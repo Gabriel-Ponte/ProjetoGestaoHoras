@@ -1,0 +1,53 @@
+import { showLoading, hideLoading, getAllProjetos } from '../allProjetos/allProjetosSlice';
+import customFetch, { checkForUnauthorizedResponse } from '../../utils/axios';
+import { clearValues } from './projetosSlice';
+
+export const createProjetoThunk = async (projeto, thunkAPI) => {
+  try {
+    console.log(projeto);
+    const resp = await customFetch.post('/projetos', projeto);
+    thunkAPI.dispatch(clearValues());
+    return resp.data.msg;
+  } catch (error) {
+    return checkForUnauthorizedResponse(error, thunkAPI);
+  }
+};
+export const deleteProjetoThunk = async (projetoId, thunkAPI) => {
+  thunkAPI.dispatch(showLoading());
+  try {
+    const resp = await customFetch.delete(`/projeto/${projetoId}`);
+    thunkAPI.dispatch(getAllProjetos());
+    return resp.data.msg;
+  } catch (error) {
+    thunkAPI.dispatch(hideLoading());
+    return checkForUnauthorizedResponse(error, thunkAPI);
+  }
+};
+export const editProjetoThunk = async (url, projeto, thunkAPI) => {
+  try {
+    const resp = await customFetch.patch(`/projetos/${projeto._id}`, projeto);
+    thunkAPI.dispatch(clearValues());
+    return resp.data;
+  } catch (error) {
+    return checkForUnauthorizedResponse(error, thunkAPI);
+  }
+};
+
+export const updateUserThunk = async (url, projeto, thunkAPI) => {
+  try {
+    const resp = await customFetch.patch(url, projeto);
+    return resp.data;
+
+  } catch (error) {
+    return checkForUnauthorizedResponse(error, thunkAPI);
+  }
+};
+
+export const getProjetoThunk = async ( thunkAPI ,projetoId) => {
+  try {
+    const resp = await customFetch.get(`/projetos/${projetoId}`);
+    return resp.data;
+  } catch (error) {
+    return checkForUnauthorizedResponse(error, thunkAPI);
+  }
+};
