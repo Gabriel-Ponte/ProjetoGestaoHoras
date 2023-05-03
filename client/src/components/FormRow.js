@@ -13,7 +13,7 @@ const FormRow = ({ type, name, value, handleChange, labelText, className, classN
       )}
       {classNameInput !== null ? (
         <div className={classNameInput ? classNameInput : 'form-input'}>
-          <input id={name} type={type} classNameInput name={name} value={value} onChange={handleChange} />
+          <input id={name} type={type} className={classNameInput} name={name} value={value} onChange={handleChange} />
         </div>
       ) : (
         <input id={name} type={type} name={name} value={value} onChange={handleChange} className='form-input' />

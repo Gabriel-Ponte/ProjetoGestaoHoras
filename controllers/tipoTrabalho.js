@@ -11,12 +11,9 @@ const getAllTiposTrabalho = async (req, res) => {
 
   const createTipoTrabalho = async (req, res) => {
     try {
-      console.log(req.body);
       const tipoTrabalho = await TipoTrabalho.create(req.body);
-      console.log(tipoTrabalho);
       res.status(StatusCodes.CREATED).json({ tipoTrabalho });
     } catch (error) {
-      console.error(error);
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error });
     }
   };

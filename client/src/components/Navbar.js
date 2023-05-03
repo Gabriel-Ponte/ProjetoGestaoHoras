@@ -43,7 +43,7 @@ const Navbar = () => {
   const returnMain = () => {
     setShowLogout(false);
     setDisableAddHoras(false);
-    navigate('/PaginaPrincipal');
+    window.location.reload(navigate('/PaginaPrincipal'));
   };
 
 

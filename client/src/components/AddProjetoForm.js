@@ -133,6 +133,7 @@ const AddProjectForm = () => {
             id="tiposTrabalhoProjeto"
             name="TipoTrabalho"
             placeholder="Tipos de Trabalho"
+            labelText = "Tipos de Trabalho"
             value={[values.TipoTrabalho]}
             list={listaTipoTrabalho}
             handleChange={handleChangeFormRowSelect}
@@ -194,6 +195,7 @@ const AddProjectForm = () => {
             id="piloto"
             name="Piloto"
             placeholder="Piloto"
+            labelText = "Piloto"
             value={[values.Piloto]}
             list={formattedListUtilizadores}
             handleChange={handleChangeFormRowSelect}

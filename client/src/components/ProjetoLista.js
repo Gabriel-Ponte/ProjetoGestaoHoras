@@ -105,6 +105,7 @@ const Projeto = ({
         </div>
       </div>
       </div>
+      <hr></hr>
     </Wrapper>
   );
 };

@@ -4,27 +4,30 @@ const { BadRequestError, NotFoundError } = require("../errors");
 
 
 const getAllProjetos = async (req, res) => {
-  const { search, Finalizado, sort } = req.query;
+  const { search, Finalizado, tipoTrabalho, sort } = req.query;
   const queryObject = {
   };
 
   if (search) {
     queryObject.position = { $regex: search, $options: "i" };
   }
-  console.log(Finalizado);
+
+  if (tipoTrabalho && tipoTrabalho === "true") {
+    queryObject.TipoTrabalho = { $exists: true, $ne: "" };
+  }
+
   if (Finalizado ==="false" || Finalizado ==="true") {
     queryObject.Finalizado = Finalizado;
   }
 
-  let result = "";
-  console.log(queryObject);
+  let result;
+
   if(queryObject){
     result = Projeto.find(queryObject);
   }else{
     result = Projeto.find();
   }
- 
-
+  
   const page = Number(req.query.page) || 1;
   const limit = Number(req.query.limit) || 5;
   const skip = (page - 1) * limit;
@@ -33,12 +36,12 @@ const getAllProjetos = async (req, res) => {
   if (sort) {
     result = await result.sort(sort);
   }
-
   const filter = queryObject || {};
+  console.log(filter)
   const projetos = await result;
   const totalProjetos = await Projeto.countDocuments(filter);
   const numOfPages = Math.ceil(totalProjetos / limit);
-
+  console.log(totalProjetos);
   res.status(StatusCodes.OK).json({ projetos, totalProjetos, numOfPages });
 };
 

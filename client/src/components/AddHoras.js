@@ -39,15 +39,18 @@ const ListaProjetos = () => {
   const [verificaDiaCalled, setVerificaDiaCalled] = useState(false);
 
   useEffect(() => {
+    dispatch(handleChange({ name: 'projetoFinalizado', value: "false" }));
+    dispatch(handleChange({ name: 'tipoTrabalho', value: "true" }));
+    dispatch(getAllProjetos({ ProjetoFinalizado: false }))
+  }, [totalProjetos]);
+  
+  useEffect(() => {
     dispatch(getDia(values.Data, user.user.id)).then((res) => {
       setListaDias(res.payload.dia);
     });
   }, []);
 
-  useEffect(() => {
-    dispatch(handleChange({ name: 'projetoFinalizado', value: "false" }));
-    dispatch(getAllProjetos({ ProjetoFinalizado: false }))
-  }, []);
+
 
 
   const verificaDia = useCallback((e) => {
@@ -188,8 +191,8 @@ const ListaProjetos = () => {
     setShowProjeto(newShowProjeto);
   };
 
+    console.log(projetos)
   const matchFoundProjeto = new Array(projetos.length).fill(false);
-
   const arrayTipoTrabalho = Object.entries(values.tipoDeTrabalhoHoras).map(([key, value]) => ({ _id: key, ...value }));
   let counter = 0;
   return (

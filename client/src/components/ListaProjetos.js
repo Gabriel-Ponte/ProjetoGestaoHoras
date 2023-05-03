@@ -24,7 +24,7 @@ const ListaProjetos = () => {
     projetoFinalizado,
   } = useSelector((store) => store.allProjetos);
   const dispatch = useDispatch();
-  console.log(projetoFinalizado);
+
   useEffect(() => {
     dispatch(getAllProjetos());
   }, [page, search, searchStatus, searchType, sort, projetoFinalizado]);
@@ -40,6 +40,7 @@ const ListaProjetos = () => {
       </Wrapper>
     );
   }
+
   const handleSort = (tipo) => {
     if (isLoading) return;
     dispatch(handleChange({ name: 'sort', value: tipo }));
@@ -57,7 +58,7 @@ const ListaProjetos = () => {
             <div className="row mb-3 text-center">
                 <div className="col-md-3 themed-grid-col">
       <h5>
-        {totalProjetos} projeto{projetos.length > 1 && 's'} {projetoFinalizado === false ? " Em Curso " : " Finalizados "} encontrados  
+        {totalProjetos} projeto{projetos.length > 1 && 's'} {projetoFinalizado === true ? " Finalizados " : " Em Curso "} encontrados  
       </h5>
       </div>
       <div className="col-md-3 themed-grid-col">

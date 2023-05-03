@@ -52,6 +52,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange }) => {
 
     return (
         <Wrapper>
+            <div className="ListaProjetosHeader">
         <div className="list-group-item">
             <div className="row mb-3 text-center">
                 <div className="col-md-3 themed-grid-col">
@@ -131,8 +132,8 @@ const ListaProjetosHeader = ({ sortValue, handleChange }) => {
                     </div>
                 </div>
             </div>
-
-        </div>
+            <hr></hr>
+        </div></div>
         </Wrapper>
     );
 }

@@ -7,7 +7,8 @@ const initialFiltersState = {
   searchStatus: 'all',
   searchType: 'all',
   sort: '',
-  projetoFinalizado: 'true',
+  projetoFinalizado: 'false',
+  tipoTrabalho:'',
 };
 
 const initialState = {

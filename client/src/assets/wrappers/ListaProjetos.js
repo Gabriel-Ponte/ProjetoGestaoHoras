@@ -43,6 +43,12 @@ const Wrapper = styled.main`
   border: 1px solid black;
 }
 
+.ListaProjetosHeader {
+  background-color: #E5E5E5;
+  align-self: center;
+  vertical-align: baseline;
+}
+
 .list {
     display: grid;
     flex-direction: row;
