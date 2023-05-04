@@ -9,7 +9,6 @@ import Header from './header';
 import Navbar from './Navbar';
 import SmallSidebar from './SmallSidebar';
 import ListaProjetos from './ListaProjetos';
-import ListaProjetos1 from './listaProjetos1';
 import Loading from './Loading';
 import EditarUtilizador from './EditarUtilizador';
 import AddHoras from './AddHoras';
@@ -25,7 +24,6 @@ export {
   FormRowSelect,
   FormRowCheckbox,
   AddUtilizador,
-  ListaProjetos1,
   Footer,
   Header,
   Navbar,

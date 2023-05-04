@@ -1,5 +1,4 @@
 import PaginaPrincipal from './PaginaPrincipal'
-import PaginaPrincipal1 from './PaginaPrincipal1'
 import PaginaLogin from './PaginaLogin';
 import SharedLayout from './SharedLayout';
 import PaginaAdicionarProjeto from './PaginaAdicionarProjeto';
@@ -14,7 +13,6 @@ export {
     PaginaLogin,
     SharedLayout,
     PaginaPrincipal,
-    PaginaPrincipal1,
     PaginaAdicionarProjeto,
     PaginaAdicionarUtilizador,
     PaginaEditarPerfil,

@@ -5,7 +5,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import {
   PaginaAdicionarUtilizador,
   PaginaPrincipal,
-  PaginaPrincipal1,
   PaginaAdicionarProjeto,
   SharedLayout,
   PaginaEditarPerfil,
@@ -28,7 +27,6 @@ function App() {
           }
         >
           <Route path='paginaPrincipal' element={<PaginaPrincipal />} />
-          <Route path='paginaPrincipal1' element={<PaginaPrincipal1 />} />
           <Route path='paginaAdicionarUtilizador' element={<PaginaAdicionarUtilizador />} />
           <Route path='paginaAdicionarProjeto' element={<PaginaAdicionarProjeto />} />
           <Route path='paginaEditarPerfil' element={<PaginaEditarPerfil />} />
@@ -38,7 +36,6 @@ function App() {
           <Route path='paginaVisualizarHoras' element={<PaginaVisualizarHoras />} />
         </Route>
 
-        
         <Route path='login' element={<Login />} />
         <Route path='*' element={<Error />} />
       </Routes>
