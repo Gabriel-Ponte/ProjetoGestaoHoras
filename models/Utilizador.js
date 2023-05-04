@@ -69,6 +69,16 @@ UserSchema.pre("save", async function () {
     this.password = await bcrypt.hash(this.password, salt);
 });
 
+UserSchema.pre('save', async function(next) {
+    const doc = this;
+    const sequence = await Counter.findOneAndUpdate(
+        { codigo: 'codigo' },
+        { $inc: { sequence_value: 1 } },
+        { returnOriginal: false, upsert: true }
+    );
+    doc.codigo = sequence.sequence_value;
+    next();
+});
 
 UserSchema.methods.createJWT = function () {
     return jwt.sign(
@@ -79,6 +89,9 @@ UserSchema.methods.createJWT = function () {
         }
     );
 };
+
+
+
 
 UserSchema.methods.comparePassword = async function (canditatePassword) {
     const isMatch = await bcrypt.compare(canditatePassword, this.password);
