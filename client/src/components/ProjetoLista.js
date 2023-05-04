@@ -69,7 +69,7 @@ const Projeto = ({
         <div className="col-md-3 themed-grid-col">
             <div className="row mb-3 text-center">
               <div className="col-md-6 themed-grid-col">
-              <input id={name} type={type} className={classNameInput} name={name} value={Tema} onChange={handleChange} />
+
                 <p>{Tema}</p>
               </div>
               <div className="col-md-6 themed-grid-col">
