@@ -32,7 +32,6 @@ const getAllProjetos = async (req, res) => {
   const limit = Number(req.query.limit) || 5;
   const skip = (page - 1) * limit;
   result = result.skip(skip).limit(limit);
-
   if (sort) {
     result = await result.sort(sort);
   }

@@ -50,8 +50,9 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
 
             case 'DataFim':
                 setVerificaActivo('DataFim');
+                console.log(verificaSortDataFim)
                 setVerificaSortDataFim(!verificaSortDataFim);
-                handleChange(verificaSortAcoes ? 'DataFim' : '-DataFim');
+                handleChange(verificaSortDataFim ? 'DataFim' : '-DataFim');
                 break;
             default:
                 break;
