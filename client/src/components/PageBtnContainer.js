@@ -38,6 +38,7 @@ const PageBtnContainer = ({ small }) => {
             Anterior
           </button>
             {pages.map((pageNumber) => {
+  
               return (
                 <button
                   type='button'
@@ -60,7 +61,7 @@ const PageBtnContainer = ({ small }) => {
           <button type='button' className='prev-btn' onClick={prevPage}>
             <HiChevronDoubleLeft />
           </button>
-          {page}
+          <p className={page ? 'pageBtn active' : 'pageBtn'}>{page}</p>
           <button type='button' className='next-btn' onClick={nextPage}>
             <HiChevronDoubleRight />
           </button>
