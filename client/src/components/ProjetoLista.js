@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import Wrapper from '../assets/wrappers/Projeto';
 import { useDispatch } from 'react-redux';
-import { getProjeto } from '../features/projetos/projetosSlice';
+import { getProjeto ,handleChange} from '../features/projetos/projetosSlice';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Projeto = ({
   _id,
@@ -21,6 +22,7 @@ const Projeto = ({
   Links,
   NumeroHorasTotal,
   Finalizado,
+  finalizado
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -29,8 +31,15 @@ const Projeto = ({
   
 
   const toggleEdit = async (idP) => {
-    await dispatch(getProjeto(idP));
+    const projeto = await dispatch(getProjeto(idP));
+    if(projeto.payload.projeto){
+    await dispatch(handleChange({ name: 'projeto', value: projeto.payload.projeto }));
+    //navigate('/PaginaEditarProjeto');
     window.location.reload(navigate('/PaginaEditarProjeto'));
+    }else{
+      toast.error("Não foi possivel carregar o projeto");
+    }
+
   };
 
   const toggleVisualize = async (idP) => {
@@ -44,6 +53,13 @@ const Projeto = ({
   if(Finalizado === true || !DataObjetivo){
     dias = "";
   }
+  let StringResultado;
+  if(Resultado === true){
+    StringResultado = "Sucesso";
+  }else(
+    StringResultado = "Insucesso"
+  )
+
 
   return (
     <Wrapper>
@@ -72,13 +88,27 @@ const Projeto = ({
           </div>
           <div className="col-md-3 themed-grid-col">
             <div className="row mb-3 text-center">
+            {finalizado === true ? (
+              <>
               <div className="col-md-6 themed-grid-col">
-              <p>{DataObjetivo ? new Date(DataObjetivo).toLocaleDateString('en-CA') : ''}</p>
+              <p>{DataFim ? new Date(DataFim).toLocaleDateString('en-CA') : ''}</p>
               </div>
               <div className="col-md-6 themed-grid-col">
-                <p>{dias}</p>
+                <p>{StringResultado}</p>
               </div>
+              </>
+          ) : (
+            <>
+            <div className="col-md-6 themed-grid-col">
+            <p>{DataObjetivo ? new Date(DataObjetivo).toLocaleDateString('en-CA') : ''}</p>
             </div>
+            <div className="col-md-6 themed-grid-col">
+              <p>{dias}</p>
+            </div>
+            </>
+
+          )}
+          </div>
           </div>
           <div className="col-md-3 themed-grid-col">
             <div className="row mb-3 text-center">

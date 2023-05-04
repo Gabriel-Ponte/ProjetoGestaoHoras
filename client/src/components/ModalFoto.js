@@ -10,8 +10,8 @@ function ModalFoto({ label, name, value, handleChange }) {
 
   const [foto, setFoto] = useState(value);
   useEffect(() => {
-
-  }, [file]);
+    setFoto(value);
+  }, [file , value]);
 
   const handleFileInputChange = (file) => {
     const reader = new FileReader();
@@ -35,12 +35,13 @@ function ModalFoto({ label, name, value, handleChange }) {
 
 
   const handleFileInputChange1 = (file) => {
+    if(file){
     const reader = new FileReader();
     reader.onload = function (event) {
       imgRef.current.src = event.target.result;
-      
     };
     reader.readAsDataURL(file);
+  }
   };
 
   const handleFileChange1 = (event) => {
@@ -50,15 +51,21 @@ function ModalFoto({ label, name, value, handleChange }) {
   };
   
   const close = () => {
-    setFile(0);
+    document.getElementById('foto').value = '';
+    imgRef.current.src = DefaultUserImg;
+    setFile(null);
+    if (foto && foto.data && foto.contentType) {
+      const blob = new Blob([new Uint8Array(foto.data)], { type: foto.contentType });
+      imgRef.current.src = URL.createObjectURL(blob);
+    }
     setShowModal(false);
   };
+  
   if(foto.data instanceof Uint8Array) {
-    //const buffer = Buffer.from(new Uint8Array(Object.values(value.data)));
     const buffer = Buffer.from(value.data);
-    console.log(buffer);
-    setFoto({ data: buffer, contentType: value.contentType });
+    setFoto({ data: {data: buffer}, contentType: value.contentType });
   }
+
   return (
     <Wrapper>
       <div className="form-row">
@@ -93,7 +100,6 @@ function ModalFoto({ label, name, value, handleChange }) {
         </div>
       </div>
       <div
-      
         className={showModal ? "modal show" : "modal fade"}
         id="ModalFoto"
         tabIndex="-1"
@@ -113,7 +119,7 @@ function ModalFoto({ label, name, value, handleChange }) {
                 className="btn-close"
                 data-bs-dismiss="modal"
                 aria-label="Close"
-                onClick={() => setShowModal(false)}
+                onClick={close}
               ></button>
             </div>
             <div className="modal-body">
@@ -133,7 +139,7 @@ function ModalFoto({ label, name, value, handleChange }) {
                   id="foto"
                   name="foto"
                   type="file"
-                  accept="image/*"
+                  accept=".jpg,.png"
                   className="rounded mx-auto d-block"
                   onChange={handleFileChange1}
                 />

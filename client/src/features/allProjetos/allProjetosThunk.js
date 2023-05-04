@@ -9,7 +9,6 @@ export const getAllProjetosThunk = async (_, thunkAPI) => {
   }
   if (tipoTrabalho !== null){
     url = url + `&tipoTrabalho=${tipoTrabalho}`;
-    console.log(tipoTrabalho)
   }
 
   try {

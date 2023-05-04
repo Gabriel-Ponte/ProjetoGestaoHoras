@@ -51,11 +51,12 @@ const AddUtilizador = () => {
     };
 
     const handleChangeFoto = (name, file) => {
+      console.log(file);
       setValues({
         ...values,
         [name]: { data: file, contentType: "image/png" }
       });
-      console.log(values.foto);
+    
     };
 
   const handleSubmit = (e) => {

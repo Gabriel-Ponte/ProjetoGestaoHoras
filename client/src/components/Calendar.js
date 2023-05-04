@@ -152,6 +152,7 @@ const CalendarControl = ({ handleChange }) =>{
             );
         }
     }
+
     function highlightToday() {
         let currentMonth = localDate.getMonth() + 1;
         let changedMonth = calendar.getMonth() + 1;
@@ -169,7 +170,6 @@ const CalendarControl = ({ handleChange }) =>{
     }
 
     function plotPrevMonthDates(dates) {
-
         //dates.reverse();
         for (let i = 0; i < dates.length; i++) {
             if (document.querySelectorAll(".prev-dates")) {

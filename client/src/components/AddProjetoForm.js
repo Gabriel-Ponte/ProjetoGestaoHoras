@@ -77,16 +77,25 @@ const AddProjectForm = () => {
     }
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!values.Nome || !values.Tema || !values.Acao) {
       toast.error('Por favor, preencha todos os campos obrigatórios!');
       return;
     }
 
+    try {
+      const result = await dispatch(createProjeto(values));
+      if(!result.error){
+        setTimeout(() => {
+          setValues(initialState);
+        }, 4000);
+      }
+    } catch (error) {
+      console.log(error);
+    }
 
-
-    dispatch(createProjeto(values));
+  
     //navigate('/');
   };
 

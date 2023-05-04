@@ -48,7 +48,6 @@ const ListaProjetos = () => {
 
   const handleChangeCheckbox = (event) => {
     const finalizado = event.target.checked;
-    console.log(finalizado);
     dispatch(handleChange({ name: 'projetoFinalizado', value: finalizado }));
   };
 
@@ -79,10 +78,15 @@ const ListaProjetos = () => {
       <ListaProjetosHeader
           sortValue={sort}
           handleChange={handleSort}
+          finalizado= {projetoFinalizado}
         />
 
         {projetos.map((projeto) => {
-          return <Projeto key={projeto._id} {...projeto} />;
+          return <Projeto 
+          key={projeto._id} 
+          {...projeto} 
+          finalizado = {projetoFinalizado}
+          />;
         })}
       </div>
       {numOfPages > 1 && <PageBtnContainer />}

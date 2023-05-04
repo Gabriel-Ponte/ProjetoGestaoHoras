@@ -1,21 +1,28 @@
 import { useState, useEffect, useRef } from 'react';
 import Wrapper from '../assets/wrappers/FormRowSelect';
 
-const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, handleLista, className, classNameLabel, classNameInput }) => {
+const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, handleLista, className, classNameLabel, classNameInput, classNameResult }) => {
+
   if (multiple === null) {
     multiple = true;
+  }
+  let separatedArray;
+  if (Array.isArray(value)) {
+    separatedArray = value.length > 0 ? value[0].split(/[,\/]/) : [];
+  } else {
+    separatedArray = value.split(/[,\/]/);
   }
 
   const [newOption, setNewOption] = useState(''); // state to hold new option value
   const [updatedList, setUpdatedList] = useState(list); // state to hold updated list
-  const [selectedOption, setSelectedOption] = useState(Array.isArray(value) ? value : [value]); // state to hold the selected option
+  const [selectedOption, setSelectedOption] = useState(Array.isArray(separatedArray) ? separatedArray : (value ? value.split(',') : []));
 
   const handleMultiChange = async (event) => {
     const selectedOptions = Array.from(event.target.selectedOptions, (option) => option.value);
     const previousOptions = selectedOption.filter((option) => !selectedOptions.includes(option));
     // Declare updatedOptions variable outside of the if/else block
     const updatedOptions = [...previousOptions, ...selectedOptions];
-
+    console.log(updatedOptions);
     // Remove duplicated setSelectedOption() call
     setSelectedOption(updatedOptions.length === selectedOption.length ? previousOptions : updatedOptions);
     const op = updatedOptions.length === selectedOption.length ? previousOptions : updatedOptions;
@@ -64,7 +71,6 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
     ));
 
     selectOptions = lista.concat(
-
     );
   }
 
@@ -101,26 +107,45 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
           </label>
         )}
         <div className={classNameInput ? classNameInput : 'form-row'}>
-          <select
-            name={name}
-            id={name}
-            value={selectedOption}
-            onChange={multiple ? handleMultiChange : handleSingleChange} // Fixed the syntax error
-            className="form-select"
-            multiple={multiple}
-          >
-            {selectOptions}
-          </select>
-          <div className={className ? className : 'form-row'}>
-            <div className={classNameLabel ? classNameLabel : 'form-row'}>
-              {value && (
+          {multiple ? (
+            <select
+              multiple
+              name={name}
+              id={name}
+              value={selectedOption}
+              onChange={handleMultiChange}
+              className="form-select"
+            >
+              {selectOptions}
+            </select>
+          ) : (
+            <select
+              name={name}
+              id={name}
+              value={selectedOption[0]}
+              onChange={handleSingleChange}
+              className="form-select"
+            >
+              {selectOptions}
+            </select>
+          )}
+
+          {value && (
+            <div className={classNameResult ? classNameResult : 'formRow'}>
+              <div className={classNameLabel ? classNameLabel : 'formRowLabel'}>
                 <p>
                   {labelText + ': ' || name + ': '}
+                </p>
+              </div>
+              <div className={classNameLabel ? classNameLabel : 'formRowLabel'}>
+
+                <p>
                   {Array.isArray(value) ? value.join(', ') : value}
                 </p>
-              )}
+              </div>
             </div>
-          </div>
+          )}
+
           {name !== 'Piloto' && (
             <div className={className ? className : 'form-row'}>
               <div className={classNameLabel ? classNameLabel : 'form-row'}>

@@ -12,7 +12,9 @@ import { listaUtilizadores } from '../features/utilizadores/utilizadorSlice';
 
 function VisualizarProjeto() {
     const { projeto, isLoading } = useSelector((store) => store.projeto);
-    const { utilizadores, listaDeUtilizadores } = useSelector((store) => store.utilizador)
+    
+    
+    const { utilizadores, listaDeUtilizadores } = useSelector((store) => store.utilizador);
     const [listaTipoTrabalho, setListaTipoTrabalho] = useState([]);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -35,9 +37,9 @@ function VisualizarProjeto() {
         dispatch(createTipoTrabalho(e));
       }
 
-
     useEffect(() => {
-      if (projeto) {
+      if (projeto){
+        if(projeto.projeto) {
         const initialState = {
           _id: projeto.projeto._id,
           Nome: projeto.projeto.Nome,
@@ -55,9 +57,31 @@ function VisualizarProjeto() {
           Resultado: projeto.projeto.Resultado,
           Notas: projeto.projeto.Notas,
         };
+
+        setValues(initialState);
+      }else{
+        const initialState = {
+          _id: projeto._id,
+          Nome: projeto.Nome,
+          Cliente: projeto.Cliente,
+          DataInicio: projeto.DataInicio,
+          DataObjetivo: projeto.DataObjetivo,
+          DataFim: projeto.DataFim,
+          Tema: projeto.Tema,
+          Acao: projeto.Acao,
+          TipoTrabalho: projeto.TipoTrabalho,
+          Piloto: projeto.Piloto,
+          Links: projeto.Links,
+          Finalizado: projeto.Finalizado,
+          NumeroHorasTotal: projeto.NumeroHorasTotal,
+          Resultado: projeto.Resultado,
+          Notas: projeto.Notas,
+        };
         setValues(initialState);
       }
+    }
     }, [projeto]);
+
 
     useEffect(() => {
         if (projeto !== null) {
@@ -81,7 +105,7 @@ function VisualizarProjeto() {
         values.DataFim = "";
       }
       console.log(values)
-      //dispatch(updateProjeto(values));
+      dispatch(updateProjeto(values));
       //navigate('/');
     };
     const handleChangeFormRowSelect = (nome, selectedOptions) => {
@@ -119,18 +143,14 @@ function VisualizarProjeto() {
       setValues({ ...values });
     };
 
-    if (values === null) {
-        if (projeto === null){
+    if (values === null || typeof values === 'undefined') {
             return (
                 <Wrapper>
                   <h2>Sem projeto para Editar</h2>
                 </Wrapper>
               );
-        }
-        else{
-            return null;
-        }
     }
+
 
     return (
 

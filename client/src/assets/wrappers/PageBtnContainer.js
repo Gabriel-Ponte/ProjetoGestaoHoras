@@ -25,7 +25,8 @@ const Wrapper = styled.section`
     cursor: pointer;
   }
   .active {
-    background: var(--primary-500);
+    font-size: 1.5rem;
+    background: var(--primary-900);
     color: var(--white);
   }
   .prev-btn,

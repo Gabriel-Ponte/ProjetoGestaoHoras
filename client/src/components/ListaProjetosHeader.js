@@ -4,14 +4,16 @@ import { BsArrowLeftShort } from 'react-icons/bs';
 import { useState } from 'react';
 import Wrapper from '../assets/wrappers/ListaProjetos';
 
-const ListaProjetosHeader = ({ sortValue, handleChange }) => {
+const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
     const [verificaSortTema, setVerificaSortTema] = useState(false);
     const [verificaSortNome, setVerificaSortNome] = useState(false);
     const [verificaSortNotas, setVerificaSortNotas] = useState(false);
     const [verificaSortAcoes, setVerificaSortAcoes] = useState(false);
     const [verificaSortDataObjetivo, setVerificaSortDataObjetivo] = useState(false);
     const [verificaSortAlertaDias, setVerificaSortAlertaDias] = useState(false);
+    const [verificaSortDataFim, setVerificaSortDataFim] = useState(false);
     const [verificaActivo, setVerificaActivo] = useState(sortValue);
+
 
     const toggleSort = (button) => {
         switch (button) {
@@ -45,95 +47,118 @@ const ListaProjetosHeader = ({ sortValue, handleChange }) => {
                 setVerificaSortAcoes(!verificaSortAcoes);
                 handleChange(verificaSortAcoes ? 'Acao' : '-Acao');
                 break;
+
+            case 'DataFim':
+                setVerificaActivo('DataFim');
+                setVerificaSortDataFim(!verificaSortDataFim);
+                handleChange(verificaSortAcoes ? 'DataFim' : '-DataFim');
+                break;
             default:
                 break;
         }
     };
-
+    
     return (
         <Wrapper>
             <div className="ListaProjetosHeader">
-        <div className="list-group-item">
-            <div className="row mb-3 text-center">
-                <div className="col-md-3 themed-grid-col">
+                <div className="list-group-item">
                     <div className="row mb-3 text-center">
-                        <div className="col-md-6 themed-grid-col">
-                            <button
-                                type="button"
-                                name="VisualizarButton"
-                                className="btn"
-                                onClick={() => toggleSort('Tema')}
-                            >
-                                Tema {verificaActivo === "Tema" || verificaActivo === "-Tema"  ? verificaSortNome ? <AiOutlineArrowUp /> : <AiOutlineArrowDown /> : <BsArrowLeftShort />}
-                            </button>
+                        <div className="col-md-3 themed-grid-col">
+                            <div className="row mb-3 text-center">
+                                <div className="col-md-6 themed-grid-col">
+                                    <button
+                                        type="button"
+                                        name="VisualizarButton"
+                                        className="btn"
+                                        onClick={() => toggleSort('Tema')}
+                                    >
+                                        Tema {verificaActivo === "Tema" || verificaActivo === "-Tema" ? verificaSortNome ? <AiOutlineArrowUp /> : <AiOutlineArrowDown /> : <BsArrowLeftShort />}
+                                    </button>
+                                </div>
+                                <div className="col-md-6 themed-grid-col">
+                                    <button
+                                        type="button"
+                                        name="VisualizarButton"
+                                        className="btn"
+                                        onClick={() => toggleSort('Nome')}
+                                    >
+                                        Projeto {verificaActivo === "Nome" || verificaActivo === "-Nome" ? verificaSortTema ? <AiOutlineArrowUp /> : <AiOutlineArrowDown /> : <BsArrowLeftShort />}
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                        <div className="col-md-6 themed-grid-col">
-                            <button
-                                type="button"
-                                name="VisualizarButton"
-                                className="btn"
-                                onClick={() => toggleSort('Nome')}
-                            >
-                                Projeto {verificaActivo === "Nome" ||verificaActivo === "-Nome"   ? verificaSortTema ? <AiOutlineArrowUp /> : <AiOutlineArrowDown /> : <BsArrowLeftShort />}
-                            </button>
+                        <div className="col-md-3 themed-grid-col">
+                            <div className="row mb-3 text-center">
+
+                                <div className="col-md-6 themed-grid-col">
+                                    <button
+                                        type="button"
+                                        name="VisualizarButton"
+                                        className="btn"
+                                        onClick={() => toggleSort('Acao')}
+                                    >
+                                        Ações {verificaActivo === "Acao" || verificaActivo === "-Acao" ? (verificaSortAcoes ? <AiOutlineArrowUp /> : <AiOutlineArrowDown />) : <BsArrowLeftShort />}
+                                    </button>
+                                </div>
+                                <div className="col-md-6 themed-grid-col">
+                                    <button
+                                        type="button"
+                                        name="VisualizarButton"
+                                        className="btn"
+                                        onClick={() => toggleSort('Notas')}
+                                    >
+                                        Notas {verificaActivo === "Notas" || verificaActivo === "-Notas" ? verificaSortNotas ? <AiOutlineArrowUp /> : <AiOutlineArrowDown /> : <BsArrowLeftShort />}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-md-3 themed-grid-col">
+                            <div className="row mb-3 text-center">
+                                {finalizado === true ? (
+                                    <>
+                                        <div className="col-md-6 themed-grid-col">
+                                            <button
+                                                type="button"
+                                                name="VisualizarButton"
+                                                className="btn "
+                                                onClick={() => toggleSort('DataFim')}
+                                            >
+                                                Data Final{' '}
+                                                {verificaActivo === "DataFim" || verificaActivo === "-DataFim" ? verificaSortDataFim ? <AiOutlineArrowUp /> : <AiOutlineArrowDown /> : <BsArrowLeftShort />}
+                                            </button>
+                                        </div>
+                                        <div className="col-md-6 themed-grid-col">
+                                            <p className="btn ">
+                                                Resultado
+                                            </p>
+                                        </div>
+                                    </>
+
+                                ) : (
+                                    <>
+                                        <div className="col-md-6 themed-grid-col">
+                                            <button
+                                                type="button"
+                                                name="VisualizarButton"
+                                                className="btn "
+                                                onClick={() => toggleSort('DataObjetivo')}
+                                            >
+                                                DataObjetivo{' '}
+                                                {verificaActivo === "DataObjetivo" || verificaActivo === "-DataObjetivo" ? verificaSortDataObjetivo ? <AiOutlineArrowUp /> : <AiOutlineArrowDown /> : <BsArrowLeftShort />}
+                                            </button>
+                                        </div>
+                                        <div className="col-md-6 themed-grid-col">
+                                            <p className="btn ">
+                                                Alerta dias
+                                            </p>
+                                        </div>
+                                    </>
+                                )}
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className="col-md-3 themed-grid-col">
-                    <div className="row mb-3 text-center">
-
-                        <div className="col-md-6 themed-grid-col">
-                            <button
-                                type="button"
-                                name="VisualizarButton"
-                                className="btn"
-                                onClick={() => toggleSort('Acao')}
-                            >
-                                Ações {verificaActivo === "Acao" ||  verificaActivo === "-Acao" ? (verificaSortAcoes ? <AiOutlineArrowUp /> : <AiOutlineArrowDown />) : <BsArrowLeftShort /> }
-                            </button>
-                        </div>
-                        <div className="col-md-6 themed-grid-col">
-                            <button
-                                type="button"
-                                name="VisualizarButton"
-                                className="btn"
-                                onClick={() => toggleSort('Notas')}
-                            >
-                                Notas {verificaActivo === "Notas" || verificaActivo === "-Notas" ? verificaSortNotas ? <AiOutlineArrowUp /> : <AiOutlineArrowDown /> : <BsArrowLeftShort />}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div className="col-md-3 themed-grid-col">
-                    <div className="row mb-3 text-center">
-                        <div className="col-md-6 themed-grid-col">
-                            <button
-                                type="button"
-                                name="VisualizarButton"
-                                className="btn "
-                                onClick={() => toggleSort('DataObjetivo')}
-                            >
-                                DataObjetivo{' '}
-                                {verificaActivo === "DataObjetivo"  ||  verificaActivo === "-DataObjetivo"  ? verificaSortDataObjetivo ? <AiOutlineArrowUp /> : <AiOutlineArrowDown /> : <BsArrowLeftShort />}
-                            </button>
-                        </div>
-                        <div className="col-md-6 themed-grid-col">
-                            <button
-                                type="button"
-                                name="VisualizarButton"
-                                className="btn "
-                                onClick={() => toggleSort('AlertaDias')}
-                            >
-                            Alerta Dias {verificaActivo === "AlertaDias" ||   verificaActivo === "-DataObjetivo"? verificaSortAlertaDias ? <AiOutlineArrowUp /> : <AiOutlineArrowDown /> : <BsArrowLeftShort />}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <hr></hr>
-        </div></div>
+                    <hr></hr>
+                </div></div>
         </Wrapper>
     );
 }

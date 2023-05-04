@@ -9,22 +9,21 @@ import { listaUtilizadores } from '../features/utilizadores/utilizadorSlice';
 import { FormRowSelect } from '../components';
 import Calendar from './Calendar'
 
+
 const today = new Date();
 
-function getWeekdayCount() {
-    const year = today.getFullYear();
-    const month = today.getMonth();
+function getWeekdayCount(month, year) {
     const daysInMonth = new Date(year, month + 1, 0).getDate(); // number of days in the month
     let count = 0;
 
     for (let day = 1; day <= daysInMonth; day++) {
         const date = new Date(year, month, day);
         const dayOfWeek = date.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-        if (dayOfWeek !== 0 && dayOfWeek !== 6) {
-            count++;
-        }
         if (date >= today) {
             break;
+        }
+        if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+            count++;
         }
     }
     return count;
@@ -45,34 +44,31 @@ const ListaHoras = () => {
 
     const handleChangeCalendario = useCallback((dia, mes, ano) => {
         const [selectedDia, selectedMes, selectedAno] = [dia, mes, ano];
-        console.log(selectedDia ,selectedMes, selectedAno)
         setSelectedDay({ dia: selectedDia, mes: selectedMes, ano: selectedAno });
     }, []);
 
 
     const handleChangeUtilizador = useCallback((e) => {
-        console.log(e)
         const { value } = e.target;
         setSelectedUser(value);
     }, []);
 
     useEffect(() => {
         dispatch(listaUtilizadores());
-    }, [dispatch]);
+    }, [selectedUser]);
 
     useEffect(() => {
         dispatch(getAllDiasUtilizador({ userNome: selectedUser })).then((res) => {
             setListaDias(res.payload);
         });
         setUserNome(selectedUser); // update userNome state with selected user name
-    }, [dispatch, selectedUser]);
+    }, [selectedUser]);
 
     if (isLoading) {
         return <Loading />;
     }
 
     if (listaDias.length > 0) {
-
         return (
             <Wrapper>
                 <div className='projetos'>
@@ -96,10 +92,23 @@ const ListaHoras = () => {
             </Wrapper>
         );
     }
-    const weekdayCount = getWeekdayCount();
+
+    const diaSelected = selectedDay ? selectedDay.dia : 0;
+    const month = selectedDay ? selectedDay.mes : today.getMonth();
+    const year = selectedDay ? selectedDay.ano : today.getFullYear();
+    const weekdayCount = getWeekdayCount(month, year);
     const possibleHours = weekdayCount * 8;
+    let horasRealizadas = 0;
 
+    for (let i = 0 ; i < dias.length ; i++){
+        const data = new Date(dias[i].Data);
 
+        if(year === data.getFullYear() && month === data.getMonth()){
+        horasRealizadas += dias[i].NumeroHoras;
+        }
+    }
+    const percentagemHoras = (horasRealizadas / possibleHours) * 100;
+    //const percentagemHoras = Math.round((horasRealizadas / possibleHours) * 100);
     return (
         <Wrapper>
             <div className='projetos'>
@@ -117,24 +126,32 @@ const ListaHoras = () => {
                         multiple={false}
                     />
                 </div>
-                <h1>{userNome}</h1>
-                
+                <div>
+                    <h1>{userNome}</h1>
+                    <p>Horas Possiveis {possibleHours}</p>
+                    <p>Horas Realizadas {horasRealizadas}</p>
+                    {percentagemHoras >= 0 && <p>{percentagemHoras.toFixed(1)}%</p>}
+                </div>
                 <Calendar
                     handleChange={handleChangeCalendario}
                 />
-                
-                {dias.map((dia) => {
-                    const data = new Date(dia.Data);
-                    const month = selectedDay ? selectedDay.mes : today.getMonth();
-                    const diaSelected = selectedDay ? selectedDay.dia : 0;
-                    if (month === data.getMonth()) {
-                         if (diaSelected === 0) {
-                            return <Dia key={dia.Data} {...dia} horasPossiveis={possibleHours} />;
-                        } else if (Number(diaSelected) === data.getDate()) {
-                            return <Dia key={dia.Data} {...dia} horasPossiveis={possibleHours} />;
+
+                <div>
+                    {dias.map((dia) => {
+                        const data = new Date(dia.Data);
+
+                        if (month === data.getMonth()) {
+                            if (diaSelected === 0 || Number(diaSelected) === data.getDate()) {
+                                return <Dia key={dia.Data} {...dia} horasPossiveis={possibleHours} />;
+                            }
                         }
-                    }
-                })}
+                        return null;
+                    })}
+                    {dias.filter((dia) => {
+                        const data = new Date(dia.Data);
+                        return month === data.getMonth() && (diaSelected === 0 || Number(diaSelected) === data.getDate());
+                    }).length === 0 && <h2>Sem Horas inseridas neste mes</h2>}
+                </div>
             </div>
         </Wrapper>
     );

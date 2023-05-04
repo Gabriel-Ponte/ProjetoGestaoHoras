@@ -41,6 +41,7 @@ const projetoSlice = createSlice({
   reducers: {
     handleChange: (state, { payload: { name, value } }) => {
       state[name] = value;
+      console.log(state.projeto);
     },
     clearValues: (state, { payload }) => {
       state.projeto = null;

@@ -53,15 +53,22 @@ const AddUtilizador = () => {
 
 
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
       e.preventDefault();
       if (!values.login || !values.email || !values.nome) {
         toast.error('Por favor, preencha todos os campos obrigatórios!');
         return;
       }
-  
-      dispatch(registerUser(values));
-      //navigate('/');
+      try {
+        const result = await dispatch(registerUser(values));
+        if(!result.error){
+          setTimeout(() => {
+            setValues(initialState);
+          }, 4000);
+        }
+      } catch (error) {
+        console.log(error);
+      }
   };
 
   const toggleMember = e => {

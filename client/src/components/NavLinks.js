@@ -6,6 +6,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getAllProjetos } from '../features/allProjetos/allProjetosSlice';
 import { getProjeto } from '../features/projetos/projetosSlice';
 import PageBtnContainer from './PageBtnContainer';
+import { useNavigate } from 'react-router-dom';
+
 const NavLinks = ({ toggleSidebar }) => {
   const {
     projetos,
@@ -16,6 +18,8 @@ const NavLinks = ({ toggleSidebar }) => {
   const [showProjetoV, setShowProjetoV] = useState(false);
   const dispatch = useDispatch();
 
+
+  const navigate = useNavigate();
   const handleShowProjetos = () => {
     setShowProjeto(!showProjeto);
     if (showProjeto === false) {
@@ -35,10 +39,19 @@ const NavLinks = ({ toggleSidebar }) => {
 
   }, [page]);
 
-  const setProjetos = async (idP) => {
+  const setProjetosV = async (idP) => {
     try {
       await dispatch(getProjeto(idP));
-      //toggleSidebar();
+      {window.location.reload(navigate('/PaginaVisualizarProjeto'))}
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const setProjetosEdit = async (idP) => {
+    try {
+      await dispatch(getProjeto(idP));
+      {window.location.reload(navigate('/PaginaEditarProjeto'))}
     } catch (error) {
       console.error(error);
     }
@@ -69,11 +82,12 @@ const NavLinks = ({ toggleSidebar }) => {
                   {projetos.map((projeto) => (
                     <div key={"projeto-" + projeto._id}>
                       <NavLink
-                        to={path}
+                        
+                        //to={path}
                         className={({ isActive }) => {
                           return isActive ? "nav-link active" : "nav-link";
                         }}
-                        onClick={() => setProjetos(projeto._id)}
+                        onClick={() => setProjetosEdit(projeto._id)}
                         key={"projeto-" + projeto._id}
                       >
                         {projeto.Nome}
@@ -90,11 +104,12 @@ const NavLinks = ({ toggleSidebar }) => {
                     <div key={"V-" + projeto._id}>
                       <NavLink
                        //
-                        to={path}
+
+                        //to={path}
                         className={({ isActive }) => {
                           return isActive ? "nav-link active" : "nav-link";
                         }}
-                        onClick={() => setProjetos(projeto._id)}
+                        onClick={() => setProjetosV(projeto._id)}
                         key={"V-" + projeto._id}
                       >
                         {projeto.Nome}

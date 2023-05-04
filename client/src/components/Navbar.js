@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toggleSidebar, clearStore } from '../features/utilizadores/utilizadorSlice';
 import { GiHourglass } from 'react-icons/gi';
 import { GoDiffAdded } from 'react-icons/go';
-
+import { handleChange } from '../features/allProjetos/allProjetosSlice';
 
 
 const Navbar = () => {
@@ -43,7 +43,9 @@ const Navbar = () => {
   const returnMain = () => {
     setShowLogout(false);
     setDisableAddHoras(false);
-    window.location.reload(navigate('/PaginaPrincipal'));
+    dispatch(handleChange({ name: 'tipoTrabalho', value: "" }));
+    navigate('/PaginaPrincipal');
+    //window.location.reload(navigate('/PaginaPrincipal'));
   };
 
 
