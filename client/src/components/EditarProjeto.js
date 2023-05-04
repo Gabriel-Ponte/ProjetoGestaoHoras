@@ -80,7 +80,8 @@ function VisualizarProjeto() {
         values.Resultado = false;
         values.DataFim = "";
       }
-      dispatch(updateProjeto(values));
+      console.log(values)
+      //dispatch(updateProjeto(values));
       //navigate('/');
     };
     const handleChangeFormRowSelect = (nome, selectedOptions) => {

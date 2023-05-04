@@ -37,11 +37,9 @@ const getAllProjetos = async (req, res) => {
     result = await result.sort(sort);
   }
   const filter = queryObject || {};
-  console.log(filter)
   const projetos = await result;
   const totalProjetos = await Projeto.countDocuments(filter);
   const numOfPages = Math.ceil(totalProjetos / limit);
-  console.log(totalProjetos);
   res.status(StatusCodes.OK).json({ projetos, totalProjetos, numOfPages });
 };
 
@@ -94,8 +92,8 @@ const updateProjeto = async (req, res) => {
   const { id: projetoId } = req.params;
   try {
     if (Nome === "" || Tema === "" || Cliente === "" || DataInicio === ""
-      || DataObjetivo === "" || TipoTrabalho === "") {
-      throw new BadRequestError("Nome, Tema, Cliente, DataInicio, DataFim, TipoTrabalho cannot be empty");
+      || DataObjetivo === "") {
+      throw new BadRequestError("Nome, Tema, Cliente, DataInicio, DataObjetivo cannot be empty");
     }
     const projeto = await Projeto.findByIdAndUpdate(
       {
