@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 
 const Wrapper = styled.section`
+
   height: 6rem;
   margin-top: 2rem;
   display: flex;
@@ -12,6 +13,7 @@ const Wrapper = styled.section`
     background: var(--primary-100);
     border-radius: var(--borderRadius);
   }
+
   .pageBtn {
     background: transparent;
     border-color: transparent;
@@ -24,11 +26,13 @@ const Wrapper = styled.section`
     border-radius: var(--borderRadius);
     cursor: pointer;
   }
+
   .active {
     font-size: 1.5rem;
     background: var(--primary-900);
     color: var(--white);
   }
+  
   .prev-btn,
   .next-btn {
     width: 100px;
@@ -46,6 +50,7 @@ const Wrapper = styled.section`
     cursor: pointer;
     transition: var(--transition);
   }
+
   .prev-btn:hover,
   .next-btn:hover {
     background: var(--primary-500);

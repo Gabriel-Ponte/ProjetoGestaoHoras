@@ -26,10 +26,10 @@ const AddUtilizador = () => {
 
     const dispatch = useDispatch();
   
-
     if (isLoading) {
       return <Loading />;
     }
+
     const handleChangeTipo = (e)=> {
       if(e.target.value === "Administrador"){
         e.target.value = 1;

@@ -6,7 +6,7 @@ const initialFiltersState = {
   search: '',
   searchStatus: 'all',
   searchType: 'all',
-  sort: '',
+  sort: 'DataObjetivo',
   projetoFinalizado: 'false',
   tipoTrabalho:'',
 };

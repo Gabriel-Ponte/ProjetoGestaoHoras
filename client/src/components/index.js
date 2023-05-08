@@ -12,6 +12,7 @@ import ListaProjetos from './ListaProjetos';
 import Loading from './Loading';
 import EditarUtilizador from './EditarUtilizador';
 import AddHoras from './AddHoras';
+import AddHorasProjeto from './AddHorasProjeto'
 import VisualizarProjeto from './VisualizarProjeto';
 import EditarProjeto from './EditarProjeto';
 import VisualizarHoras from './VisualizarHoras';
@@ -31,6 +32,7 @@ export {
   Loading,
   EditarUtilizador,
   AddHoras,
+  AddHorasProjeto,
   VisualizarProjeto,
   EditarProjeto,
   VisualizarHoras,

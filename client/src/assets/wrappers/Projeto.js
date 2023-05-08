@@ -7,12 +7,8 @@ const Wrapper = styled.article`
   grid-template-rows: 1fr auto;
   box-shadow: var(--shadow-2);
 
-  .resultadoProjetoP{
-    background-color: #B35151;
-  }
-  .resultadoProjetoN{
-    background-color: #699862;
-  }
+
+
   .main-icon {
     width: 60px;
     height: 60px;
@@ -37,6 +33,24 @@ const Wrapper = styled.article`
       letter-spacing: var(--letterSpacing);
     }
   }
+
+  .dias {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 50px; /* Adjust the width as desired */
+    height: 50px; /* Adjust the height as desired */
+    border: 1px solid black; /* Optional: add a border for visual reference */
+    margin: 0 auto; /* Center the square horizontally within its container */
+  
+    p {
+      font-size: 20px;
+      font-weight: bold;
+      margin: 0; /* Remove any default margin for the <p> element */
+    }
+  }
+
   .pending {
     background: #fcefc7;
     color: #e9b949;

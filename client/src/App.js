@@ -9,6 +9,7 @@ import {
   SharedLayout,
   PaginaEditarPerfil,
   PaginaAdicionarHoras,
+  PaginaAdicionarHorasProjeto,
   PaginaVisualizarProjeto,
   PaginaEditarProjeto,
   PaginaVisualizarHoras,
@@ -34,6 +35,7 @@ function App() {
           <Route path='paginaVisualizarProjeto' element={<PaginaVisualizarProjeto />} />
           <Route path='paginaEditarProjeto' element={<PaginaEditarProjeto />} />
           <Route path='paginaVisualizarHoras' element={<PaginaVisualizarHoras />} />
+          <Route path='paginaAdicionarHorasProjeto' element={<PaginaAdicionarHorasProjeto />} />
         </Route>
 
         <Route path='login' element={<Login />} />

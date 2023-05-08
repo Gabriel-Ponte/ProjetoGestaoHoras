@@ -86,9 +86,25 @@ const Wrapper = styled.section`
     letter-spacing: var(--letterSpacing);
   }
 
+  input {
+    text-align:center;
+    min-width : 50%;
+    width: auto;
+  }
+
+  input[type=date] {
+    font-size: 30px;
+    height: 30px;
+    position: relative;
+    min-width : 0%;
+    width : auto;
+    
+  }
+
 
   .formRowInput {
-    min-width: 40%;
+    min-width: 20%;
+    max-width: auto;
     display: flex;
     flex-direction: row;
     align-items: end;

@@ -8,6 +8,8 @@ import PaginaAdicionarHoras from './PaginaAdicionarHoras';
 import PaginaVisualizarProjeto from './PaginaVisualizarProjeto';
 import PaginaEditarProjeto from './PaginaEditarProjeto';
 import PaginaVisualizarHoras from './PaginaVisualizarHoras';
+import PaginaAdicionarHorasProjeto from './PaginaAdicionarHorasProjeto';
+
 
 export {
     PaginaLogin,
@@ -20,4 +22,5 @@ export {
     PaginaVisualizarProjeto,
     PaginaEditarProjeto,
     PaginaVisualizarHoras,
+    PaginaAdicionarHorasProjeto,
 };

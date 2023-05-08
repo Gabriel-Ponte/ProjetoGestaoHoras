@@ -42,6 +42,7 @@ const AddProjectForm = () => {
   useEffect(() => {
     dispatch(getTipoTrabalho()).then((res) => {
       setListaTipoTrabalho(Array.isArray(res.payload.tipoTrabalho) ? res.payload.tipoTrabalho : []);
+      //setValues({ ...values, TipoTrabalho: listaTipoTrabalho });
     });
   }, []);
 
@@ -109,7 +110,7 @@ const AddProjectForm = () => {
         <div className='form'>
           <FormRow
             type="text"
-            className="formRow" classNameLabel='formRowLabel' classNameInput='formRowInput'
+            className="form-row" classNameLabel='form-label' classNameInput='form-input'
             id="nomeProjeto"
             name="Nome"
             placeholder="projeto"
@@ -118,7 +119,7 @@ const AddProjectForm = () => {
           />
           <FormRow
             type="text"
-            className="formRow" classNameLabel='formRowLabel' classNameInput='formRowInput'
+            className="form-row" classNameLabel='form-label' classNameInput='form-input'
             id="temaProjeto"
             name="Tema"
             placeholder="Tema"
@@ -127,7 +128,7 @@ const AddProjectForm = () => {
           />
           <FormRow
             type="text"
-            className="formRow" classNameLabel='formRowLabel' classNameInput='formRowInput'
+            className="form-row" classNameLabel='form-label' classNameInput='form-input'
             id="Acao"
             name="Acao"
             placeholder="Ação"
@@ -149,10 +150,10 @@ const AddProjectForm = () => {
             handleLista={handleLista}
             multiple={true}
           />
-
+          
           <FormRow
             type="date"
-            className="formRow" classNameLabel='formRowLabel' classNameInput='formRowInput'
+            className="form-row" classNameLabel='form-label' classNameInput='form-input'
             id="dataInicial"
             name="DataInicio"
             placeholder="Data Inicial"
@@ -162,7 +163,7 @@ const AddProjectForm = () => {
 
           <FormRow
             type="date"
-            className="formRow" classNameLabel='formRowLabel' classNameInput='formRowInput'
+            className="form-row" classNameLabel='form-label' classNameInput='form-input'
             id="dataObjetivo"
             name="DataObjetivo"
             placeholder="Data Objetivo"
@@ -172,7 +173,7 @@ const AddProjectForm = () => {
 
           <FormRow
             type="text"
-            className="formRow" classNameLabel='formRowLabel' classNameInput='formRowInput'
+            className="form-row" classNameLabel='form-label' classNameInput='form-input'
             id="Notas"
             name="Notas"
             placeholder="Notas"
@@ -181,7 +182,7 @@ const AddProjectForm = () => {
           />
           <FormRow
             type="text"
-            className="formRow" classNameLabel='formRowLabel' classNameInput='formRowInput'
+            className="form-row" classNameLabel='form-label' classNameInput='form-input'
             id="Links"
             name="Links"
             placeholder="Links"
@@ -190,7 +191,7 @@ const AddProjectForm = () => {
           />
           <FormRow
             type="text"
-            className="formRow" classNameLabel='formRowLabel' classNameInput='formRowInput'
+            className="form-row" classNameLabel='form-label' classNameInput='form-input'
             id="Cliente"
             name="Cliente"
             placeholder="Cliente Projeto"

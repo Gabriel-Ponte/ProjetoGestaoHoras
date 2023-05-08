@@ -131,23 +131,27 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
           )}
 
           {value && (
-            <div className={classNameResult ? classNameResult : 'formRow'}>
-              <div className={classNameLabel ? classNameLabel : 'formRowLabel'}>
+            <div className={className ? className : 'row mb-3 text-center'}>
+            <div className={classNameResult ? classNameResult : 'form-Row'}>
+              <div className={classNameLabel ? classNameLabel : 'form-label'}>
                 <p>
                   {labelText + ': ' || name + ': '}
                 </p>
               </div>
-              <div className={classNameLabel ? classNameLabel : 'formRowLabel'}>
+              </div>
+              <div className={classNameResult ? classNameResult : 'form-Row'}>
+              <div className={classNameLabel ? classNameLabel : 'form-label'}>
 
                 <p>
                   {Array.isArray(value) ? value.join(', ') : value}
                 </p>
+                </div>
               </div>
             </div>
           )}
 
           {name !== 'Piloto' && (
-            <div className={className ? className : 'form-row'}>
+            <div className={className ? className : 'row mb-3 text-center'}>
               <div className={classNameLabel ? classNameLabel : 'form-row'}>
                 <label htmlFor={`${name}-new-option`} className="form-label">
                   Nova Opção:
