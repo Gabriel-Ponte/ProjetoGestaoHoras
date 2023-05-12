@@ -14,10 +14,10 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
             return false;
         }
 
-        //Tema
-        if(sortValue === "Tema") {
+        //Cliente
+        if(sortValue === "Cliente") {
             return true;
-        } else if(sortValue === "-Tema"){
+        } else if(sortValue === "-Cliente"){
             return false;
         }
 
@@ -54,7 +54,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
     }
 
 
-    const [verificaSortTema, setVerificaSortTema] = useState(sort);
+    const [verificaSortCliente, setVerificaSortCliente] = useState(sort);
     const [verificaSortNome, setVerificaSortNome] = useState(sort);
     const [verificaSortNotas, setVerificaSortNotas] = useState(sort);
     const [verificaSortAcoes, setVerificaSortAcoes] = useState(sort);
@@ -72,10 +72,10 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                 setVerificaSortNome((prevState) => !prevState);
                 await handleChange(verificaSortNome ? '-Nome' : 'Nome');
                 break;
-            case 'Tema':
-                setVerificaActivo('Tema');
-                setVerificaSortTema(!verificaSortTema);
-                handleChange(verificaSortTema ? '-Tema' : 'Tema');
+            case 'Cliente':
+                setVerificaActivo('Cliente');
+                setVerificaSortCliente(!verificaSortCliente);
+                handleChange(verificaSortCliente ? '-Cliente' : 'Cliente');
                 break;
             case 'Notas':
                 setVerificaActivo('Notas');
@@ -121,11 +121,11 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                         type="button"
                                         name="VisualizarButton"
                                         className="btn"
-                                        onClick={() => toggleSort('Tema')}
+                                        onClick={() => toggleSort('Cliente')}
                                     >
-                                        Tema
-                                        {verificaActivo === "-Tema" ?
-                                            <AiOutlineArrowUp /> : (verificaActivo === "Tema" ?
+                                        Cliente
+                                        {verificaActivo === "-Cliente" ?
+                                            <AiOutlineArrowUp /> : (verificaActivo === "Cliente" ?
                                                 <AiOutlineArrowDown /> : <BsArrowLeftShort />
                                             )
                                         }
@@ -149,7 +149,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                             </div>
                         </div>
 
-                        <div className="col-md-4 themed-grid-col">
+                        <div className="col-md-5 themed-grid-col">
                             <div className="row mb-3 text-center">
                                 <div className="col-md-6 themed-grid-col">
                                     <button
@@ -183,7 +183,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-md-3 themed-grid-col">
+                        <div className="col-md-2 themed-grid-col">
                             <div className="row mb-3 text-center">
                                 {finalizado === true ? (
                                     <>
@@ -218,7 +218,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                                 className="btn "
                                                 onClick={() => toggleSort('DataObjetivo')}
                                             >
-                                                DataObjetivo{' '}
+                                                Data Objetivo{' '}
 
                                                 {verificaActivo === "-DataObjetivo" ?
                                                     <AiOutlineArrowUp /> : (verificaActivo === "DataObjetivo" ?
@@ -228,7 +228,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                             </button>
                                         </div>
                                         <div className="col-md-6 themed-grid-col">
-                                            <p className="btn ">
+                                        <p className="btn" disabled>
                                                 Alerta dias
                                             </p>
                                         </div>

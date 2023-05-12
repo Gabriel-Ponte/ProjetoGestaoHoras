@@ -4,7 +4,6 @@ import { clearValues } from './projetosSlice';
 
 export const createProjetoThunk = async (projeto, thunkAPI) => {
   try {
-    console.log(projeto);
     const resp = await customFetch.post('/projetos', projeto);
     thunkAPI.dispatch(clearValues());
     return resp.data.msg;
@@ -12,10 +11,11 @@ export const createProjetoThunk = async (projeto, thunkAPI) => {
     return checkForUnauthorizedResponse(error, thunkAPI);
   }
 };
-export const deleteProjetoThunk = async (projetoId, thunkAPI) => {
+export const deleteProjetoThunk = async (thunkAPI, projetoId) => {
+  console.log(thunkAPI)
   thunkAPI.dispatch(showLoading());
   try {
-    const resp = await customFetch.delete(`/projeto/${projetoId}`);
+    const resp = await customFetch.delete(`/projetos/${projetoId}`);
     thunkAPI.dispatch(getAllProjetos());
     return resp.data.msg;
   } catch (error) {
@@ -33,15 +33,6 @@ export const editProjetoThunk = async (url, projeto, thunkAPI) => {
   }
 };
 
-export const updateUserThunk = async (url, projeto, thunkAPI) => {
-  try {
-    const resp = await customFetch.patch(url, projeto);
-    return resp.data;
-
-  } catch (error) {
-    return checkForUnauthorizedResponse(error, thunkAPI);
-  }
-};
 
 export const getProjetoThunk = async ( thunkAPI ,projetoId) => {
   try {

@@ -4,11 +4,11 @@ import { toast } from 'react-toastify';
 import Wrapper from '../assets/wrappers/LoginPage';
 import { FormRow, FormRowSelect, FormRowCheckbox } from '../components';
 import { useNavigate } from 'react-router-dom';
-import { updateProjeto } from '../features/projetos/projetosSlice';
+import { updateProjeto, deleteProjeto } from '../features/projetos/projetosSlice';
 import { getTipoTrabalho, createTipoTrabalho } from '../features/tipoTrabalho/tipoTrabalhoSlice';
 import Loading from './Loading';
-import { listaUtilizadores } from '../features/utilizadores/utilizadorSlice';
-
+import { listaUtilizadores, toggleSidebar } from '../features/utilizadores/utilizadorSlice';
+import DeleteProject from "./DeleteProject";
 
 function VisualizarProjeto() {
   const { projeto, isLoading } = useSelector((store) => store.projeto);
@@ -37,6 +37,9 @@ function VisualizarProjeto() {
     dispatch(createTipoTrabalho(e));
   }
 
+
+  let StringListaTrabalho = listaTipoTrabalho.map(item => item.TipoTrabalho).join(",");
+
   useEffect(() => {
     if (projeto) {
       if (projeto.projeto) {
@@ -49,7 +52,7 @@ function VisualizarProjeto() {
           DataFim: projeto.projeto.DataFim,
           Tema: projeto.projeto.Tema,
           Acao: projeto.projeto.Acao,
-          TipoTrabalho: projeto.projeto.TipoTrabalho,
+          TipoTrabalho: StringListaTrabalho,
           Piloto: projeto.projeto.Piloto,
           Links: projeto.projeto.Links,
           Finalizado: projeto.projeto.Finalizado,
@@ -69,7 +72,7 @@ function VisualizarProjeto() {
           DataFim: projeto.DataFim,
           Tema: projeto.Tema,
           Acao: projeto.Acao,
-          TipoTrabalho: projeto.TipoTrabalho,
+          TipoTrabalho: StringListaTrabalho,
           Piloto: projeto.Piloto,
           Links: projeto.Links,
           Finalizado: projeto.Finalizado,
@@ -80,7 +83,7 @@ function VisualizarProjeto() {
         setValues(initialState);
       }
     }
-  }, [projeto]);
+  }, [projeto, listaTipoTrabalho]);
 
 
   useEffect(() => {
@@ -89,19 +92,19 @@ function VisualizarProjeto() {
     }
   }, [projeto]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!values.Nome || !values.Cliente || !values.DataInicio || !values.DataObjetivo || !values.Tema || !values.Piloto) {
       const requiredFields = ['Nome', 'Cliente', 'DataInicio', 'DataObjetivo', 'Tema', 'Piloto'];
       const emptyField = requiredFields.find(field => !values[field]);
-    
+
       if (emptyField) {
         toast.error(`Por favor, preencha o campo obrigatório: ${emptyField}!`);
       } else {
         toast.error('Por favor, preencha todos os campos obrigatórios!');
       }
-    
+
       return;
     }
     if (!values.Nome || !values.Cliente || !values.DataInicio
@@ -110,7 +113,7 @@ function VisualizarProjeto() {
       return;
     }
     if (values.Finalizado === true && !values.DataFim) {
-      values.DataFim =  new Date().toISOString().slice(0, 10);
+      values.DataFim = new Date().toISOString().slice(0, 10);
       //toast.error('Por favor insira a Data Final do Projeto!');
       //return;
     }
@@ -118,10 +121,20 @@ function VisualizarProjeto() {
       values.Resultado = false;
       values.DataFim = "";
     }
-    //console.log(values)
-    dispatch(updateProjeto(values));
-    //navigate('/');
+
+    try {
+      const result = await dispatch(updateProjeto(values));
+      if (!result.error) {
+        setTimeout(() => {
+          dispatch(toggleSidebar(false));
+          navigate('/PaginaPrincipal');
+        }, 2000);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
+
   const handleChangeFormRowSelect = (nome, selectedOptions) => {
     if (nome === "Piloto") {
       const strSO = selectedOptions.join(",");
@@ -164,6 +177,30 @@ function VisualizarProjeto() {
       </Wrapper>
     );
   }
+
+
+
+
+
+
+
+  /*const deleteProjetoClicked = async (e) => {
+    const confirmed = window.confirm("Tem a certeza que quer eliminar este projeto?");
+    if (confirmed) {
+      try {
+        const result = await dispatch(deleteProjeto(values._id));
+        if (!result.error) {
+          setTimeout(() => {
+            dispatch(toggleSidebar(false));
+            navigate('/PaginaPrincipal');
+          }, 2000);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    return;
+  };*/
 
 
   return (
@@ -226,6 +263,8 @@ function VisualizarProjeto() {
                     handleChange={handleChange}
                     feedbackMessage="Data Objetivo"
                   />
+                  {
+                  /*
                   <FormRowSelect
                     type="text"
                     className="formRow" classNameLabel='formRowLabel' classNameInput='formRowInput'
@@ -239,7 +278,7 @@ function VisualizarProjeto() {
                     handleLista={handleLista}
                     multiple={true}
                   />
-
+                  */}
 
                   <FormRow
                     type="text"
@@ -323,11 +362,15 @@ function VisualizarProjeto() {
                 <button type='submit' disabled={isLoading} onClick={toggleMember} className="w-100 btn btn-lg btn-primary">
                   {isLoading ? 'loading...' : 'submit'}
                 </button>
+
+
               </div>
               <div style={{ color: 'red' }}>{values.errorMessage}</div>
 
             </form>
           </div>
+          <DeleteProject id={values._id} isLoading={isLoading} />
+
         </main>
       </div>
     </div>

@@ -9,7 +9,7 @@ import PaginaVisualizarProjeto from './PaginaVisualizarProjeto';
 import PaginaEditarProjeto from './PaginaEditarProjeto';
 import PaginaVisualizarHoras from './PaginaVisualizarHoras';
 import PaginaAdicionarHorasProjeto from './PaginaAdicionarHorasProjeto';
-
+import PaginaGerirTipoTrabalho from './PaginaGerirTiposTrabalho';
 
 export {
     PaginaLogin,
@@ -23,4 +23,5 @@ export {
     PaginaEditarProjeto,
     PaginaVisualizarHoras,
     PaginaAdicionarHorasProjeto,
+    PaginaGerirTipoTrabalho,
 };

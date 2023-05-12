@@ -7,7 +7,7 @@ const Wrapper = styled.nav`
   justify-content: center;
   box-shadow: 0 1px 0px 0px rgba(0, 0, 0, 0.1);
   position: relative;
-
+  z-index: 9998;
   .logo {
     display: flex;
     align-items: center;
@@ -46,18 +46,28 @@ const Wrapper = styled.nav`
   }
 
   .dropdown {
+    display: inline;
     position: absolute;
     left: 0;
     width: 100%;
+    align-items: top;
     background: var(--primary-100);
     box-shadow: var(--shadow-2);
     padding: 0.5rem;
     text-align: center;
     visibility: hidden;
     border-radius: var(--borderRadius);
+    background-color: #E5E5E5;
+    z-index: 9998;
   }
   .show-dropdown {
+    display: inline;
+    position: absolute;
+    height: 100%;
     visibility: visible;
+    background-color: #FFFFFF;
+    z-index: 9998;
+    background-color: #E5E5E5;
   }
   .dropdown-btn {
     background: transparent;
@@ -98,7 +108,7 @@ const Wrapper = styled.nav`
     justify-content: space-around;
     gap: 0px;
     position: relative;
-    margin: 5px;
+    margin: px;
     padding: 0px;
     font-weight: 200;
     text-align: end;
@@ -107,6 +117,8 @@ const Wrapper = styled.nav`
     font-style: normal;
     direction: ltr;
     font-size-adjust: inherit;
+    background-color: #FFFFFF;
+    opacity: 1.0;
   }
 
   .divButtonUtilizador {

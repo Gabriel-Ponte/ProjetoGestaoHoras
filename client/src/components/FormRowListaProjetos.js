@@ -25,7 +25,7 @@ const FormRow = ({ type, name, value, handleChange, className, classNameInput })
             name={name}
             value={value}
             onChange={handleChange}
-            className={/*classNameInput ? classNameInput :*/ 'form__field refresh'}
+            className={classNameInput ? classNameInput : 'form__field refresh'}
           />
         ) : (
           <input
@@ -34,7 +34,7 @@ const FormRow = ({ type, name, value, handleChange, className, classNameInput })
             name={name}
             value={value}
             onChange={handleChange}
-            className={/*classNameInput ? classNameInput :*/ 'form__field'}
+            className={classNameInput ? classNameInput : 'form__field'}
           />
         )}
       </div>

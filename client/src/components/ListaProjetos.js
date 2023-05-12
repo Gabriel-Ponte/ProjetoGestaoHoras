@@ -54,38 +54,41 @@ const ListaProjetos = () => {
 
   return (
     <Wrapper>
-            <div className="row mb-3 text-center">
-                <div className="col-md-3 themed-grid-col">
-      <h5>
-        {totalProjetos} projeto{projetos.length > 1 && 's'} {projetoFinalizado === true ? " Finalizados " : " Em Curso "} encontrados  
-      </h5>
-      </div>
-      <div className="col-md-3 themed-grid-col">
-      <FormRowCheckbox
-        type="checkbox"
-        className="row mb-3 text-center"
-        classNameLabel="col-md-3 themed-grid-col"
-        classNameInput="col-md-3 themed-grid-col"
-        id="Finalizado"
-        name="Finalizado"
-        placeholder="Finalizado"
-        value={projetoFinalizado}
-        handleChange={handleChangeCheckbox}
-      />
-      </div>
+      <div className="row mb-3 text-center">
+        <div className="col-md-3 themed-grid-col">
+          <h1>Gestão Projetos</h1>
+        </div>
+        <div className="col-md-9 text-end themed-grid-col">
+          <h5>
+            {totalProjetos} projeto{projetos.length > 1 && 's'} {projetoFinalizado === true ? " Finalizados " : " Em Curso "} encontrados
+          </h5>
+        </div>
+        <div className="col-md-12 text-end themed-grid-col">
+          <FormRowCheckbox
+            type="checkbox"
+            className="row mb-3  text-center"
+            classNameLabel="col-md-11  text-end themed-grid-col"
+            classNameInput="col-md-1 themed-grid-col"
+            id="Finalizado"
+            name="Finalizado"
+            placeholder="Finalizado"
+            value={projetoFinalizado}
+            handleChange={handleChangeCheckbox}
+          />
+        </div>
       </div>
       <div className='projetos'>
-      <ListaProjetosHeader
+        <ListaProjetosHeader
           sortValue={sort}
           handleChange={handleSort}
-          finalizado= {projetoFinalizado}
+          finalizado={projetoFinalizado}
         />
 
         {projetos.map((projeto) => {
-          return <Projeto 
-          key={projeto._id} 
-          {...projeto} 
-          finalizado = {projetoFinalizado}
+          return <Projeto
+            key={projeto._id}
+            {...projeto}
+            finalizado={projetoFinalizado}
           />;
         })}
       </div>

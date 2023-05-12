@@ -7,8 +7,9 @@ import { getAllProjetos } from '../features/allProjetos/allProjetosSlice';
 import { getProjeto } from '../features/projetos/projetosSlice';
 import PageBtnContainer from './PageBtnContainer';
 import { useNavigate } from 'react-router-dom';
-
-const NavLinks = ({ toggleSidebar }) => {
+import { toggleSidebar } from '../features/utilizadores/utilizadorSlice';
+import Wrapper from '../assets/wrappers/NavLinks';
+const NavLinks = () => {
   const {
     projetos,
     page,
@@ -56,8 +57,12 @@ const NavLinks = ({ toggleSidebar }) => {
       console.error(error);
     }
   };
-  
+  const toggleSidebarClose = ()=>{
+    dispatch(toggleSidebar(false));
+  }
+
   return (
+    <Wrapper>
     <div className='nav-links'>
       {links.map((link) => {
         const { text, path, id, icon } = link;
@@ -125,11 +130,12 @@ const NavLinks = ({ toggleSidebar }) => {
         else {
           return (
             <NavLink
+            
               to={path}
               className={({ isActive }) => {
                 return isActive ? "nav-link active" : "nav-link";
               }}
-              onClick={toggleSidebar}
+              onClick={toggleSidebarClose}
               key={id}
             >
               <span className="icon">{icon}</span>
@@ -139,6 +145,7 @@ const NavLinks = ({ toggleSidebar }) => {
         }
       })}
     </div>
+    </Wrapper>
   );
 };
 export default NavLinks;

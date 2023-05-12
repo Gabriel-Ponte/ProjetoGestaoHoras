@@ -58,8 +58,13 @@ const userSlice = createSlice({
   name: 'utilizador',
   initialState,
   reducers: {
-    toggleSidebar: (state) => {
+    toggleSidebar: (state , value) => {
+      if(value.payload === false || value.payload === true){
+        state.isSidebarOpen = value.payload;
+      }
+      else{
       state.isSidebarOpen = !state.isSidebarOpen;
+      }
     },
 
     logoutUser: (state, { payload }) => {

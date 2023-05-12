@@ -1,9 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
-import { getUserFromLocalStorage, addProjetoToLocalStorage, 
-   getProjetoFromLocalStorage, removeProjetoFromLocalStorage} from '../../utils/localStorage';
+import {
+  getUserFromLocalStorage, addProjetoToLocalStorage,
+  getProjetoFromLocalStorage, removeProjetoFromLocalStorage
+} from '../../utils/localStorage';
 
-import { createProjetoThunk, deleteProjetoThunk, editProjetoThunk , getProjetoThunk} from './projetosThunk';
+import { createProjetoThunk, deleteProjetoThunk, editProjetoThunk, getProjetoThunk } from './projetosThunk';
 
 
 const initialState = {
@@ -13,7 +15,12 @@ const initialState = {
 
 export const createProjeto = createAsyncThunk('projeto/createProjeto', createProjetoThunk);
 
-export const deleteProjeto = createAsyncThunk('projeto/deleteProjeto', deleteProjetoThunk);
+export const deleteProjeto = createAsyncThunk(
+  'projeto/deleteProjeto',
+  async (id ,thunkAPI) => {
+    return deleteProjetoThunk(thunkAPI, id);
+  }
+);
 
 export const updateProjeto = createAsyncThunk(
   'projeto/updateProjeto',
@@ -23,7 +30,7 @@ export const updateProjeto = createAsyncThunk(
 
 export const getProjeto = createAsyncThunk(
   'projeto/getProjeto',
-  async (id) => {
+  async (id , thunkAPI) => {
     return getProjetoThunk('/projeto/getProjeto', id);
   }
 );
@@ -56,65 +63,65 @@ const projetoSlice = createSlice({
   },
 
 
-  extraReducers: (builder) =>{
+  extraReducers: (builder) => {
 
     builder
-    .addCase(createProjeto.pending, (state) => {
-      state.isLoading = true;
-    })
-    .addCase(createProjeto.fulfilled, (state) => {
-      state.isLoading = false;
-      toast.success('Projeto Created');
-    })
-    .addCase(createProjeto.rejected, (state, { payload }) => {
-      state.isLoading = false;
-      toast.error(payload);
-    })
-    .addCase(deleteProjeto.fulfilled, (state, { payload }) => {
-      toast.success(payload);
-    })
-    .addCase(deleteProjeto.rejected, (state, { payload }) => {
-      toast.error(payload);
-    })
-    .addCase(updateProjeto.pending, (state) => {
-      state.isLoading = true;
-    })
-    .addCase(updateProjeto.fulfilled, (state,  { payload }) => {
-      state.isLoading = false;
-      const projeto = payload;
-      addProjetoToLocalStorage(projeto);
-      toast.success('Projeto Modified...');
-    })
-    .addCase(updateProjeto.rejected, (state, { payload }) => {
-      state.isLoading = false;
-      toast.error(payload);
-    })
-    
-    .addCase(getProjeto.pending, (state) => {
-      state.isLoading = true;
-    })
-    .addCase(getProjeto.fulfilled, (state , { payload }) => {
-      const projeto = payload;
-      state.isLoading = false;
-      addProjetoToLocalStorage(projeto)
-    })
-    .addCase(getProjeto.rejected, (state, { payload }) => {
-      state.isLoading = false;
-      toast.error(payload);
-    })
+      .addCase(createProjeto.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createProjeto.fulfilled, (state) => {
+        state.isLoading = false;
+        toast.success('Projeto Inserido');
+      })
+      .addCase(createProjeto.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(payload);
+      })
+      .addCase(deleteProjeto.fulfilled, (state, { payload }) => {
+        toast.success("Projeto Apagado");
+      })
+      .addCase(deleteProjeto.rejected, (state, { payload }) => {
+        toast.error(payload);
+      })
+      .addCase(updateProjeto.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateProjeto.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        const projeto = payload;
+        addProjetoToLocalStorage(projeto);
+        toast.success('Projeto Modified...');
+      })
+      .addCase(updateProjeto.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(payload);
+      })
 
-    .addCase(getProjetoList.pending, (state) => {
-      state.isLoading = true;
-    })
-    .addCase(getProjetoList.fulfilled, (state , { payload }) => {
-      const projeto = payload;
-      state.projeto = projeto;
-      state.isLoading = false;
-    })
-    .addCase(getProjetoList.rejected, (state, { payload }) => {
-      state.isLoading = false;
-      toast.error(payload);
-    })
+      .addCase(getProjeto.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getProjeto.fulfilled, (state, { payload }) => {
+        const projeto = payload;
+        state.isLoading = false;
+        addProjetoToLocalStorage(projeto)
+      })
+      .addCase(getProjeto.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(payload);
+      })
+
+      .addCase(getProjetoList.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getProjetoList.fulfilled, (state, { payload }) => {
+        const projeto = payload;
+        state.projeto = projeto;
+        state.isLoading = false;
+      })
+      .addCase(getProjetoList.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(payload);
+      })
   },
 });
 

@@ -9,6 +9,7 @@ const initialFiltersState = {
   sort: 'DataObjetivo',
   projetoFinalizado: 'false',
   tipoTrabalho:'',
+  limit:'1000',
 };
 
 const initialState = {

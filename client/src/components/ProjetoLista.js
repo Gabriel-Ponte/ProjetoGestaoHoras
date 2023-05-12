@@ -86,9 +86,6 @@ const Projeto = ({
 
     const nome = e.target.name;
     const value = e.target.value;
-
-    console.log(value);
-    console.log(initialState[nome]);
     if(initialState[nome] === value){
       setVerificaAlterado(false);
     }else{
@@ -144,7 +141,7 @@ const Projeto = ({
   const handleSubmit = async (e) => {
     console.log(e)
     e.preventDefault();
-    if (!values.Nome || !values.Tema || !values.DataObjetivo || !values.Acao) {
+    if (!values.Nome || !values.Cliente || !values.DataObjetivo || !values.Acao) {
       toast.error('Por favor, preencha todos os campos obrigatórios!');
       return;
     }
@@ -182,20 +179,19 @@ const Projeto = ({
     <Wrapper>
       <div className={verificaResultado === 1 ? '' : verificaResultado ? 'resultadoProjetoP' : 'resultadoProjetoN'}>
         <div className="list-group-item">
-          <div className="row mb-3 text-center">
+          <div className="row mb-3 text-center teste">
+
             <div className="col-md-4 themed-grid-col">
               <div className="row mb-3 text-center">
                 <div className="col-md-6 themed-grid-col">
                 {finalizado === true ? (
-                  <p>{values.Tema}</p>
+                  <h5>{values.Cliente}</h5>
                 ):(
                   <FormRowListaProjetos
                     type="textarea"
-                    id="TemaProjeto"
-                    name="Tema"
-                    //label="Login"
-                    //className="form-control"
-                    value={values.Tema}
+                    id="ClienteProjeto"
+                    name="Cliente"
+                    value={values.Cliente}
                     handleChange={handleChangeProjeto}
                   />
                 )}
@@ -208,8 +204,6 @@ const Projeto = ({
                     type="textarea"
                     id="NomeProjeto"
                     name="Nome"
-                    //label="Login"
-                    //className="form-control"
                     value={values.Nome}
                     handleChange={handleChangeProjeto}
                   />
@@ -218,7 +212,9 @@ const Projeto = ({
                 </div>
               </div>
             </div>
-            <div className="col-md-4 themed-grid-col">
+
+
+            <div className="col-md-5 themed-grid-col">
               <div className="row mb-3 text-center">
                 <div className="col-md-6 themed-grid-col">
                 {finalizado === true ? (
@@ -228,8 +224,6 @@ const Projeto = ({
                   type="textarea"
                   id="AcaoProjeto"
                   name="Acao"
-                  //label="Login"
-                  //className="form-control"
                   value={values.Acao}
                   handleChange={handleChangeProjeto}
                 />
@@ -245,8 +239,6 @@ const Projeto = ({
                   type="textarea"
                   id="NotasProjeto"
                   name="Notas"
-                  //label="Login"
-                  //className="form-control"
                   value={values.Notas}
                   handleChange={handleChangeProjeto}
                 />)
@@ -254,7 +246,9 @@ const Projeto = ({
                 </div>
               </div>
             </div>
-            <div className="col-md-3 themed-grid-col">
+
+
+            <div className="col-md-2 themed-grid-col">
               <div className="row mb-3 text-center">
                 {finalizado === true ? (
                   <>
@@ -273,7 +267,7 @@ const Projeto = ({
                     id="DataObjetivoProjeto"
                     name="DataObjetivo"
                     //label="Login"
-                    //className="form-control"
+                    classNameInput="form__field__date"
                     value={values.DataObjetivo ? new Date(values.DataObjetivo).toLocaleDateString('en-CA') : ''}
                     handleChange={handleChangeDateProjeto}
                   />
@@ -287,7 +281,6 @@ const Projeto = ({
                   </div>
                   </div>
                   </>
-
                 )
                 }
               </div>

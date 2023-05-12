@@ -3,7 +3,7 @@ import styled from 'styled-components'
 const Wrapper = styled.aside`
   display: none;
   @media {
-    display: block;
+    display: inline-block;
     box-shadow: 1px 0px 0px 0px rgba(0, 0, 0, 0.1);
     background-color: #303030;
     .sidebar-container {
@@ -20,7 +20,7 @@ const Wrapper = styled.aside`
     }
   }
     .content {
-      height: 70%;
+      height: 100%;
       background-color: #E5E5E5;
       position: sticky;
       top: 0;

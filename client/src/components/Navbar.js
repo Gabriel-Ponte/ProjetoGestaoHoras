@@ -15,6 +15,7 @@ const Navbar = () => {
   const { user } = useSelector((store) => store.utilizador);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const toggle = () => {
     setShowLogout(false);
     setDisableAddHoras(false);
@@ -44,6 +45,7 @@ const Navbar = () => {
     setShowLogout(false);
     setDisableAddHoras(false);
     dispatch(handleChange({ name: 'tipoTrabalho', value: "" }));
+    dispatch(toggleSidebar(false));
     navigate('/PaginaPrincipal');
     //window.location.reload(navigate('/PaginaPrincipal'));
   };
@@ -52,6 +54,7 @@ const Navbar = () => {
   const visualizarHoras=()=>{
     setShowLogout(false);
     setDisableAddHoras(false);
+    dispatch(toggleSidebar(false));
     //window.location.reload(navigate('/PaginaVisualizarHoras'));
     navigate('/PaginaVisualizarHoras');
   }
@@ -59,6 +62,7 @@ const Navbar = () => {
   const addHoras = () => {
     setShowLogout(false);
     setDisableAddHoras(false);
+    dispatch(toggleSidebar(false));
     navigate('/PaginaAdicionarHoras');
   };
   
@@ -69,7 +73,7 @@ const Navbar = () => {
           <FaAlignLeft />
         </button>
         <div>
-          <button className='btn btn-light' style={{fontSize : "250%"}} type='button' onClick={returnMain}>Gestão Horas</button>
+          <button className='btn btn-light' style={{fontSize : "250%"}} type='button' onClick={returnMain}>Gestão Projetos</button>
         </div>
         <div className='btn-container'>
           <div className='divButtonUtilizador'>

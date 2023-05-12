@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { createProjeto } from '../features/projetos/projetosSlice';
 import { getTipoTrabalho, createTipoTrabalho } from '../features/tipoTrabalho/tipoTrabalhoSlice';
-import { listaUtilizadores } from '../features/utilizadores/utilizadorSlice';
+import { listaUtilizadores, toggleSidebar} from '../features/utilizadores/utilizadorSlice';
 import { useNavigate } from 'react-router-dom';
 import Loading from './Loading';
 
@@ -89,8 +89,9 @@ const AddProjectForm = () => {
       const result = await dispatch(createProjeto(values));
       if(!result.error){
         setTimeout(() => {
-          setValues(initialState);
-        }, 4000);
+          dispatch(toggleSidebar(false));
+          navigate('/PaginaPrincipal');
+        }, 2000);
       }
     } catch (error) {
       console.log(error);
@@ -137,7 +138,9 @@ const AddProjectForm = () => {
           />
 
 
-          <FormRowSelect
+          {
+          /*
+            <FormRowSelect
             type="text"
             className="formRow" classNameLabel='formRowLabel' classNameInput='formRowInput'
             id="tiposTrabalhoProjeto"
@@ -150,7 +153,7 @@ const AddProjectForm = () => {
             handleLista={handleLista}
             multiple={true}
           />
-          
+          */}
           <FormRow
             type="date"
             className="form-row" classNameLabel='form-label' classNameInput='form-input'

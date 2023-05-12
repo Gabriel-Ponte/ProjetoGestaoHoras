@@ -16,6 +16,8 @@ import AddHorasProjeto from './AddHorasProjeto'
 import VisualizarProjeto from './VisualizarProjeto';
 import EditarProjeto from './EditarProjeto';
 import VisualizarHoras from './VisualizarHoras';
+import DeleteProject from './DeleteProject';
+import GerirTipoTrabalho from './GerirTipoTrabalho';
 
 export {
   ListaProjetos,
@@ -36,4 +38,6 @@ export {
   VisualizarProjeto,
   EditarProjeto,
   VisualizarHoras,
+  DeleteProject,
+  GerirTipoTrabalho,
 };
