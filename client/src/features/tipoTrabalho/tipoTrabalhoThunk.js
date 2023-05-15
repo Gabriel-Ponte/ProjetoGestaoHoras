@@ -3,7 +3,8 @@ import customFetch, { checkForUnauthorizedResponse } from '../../utils/axios';
 import { clearValues } from './tipoTrabalhoSlice';
 
 
-export const deleteTipoTrabalhoThunk = async (tipoTrabalhoId, thunkAPI) => {
+export const deleteTipoTrabalhoThunk = async (thunkAPI, tipoTrabalhoId) => {
+  console.log(thunkAPI)
   thunkAPI.dispatch(showLoading());
   try {
     const resp = await customFetch.delete(`/tipoTrabalho/${tipoTrabalhoId}`);

@@ -1,141 +1,129 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getTipoTrabalho, createTipoTrabalho, deleteTipoTrabalho } from '../features/tipoTrabalho/tipoTrabalhoSlice';
+import { AiFillDelete } from 'react-icons/ai';
 import Wrapper from '../assets/wrappers/FormRowSelect';
+import FormRowListaProjetos from './FormRowListaProjetos';
 
-const GetTipoTrabalho = ({ labelText, name, value, handleChange, list, multiple, handleLista, className, classNameLabel, classNameInput, classNameResult }) => {
+const GetTipoTrabalho = () => {
+  const [listaTipoTrabalho, setListaTipoTrabalho] = useState([]);
+  const dispatch = useDispatch();
 
+  let StringListaTrabalho = listaTipoTrabalho.map(item => item.TipoTrabalho).join(",");
 
+  useEffect(() => {
+    dispatch(getTipoTrabalho()).then((res) => {
+      setListaTipoTrabalho(Array.isArray(res.payload.tipoTrabalho) ? res.payload.tipoTrabalho : []);
+    });
+  }, []);
 
-  if (multiple === null) {
-    multiple = true;
+  const handleLista = (e) => {
+    dispatch(createTipoTrabalho(e));
   }
+
+
   let separatedArray;
-  if (Array.isArray(value)) {
-    separatedArray = value.length > 0 ? value[0].split(/[,\/]/) : [];
+  if (Array.isArray(StringListaTrabalho)) {
+    separatedArray = StringListaTrabalho.length > 0 ? StringListaTrabalho[0].split(/[,\/]/) : [];
   } else {
-    separatedArray = value.split(/[,\/]/);
+    separatedArray = StringListaTrabalho.split(/[,\/]/);
   }
 
   const [newOption, setNewOption] = useState(''); // state to hold new option value
-  const [updatedList, setUpdatedList] = useState(list); // state to hold updated list
-  const [selectedOption, setSelectedOption] = useState(Array.isArray(separatedArray) ? separatedArray : (value ? value.split(',') : []));
 
-  const handleMultiChange = async (event) => {
-    const selectedOptions = Array.from(event.target.selectedOptions, (option) => option.value);
-    const previousOptions = selectedOption.filter((option) => !selectedOptions.includes(option));
-    // Declare updatedOptions variable outside of the if/else block
-    const updatedOptions = [...previousOptions, ...selectedOptions];
-    console.log(updatedOptions);
-    // Remove duplicated setSelectedOption() call
-    setSelectedOption(updatedOptions.length === selectedOption.length ? previousOptions : updatedOptions);
-    const op = updatedOptions.length === selectedOption.length ? previousOptions : updatedOptions;
-    if (updatedOptions[0] === null || updatedOptions[0] === '') {
-      updatedOptions.shift();
-    }
 
-    handleChange(event.target.id, op);
-  };
 
-  
   const handleNewOptionChange = (event) => {
     setNewOption(event.target.value);
   };
 
-  if (!updatedList.length && list.length) {
-    setUpdatedList(list);
+
+  const deleteTT = async (id) => {
+    //console.log(id);
+    await dispatch(deleteTipoTrabalho(id));
+
   }
-  useEffect(() => {
 
-  }, [updatedList]);
-
-  let selectOptions;
-
-
-    // Add checkbox inputs for each option
-    const lista = updatedList.map((itemValue, index) => (
-      <option key={index} value={itemValue.TipoTrabalho}>
-        {
-          itemValue.TipoTrabalho
-        }
-      </option>
-    ));
-
-    selectOptions = lista.concat(
-    );
-  
 
   const handleAddToList = () => {
     if (newOption.trim() !== '') {
-      const newList = [...updatedList, {
-        _id: updatedList.length + 1,
+      const lowercaseOption = newOption.trim().toLowerCase();
+      const newList = [...listaTipoTrabalho, {
+        _id: listaTipoTrabalho.length + 1,
         TipoTrabalho: newOption,
         __v: 0
       }];
 
-      if (list.some(item => item.TipoTrabalho === newOption) || updatedList.some(item => item.TipoTrabalho === newOption)) {
-        alert('This option was already added.');
+      if (listaTipoTrabalho.some(item => item.TipoTrabalho.toLowerCase() === lowercaseOption)) {
+        alert('Este tipo de Trabalho ' + newOption + ' já existe.');
         setNewOption('');
         return;
       }
-      setUpdatedList(newList);
+      setListaTipoTrabalho(newList);
       handleLista(newOption.trim());
       setNewOption('');
     }
   };
-
   return (
     <Wrapper>
-      <div className={className ? className : 'form-row'}>
-
-        <p>Adicionar Tipo Trabalho</p>
-        <p>lista Tipo Trabalho </p>
-        <p>Eliminar Tipo Trabalho</p>
+      <div className={'form-row'}>
 
 
-            <div className={className ? className : 'row mb-3 text-center'}>
-              <div className={classNameLabel ? classNameLabel : 'form-row'}>
-                <label htmlFor={`${name}-new-option`} className="form-label">
-                  Adicionar Tipo de Trabalho:
-                </label>
-              </div>
+        <h1>Tipos de Trabalho</h1>
+        {listaTipoTrabalho.map((t, i) => (
+          <div className="row text-center" key={i}>
+            <div className="col-md-12 text-center">
+              <div className="col-md-4 text-center">
+                <p >{t.TipoTrabalho}</p>
 
-              <div className={classNameInput ? classNameInput : 'form-row'}>
-                <input
-                  type="text"
-                  id={`${name}-new-option`}
-                  value={newOption}
-                  onChange={handleNewOptionChange}
-                  className="form-input"
-                />
-                <button type="button" onClick={handleAddToList}>
-                  Adicionar
+              {/*<FormRowListaProjetos
+                    type="textarea"
+                    id="ClienteProjeto"
+                    name="Cliente"
+                    value={t.TipoTrabalho}
+                    handleChange={handleChangeProjeto}
+                  />
+              */}     
+               </div>
+              <div className="col-mb-4 text-center">
+                <button type='submit'
+                  onClick={() => deleteTT(t._id)}
+                  className="btn">
+                  <AiFillDelete />
                 </button>
               </div>
             </div>
+          </div>
+        ))}
+        <div className={'row mb-12 text-center'}>
+          <div className={'row mb-6 text-center'}>
+            <div className={'form-row'}>
+              <label htmlFor={`-new-option`} className="form-label">
+                Adicionar Tipo de Trabalho:
+              </label>
 
+            </div>
+          </div>
+          <div className={'row mb-6 text-center'}>
+            <div className={'form-row'}>
+              <input
+                type="text"
+                id={`$-new-option`}
+                value={newOption}
+                onChange={handleNewOptionChange}
+                className="form-input"
+              />
+              <button type="button" onClick={handleAddToList}>
+                Adicionar
+              </button>
+            </div>
+          </div>
         </div>
+
+      </div>
     </Wrapper>
   );
 };
 
 export default GetTipoTrabalho;
-
-
-
-
-
-/*{
-    
-      <FormRowSelect
-      type="text"
-      className="formRow" classNameLabel='formRowLabel' classNameInput='formRowInput'
-      id="tiposTrabalhoProjeto"
-      name="TipoTrabalho"
-      placeholder="Tipos de Trabalho"
-      labelText = "Tipos de Trabalho"
-      value={[values.TipoTrabalho]}
-      list={listaTipoTrabalho}
-      handleChange={handleChangeFormRowSelect}
-      handleLista={handleLista}
-      multiple={true}
-    />
-}*/

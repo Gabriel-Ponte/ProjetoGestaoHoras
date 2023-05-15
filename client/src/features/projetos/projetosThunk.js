@@ -12,7 +12,6 @@ export const createProjetoThunk = async (projeto, thunkAPI) => {
   }
 };
 export const deleteProjetoThunk = async (thunkAPI, projetoId) => {
-  console.log(thunkAPI)
   thunkAPI.dispatch(showLoading());
   try {
     const resp = await customFetch.delete(`/projetos/${projetoId}`);

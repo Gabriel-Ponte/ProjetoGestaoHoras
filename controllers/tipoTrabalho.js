@@ -19,7 +19,48 @@ const getAllTiposTrabalho = async (req, res) => {
   };
 
 
+
+  const updateTipoTrabalho = async (req, res) => {
+    const {
+      TipoTrabalho,
+    } = req.body;
+
+    const { id: TipoTrabalhoId } = req.params;
+    try {
+      const tipoTrabalho = await TipoTrabalho.findByIdAndUpdate(
+        {
+          _id: TipoTrabalhoId,
+        },
+        req.body,
+        { new: true, runValidators: true }
+      );
+      if (!tipoTrabalho) {
+        throw new NotFoundError(`Não existe nenhum tipo de trabalho com id ${req.params.id}`);
+      }
+      res.status(StatusCodes.OK).json({ projeto });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
+
+  const deleteTipoTrabalho = async (req, res) => {
+    const {
+      params: { id: TipoTrabalhoId },
+    } = req;
+  
+    const tipoTrabalho = await TipoTrabalho.findByIdAndRemove({
+      _id: TipoTrabalhoId,
+    });
+    if (!tipoTrabalho) {
+      throw new NotFoundError(`Não existe nenhum tipo de trabalho com id ${req.params.id}`);
+    }
+    res.status(StatusCodes.OK).send();
+  };
+
   module.exports = {
     getAllTiposTrabalho,
     createTipoTrabalho,
+    deleteTipoTrabalho,
+    updateTipoTrabalho,
   };

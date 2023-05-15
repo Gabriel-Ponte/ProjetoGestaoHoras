@@ -2,6 +2,7 @@ import styled from 'styled-components'
 
 const Wrapper = styled.aside`
   display: none;
+
   @media {
     display: inline-block;
     box-shadow: 1px 0px 0px 0px rgba(0, 0, 0, 0.1);

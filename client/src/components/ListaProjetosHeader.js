@@ -113,9 +113,10 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
         <Wrapper>
             <div className="ListaProjetosHeader">
                 <div className="list-group-item">
-                    <div className="row mb-3 text-center">
-                        <div className="col-md-4 themed-grid-col">
-                            <div className="row mb-3 text-center">
+                    
+                    <div className="row text-center">
+                        <div className="col-md-3 themed-grid-col">
+                            <div className="row text-center">
                                 <div className="col-md-6 themed-grid-col">
                                     <button
                                         type="button"
@@ -123,7 +124,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                         className="btn"
                                         onClick={() => toggleSort('Cliente')}
                                     >
-                                        Cliente
+                                        Cliente{' '}
                                         {verificaActivo === "-Cliente" ?
                                             <AiOutlineArrowUp /> : (verificaActivo === "Cliente" ?
                                                 <AiOutlineArrowDown /> : <BsArrowLeftShort />
@@ -138,7 +139,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                         className="btn"
                                         onClick={() => toggleSort('Nome')}
                                     >
-                                        Projeto
+                                        Projeto{' '}
                                         {verificaActivo === "-Nome" ?
                                             <AiOutlineArrowUp /> : (verificaActivo === "Nome" ?
                                                 <AiOutlineArrowDown /> : <BsArrowLeftShort />
@@ -149,8 +150,8 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                             </div>
                         </div>
 
-                        <div className="col-md-5 themed-grid-col">
-                            <div className="row mb-3 text-center">
+                        <div className="col-md-6 themed-grid-col">
+                            <div className="row text-center">
                                 <div className="col-md-6 themed-grid-col">
                                     <button
                                         type="button"
@@ -158,7 +159,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                         className="btn"
                                         onClick={() => toggleSort('Acao')}
                                     >
-                                        Ações
+                                        Ações{' '}
                                         {verificaActivo === "-Acao" ?
                                             <AiOutlineArrowUp /> : (verificaActivo === "Acao" ?
                                                 <AiOutlineArrowDown /> : <BsArrowLeftShort />
@@ -173,7 +174,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                         className="btn"
                                         onClick={() => toggleSort('Notas')}
                                     >
-                                        Notas
+                                        Notas{' '}
                                         {verificaActivo === "-Notas" ?
                                             <AiOutlineArrowUp /> : (verificaActivo === "Notas" ?
                                                 <AiOutlineArrowDown /> : <BsArrowLeftShort />
@@ -184,10 +185,10 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                             </div>
                         </div>
                         <div className="col-md-2 themed-grid-col">
-                            <div className="row mb-3 text-center">
+                            <div className="row text-center">
                                 {finalizado === true ? (
                                     <>
-                                        <div className="col-md-6 themed-grid-col">
+                                        <div className="col-md-8 themed-grid-col">
                                             <button
                                                 type="button"
                                                 name="VisualizarButton"
@@ -203,7 +204,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                                 }
                                             </button>
                                         </div>
-                                        <div className="col-md-6 themed-grid-col">
+                                        <div className="col-md-4 themed-grid-col">
                                             <p className="btn ">
                                                 Resultado
                                             </p>
@@ -211,7 +212,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                     </>
                                 ) : (
                                     <>
-                                        <div className="col-md-6 themed-grid-col">
+                                        <div className="col-md-8 themed-grid-col">
                                             <button
                                                 type="button"
                                                 name="VisualizarButton"
@@ -227,7 +228,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                                 }
                                             </button>
                                         </div>
-                                        <div className="col-md-6 themed-grid-col">
+                                        <div className="col-md-4 themed-grid-col">
                                         <p className="btn" disabled>
                                                 Alerta dias
                                             </p>

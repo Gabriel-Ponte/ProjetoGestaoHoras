@@ -1,40 +1,9 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.main`
-
-.App {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-items: end;
-  overflow: auto;
-  position: relative;
-  flex-wrap: wrap;
-  align-content: end;
-  justify-content: start;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
+height:100%;
+width:100%;
+padding:0px;
 .ListaProjetos {
   display: inline;
   overflow: scroll;
@@ -43,10 +12,16 @@ const Wrapper = styled.main`
   border: 1px solid black;
 }
 
+hr {
+  border: 1px solid #303030;
+  margin:0;
+}
+
 .ListaProjetosHeader {
   background-color: #E5E5E5;
   align-self: center;
   vertical-align: baseline;
+  margin:0;
 }
 
 .list {
@@ -80,6 +55,9 @@ const Wrapper = styled.main`
     position: relative;
     flex-direction: row;
   }
+
+
+
   `;
 
 export default Wrapper;

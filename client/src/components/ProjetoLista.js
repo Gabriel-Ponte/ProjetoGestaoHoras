@@ -174,15 +174,16 @@ const Projeto = ({
       return '#A3B18A'; // Light green
     }
   }
-  
+
   return (
     <Wrapper>
       <div className={verificaResultado === 1 ? '' : verificaResultado ? 'resultadoProjetoP' : 'resultadoProjetoN'}>
-        <div className="list-group-item">
-          <div className="row mb-3 text-center teste">
+        <div className="listaProjetos">
+          <div className="row ">
 
-            <div className="col-md-4 themed-grid-col">
-              <div className="row mb-3 text-center">
+
+            <div className="col-md-3 themed-grid-col">
+              <div className="row text-center">
                 <div className="col-md-6 themed-grid-col">
                 {finalizado === true ? (
                   <h5>{values.Cliente}</h5>
@@ -214,8 +215,8 @@ const Projeto = ({
             </div>
 
 
-            <div className="col-md-5 themed-grid-col">
-              <div className="row mb-3 text-center">
+            <div className="col-md-6 themed-grid-col">
+              <div className="row text-center">
                 <div className="col-md-6 themed-grid-col">
                 {finalizado === true ? (
                   <p>{values.Acao}</p>
@@ -249,19 +250,19 @@ const Projeto = ({
 
 
             <div className="col-md-2 themed-grid-col">
-              <div className="row mb-3 text-center">
+              <div className="row text-center">
                 {finalizado === true ? (
                   <>
-                    <div className="col-md-6 themed-grid-col">
+                    <div className="col-md-8 themed-grid-col">
                       <p>{DataFim ? new Date(DataFim).toLocaleDateString('en-CA') : ''}</p>
                     </div>
-                    <div className="col-md-6 themed-grid-col">
+                    <div className="col-md-4 themed-grid-col">
                       <p>{StringResultado}</p>
                     </div>
                   </>
                 ) : (
                   <>
-                    <div className="col-md-6 themed-grid-col">
+                    <div className="col-md-8 themed-grid-col">
                     <FormRowListaProjetos
                     type="Date"
                     id="DataObjetivoProjeto"
@@ -275,8 +276,8 @@ const Projeto = ({
                  //<p>{DataObjetivo ? new Date(DataObjetivo).toLocaleDateString('en-CA') : ''}</p>
                   }
                    </div>
-                   <div className="col-md-6">
-                    <div className="col-md-6 dias  text-center" style={{ backgroundColor: dias < 0 ? getRedShade(dias) : getGreenShade(dias) }}>
+                   <div className="col-md-4 align">
+                    <div className="col-md-12 dias  " style={{ backgroundColor: dias < 0 ? getRedShade(dias) : getGreenShade(dias) }}>
                     <p>{dias}</p>
                   </div>
                   </div>
@@ -286,17 +287,17 @@ const Projeto = ({
               </div>
             </div>
             
-            <div className="col-md-1 themed-grid-col">
+            <div className="col-md-1 themed-grid-col " >
+            <div className="col-md-11 themed-grid-col " >
             {
               verificaAlterado === true ? (
-                <>
-                  <div className="row mb-3 text-center">
-                  </div> 
-                  <div className='row mb-3 text-center'>
+                <><div className='row mb-2 text-center'>
+                  </div>
+                  <div className='row mb-2 align-items-center text-center'>
                     <div className='col-md-12 themed-grid-col'>
                       <button
                         type='button'
-                        className='btn sbmt-btn'
+                        className='btn btn-outline-primary'
                         onClick={handleSubmit}
                       >
                         Alterar
@@ -308,19 +309,19 @@ const Projeto = ({
               ) :
                 (
                   <>
-                      <div className='row mb-3 text-center'>
+                      <div className='row mb-2 text-center'>
                         <button
                           type='button'
-                          className='btn edit-btn'
+                          className='btn btn-outline-secondary'
                           onClick={() => toggleEdit(_id)}
                         >
                           Editar
                         </button>
                       </div>
-                      <div className='row mb-3 text-center'>
+                      <div className='row mb-2 text-center'>
                         <button
                           type='button'
-                          className='btn edit-btn'
+                          className='btn btn-outline-secondary'
                           onClick={() => toggleVisualize(_id)}
                         >
                           Visualizar
@@ -328,10 +329,10 @@ const Projeto = ({
                       </div>
    
                       {finalizado !== true && (
-                      <div className='row mb-3 text-center'>
+                      <div className='row  text-center'>
                         <button
                           type='button'
-                          className='btn edit-btn'
+                          className='btn btn-outline-secondary'
                           onClick={() => toggleAddHoras(_id)}
                         >
                           Adicionar Horas
@@ -342,10 +343,12 @@ const Projeto = ({
                 )
             }
             </div>
+            </div>
           </div>
+          <hr></hr>
         </div>
       </div>
-      <hr></hr>
+
     </Wrapper>
   );
 };

@@ -5,8 +5,13 @@ const testUser = require("../middleware/testeUser");
 
 const router = express.Router();
 
-const { getAllTiposTrabalho, createTipoTrabalho } = require("../controllers/tipoTrabalho");
+const { getAllTiposTrabalho, createTipoTrabalho, deleteTipoTrabalho, updateTipoTrabalho} = require("../controllers/tipoTrabalho");
 
 router.route("/").post(createTipoTrabalho).get(getAllTiposTrabalho);
+
+router
+  .route("/:id")
+  .delete(deleteTipoTrabalho)
+  .patch(testUser, updateTipoTrabalho);
 
 module.exports = router;

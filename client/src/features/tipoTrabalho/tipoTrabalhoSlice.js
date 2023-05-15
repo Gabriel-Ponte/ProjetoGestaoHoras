@@ -10,7 +10,12 @@ const initialState = {
 
 export const createTipoTrabalho = createAsyncThunk('tipoTrabalho/createTipoTrabalho', createTipoTrabalhoThunk);
 
-export const deleteTipoTrabalho = createAsyncThunk('tipoTrabalho/deleteTipoTrabalho', deleteTipoTrabalhoThunk);
+
+export const deleteTipoTrabalho = createAsyncThunk(
+  'tipoTrabalho/deleteTipoTrabalho',async (id ,thunkAPI) => {
+  return deleteTipoTrabalhoThunk(thunkAPI, id);
+  }
+  );
 
 export const editTipoTrabalho = createAsyncThunk('tipoTrabalho/editTipoTrabalho', editTipoTrabalhoThunk);
 
@@ -57,7 +62,7 @@ const tipoTrabalhoSlice = createSlice({
         toast.error(payload);
       })
       .addCase(deleteTipoTrabalho.fulfilled, (state, { payload }) => {
-        toast.success(payload);
+        toast.success('Tipo de Trabalho Apagado');
       })
       .addCase(deleteTipoTrabalho.rejected, (state, { payload }) => {
         toast.error(payload);

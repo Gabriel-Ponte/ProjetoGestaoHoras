@@ -54,7 +54,7 @@ const ListaProjetos = () => {
 
   return (
     <Wrapper>
-      <div className="row mb-3 text-center">
+      <div className="row text-center">
         <div className="col-md-3 themed-grid-col">
           <h1>Gestão Projetos</h1>
         </div>
