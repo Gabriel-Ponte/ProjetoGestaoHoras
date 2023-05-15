@@ -21,10 +21,6 @@ const getAllTiposTrabalho = async (req, res) => {
 
 
   const updateTipoTrabalho = async (req, res) => {
-    const {
-      TipoTrabalho,
-    } = req.body;
-
     const { id: TipoTrabalhoId } = req.params;
     try {
       const tipoTrabalho = await TipoTrabalho.findByIdAndUpdate(
@@ -34,12 +30,13 @@ const getAllTiposTrabalho = async (req, res) => {
         req.body,
         { new: true, runValidators: true }
       );
+      
       if (!tipoTrabalho) {
         throw new NotFoundError(`Não existe nenhum tipo de trabalho com id ${req.params.id}`);
       }
-      res.status(StatusCodes.OK).json({ projeto });
+      res.status(StatusCodes.OK).json({ tipoTrabalho });
     } catch (error) {
-      console.log(error);
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error });
     }
   };
   

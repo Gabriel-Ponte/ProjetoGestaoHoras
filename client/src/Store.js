@@ -6,6 +6,7 @@ import userSlice from './features/utilizadores/utilizadorSlice';
 import allProjetosSlice from './features/allProjetos/allProjetosSlice';
 import allDiasSlice from './features/allDias/allDiasSlice';
 import diasSlice from './features/dias/diasSlice';
+import tipoTrabalhoSlice from './features/tipoTrabalho/tipoTrabalhoSlice';
 
 export const Store = configureStore({
   reducer: {
@@ -14,5 +15,6 @@ export const Store = configureStore({
     dias: diasSlice,
     allProjetos: allProjetosSlice,
     allDias: allDiasSlice,
+    tipoTrabalho: tipoTrabalhoSlice,
   },
 });

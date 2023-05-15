@@ -75,7 +75,7 @@ const AddUtilizador = () => {
     setValues({ ...values });
   };
 
-    console.log(values.foto)
+
   return (
     <main style={{ marginBottom: "100px" }}>
       <div className="form-signin w-100 m-auto">

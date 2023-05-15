@@ -5,7 +5,12 @@ import {
   getProjetoFromLocalStorage, removeProjetoFromLocalStorage
 } from '../../utils/localStorage';
 
-import { createProjetoThunk, deleteProjetoThunk, editProjetoThunk, getProjetoThunk } from './projetosThunk';
+import { 
+  createProjetoThunk, 
+  deleteProjetoThunk, 
+  editProjetoThunk, 
+  getProjetoThunk 
+} from './projetosThunk';
 
 
 const initialState = {
@@ -13,7 +18,10 @@ const initialState = {
   projeto: getProjetoFromLocalStorage(),
 };
 
-export const createProjeto = createAsyncThunk('projeto/createProjeto', createProjetoThunk);
+export const createProjeto = createAsyncThunk(
+  'projeto/createProjeto',
+   createProjetoThunk
+   );
 
 export const deleteProjeto = createAsyncThunk(
   'projeto/deleteProjeto',
