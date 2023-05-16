@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import Wrapper from '../assets/wrappers/LoginPage';
-import { FormRow, FormRowSelect, } from '../components';
-
+import { FormRow, FormRowSelectTipo } from '../components';
+import { useNavigate } from 'react-router-dom';
 
 
 import "../assets/css/signin.css";
@@ -23,20 +23,31 @@ const initialState = {
 const AddUtilizador = () => {
     const [values, setValues] = useState(initialState);
     const { isLoading } = useSelector((store) => store.utilizador)
-
+    const { user } = useSelector((store) => store.utilizador.user);
+    //const { isLoading } = useSelector((store) => store.projetos);
+    const navigate = useNavigate();
     const dispatch = useDispatch();
-  
+
+    useEffect(() => {
+      if (user && user.tipo === 1) {
+        toast.error("Sem permissões para aceder a esta página!")
+        navigate('/PaginaPrincipal');
+      }
+    }, [user, navigate]);
+    
     if (isLoading) {
       return <Loading />;
     }
 
     const handleChangeTipo = (e)=> {
-      if(e.target.value === "Administrador"){
+      const { name, value } = e.target;
+      if(value === "Administrador"){
+        e.target.value = 2;
+        setValues({ ...values, [name]: 2 });
+      }else if(value =="Funcionario"){
         e.target.value = 1;
-      }else if(e.target.value =="Funcionario"){
-        e.target.value = 0 
+        setValues({ ...values, [name]: 1 });
       }
-      handleChange(e);
     }
 
     const handleChangeFoto = (name ,file) => {
@@ -46,6 +57,7 @@ const AddUtilizador = () => {
 
       setValues({ ...values, [name]: file });
     };
+
     const handleChange = (e) => {
       const { name, value } = e.target;
       setValues({ ...values, [name]: value });
@@ -76,6 +88,7 @@ const AddUtilizador = () => {
     setValues({ ...values });
   };
 
+
   return (
     <main style={{ marginBottom: "100px" }}>
       <div className="form-signin w-100 m-auto">
@@ -94,18 +107,18 @@ const AddUtilizador = () => {
               handleChange={handleChange}
               feedbackMessage="Nome"
             />
-            {/* TIPO
-            <FormRowSelect 
+            {/* TIPO */}
+            <FormRowSelectTipo
                 type="text"
                 className="form-control"
                 id="tipo"
                 name ="tipo"
                 placeholder ="Escolha um tipo"
                 value= {values.tipo}
-                list = {[["Administrador"] , ["Funcionario"]]}
+                list = {[["Funcionario"], ["Administrador"] ]}
                 handleChange ={handleChangeTipo}            
             />
-            */}
+
 
             <FormRow
               type="text"

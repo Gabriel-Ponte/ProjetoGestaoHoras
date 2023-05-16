@@ -4,17 +4,14 @@ import { toast } from 'react-toastify';
 import Wrapper from '../assets/wrappers/LoginPage';
 import { FormRow, FormRowSelect, } from '../components';
 import { useNavigate } from 'react-router-dom';
-
-
-import "../assets/css/signin.css";
 import ModalFoto from "./ModalFoto";
 import { updateUser } from '../features/utilizadores/utilizadorSlice';
 import Loading from './Loading';
 
-const AddUtilizador = () => {
+const EditarUtilizador = () => {
     const { user } = useSelector((store) => store.utilizador);
-
     const initialState = {
+      _id: user.user.id,
       login: user.user.login,
       password: user.user.password,
       codigo: user.user.codigo,
@@ -28,7 +25,6 @@ const AddUtilizador = () => {
     const { isLoading } = useSelector((store) => store.utilizador)
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
     let modifiedUser = user;
     if (user != null) {
       modifiedUser = user.user;
@@ -51,7 +47,6 @@ const AddUtilizador = () => {
     };
 
     const handleChangeFoto = (name, file) => {
-      console.log(file);
       setValues({
         ...values,
         [name]: { data: file, contentType: "image/png" }
@@ -154,4 +149,4 @@ const AddUtilizador = () => {
   );
 }
 
-export default AddUtilizador;
+export default EditarUtilizador;

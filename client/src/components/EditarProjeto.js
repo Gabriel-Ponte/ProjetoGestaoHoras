@@ -8,7 +8,7 @@ import { updateProjeto, deleteProjeto } from '../features/projetos/projetosSlice
 import { getTipoTrabalho, createTipoTrabalho } from '../features/tipoTrabalho/tipoTrabalhoSlice';
 import Loading from './Loading';
 import { listaUtilizadores, toggleSidebar } from '../features/utilizadores/utilizadorSlice';
-import DeleteProject from "./DeleteProject";
+import DeleteFromDB from "./DeleteFromDB";
 
 function VisualizarProjeto() {
   const { projeto, isLoading } = useSelector((store) => store.projeto);
@@ -184,24 +184,6 @@ function VisualizarProjeto() {
 
 
 
-  /*const deleteProjetoClicked = async (e) => {
-    const confirmed = window.confirm("Tem a certeza que quer eliminar este projeto?");
-    if (confirmed) {
-      try {
-        const result = await dispatch(deleteProjeto(values._id));
-        if (!result.error) {
-          setTimeout(() => {
-            dispatch(toggleSidebar(false));
-            navigate('/PaginaPrincipal');
-          }, 2000);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    return;
-  };*/
-
 
   return (
 
@@ -369,7 +351,7 @@ function VisualizarProjeto() {
 
             </form>
           </div>
-          <DeleteProject id={values._id} isLoading={isLoading} />
+          <DeleteFromDB id={values._id} name={values.Nome} isLoading={isLoading} type="Projeto"/>
 
         </main>
       </div>

@@ -4,9 +4,13 @@ const authenticateUser = require("../middleware/authentication");
 const testUser = require("../middleware/testeUser");
 
 
-const { register, updateUser, getUser, getAllUser} = require("../controllers/auth");
+const { register, updateUser, getUser, getAllUser, deleteUser} = require("../controllers/auth");
 router.get("/", getAllUser);
-router.get("/:id", getUser);
+
+router.route("/:id")
+    .get(getUser)
+    .delete(deleteUser)
+
 router.post("/register", register);
 router.patch("/updateUser", authenticateUser, testUser, updateUser);
 module.exports = router;

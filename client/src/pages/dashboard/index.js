@@ -10,7 +10,7 @@ import PaginaEditarProjeto from './PaginaEditarProjeto';
 import PaginaVisualizarHoras from './PaginaVisualizarHoras';
 import PaginaAdicionarHorasProjeto from './PaginaAdicionarHorasProjeto';
 import PaginaGerirTipoTrabalho from './PaginaGerirTiposTrabalho';
-
+import PaginaGerirUtilizadores from './PaginaGerirUtilizador';
 export {
     PaginaLogin,
     SharedLayout,
@@ -24,4 +24,5 @@ export {
     PaginaVisualizarHoras,
     PaginaAdicionarHorasProjeto,
     PaginaGerirTipoTrabalho,
+    PaginaGerirUtilizadores,
 };

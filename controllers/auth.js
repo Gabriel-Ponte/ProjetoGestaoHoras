@@ -82,14 +82,15 @@ const login = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-  const { login, password, codigo, email, nome, tipo } = req.body;
+  const { login, password, codigo, email, nome, tipo, _id } = req.body;
   const foto = req.body.foto;
   const buffer = Buffer.from(new Uint8Array(Object.values(foto.data)));// convert the Uint8Array to a Buffer
 
   if ( !login || !email || !codigo || !email || !foto|| !nome || !tipo ) {
     throw new BadRequestError("Please provide all values");
   }
-  const user = await User.findOne({ _id: req.user.userId });
+  const user = await User.findOne({ _id: _id });
+  user.id = _id;
   user.login = login;
   user.password = password;
   user.codigo = codigo;
@@ -106,7 +107,7 @@ const updateUser = async (req, res) => {
   const token = user.createJWT();
   res.status(StatusCodes.OK).json({
     user: {
-      //id: user._id,
+      id: user._id,
       login: user.login,
       password: user.password,
       codigo: user.codigo,
@@ -119,10 +120,25 @@ const updateUser = async (req, res) => {
   });
 };
 
+
+const deleteUser = async (req, res) => {
+  const {
+    params: { id: utilizadorId },
+  } = req;
+  const utilizador = await User.findByIdAndRemove({
+    _id: utilizadorId,
+  });
+  if (!utilizador) {
+    throw new NotFoundError(`Não existe nenhum utilizador com este id ${utilizadorId}`);
+  }
+  res.status(StatusCodes.OK).send();
+};
+
 module.exports = {
   register,
   login,
   getUser,
   getAllUser,
   updateUser,
+  deleteUser,
 };

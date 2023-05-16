@@ -7,7 +7,7 @@ const Error = () => {
     <Wrapper className='full-page'>
       <Header />
       <div>
-        <h3>Ohh! Pagina não encontrada</h3>
+        <h3>Pagina não encontrada</h3>
         <p>Não foi possivel encontrar a página que procura</p>
         <Link to='/PaginaPrincipal'>Voltar á página Principal</Link>
       </div>

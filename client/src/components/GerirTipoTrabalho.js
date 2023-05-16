@@ -7,13 +7,22 @@ import Wrapper from '../assets/wrappers/GerirTipoTrabalho';
 import FormRowListaTipoTrabalho from './FormRowListaTipoTrabalho';
 import { toast } from 'react-toastify';
 
-const GetTipoTrabalho = () => {
+const GerirTipoTrabalho = () => {
   const [listaTipoTrabalho, setListaTipoTrabalho] = useState([]);
   const [initialState, setInitialState] = useState([]);
   const [verificaAlterado, setVerificaAlterado] = useState({});
   const dispatch = useDispatch();
   const [callUseEffect, setCallUseEffect] = useState();
+  const { user } = useSelector((store) => store.utilizador.user);
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user && user.tipo === 1) {
+      toast.error("Sem permissões para aceder a esta página!")
+      navigate('/PaginaPrincipal');
+    }
+  }, [user, navigate]);
 
   let StringListaTrabalho = listaTipoTrabalho.map(item => item.TipoTrabalho).join(",");
 
@@ -32,11 +41,24 @@ const GetTipoTrabalho = () => {
     setCallUseEffect(!callUseEffect);
   }
 
-  const deleteTT = async (id) => {
-    await dispatch(deleteTipoTrabalho(id));
-    setCallUseEffect(!callUseEffect);
-  }
-
+  const deleteTT = async (id ,nome) => {
+    try {
+      const confirmed = window.confirm("Tem a certeza que deseja apagar o tipo de Trabalho: "+ nome +"?");
+      if (confirmed) {
+        const result = await dispatch(deleteTipoTrabalho(id));
+        if (!result.error) {
+          setTimeout(() => {
+            navigate('/PaginaPrincipal');
+          }, 2000);
+          return "Tipo de Trabalho Apagado. Voltando para a pagina principal...";
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      return "Ocorreu um erro ao apagar o Tipo de Trabalho.";
+    }
+  };
+  
   const alterarTipoTrabalho = async (tt) => {
     if (!tt.TipoTrabalho) {
       toast.error('Por favor, não insira um tipo de trabalho vazio!');
@@ -61,9 +83,6 @@ const GetTipoTrabalho = () => {
   const handleNewOptionChange = (event) => {
     setNewOption(event.target.value);
   };
-
-
-
 
 
   const handleChangeTipoTrabalho = (e, id) => {
@@ -142,7 +161,7 @@ const GetTipoTrabalho = () => {
                 ) : (
 
                   <button type='submit'
-                    onClick={() => deleteTT(t._id)}
+                    onClick={() => deleteTT(t._id , t.TipoTrabalho)}
                     className="btn">
                     <AiFillDelete />
                   </button>
@@ -185,4 +204,4 @@ const GetTipoTrabalho = () => {
   );
 };
 
-export default GetTipoTrabalho;
+export default GerirTipoTrabalho;

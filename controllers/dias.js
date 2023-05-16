@@ -19,6 +19,7 @@ const getAllDiasUtilizador = async (req, res) => {
   if (!diasAllUtilizador.length) {
     throw new NotFoundError(`No Dias found for ${u1.Nome}`);
   }
+  diasAllUtilizador.sort((a, b) => a.Data - b.Data);
   res.status(StatusCodes.OK).json({ diasAllUtilizador });
 };
 

@@ -11,7 +11,9 @@ import {
   loginUserThunk,
   registerUserThunk,
   updateUserThunk,
+  updateUserTypeThunk,
   clearStoreThunk,
+  deleteUserThunk,
 } from './utilizadorThunk';
 
 
@@ -22,6 +24,12 @@ const initialState = {
   user: getUserFromLocalStorage(),
 };
 
+export const deleteUser = createAsyncThunk(
+  'utilizador/deleteUtilizador',
+  async (id ,thunkAPI) => {
+    return deleteUserThunk(thunkAPI, id);
+  }
+);
 
 export const registerUser = createAsyncThunk(
   'utilizador/registerUser',
@@ -38,11 +46,17 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-
 export const updateUser = createAsyncThunk(
   'utilizador/updateUser',
   async (user, thunkAPI) => {
     return updateUserThunk('/utilizador/updateUser', user, thunkAPI);
+  }
+);
+
+export const updateUserType = createAsyncThunk(
+  'utilizador/updateUserType',
+  async (user, thunkAPI) => {
+    return updateUserTypeThunk('/utilizador/updateUser', user, thunkAPI);
   }
 );
 
@@ -130,6 +144,31 @@ const userSlice = createSlice({
       toast.error(payload);
     })
 
+    //Update Type
+    .addCase(updateUserType.pending, (state) => {
+      state.isLoadingU = true;
+    })
+    .addCase(updateUserType.fulfilled, (state, { payload }) => {
+      state.isLoadingU = false;
+      toast.success(`Utilizador atualizado!`);
+    })
+    .addCase(updateUserType.rejected, (state, { payload }) => {
+      state.isLoadingU = false;
+      toast.error(payload);
+    })
+
+    //Delete User
+    .addCase(deleteUser.pending, (state) => {
+      state.isLoadingU = true;
+    })
+    .addCase(deleteUser.fulfilled, (state, { payload }) => {
+      state.isLoadingU = false;
+      toast.success(`Utilizador Eliminado!`);
+    })
+    .addCase(deleteUser.rejected, (state, { payload }) => {
+      state.isLoadingU = false;
+      toast.error(payload);
+    })
 
     //ListaUtilizador
     .addCase(listaUtilizadores.pending, (state) => {

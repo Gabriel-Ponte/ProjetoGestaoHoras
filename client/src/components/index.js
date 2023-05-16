@@ -2,6 +2,7 @@ import BigSidebar from './BigSidebar';
 import AddProjectForm from './AddProjetoForm';
 import FormRow from './FormRow';
 import FormRowSelect from './FormRowSelect';
+import FormRowSelectTipo from './FormRowSelectTipo';
 import FormRowCheckbox from './FormRowCheckbox';
 import AddUtilizador from './AddUtilizador';
 import Footer from './Footer';
@@ -16,8 +17,9 @@ import AddHorasProjeto from './AddHorasProjeto'
 import VisualizarProjeto from './VisualizarProjeto';
 import EditarProjeto from './EditarProjeto';
 import VisualizarHoras from './VisualizarHoras';
-import DeleteProject from './DeleteProject';
+import DeleteFromDB from './DeleteFromDB';
 import GerirTipoTrabalho from './GerirTipoTrabalho';
+import GerirUtilizadores from './GerirUtilizadores';
 
 export {
   ListaProjetos,
@@ -38,6 +40,8 @@ export {
   VisualizarProjeto,
   EditarProjeto,
   VisualizarHoras,
-  DeleteProject,
+  DeleteFromDB,
   GerirTipoTrabalho,
+  FormRowSelectTipo,
+  GerirUtilizadores,
 };

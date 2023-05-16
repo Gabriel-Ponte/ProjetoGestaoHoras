@@ -18,8 +18,7 @@ const NavLinks = () => {
   const [showProjeto, setShowProjeto] = useState(false);
   const [showProjetoV, setShowProjetoV] = useState(false);
   const dispatch = useDispatch();
-
-
+  const { user } = useSelector((store) => store.utilizador.user);
   const navigate = useNavigate();
   const handleShowProjetos = () => {
     setShowProjeto(!showProjeto);
@@ -27,6 +26,7 @@ const NavLinks = () => {
       setShowProjetoV(false);
     }
   };
+
 
   const handleShowProjetosV = () => {
     setShowProjetoV(!showProjetoV);
@@ -65,11 +65,15 @@ const NavLinks = () => {
     <Wrapper>
     <div className='nav-links'>
       {links.map((link) => {
+
         const { text, path, id, icon } = link;
-        if (id === 5 || id === 6) {
+        if(user.tipo === 1 && (id === 2 || id === 3 || id == 4)){
+          return;
+        }
+        if (id === 6 || id === 7) {
           return (
             <React.Fragment key={id}>
-              <button type="button" className="btn btn-link" onClick={id === 5 ? handleShowProjetos : id === 6 ? handleShowProjetosV : null} >
+              <button type="button" className="btn btn-link" onClick={id === 6 ? handleShowProjetos : id === 7 ? handleShowProjetosV : null} >
                 <NavLink
                   className={({ isActive }) => {
                     return isActive ? "nav-link active" : "nav-link";
@@ -82,7 +86,7 @@ const NavLinks = () => {
 
 
               </button>
-              {id === 5 && showProjeto && (
+              {id === 6 && showProjeto && (
                 <div className="projetos" style={{ textAlign: "right", marginLeft:"100px"}}>
                   {projetos.map((projeto) => (
                     <div key={"projeto-" + projeto._id}>
@@ -103,7 +107,7 @@ const NavLinks = () => {
                 </div>
               )}
 
-              {id === 6 && showProjetoV && (
+              {id === 7 && showProjetoV && (
                 <div className="projetos" style={{ textAlign: "right", marginLeft:"100px"}}>
                   {projetos.map((projeto) => (
                     <div key={"V-" + projeto._id}>
