@@ -113,7 +113,6 @@ const AddUtilizador = () => {
                 className="form-control"
                 id="tipo"
                 name ="tipo"
-                placeholder ="Escolha um tipo"
                 value= {values.tipo}
                 list = {[["Funcionario"], ["Administrador"] ]}
                 handleChange ={handleChangeTipo}            

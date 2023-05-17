@@ -1,4 +1,6 @@
-const FormRowSelect = ({ labelText, name, value, handleChange, list }) => {
+import Wrapper from '../assets/wrappers/FormRowSelect';
+
+const FormRowSelect = ({ labelText, name, value, handleChange, list, className}) => {
 
   if(value === 1 && name === "tipo"){
     value = "Funcionario";
@@ -7,7 +9,8 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list }) => {
   }
 
   return (
-    <div className='form-row'>
+    <Wrapper>
+    <div className={className ? className : 'form-row'}>
       <label htmlFor={name} className='form-label'>
         {labelText || name}
       </label>
@@ -28,6 +31,7 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list }) => {
         })}
       </select>
     </div>
+    </Wrapper>
   );
 };
 

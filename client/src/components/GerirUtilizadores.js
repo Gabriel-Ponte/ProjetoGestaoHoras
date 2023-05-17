@@ -121,14 +121,15 @@ const handleConfirmDelete = async (id , nome) => {
               <FormRowSelectTipo
                 type="text"
                 className="form-control"
+                labelText=" "
                 id="tipo"
                 name ="tipo"
                 handleChange={(e) => handleChangeUtilizador(e, t._id)}   
                 placeholder ="Escolha um tipo"
                 value= {t.tipo}
                 list = {[["Funcionario"], ["Administrador"] ]}
-      
             />
+
             </div>
             <div className="col-md-6 text-center">
               <div className='Buttons'>
