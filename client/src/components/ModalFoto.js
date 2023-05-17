@@ -3,7 +3,10 @@ import DefaultUserImg from "../assets/image/DefaultUserImg.png";
 import Wrapper from '../assets/wrappers/ModalFoto';
 import { toast } from 'react-toastify';
 import { Buffer } from 'buffer';
-function ModalFoto({ label, name, value, handleChange }) {
+
+
+
+function ModalFoto({ label, name, value, handleChange ,className }) {
   const [file, setFile] = useState("");
   const [showModal, setShowModal] = useState(false);
   const imgRef = useRef(null);
@@ -68,7 +71,7 @@ function ModalFoto({ label, name, value, handleChange }) {
 
   return (
     <Wrapper>
-      <div className="form-row">
+      <div className={className ? className: "form-row"}>
       <div className="row mb-3 text-center">
             <div className="col-md-6 themed-grid-col">
         <label htmlFor={name} className='form-label'>

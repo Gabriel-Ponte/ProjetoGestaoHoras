@@ -92,8 +92,8 @@ const AddUtilizador = () => {
   return (
     <main style={{ marginBottom: "100px" }}>
       <div className="form-signin w-100 m-auto">
-        <h1 className="h3 mb-3 fw-normal">Criar Utilizador</h1>
-        <p>Preencha o formulario para criar uma conta.</p>
+        <h1 className="h3 mb-3 fw-normal text-center">Criar Utilizador</h1>
+        <p className='text-center'>Preencha o formulario para criar uma conta.</p>
         <form onSubmit = {handleSubmit} className='form'>
 
           <div className="container">
