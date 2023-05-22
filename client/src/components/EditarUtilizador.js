@@ -1,11 +1,10 @@
-import React, { useState , useEffect} from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import Wrapper from '../assets/wrappers/LoginPage';
-import { FormRow, FormRowSelect, } from '../components';
+import { FormRow } from '../components';
 import { useNavigate } from 'react-router-dom';
 import ModalFoto from "./ModalFoto";
-import { updateUser } from '../features/utilizadores/utilizadorSlice';
+import { updateUser, toggleSidebar } from '../features/utilizadores/utilizadorSlice';
 import Loading from './Loading';
 
 const EditarUtilizador = () => {
@@ -22,66 +21,99 @@ const EditarUtilizador = () => {
     };
 
     const [values, setValues] = useState(initialState);
+    const [alterado, setAlterado] = useState(false);
     const { isLoading } = useSelector((store) => store.utilizador)
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    let modifiedUser = user;
-    if (user != null) {
-      modifiedUser = user.user;
-    }
+
   
     if (isLoading) {
       return <Loading />;
     }
+    /*
     const handleChangeTipo = (e)=> {
       if(e.target.value === "Administrador"){
         e.target.value = 1;
-      }else if(e.target.value =="Funcionario"){
+      }else if(e.target.value === "Funcionario"){
         e.target.value = 0 
       }
       handleChange(e);
     }
-    const handleChange = (e) => {
+    */
+
+    const handleChange = async(e) => {
+
+      setAlterado(true);
       const { name, value } = e.target;
-      setValues({ ...values, [name]: value });
+      if(values.foto.data.data){
+        const nameFoto ="foto"
+        const novaFoto = new Uint8Array(values.foto.data.data);
+        console.log(novaFoto)
+        await setValues({
+          ...values,
+          [name]: value,
+          [nameFoto]: { data: novaFoto, contentType: "image/png" }
+        });
+      }else {
+        await setValues({ ...values, [name]: value });
+      }
+      if (
+        JSON.stringify({ ...values, [name]: value }) ===
+        JSON.stringify({
+          ...initialState,
+          foto: { data: new Uint8Array(initialState.foto.data.data), contentType: "image/png" },
+        })
+      ) {
+        setAlterado(false);
+        return;
+      }
     };
 
     const handleChangeFoto = (name, file) => {
+      setAlterado(true);
       setValues({
         ...values,
         [name]: { data: file, contentType: "image/png" }
       });
-    
     };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
+      console.log(values.foto)
       e.preventDefault();
       if (!values.login || !values.email || !values.nome || !values.password ) {
         toast.error('Por favor, preencha todos os campos obrigatórios!');
         return;
       }
-      dispatch(updateUser(values));
-      //navigate('/');
+      try {
+       const result = await dispatch(updateUser(values));
+        if (!result.error) {
+          setTimeout(() => {
+            dispatch(toggleSidebar(false));
+            {window.location.reload(navigate('/PaginaPrincipal'))}
+          }, 2000);
+        }
+      } catch (error) {
+        console.log(error);
+      }
   };
 
 
   const toggleMember = e => {
-    // handle form submission logic here
     setValues({ ...values });
   };
 
 
   return (
-    <main style={{ marginBottom: "100px" }}>
-      <div className="form-signin w-100 m-auto">
-        <h1 className="h3 mb-3 fw-normal">Editar Perfil</h1>
+    <main >
+      <div className="form-signin w-100 m-auto" >
+        <h1 className="h3 mb-4 fw-normal text-center">Editar Perfil</h1>
         <form onSubmit = {handleSubmit} className='form'>
           <div className="container">
             <FormRow
               type="text"
               id="nomeUtilizador"
               name="nome"
-              label="Nome"
+              labelText="Nome"
               className="form-control"
               value={values.nome}
               handleChange={handleChange}
@@ -92,7 +124,7 @@ const EditarUtilizador = () => {
               type="text"
               id="loginProjeto"
               name="login"
-              label="Login"
+              labelText="Login"
               className="form-control"
               value={values.login}
               handleChange={handleChange}
@@ -102,7 +134,7 @@ const EditarUtilizador = () => {
               type="password"
               id="password"
               name="password"
-              label="Password"
+              labelText="Password"
               className="form-control"
               value={values.password}
               handleChange={handleChange}
@@ -112,7 +144,7 @@ const EditarUtilizador = () => {
               type="text"
               id="email"
               name="email"
-              label="Email"
+              labelText="Email"
               className="form-control"
               value={values.email}
               handleChange={handleChange}
@@ -123,7 +155,7 @@ const EditarUtilizador = () => {
               type="file"
               id="fotoU"
               name="foto"
-              label="Foto Perfil"
+              label="Foto de Perfil"
               className="form-control"
               value={values.foto}
               handleChange = {handleChangeFoto}
@@ -133,7 +165,7 @@ const EditarUtilizador = () => {
               <div id="addUtilizador">
                 <button
                   type="submit"
-                  disabled={isLoading}
+                  disabled={isLoading || !alterado}
                   onClick={toggleMember}
                   className="w-100 btn btn-lg btn-primary"
                 >

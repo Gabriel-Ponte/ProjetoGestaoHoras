@@ -9,7 +9,7 @@ const getAllUser = async (req, res) => {
   const UsersAll = await User.find();
 
   if (!UsersAll) {
-    throw new NotFoundError(`No Users found`);
+    throw new NotFoundError(`Não foi encontrado nenhum utilizador`);
   }
   res.status(StatusCodes.OK).json({ UsersAll });
 };
@@ -24,7 +24,7 @@ const getUser = async (req, res) => {
     _id : userID,
   });
   if (!user) {
-    throw new NotFoundError(`No utilizador with id ${userID}`);
+    throw new NotFoundError(`Nenhum utilizador com id: ${userID}`);
   }
   res.status(StatusCodes.OK).json({ user });
 };
@@ -33,35 +33,60 @@ const getUser = async (req, res) => {
 
 
 const register = async (req, res) => {
-  const user = await User.create({ ...req.body });
-  const token = user.createJWT();
-  res.status(StatusCodes.CREATED).json({
-    user: {
-      login: user.login,
-      password: user.password,
-      codigo: user.codigo,
-      email: user.email,
-      foto: user.foto,
-      nome: user.nome,
-      tipo: user.tipo,
-    },
-  });
+  const { login, password, codigo, email, nome, tipo } = req.body;
+  const foto = req.body.foto;
+  const buffer = Buffer.from(new Uint8Array(Object.values(foto.data))); // Convert the Uint8Array to a Buffer
+
+  try {
+    const user = await User.create({
+      login,
+      password,
+      codigo,
+      email,
+      nome,
+      tipo,
+      foto: {
+        data: buffer,
+        contentType: 'image/png'
+      }
+    });
+
+    res.status(StatusCodes.CREATED).json({
+      user: {
+        login: user.login,
+        password: user.password,
+        codigo: user.codigo,
+        email: user.email,
+        foto: {
+          data: buffer,
+          contentType: 'image/png'
+        },
+        nome: user.nome,
+        tipo: user.tipo
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Falha no registo.' });
+  }
 };
+
 
 
 const login = async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    throw new BadRequestError("Please provide email and password");
+    throw new BadRequestError("");
   }
   const user = await User.findOne({ email });
   if (!user) {
-    throw new UnauthenticatedError("Invalid Credentials");
-  }
+    throw new UnauthenticatedError("Credenciais Invalidas");
+  }else{
   const isPasswordCorrect = await user.comparePassword(password);
   if (!isPasswordCorrect) {
-    throw new UnauthenticatedError("Invalid Credentials");
+    throw new UnauthenticatedError("Password incorreta");
+  }
   }
 
   // compare password
@@ -87,7 +112,7 @@ const updateUser = async (req, res) => {
   const buffer = Buffer.from(new Uint8Array(Object.values(foto.data)));// convert the Uint8Array to a Buffer
 
   if ( !login || !email || !codigo || !email || !foto|| !nome || !tipo ) {
-    throw new BadRequestError("Please provide all values");
+    throw new BadRequestError("Insira todos os valores");
   }
   const user = await User.findOne({ _id: _id });
   user.id = _id;

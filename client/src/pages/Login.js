@@ -38,7 +38,6 @@ function Login() {
         }, 2000);
         return;
     } else {
-      toast.error('Invalid email or password');
       return;
     }
   };

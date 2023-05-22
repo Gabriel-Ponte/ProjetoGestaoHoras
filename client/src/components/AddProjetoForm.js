@@ -108,6 +108,7 @@ const AddProjectForm = () => {
   return (
     <Wrapper>
       <form onSubmit={handleSubmit} className='MainForm'>
+      <h1 className="h3 mb-4 fw-normal">Adicionar Projeto</h1>
         <div className='form'>
           <FormRow
             type="text"
@@ -205,6 +206,7 @@ const AddProjectForm = () => {
           <FormRowSelect
             type="text"
             className="formRow" classNameLabel='formRowLabel' classNameInput='formRowInput'
+            
             id="piloto"
             name="Piloto"
             placeholder="Piloto"

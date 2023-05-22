@@ -191,7 +191,7 @@ function VisualizarProjeto() {
       <div className="container">
         <main>
           <div className="form m-auto">
-            <h1 className="h3 mb-3 fw-normal">Editar Projetos</h1>
+            <h1 className="h3 mb-4 fw-normal">Editar Projeto</h1>
             <form onSubmit={handleSubmit} className='form'>
               <div className="row mb-3 text-center" style={{ marginTop: '3%', textAlign: 'center' }}>
                 <div className="container">

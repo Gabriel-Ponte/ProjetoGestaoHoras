@@ -1,12 +1,11 @@
-import React, { useState, useEffect ,useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import DefaultUserImg from "../assets/image/DefaultUserImg.png";
 import Wrapper from '../assets/wrappers/ModalFoto';
-import { toast } from 'react-toastify';
 import { Buffer } from 'buffer';
 
 
 
-function ModalFoto({ label, name, value, handleChange ,className }) {
+function ModalFoto({ label, name, value, handleChange, className }) {
   const [file, setFile] = useState("");
   const [showModal, setShowModal] = useState(false);
   const imgRef = useRef(null);
@@ -14,21 +13,77 @@ function ModalFoto({ label, name, value, handleChange ,className }) {
   const [foto, setFoto] = useState(value);
   useEffect(() => {
     setFoto(value);
-  }, [file , value]);
+  }, [file, value]);
 
   const handleFileInputChange = (file) => {
     const reader = new FileReader();
     reader.onload = function (event) {
-      const novaFoto =  new Uint8Array(event.target.result)
-
-      if (novaFoto.length > 10000){
-        toast.error(`Foto inserida é demasiado grande`);
-      }else{
-      handleChange(name, novaFoto);
+      const novaFoto = new Uint8Array(event.target.result);
+      if (novaFoto.length > 10000) {
+        resizeImage(event.target.result)
+          .then((resizedDataUrl) => {
+            const novaFoto = new Uint8Array(resizedDataUrl);
+            handleChange(name, novaFoto);
+            // toast.error(`Foto inserida é demasiado grande`);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      } else {
+        handleChange(name, novaFoto);
       }
     };
+    if(file){
     reader.readAsArrayBuffer(file);
+  }
   };
+
+  
+  const resizeImage = (image) => {
+    return new Promise((resolve) => {
+      const img = new Image();
+  
+      img.onload = function () {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+  
+        let width = img.width;
+        let height = img.height;
+  
+        if (width > height) {
+          if (width > 100) {
+            height *= 100 / width;
+            width = 100;
+          }
+        } else {
+          if (height > 100) {
+            width *= 100 / height;
+            height = 100;
+          }
+        }
+  
+        canvas.width = width;
+        canvas.height = height;
+  
+        ctx.drawImage(img, 0, 0, width, height);
+  
+        canvas.toBlob((blob) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            const resizedArrayBuffer = reader.result;
+            resolve(resizedArrayBuffer);
+          };
+          reader.readAsArrayBuffer(blob);
+        }, image.contentType);
+      };
+  
+      const arrayBufferView = new Uint8Array(image);
+      const blob = new Blob([arrayBufferView], { type: image.contentType });
+      const url = URL.createObjectURL(blob);
+      img.src = url;
+    });
+  };
+  
 
   const handleFileChange = () => {
     handleFileInputChange(file);
@@ -38,13 +93,13 @@ function ModalFoto({ label, name, value, handleChange ,className }) {
 
 
   const handleFileInputChange1 = (file) => {
-    if(file){
-    const reader = new FileReader();
-    reader.onload = function (event) {
-      imgRef.current.src = event.target.result;
-    };
-    reader.readAsDataURL(file);
-  }
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        imgRef.current.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleFileChange1 = (event) => {
@@ -52,7 +107,7 @@ function ModalFoto({ label, name, value, handleChange ,className }) {
     setFile(file);
     handleFileInputChange1(file);
   };
-  
+
   const close = () => {
     document.getElementById('foto').value = '';
     imgRef.current.src = DefaultUserImg;
@@ -63,42 +118,45 @@ function ModalFoto({ label, name, value, handleChange ,className }) {
     }
     setShowModal(false);
   };
-  
-  if(foto.data instanceof Uint8Array) {
+
+  if (foto.data instanceof Uint8Array) {
     const buffer = Buffer.from(value.data);
-    setFoto({ data: {data: buffer}, contentType: value.contentType });
+    setFoto({ data: { data: buffer }, contentType: value.contentType });
   }
+
 
   return (
     <Wrapper>
-      <div className={className ? className: "form-row"}>
-      <div className="row mb-3 text-center">
-            <div className="col-md-6 themed-grid-col">
-        <label htmlFor={name} className='form-label'>
-        {label || name}
-      </label>
+      <div className={className ? className : "form-row"}>
+        <div className="row text-center">
+          <div className="col-md-12 themed-grid-col text-start">
+            <label  className='form-label'>
+              {label || name}
+            </label>
+          </div>
         </div>
-        <div className="col-md-6 themed-grid-col">
-        <img
-          ref={imgRef}
-          src={
-            foto.data
-              ? URL.createObjectURL(new Blob([new Uint8Array(foto.data.data)], { type: foto.contentType }))
-              : DefaultUserImg
-          }
-          className="rounded mx-auto d-block"
-          style={{ maxWidth: "100px" }}
-        />
-
+        <div className="row mb-3 text-center">
+          <div className="col-md-12 themed-grid-col">
           <button
-            type="button"
-            className="btn"
-            data-bs-toggle="modal"
-            data-bs-target="#ModalFoto"
-            onClick={() => setShowModal(true)}
-          >
-            Escolher
-          </button>
+                type="button"
+                className="btn"
+                data-bs-toggle="modal"
+                data-bs-target="#ModalFoto"
+                onClick={() => setShowModal(true)}
+              >
+              <img
+                ref={imgRef}
+                alt="Imagem Perfil"
+                src={
+                  foto.data
+                    ? URL.createObjectURL(new Blob([new Uint8Array(foto.data.data)], { type: foto.contentType }))
+                    : DefaultUserImg
+                }
+                className="rounded mx-auto d-block"
+                style={{ maxWidth: "100px" }}
+              />
+                Escolher
+              </button>
           </div>
         </div>
       </div>
@@ -129,6 +187,7 @@ function ModalFoto({ label, name, value, handleChange ,className }) {
               <div className="container">
                 <img
                   ref={imgRef}
+                  alt="Imagem Perfil"
                   src={
                     foto.data
                       ? URL.createObjectURL(new Blob([new Uint8Array(foto.data.data)], { type: foto.contentType }))

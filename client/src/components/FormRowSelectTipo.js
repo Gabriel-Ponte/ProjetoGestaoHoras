@@ -10,16 +10,21 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, className})
 
   return (
     <Wrapper>
-    <div className={className ? className : 'form-row'}>
-      <label htmlFor={name} className='form-label'>
+    <div className={className ? className : 'form-row text-center'} style={{ width: '100%' }}>
+      {labelText !== " " &&
+      <label className='form-label'>
         {labelText || name}
       </label>
+      }
+      
+      <div className="text-center" style={{ width: '75%', marginLeft: 'auto' , marginRight:'auto'}}>
       <select
         name={name}
         id={name}
         value={value}
         onChange={handleChange}
-        className='form-select'
+        className='form-select '
+
       >
         {list.map((itemValue, index) => {
           
@@ -29,7 +34,10 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, className})
             </option>
           );
         })}
+
       </select>
+      <br></br>
+      </div>
     </div>
     </Wrapper>
   );

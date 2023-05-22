@@ -55,7 +55,7 @@ const AddUtilizador = () => {
       //const imageUrl = URL.createObjectURL(file);
       //console.log(imageUrl);
 
-      setValues({ ...values, [name]: file });
+      setValues({ ...values, [name]:  { data: file, contentType: "image/png"} });
     };
 
     const handleChange = (e) => {
@@ -102,6 +102,7 @@ const AddUtilizador = () => {
               id="nomeUtilizador"
               name="nome"
               label="Nome"
+              labelText="Nome"
               className="form-control"
               value={values.nome}
               handleChange={handleChange}
@@ -113,6 +114,7 @@ const AddUtilizador = () => {
                 className="form-control"
                 id="tipo"
                 name ="tipo"
+                labelText="Tipo de Utilizador"
                 value= {values.tipo}
                 list = {[["Funcionario"], ["Administrador"] ]}
                 handleChange ={handleChangeTipo}            
@@ -124,6 +126,7 @@ const AddUtilizador = () => {
               id="loginProjeto"
               name="login"
               label="Login"
+              labelText="Login"
               className="form-control"
               value={values.login}
               handleChange={handleChange}
@@ -134,6 +137,7 @@ const AddUtilizador = () => {
               id="password"
               name="password"
               label="Password"
+              labelText="Password"
               className="form-control"
               value={values.password}
               handleChange={handleChange}
@@ -144,6 +148,7 @@ const AddUtilizador = () => {
               id="email"
               name="email"
               label="Email"
+              labelText="Email"
               className="form-control"
               value={values.email}
               handleChange={handleChange}
@@ -154,7 +159,8 @@ const AddUtilizador = () => {
               type="file"
               id="fotoU"
               name="foto"
-              label="Foto Perfil"
+              label="Foto de Perfil"
+              labelText="Foto de Perfil"
               className="form-control"
               value={values.foto}
               handleChange = {handleChangeFoto}
@@ -168,7 +174,7 @@ const AddUtilizador = () => {
                   onClick={toggleMember}
                   className="w-100 btn btn-lg btn-primary"
                 >
-                  {isLoading ? 'loading...' : 'submit'}
+                  {isLoading ? 'Carregando...' : 'Adicionar'}
                 </button>
               </div>
               <div style={{ color: 'red' }}>{values.errorMessage}</div>

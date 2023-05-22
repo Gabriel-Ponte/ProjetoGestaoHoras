@@ -9,9 +9,9 @@ import { TbUserExclamation } from 'react-icons/tb';
 
 const links = [
   { id: 1, text: 'Editar Perfil', path: '/PaginaEditarPerfil', icon: <ImProfile /> },
-  { id: 2, text: 'Gerir Tipos de Trabalho', path: '/PaginaGerirTipoTrabalho', icon: <CgWorkAlt /> },
-  { id: 3, text: 'Adicionar Utilizador', path: '/PaginaAdicionarUtilizador', icon: <FiUserPlus /> },
-  { id: 4, text: 'Gerir Utilizadores', path: '/PaginaGerirUtilizadores', icon: <TbUserExclamation /> },
+  { id: 2, text: 'Adicionar Utilizador', path: '/PaginaAdicionarUtilizador', icon: <FiUserPlus /> },
+  { id: 3, text: 'Gerir Utilizadores', path: '/PaginaGerirUtilizadores', icon: <TbUserExclamation /> },
+  { id: 4, text: 'Gerir Tipos de Trabalho', path: '/PaginaGerirTipoTrabalho', icon: <CgWorkAlt /> },
   { id: 5, text: 'Adicionar Projeto', path: '/PaginaAdicionarProjeto', icon: <AiFillFileAdd /> },
   { id: 6, text: 'Editar Projetos', path: '/PaginaEditarProjeto', icon: <FiEdit /> },
   { id: 7, text: 'Visualizar Projetos', path: '/PaginaVisualizarProjeto', icon: <RiSearchEyeLine /> },

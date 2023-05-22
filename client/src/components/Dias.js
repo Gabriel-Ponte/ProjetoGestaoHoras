@@ -40,10 +40,13 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPos
         <div className="list-group-item" >
           <div className="row mb-3 text-center">
             <div className="col-md-3 themed-grid-col">
-              <p>{Data ? new Date(Data).toLocaleDateString('en-CA') : ''}</p>
+              <h3>{Data ? new Date(Data).toLocaleDateString('en-CA') : ''}</h3>
             </div>
+            </div>
+            
+            <div className="row mb-3 text-center">
             <div className="col-md-3 themed-grid-col">
-              <p>{NumeroHoras}</p>
+              <h4>{NumeroHoras}</h4>
             </div>
             <div className="col-md-6 themed-grid-col">
               {projeto.map(({ tipoTrabalho, horas, projeto }) => (
@@ -68,9 +71,11 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPos
                 </div>
               ))}
             </div>
+            <hr></hr>
           </div>
         </div>
       </div>
+
     </Wrapper>
 
   );

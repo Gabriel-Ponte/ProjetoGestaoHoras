@@ -57,7 +57,7 @@ const DeleteFromDB = ({ id, name, isLoading, type }) => {
         data-bs-backdrop="static"
         onClick={() => handleModal(id, name, type)}
       >
-        {isLoading ? 'loading...' : <AiFillDelete /> + name}
+        {isLoading ? 'loading...' : <AiFillDelete />}
       </button>
 
       <div

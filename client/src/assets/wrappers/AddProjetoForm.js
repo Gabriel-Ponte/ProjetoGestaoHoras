@@ -32,9 +32,6 @@ const Wrapper = styled.section`
     align-items: center;
     justify-items: center;
     flex-wrap: nowrap;
-    overflow-y: scroll;  overflow-y: scroll;
-    scrollbar-color: rebeccapurple green;
-    scrollbar-width: thin;
   }
 
   .form {

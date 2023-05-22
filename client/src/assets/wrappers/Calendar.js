@@ -114,8 +114,13 @@ const Wrapper = styled.section`
     font-size: 20px;
 }
 
+.calendar .calendar-inner .calendar-body .calendar-fimSemana {
+    background: #BCB8B1;
+    border-radius: 4px;
+}
+
 .calendar .calendar-inner .calendar-body .calendar-today {
-    background: var(--calendar-today-color);
+    color: blue;
     border-radius: 4px;
 }
 
@@ -127,6 +132,32 @@ const Wrapper = styled.section`
     outline: 2px solid var(--calendar-today-innerborder-color);
 }
 
+.calendar .calendar-inner .calendar-body .calendar-inserted {
+    background: #588157;
+    border-radius: 4px;
+}
+
+.calendar .calendar-inner .calendar-body .calendar-feriado {
+    background: #c26c18;
+    border-radius: 4px;
+}
+
+
+
+.calendar .calendar-inner .calendar-body .calendar-notFound {
+    background: #81171B;
+    border-radius: 4px;
+}
+
+.calendar .calendar-inner .calendar-body .calendar-inserted-low {
+    background: #DDDF00;
+    border-radius: 4px;
+}
+
+.calendar .calendar-inner .calendar-body .calendar-inserted-high {
+    background: #1A4301;
+    border-radius: 4px;
+}
 .calendar .calendar-inner .calendar-controls .calendar-next a,
 .calendar .calendar-inner .calendar-controls .calendar-prev a {
     color: var(--calendar-font-color);

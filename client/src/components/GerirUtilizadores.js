@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteUser, updateUserType, listaUtilizadores } from '../features/utilizadores/utilizadorSlice';
-import Wrapper from '../assets/wrappers/GerirTipoTrabalho';
+import Wrapper from '../assets/wrappers/GerirUtilizador';
 import { AiFillDelete } from 'react-icons/ai';
 import FormRowSelectTipo from './FormRowSelectTipo';
 import { toast } from 'react-toastify';
@@ -105,14 +105,14 @@ const handleConfirmDelete = async (id , nome) => {
   return (
     <Wrapper>
       <div className={'row mb-12 text-center tittle'}>
-        <h1>Utilizadores</h1>
+        <h1>Gerir Utilizadores</h1>
       </div>
       <div className="listaTiposTrabalho">
       {listaDeUtilizadores.map((t, i) => {
           if (user.id !== t._id) {
           return(
           <div className="row text-center" key={i}>
-            <div className="col-md-6 text-center tiposTrabalho">
+            <div className="col-md-8 text-center tiposTrabalho">
               {
                 <p>
                   {t.nome}
@@ -120,7 +120,7 @@ const handleConfirmDelete = async (id , nome) => {
               }
               <FormRowSelectTipo
                 type="text"
-                className="form-control"
+                className="form-row"
                 labelText=" "
                 id="tipo"
                 name ="tipo"
@@ -131,7 +131,7 @@ const handleConfirmDelete = async (id , nome) => {
             />
 
             </div>
-            <div className="col-md-6 text-center">
+            <div className="col-md-4 text-center">
               <div className='Buttons'>
                 {verificaAlterado[t._id] === true ? (
                   <button type='submit'
