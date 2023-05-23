@@ -1,11 +1,12 @@
 import React from 'react';
-import '../assets/css/footer.css';
+import Wrapper from '../assets/wrappers/footer';
 import { MdOutlineEmail } from 'react-icons/md';
 import { BsTelephoneFill } from 'react-icons/bs';
 
 function Footer() {
   const Data = new Date().toISOString().slice(0, 10);
   return (
+    <Wrapper>
     <footer className="footer">
       <div className="container">
         <div className="topTextFooter">
@@ -26,6 +27,7 @@ function Footer() {
         </div>
       </div>
     </footer>
+    </Wrapper>
   );
 }
 

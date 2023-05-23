@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Wrapper from "../assets/wrappers/Calendar";
 import { MdKeyboardArrowLeft } from 'react-icons/md';
 import { MdKeyboardArrowRight } from 'react-icons/md';
-const CalendarControl = ({ handleChange, inserted, feriados }) => {
+const CalendarControl = ({ handleChange, inserted, feriados, inicio, fim , objetivo }) => {
     const [calendar, setCalendar] = useState(new Date());
     const calWeekDays = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
     const calMonthName = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
@@ -134,7 +134,7 @@ const CalendarControl = ({ handleChange, inserted, feriados }) => {
 
         // plot dates of current month
         for (let i = 1; i <= calendarDays; i++) {
-            const dateHTML = `<div class="number-item" data-num="${count}"><a class="dateNumber" href="#">${i}</a></div>`;
+            const dateHTML = `<div class="number-item" data-num="${count}"><a class="dateNumber" >${i}</a></div>`;
             calendarBody.insertAdjacentHTML("beforeend", dateHTML);
             count++;
         }
@@ -191,7 +191,6 @@ const CalendarControl = ({ handleChange, inserted, feriados }) => {
         const changedMonth = calendar.getMonth() + 1;
         const changedYear = calendar.getFullYear();
         let dias = [];
-
         if (inserted) {
             for (let i = 0; i < inserted.length; i++) {
                 const insertedDay = new Date(inserted[i]?.Data);
@@ -234,16 +233,69 @@ const CalendarControl = ({ handleChange, inserted, feriados }) => {
             }
         }
 
+        if (inicio){
+            try{
+                const insertedDay = new Date(inicio);
+                const currentMonth = insertedDay?.getMonth() + 1;
+                const currentYear = insertedDay?.getFullYear();
+                if (
+                    currentYear === changedYear &&
+                    currentMonth === changedMonth &&
+                    numberItems !== null &&
+                    numberItems.length >= calendar.getDate()
+                ) {
+                console.log(insertedDay)
+                numberItems[insertedDay.getDate() - 1].classList.add("calendar-inicio");
+                }
+            }catch{
+                console.log("Inicio não é uma data")
+            }
+        }
+
+        if (objetivo){
+            try{
+                const insertedDay = new Date(objetivo);
+                const currentMonth = insertedDay?.getMonth() + 1;
+                const currentYear = insertedDay?.getFullYear();
+                if (
+                    currentYear === changedYear &&
+                    currentMonth === changedMonth &&
+                    numberItems !== null &&
+                    numberItems.length >= calendar.getDate()
+                ) {
+                console.log(insertedDay)
+                numberItems[insertedDay.getDate() - 1].classList.add("calendar-objetivo");
+                }
+            }catch{
+                console.log("Objetivo não é uma data")
+            }
+        }
+
+        if(fim){
+            try{
+                const insertedDay = new Date(fim);
+                const currentMonth = insertedDay?.getMonth() + 1;
+                const currentYear = insertedDay?.getFullYear();
+                if (
+                    currentYear === changedYear &&
+                    currentMonth === changedMonth &&
+                    numberItems !== null &&
+                    numberItems.length >= calendar.getDate()
+                ) {
+                console.log(insertedDay)
+                numberItems[insertedDay.getDate() - 1].classList.add("calendar-fim");
+                }
+            }catch{
+                console.log("Fim não é uma data")
+            }
+        }
+
         const daysInMonth = new Date(changedYear, changedMonth, 0).getDate();
-        console.log(daysInMonth);
         for (let day = 1; day <= daysInMonth; day++) {
           const date = new Date(changedYear, changedMonth - 1, day);
           const dayOfWeek = date.getDay();
-          console.log(dayOfWeek, "dia semana", day);
           if (dayOfWeek === 0 || dayOfWeek === 6) {
             numberItems[day - 1].classList.add("calendar-fimSemana");
-            console.log(numberItems);
-            console.log(day);
           }
         }
         
@@ -300,7 +352,7 @@ const CalendarControl = ({ handleChange, inserted, feriados }) => {
                 <div className="calendar-inner">
                     <div className="calendar-controls">
                         <div className="calendar-prev text-end">
-                            <a href="#">
+                            <a>
                                 <MdKeyboardArrowLeft width="128" height="128" />
                             </a>
                         </div>
@@ -310,7 +362,7 @@ const CalendarControl = ({ handleChange, inserted, feriados }) => {
                             <div className="calendar-year-label"></div>
                         </div>
                         <div className="calendar-next text-start">
-                            <a href="#">
+                            <a>
                                 <MdKeyboardArrowRight width="128" height="128" />
                             </a>
                         </div>

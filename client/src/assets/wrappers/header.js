@@ -1,3 +1,6 @@
+import styled from 'styled-components';
+
+const Wrapper = styled.section`
 .header{
     position: relative;
     width: 100%;
@@ -29,4 +32,8 @@
   .dropdown-toggle {
     outline: 0;
   }
+  
+  `
+
+  export default Wrapper
   

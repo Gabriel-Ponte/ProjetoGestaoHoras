@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import { FormRow } from '../components';
 import { useNavigate } from 'react-router-dom';
 import ModalFoto from "./ModalFoto";
+import Wrapper from '../assets/wrappers/AddUser';
 import { updateUser, toggleSidebar } from '../features/utilizadores/utilizadorSlice';
 import Loading from './Loading';
 
@@ -104,6 +105,7 @@ const EditarUtilizador = () => {
 
 
   return (
+    <Wrapper>
     <main >
       <div className="form-signin w-100 m-auto" >
         <h1 className="h3 mb-4 fw-normal text-center">Editar Perfil</h1>
@@ -178,6 +180,7 @@ const EditarUtilizador = () => {
         </form>
       </div>
     </main>
+    </Wrapper>
   );
 }
 

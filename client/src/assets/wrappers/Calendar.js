@@ -23,7 +23,7 @@ const Wrapper = styled.section`
 .calendar {
     font-family: 'IBM Plex Sans', sans-serif;
     position: relative;
-    max-width: 60%; /*change as per your design need */
+    width: auto; /*change as per your design need */
     min-width: 320px;
     background: var(--calendar-bg-color);
     color: var(--calendar-font-color);
@@ -32,7 +32,6 @@ const Wrapper = styled.section`
     overflow: hidden;
     font-weight: normal;
     border-radius: var(--calendar-border-radius);
-
 }
 
 .calendar-inner {
@@ -62,6 +61,7 @@ const Wrapper = styled.section`
 .calendar .calendar-inner .calendar-body div:nth-child(-n+7):hover {
     border: 1px solid transparent;
     border-bottom: 1px solid var(--weekdays-border-bottom-color);
+    cursor: default;
 }
 
 .calendar .calendar-inner .calendar-body div>a {
@@ -74,6 +74,7 @@ const Wrapper = styled.section`
 .calendar .calendar-inner .calendar-body div:hover {
     border: 1px solid var(--calendar-date-hover-color);
     border-radius: 4px;
+    cursor: pointer;
 }
 
 .calendar .calendar-inner .calendar-body div.empty-dates:hover {
@@ -114,6 +115,9 @@ const Wrapper = styled.section`
     font-size: 20px;
 }
 
+.calendar .calendar-inner .calendar-body .calendar-today:hover {
+    border: 1px solid transparent;
+}
 .calendar .calendar-inner .calendar-body .calendar-fimSemana {
     background: #BCB8B1;
     border-radius: 4px;
@@ -124,9 +128,6 @@ const Wrapper = styled.section`
     border-radius: 4px;
 }
 
-.calendar .calendar-inner .calendar-body .calendar-today:hover {
-    border: 1px solid transparent;
-}
 
 .calendar .calendar-inner .calendar-body .calendar-today a {
     outline: 2px solid var(--calendar-today-innerborder-color);
@@ -142,7 +143,20 @@ const Wrapper = styled.section`
     border-radius: 4px;
 }
 
+.calendar .calendar-inner .calendar-body .calendar-inicio {
+    background: #588157;
+    border-radius: 4px;
+}
 
+.calendar .calendar-inner .calendar-body .calendar-fim {
+    background: #588157;
+    border-radius: 4px;
+}
+
+.calendar .calendar-inner .calendar-body .calendar-objetivo {
+    background: #81171B;
+    border-radius: 4px;
+}
 
 .calendar .calendar-inner .calendar-body .calendar-notFound {
     background: #81171B;

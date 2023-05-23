@@ -37,13 +37,13 @@ const NavLinks = () => {
 
   useEffect(() => {
     dispatch(getAllProjetos());
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
   const setProjetosV = async (idP) => {
     try {
       await dispatch(getProjeto(idP));
-      {window.location.reload(navigate('/PaginaVisualizarProjeto'))}
+      window.location.reload(navigate('/PaginaVisualizarProjeto'))
     } catch (error) {
       console.error(error);
     }
@@ -52,7 +52,7 @@ const NavLinks = () => {
   const setProjetosEdit = async (idP) => {
     try {
       await dispatch(getProjeto(idP));
-      {window.location.reload(navigate('/PaginaEditarProjeto'))}
+      window.location.reload(navigate('/PaginaEditarProjeto'))
     } catch (error) {
       console.error(error);
     }
@@ -67,8 +67,8 @@ const NavLinks = () => {
       {links.map((link) => {
 
         const { text, path, id, icon } = link;
-        if(user.tipo === 1 && (id === 2 || id === 3 || id == 4)){
-          return;
+        if(user.tipo === 1 && (id === 2 || id === 3 || id === 4)){
+          return null;
         }
         if (id === 6 || id === 7) {
           return (

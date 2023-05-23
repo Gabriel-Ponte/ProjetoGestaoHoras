@@ -1,3 +1,7 @@
+import styled from 'styled-components'
+
+const Wrapper = styled.aside`
+
 html,
 body {
   height: 100%;
@@ -25,3 +29,5 @@ body {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
+`
+export default Wrapper

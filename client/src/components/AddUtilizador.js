@@ -1,12 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import Wrapper from '../assets/wrappers/LoginPage';
+import Wrapper from '../assets/wrappers/AddUser';
 import { FormRow, FormRowSelectTipo } from '../components';
 import { useNavigate } from 'react-router-dom';
 
-
-import "../assets/css/signin.css";
 import ModalFoto from "./ModalFoto";
 import { registerUser } from '../features/utilizadores/utilizadorSlice';
 import Loading from './Loading';
@@ -90,6 +88,7 @@ const AddUtilizador = () => {
 
 
   return (
+    <Wrapper>
     <main style={{ marginBottom: "100px" }}>
       <div className="form-signin w-100 m-auto">
         <h1 className="h3 mb-3 fw-normal text-center">Criar Utilizador</h1>
@@ -183,6 +182,7 @@ const AddUtilizador = () => {
         </form>
       </div>
     </main>
+    </Wrapper>
   );
 }
 

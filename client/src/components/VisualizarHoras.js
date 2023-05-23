@@ -2,7 +2,6 @@ import { useEffect, useState, useCallback } from 'react';
 import Wrapper from '../assets/wrappers/ProjetossContainer';
 import { useSelector, useDispatch } from 'react-redux';
 import Loading from './Loading';
-import { handleChange } from '../features/allProjetos/allProjetosSlice';
 import Dia from './Dias';
 import { getAllDiasUtilizador } from '../features/allDias/allDiasSlice';
 import { listaUtilizadores } from '../features/utilizadores/utilizadorSlice';
@@ -17,18 +16,18 @@ const ListaHoras = () => {
   const [selectedDay, setSelectedDay] = useState();
   let [getFeriados, setGetFeriados] = useState([]);
   const [listaDias, setListaDias] = useState([]);
+  const [ horasRealizadas, setHorasRealizadas] = useState(0);
+  const [ percentagemHoras, setPercentagemHoras] = useState(0);
+  const [ possibleHours, setPossibleHours] = useState(0);
   const [userNome, setUserNome] = useState(user?.user?.nome); // add state for user name
-  const userId = user?.user?.id;
   const dispatch = useDispatch();
   const formattedListUtilizadores = Array.isArray(utilizadores) ? utilizadores : [];
 
   const today = new Date();
 
   function getWeekdayCount(month, year) {
-    console.log(year)
     const daysInMonth = new Date(year, month + 1, 0).getDate(); // number of days in the month
     let count = 0;
-    let weekdays = 0;
 
     for (let day = 1; day <= daysInMonth; day++) {
       const date = new Date(year, month, day);
@@ -115,16 +114,44 @@ const ListaHoras = () => {
     setSelectedUser(value);
   }, []);
 
+
   useEffect(() => {
     dispatch(listaUtilizadores());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedUser]);
+
 
   useEffect(() => {
     dispatch(getAllDiasUtilizador({ userNome: selectedUser })).then((res) => {
       setListaDias(res.payload);
     });
     setUserNome(selectedUser); // update userNome state with selected user name
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedUser]);
+
+  useEffect(() => {
+    console.log(dias);
+    console.log(listaDias.diasAllUtilizador)
+    const month = selectedDay ? selectedDay.mes : today.getMonth();
+    const year = selectedDay ? selectedDay.ano : today.getFullYear();
+    const weekdayCount = getWeekdayCount(month, year);
+    const possibleHoursCount = weekdayCount * 8;
+    let horasRealizadasCount = 0;
+    if(listaDias?.diasAllUtilizador){
+    for (let i = 0; i < listaDias?.diasAllUtilizador.length; i++) {
+      const data = new Date(listaDias?.diasAllUtilizador[i].Data);
+  
+      if (year === data.getFullYear() && month === data.getMonth()) {
+        horasRealizadasCount += dias[i].NumeroHoras;
+      }
+    }
+  }
+    setPossibleHours(possibleHoursCount);
+    setHorasRealizadas(horasRealizadasCount);
+    setPercentagemHoras((horasRealizadasCount / possibleHoursCount) * 100);
+    //const percentagemHoras = Math.round((horasRealizadas / possibleHours) * 100);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listaDias, selectedDay]);
 
   if (isLoading) {
     return <Loading />;
@@ -134,26 +161,15 @@ const ListaHoras = () => {
   const month = selectedDay ? selectedDay.mes : today.getMonth();
   const year = selectedDay ? selectedDay.ano : today.getFullYear();
   const weekdayCount = getWeekdayCount(month, year);
-  const possibleHours = weekdayCount * 8;
-  let horasRealizadas = 0;
 
-  for (let i = 0; i < dias.length; i++) {
-    const data = new Date(dias[i].Data);
 
-    if (year === data.getFullYear() && month === data.getMonth()) {
-      horasRealizadas += dias[i].NumeroHoras;
-    }
-  }
-
-  const percentagemHoras = (horasRealizadas / possibleHours) * 100;
-  //const percentagemHoras = Math.round((horasRealizadas / possibleHours) * 100);
   return (
     <Wrapper>
 
       <div className='projetos'>
         {(user?.user?.tipo === 2) && (
-          <div>
-            <h3>Escolha Utilizador</h3>
+          <div className='text-center mb-5'>
+            <h3 className='mb-5'>Escolha Utilizador</h3>
             <FormRowSelect
               type="text"
               className="formRow" classNameLabel='formRowLabel' classNameInput='formRowInput'
@@ -187,11 +203,13 @@ const ListaHoras = () => {
           </div>
         ) : (
           <>
+            <div className='col-12'>
             <Calendar
               handleChange={handleChangeCalendario}
               inserted={dias}
               feriados={getFeriados}
             />
+            </div>
             <div>
               {dias.map((dia) => {
                 const data = new Date(dia.Data);
@@ -224,7 +242,7 @@ const ListaHoras = () => {
 
                 return isSameMonth && isSameDate;
               }).length === 0 && diaSelected !== 0 && (
-                  <h2>Sem Horas inseridas neste dia</h2>
+                  <h2>Sem Horas inseridas neste dia {diaSelected}</h2>
                 )}
             </div>
 

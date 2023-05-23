@@ -1,3 +1,6 @@
+import styled from 'styled-components';
+
+const Wrapper = styled.section`
 .footer{
     position: absolute;
     width: 100%;
@@ -39,3 +42,7 @@
 
 .object-fit-contain{-o-object-fit:contain!important;
     object-fit:contain!important}
+
+    `
+
+export default Wrapper
