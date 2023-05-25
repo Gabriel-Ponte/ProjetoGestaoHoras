@@ -4,16 +4,19 @@ import { toast } from 'react-toastify';
 import Wrapper from '../assets/wrappers/AddUser';
 import { FormRow, FormRowSelectTipo } from '../components';
 import { useNavigate } from 'react-router-dom';
-
 import ModalFoto from "./ModalFoto";
 import { registerUser } from '../features/utilizadores/utilizadorSlice';
 import Loading from './Loading';
+//import DefaultUserImg from "../assets/image/DefaultUserImg.png";
 
-const initialState = {
+
+
+
+const  initialState = {
     login: '',
     password: '',
     email: '',
-    foto: "DefaultUserImg",
+    foto: '',
     nome: '',
     tipo: 1,
   };
@@ -26,6 +29,7 @@ const AddUtilizador = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
+    
     useEffect(() => {
       if (user && user.tipo === 1) {
         toast.error("Sem permissões para aceder a esta página!")
@@ -42,14 +46,13 @@ const AddUtilizador = () => {
       if(value === "Administrador"){
         e.target.value = 2;
         setValues({ ...values, [name]: 2 });
-      }else if(value =="Funcionario"){
+      }else if(value === "Funcionario"){
         e.target.value = 1;
         setValues({ ...values, [name]: 1 });
       }
     }
 
     const handleChangeFoto = (name ,file) => {
-      console.log(file);
       //const imageUrl = URL.createObjectURL(file);
       //console.log(imageUrl);
 

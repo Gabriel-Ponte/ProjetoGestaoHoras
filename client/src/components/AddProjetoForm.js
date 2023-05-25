@@ -4,7 +4,7 @@ import { FormRow, FormRowSelect, } from '../components';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { createProjeto } from '../features/projetos/projetosSlice';
-import { getTipoTrabalho, createTipoTrabalho } from '../features/tipoTrabalho/tipoTrabalhoSlice';
+//import { getTipoTrabalho, createTipoTrabalho } from '../features/tipoTrabalho/tipoTrabalhoSlice';
 import { listaUtilizadores, toggleSidebar} from '../features/utilizadores/utilizadorSlice';
 import { useNavigate } from 'react-router-dom';
 import Loading from './Loading';
@@ -28,8 +28,8 @@ const initialState = {
 
 const AddProjectForm = () => {
   const [values, setValues] = useState(initialState);
-  const { isLoading } = useSelector((store) => store.projeto);
-  const [listaTipoTrabalho, setListaTipoTrabalho] = useState([]);
+  //const { isLoading } = useSelector((store) => store.projeto);
+  //const [listaTipoTrabalho, setListaTipoTrabalho] = useState([]);
   const { isLoadingU, utilizadores, listaDeUtilizadores } = useSelector((store) => store.utilizador)
   //const { isLoading } = useSelector((store) => store.projetos);
 
@@ -39,16 +39,17 @@ const AddProjectForm = () => {
 
 
   // //////////////////////////////////////////////////////////////////////////////////
-  useEffect(() => {
-    dispatch(getTipoTrabalho()).then((res) => {
-      setListaTipoTrabalho(Array.isArray(res.payload.tipoTrabalho) ? res.payload.tipoTrabalho : []);
+  //useEffect(() => {
+  //  dispatch(getTipoTrabalho()).then((res) => {
+  //    setListaTipoTrabalho(Array.isArray(res.payload.tipoTrabalho) ? res.payload.tipoTrabalho : []);
       //setValues({ ...values, TipoTrabalho: listaTipoTrabalho });
-    });
-  }, []);
+  //  });
+  //}, []);
 
   /////////////////////////////////////////////////////////////////////////////////////
   useEffect(() => {
     dispatch(listaUtilizadores());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listaDeUtilizadores]);
 
   if (isLoadingU) {
@@ -58,9 +59,9 @@ const AddProjectForm = () => {
 
   const formattedListUtilizadores = Array.isArray(utilizadores) ? utilizadores : [];
 
-  const handleLista = (e) => {
-    dispatch(createTipoTrabalho(e));
-  }
+  //const handleLista = (e) => {
+  //  dispatch(createTipoTrabalho(e));
+  //}
 
   const handleChange = (e) => {
     const nome = e.target.id;

@@ -12,7 +12,26 @@ function ModalFoto({ label, name, value, handleChange, className }) {
 
   const [foto, setFoto] = useState(value);
   useEffect(() => {
+    if(value === "" || typeof value === "undefined"){
+    fetch(DefaultUserImg)
+    .then(response => response.blob())
+    .then(blob => {
+      const novaFoto = URL.createObjectURL(blob);
+      return fetch(novaFoto);
+    })
+    .then(response => response.arrayBuffer())
+    .then(buffer => {
+      const fotoUser = new Uint8Array(buffer);
+      setFoto(fotoUser);
+      handleChange(name, fotoUser);
+    })
+    .catch(error => {
+      console.error("Error fetching image:", error);
+    });
+    }
+    else{
     setFoto(value);
+  }
   }, [file, value]);
 
   const handleFileInputChange = (file) => {
@@ -123,6 +142,8 @@ function ModalFoto({ label, name, value, handleChange, className }) {
     const buffer = Buffer.from(value.data);
     setFoto({ data: { data: buffer }, contentType: value.contentType });
   }
+
+
 
 
   return (
