@@ -15,6 +15,8 @@ import {
   PaginaVisualizarHoras,
   PaginaGerirTipoTrabalho,
   PaginaGerirUtilizadores,
+  PaginaResetPassword,
+  PaginaResetPasswordChange,
 } from './pages/dashboard';
 
 function App() {
@@ -43,6 +45,8 @@ function App() {
         </Route>
 
         <Route path='login' element={<Login />} />
+        <Route path='paginaResetPassword' element={<PaginaResetPassword />} />
+        <Route path='paginaResetPasswordChange/:token' element={<PaginaResetPasswordChange />} />
         <Route path='*' element={<Error />} />
       </Routes>
       <ToastContainer position='top-center' />

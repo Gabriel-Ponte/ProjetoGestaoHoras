@@ -22,6 +22,36 @@ export const registerUserThunk = async (url, user, thunkAPI) => {
   }
 };
 
+export const updateResetedPasswordThunk = async (  thunkAPI, values ) => {
+  try {
+    const resp = await customFetch.post(`/inicio/updateResetedPassword/`,values);
+    return resp.data;
+
+  } catch (error) {
+    console.log("ERROR Udating" , error)
+    return checkForUnauthorizedResponse(error, thunkAPI);
+  }
+};
+export const postResetPasswordThunk = async (  thunkAPI, email ) => {
+  try {
+    const resp = await customFetch.post(`/inicio/resetPassword/${email}`);
+    console.log(resp.data)
+    return resp.data;
+
+  } catch (error) {
+    console.log(error)
+    return checkForUnauthorizedResponse(error, thunkAPI);
+  }
+};
+export const getUtilizadorThunk = async ( thunkAPI, utilizadorId ) => {
+  try {
+    const resp = await customFetch.get(`/utilizador/${utilizadorId}`);
+    return resp.data;
+  } catch (error) {
+    return checkForUnauthorizedResponse(error, thunkAPI);
+  }
+};
+
 export const loginUserThunk = async (url, user, thunkAPI) => {
   try {
     const resp = await customFetch.post(url, user);

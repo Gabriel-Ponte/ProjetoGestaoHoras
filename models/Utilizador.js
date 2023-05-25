@@ -61,6 +61,8 @@ const UserSchema = new mongoose.Schema({
         maxlength: 20,
         default: "2",
     },
+    resetPasswordToken: String,
+    resetPasswordExpires: Date,
 });
 
 UserSchema.pre("save", async function () {

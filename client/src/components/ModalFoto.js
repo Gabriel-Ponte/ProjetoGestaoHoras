@@ -19,12 +19,12 @@ function ModalFoto({ label, name, value, handleChange, className }) {
     const reader = new FileReader();
     reader.onload = function (event) {
       const novaFoto = new Uint8Array(event.target.result);
+      console.log(novaFoto)
       if (novaFoto.length > 10000) {
         resizeImage(event.target.result)
           .then((resizedDataUrl) => {
             const novaFoto = new Uint8Array(resizedDataUrl);
             handleChange(name, novaFoto);
-            // toast.error(`Foto inserida é demasiado grande`);
           })
           .catch((error) => {
             console.error(error);

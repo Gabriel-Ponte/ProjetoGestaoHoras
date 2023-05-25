@@ -32,7 +32,6 @@ function Login() {
     }
     const result = await dispatch(loginUser({ email, password }));
     if (result.payload.user) {
-        console.log(user);
         setTimeout(() => {
         window.location.reload(navigate('/PaginaPrincipal'));
         }, 2000);
@@ -48,23 +47,35 @@ function Login() {
     }
   }, [user]);
 
-
+const handleForget =()=>{
+  navigate('/PaginaResetPassword');
+}
   return (
     <Wrapper className='full-page'>
       <Header />
       <div className="MainLogin">
-      <h1>Gestão Horas</h1>
+      <h1 className='mt-5'>Gestão Horas</h1>
       <form className='loginForm' onSubmit={onSubmit}>
-        <h3>{'Login'}</h3>
+        <h3 className='mb-5'>{'Login'}</h3>
+        
         {/* email field */}
         <FormRow className="formRow" classNameLabel='formRowLabel' classNameInput='formRowInput'
-        type='email' name='email' value={values.email} handleChange={handleChange} />
+        type='email' name='email' labelText='Email:' value={values.email} handleChange={handleChange} required="True"/>
+        
         {/* password field */}
         <FormRow className="formRow" classNameLabel='formRowLabel' classNameInput='formRowInput' 
-        type='password' name='password' value={values.password} handleChange={handleChange} />
-        <button type='submit' className='btn btn-block' disabled={isLoading}>
-          {isLoading ? 'loading...' : 'submit'}
+        type='password' name='password' labelText='Password:' value={values.password} handleChange={handleChange} required="True"/>
+        <div className='buttonPassword'>
+        <button type='button' className='buttonP btn btn-link' onClick={handleForget} disabled={isLoading}>
+          {isLoading ? 'loading...' : 'esqueceu password'}
         </button>
+        </div>
+        <button type='submit' className='btn btn-outline-primary' disabled={isLoading}>
+          {isLoading ? 'loading...' : 'Submeter'}
+        </button>
+
+
+      
       </form>
       </div>
       <Footer />

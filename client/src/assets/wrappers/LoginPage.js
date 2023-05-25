@@ -18,6 +18,19 @@ const Wrapper = styled.section`
     flex-wrap: nowrap;
     height: 100%;
   }
+
+  .buttonPassword{
+    width: 15%;
+    display: flex;
+    align-self: center;
+    justify-content: end;
+    align-items: top;
+    justify-items: start;
+    flex-wrap: nowrap;
+  }
+  .buttonPassword .buttonP{
+    margin-top:0;
+  }
   .logo {
     display: block;
     margin: 0 auto;

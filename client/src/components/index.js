@@ -20,7 +20,8 @@ import VisualizarHoras from './VisualizarHoras';
 import DeleteFromDB from './DeleteFromDB';
 import GerirTipoTrabalho from './GerirTipoTrabalho';
 import GerirUtilizadores from './GerirUtilizadores';
-
+import ForgetPassword from './ForgetPassword';
+import ForgetPasswordChange from './ForgetPasswordChange';
 export {
   ListaProjetos,
   BigSidebar,
@@ -44,4 +45,6 @@ export {
   GerirTipoTrabalho,
   FormRowSelectTipo,
   GerirUtilizadores,
+  ForgetPassword,
+  ForgetPasswordChange,
 };

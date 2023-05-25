@@ -11,6 +11,8 @@ import PaginaVisualizarHoras from './PaginaVisualizarHoras';
 import PaginaAdicionarHorasProjeto from './PaginaAdicionarHorasProjeto';
 import PaginaGerirTipoTrabalho from './PaginaGerirTiposTrabalho';
 import PaginaGerirUtilizadores from './PaginaGerirUtilizador';
+import PaginaResetPassword from './PaginaResetPassword'
+import PaginaResetPasswordChange from './PaginaResetPasswordChange'
 export {
     PaginaLogin,
     SharedLayout,
@@ -25,4 +27,6 @@ export {
     PaginaAdicionarHorasProjeto,
     PaginaGerirTipoTrabalho,
     PaginaGerirUtilizadores,
+    PaginaResetPassword,
+    PaginaResetPasswordChange,
 };

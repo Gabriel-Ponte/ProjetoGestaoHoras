@@ -130,8 +130,6 @@ const ListaHoras = () => {
   }, [selectedUser]);
 
   useEffect(() => {
-    console.log(dias);
-    console.log(listaDias.diasAllUtilizador)
     const month = selectedDay ? selectedDay.mes : today.getMonth();
     const year = selectedDay ? selectedDay.ano : today.getFullYear();
     const weekdayCount = getWeekdayCount(month, year);
@@ -160,8 +158,6 @@ const ListaHoras = () => {
   const diaSelected = selectedDay ? selectedDay.dia : 0;
   const month = selectedDay ? selectedDay.mes : today.getMonth();
   const year = selectedDay ? selectedDay.ano : today.getFullYear();
-  const weekdayCount = getWeekdayCount(month, year);
-
 
   return (
     <Wrapper>

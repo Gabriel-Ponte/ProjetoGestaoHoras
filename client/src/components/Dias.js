@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { getProjetoList } from '../features/projetos/projetosSlice';
 
 const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPossiveis }) => {
+
   const dispatch = useDispatch();
   const [projeto, setProjeto] = useState([]);
   const [horasTotal, sethorasTotal] = useState([]);
