@@ -1,4 +1,4 @@
-import Wrapper from '../assets/wrappers/FormRowSelect';
+import Wrapper from '../assets/wrappers/FormRowSelectTipo';
 
 const FormRowSelect = ({ labelText, name, value, handleChange, list, className}) => {
 
@@ -23,7 +23,7 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, className})
         id={name}
         value={value}
         onChange={handleChange}
-        className='form-select '
+        className='form-select'
 
       >
         {list.map((itemValue, index) => {

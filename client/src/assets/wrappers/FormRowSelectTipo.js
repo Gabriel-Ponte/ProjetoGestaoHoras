@@ -1,32 +1,6 @@
 import styled from 'styled-components'
 
 const Wrapper = styled.section`
-@media (max-width: 768px) {
-  .text-end {
-    align-content: center;
-    justify-content: center;
-    align-items: center;
-    justify-items: center;
-    text-align: center;
-    align-self:center;
-    width:auto;
-    text-align: center;
-    margin: auto;
-  }
-
-  .text-start {
-    align-content: center;
-    justify-content: center;
-    align-items: center;
-    justify-items: center;
-    text-align: center;
-    align-self:center;
-    width:auto;
-    text-align: center;
-    margin: auto;
-  }
-}
-
 
 .multiselect {
     width: 200px;
@@ -36,17 +10,6 @@ const Wrapper = styled.section`
     position: relative;
   }
   
-  .form-select{
-    align-content: center;
-    justify-content: center;
-    align-items: center;
-    justify-items: center;
-    text-align: center;
-    align-self:center;
-    width:50%;
-    margin: auto;
-    overflow-y: auto;
-  }
   .selectBox select {
     width: 100%;
     font-weight: bold;

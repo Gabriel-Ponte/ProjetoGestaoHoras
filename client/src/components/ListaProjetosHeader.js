@@ -50,6 +50,13 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
             return false;
         }
 
+        //DataFim
+        if(sortValue === "Resultado") {
+            return true;
+        } else if(sortValue === "-Resultado"){
+            return false;
+        }
+
         return false;
     }
 
@@ -61,6 +68,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
     const [verificaSortDataObjetivo, setVerificaSortDataObjetivo] = useState(sort);
     const [verificaSortAlertaDias, setVerificaSortAlertaDias] = useState(sort);
     const [verificaSortDataFim, setVerificaSortDataFim] = useState(sort);
+    const [verificaSortResultado, setVerificaSortResultado] = useState(sort);
     const [verificaActivo, setVerificaActivo] = useState(sortValue);
 
 
@@ -72,26 +80,31 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                 setVerificaSortNome((prevState) => !prevState);
                 await handleChange(verificaSortNome ? '-Nome' : 'Nome');
                 break;
+
             case 'Cliente':
                 setVerificaActivo('Cliente');
                 setVerificaSortCliente(!verificaSortCliente);
                 handleChange(verificaSortCliente ? '-Cliente' : 'Cliente');
                 break;
+
             case 'Notas':
                 setVerificaActivo('Notas');
                 setVerificaSortNotas(!verificaSortNotas);
                 await handleChange(verificaSortNotas ? '-Notas' : 'Notas');
                 break;
+
             case 'DataObjetivo':
                 setVerificaActivo('DataObjetivo');
                 setVerificaSortDataObjetivo(!verificaSortDataObjetivo);
                 await handleChange(verificaSortDataObjetivo ? '-DataObjetivo' : 'DataObjetivo');
                 break;
+
             case 'AlertaDias':
                 setVerificaActivo('AlertaDias');
                 setVerificaSortAlertaDias(!verificaSortAlertaDias);
                 await handleChange(verificaSortAlertaDias ? '-DataObjetivo' : 'DataObjetivo');
                 break;
+
             case 'Acao':
                 setVerificaActivo('Acao');
                 setVerificaSortAcoes(!verificaSortAcoes);
@@ -103,11 +116,16 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                 setVerificaSortDataFim(!verificaSortDataFim);
                 await handleChange(verificaSortDataFim ? '-DataFim' : 'DataFim');
                 break;
+
+            case 'Resultado':
+                setVerificaActivo('Resultado');
+                setVerificaSortResultado(!verificaSortResultado);
+                await handleChange(verificaSortResultado ? '-Resultado' : 'Resultado');
+                break;
             default:
                 break;
         }
     };
-
 
     return (
         <Wrapper>
@@ -205,9 +223,20 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                             </button>
                                         </div>
                                         <div className="col-md-4 themed-grid-col">
-                                            <p className="btn ">
-                                                Resultado
-                                            </p>
+                                        <button
+                                                type="button"
+                                                name="VisualizarButton"
+                                                className="btn "
+                                                onClick={() => toggleSort('Resultado')}
+                                            >
+
+                                                Resultado{' '}
+                                                {verificaActivo === "-Resultado" ?
+                                                    <AiOutlineArrowUp /> : (verificaActivo === "Resultado" ?
+                                                        <AiOutlineArrowDown /> : <BsArrowLeftShort />
+                                                    )
+                                                }
+                                            </button>
                                         </div>
                                     </>
                                 ) : (

@@ -97,8 +97,6 @@ const AddProjectForm = () => {
     } catch (error) {
       console.log(error);
     }
-
-  
     //navigate('/');
   };
 
@@ -109,31 +107,41 @@ const AddProjectForm = () => {
   return (
     <Wrapper>
       <form onSubmit={handleSubmit} className='MainForm'>
-      <h1 className="h3 mb-4 fw-normal">Adicionar Projeto</h1>
+      <h1 className="h3 mb-4 fw-normal text-center">Adicionar Projeto</h1>
         <div className='form'>
+          
           <FormRow
             type="text"
-            className="form-row" classNameLabel='form-label' classNameInput='form-input'
+            className="row mb-3 text-center" 
+            classNameLabel='col-md-3 text-end' 
+            classNameInput='col-md-9'
             id="nomeProjeto"
             name="Nome"
+            labelText="Nome:"
             placeholder="projeto"
             value={values.Nome}
             handleChange={handleChange}
           />
           <FormRow
             type="text"
-            className="form-row" classNameLabel='form-label' classNameInput='form-input'
+            className="row mb-3 text-center" 
+            classNameLabel='col-md-3 text-end' 
+            classNameInput='col-md-9'
             id="temaProjeto"
             name="Tema"
+            labelText="Tema:"
             placeholder="Tema"
             value={values.Tema}
             handleChange={handleChange}
           />
           <FormRow
             type="text"
-            className="form-row" classNameLabel='form-label' classNameInput='form-input'
+            className="row mb-3 text-center" 
+            classNameLabel='col-md-3 text-end' 
+            classNameInput='col-md-9'
             id="Acao"
             name="Acao"
+            labelText="Ação:"
             placeholder="Ação"
             value={values.Acao}
             handleChange={handleChange}
@@ -155,22 +163,30 @@ const AddProjectForm = () => {
             handleLista={handleLista}
             multiple={true}
           />
-          */}
+          */
+          }
+
           <FormRow
             type="date"
-            className="form-row" classNameLabel='form-label' classNameInput='form-input'
+            className="row mb-3 text-center" 
+            classNameLabel='col-md-3 text-end' 
+            classNameInput='col-md-9'
             id="dataInicial"
             name="DataInicio"
             placeholder="Data Inicial"
+            labelText="Data Inicial:"
             value={values.DataInicio}
             handleChange={handleChange}
           />
 
           <FormRow
             type="date"
-            className="form-row" classNameLabel='form-label' classNameInput='form-input'
+            className="row mb-3 text-center" 
+            classNameLabel='col-md-3 text-end' 
+            classNameInput='col-md-9'
             id="dataObjetivo"
             name="DataObjetivo"
+            labelText="Data Objetivo:"
             placeholder="Data Objetivo"
             value={values.DataObjetivo}
             handleChange={handleChange}
@@ -178,40 +194,53 @@ const AddProjectForm = () => {
 
           <FormRow
             type="text"
-            className="form-row" classNameLabel='form-label' classNameInput='form-input'
+            className="row mb-3 text-center" 
+            classNameLabel='col-md-3 text-end' 
+            classNameInput='col-md-9'
             id="Notas"
             name="Notas"
+            labelText="Notas:"
             placeholder="Notas"
             value={values.Notas}
             handleChange={handleChange}
           />
           <FormRow
             type="text"
-            className="form-row" classNameLabel='form-label' classNameInput='form-input'
+            className="row mb-3 text-center" 
+            classNameLabel='col-md-3 text-end' 
+            classNameInput='col-md-9'
             id="Links"
             name="Links"
+            labelText="Links:"
             placeholder="Links"
             value={values.Links}
             handleChange={handleChange}
           />
           <FormRow
             type="text"
-            className="form-row" classNameLabel='form-label' classNameInput='form-input'
+            className="row mb-3 text-center" 
+            classNameLabel='col-md-3 text-end' 
+            classNameInput='col-md-9'
             id="Cliente"
             name="Cliente"
+            labelText="Cliente:"
             placeholder="Cliente Projeto"
             value={values.Cliente}
             handleChange={handleChange}
           />
+          <hr/>
 
           <FormRowSelect
             type="text"
-            className="formRow" classNameLabel='formRowLabel' classNameInput='formRowInput'
+            className="row mb-3 text-center" 
+            classNameLabel='col-md-3 text-end' 
+            classNameInput='col-md-9'
+            classNameResult='col-md-9'
             
             id="piloto"
             name="Piloto"
             placeholder="Piloto"
-            labelText = "Piloto"
+            labelText = "Piloto:"
             value={[values.Piloto]}
             list={formattedListUtilizadores}
             handleChange={handleChangeFormRowSelect}

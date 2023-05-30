@@ -36,8 +36,6 @@ const ForgetPasswordChange = () => {
     try {
 
 
-
-      // Por fazer ...
       const result = await dispatch(updatePassword({token , password}));
       if(!result.error){
         setMessage(`Password Alterada`);

@@ -32,6 +32,7 @@ function ModalFoto({ label, name, value, handleChange, className }) {
     else{
     setFoto(value);
   }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file, value]);
 
   const handleFileInputChange = (file) => {

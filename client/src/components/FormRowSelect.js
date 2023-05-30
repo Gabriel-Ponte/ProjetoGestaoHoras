@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import Wrapper from '../assets/wrappers/FormRowSelect';
 
 const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, handleLista, className, classNameLabel, classNameInput, classNameResult }) => {
@@ -22,7 +22,6 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
     const previousOptions = selectedOption.filter((option) => !selectedOptions.includes(option));
     // Declare updatedOptions variable outside of the if/else block
     const updatedOptions = [...previousOptions, ...selectedOptions];
-    console.log(updatedOptions);
     // Remove duplicated setSelectedOption() call
     setSelectedOption(updatedOptions.length === selectedOption.length ? previousOptions : updatedOptions);
     const op = updatedOptions.length === selectedOption.length ? previousOptions : updatedOptions;
@@ -132,22 +131,18 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
 
           {value && (
             <div className={className ? className : 'row mb-3 text-center'}>
-            <div className={classNameResult ? classNameResult : 'form-Row'}>
               <div className={classNameLabel ? classNameLabel : 'form-label'}>
                 <p>
-                  {labelText + ': ' || name + ': '}
+                  {'Selecionado: ' || name + ': '}
                 </p>
               </div>
-              </div>
-              <div className={classNameResult ? classNameResult : 'form-Row'}>
-              <div className={classNameLabel ? classNameLabel : 'form-label'}>
+              <div className={classNameResult ? classNameResult : 'form-label'}>
 
                 <p>
                   {Array.isArray(value) ? value.join(', ') : value}
                 </p>
                 </div>
               </div>
-            </div>
           )}
 
           {name !== 'Piloto' && (

@@ -221,10 +221,10 @@ const ListaProjetos = () => {
             return (
               <div className="list-group-item" key={project._id}>
                 <div className="row mb-3 text-center">
-                  <div className="col-md-3 themed-grid-col">
-                    <p>{project.Nome}</p>
+                  <div className="col-md-4 text-end themed-grid-col">
+                    <h5>{project.Nome}</h5>
                   </div>
-                  <div className="col-md-9 themed-grid-col">
+                  <div className="col-md-8 themed-grid-col">
                     <div className="btn-container">
                       <button
                         type="button"
@@ -235,23 +235,23 @@ const ListaProjetos = () => {
                       </button>
 
                       <div
-                        className={
-                          showProjeto[project._id]
-                            ? "dropdown show-dropdown"
-                            : "dropdown"
-                        }
+                    className={
+                      `dropdown ${showProjeto[project._id] ? "show-dropdown" : "hidden-dropdown"}
+                      ${showProjeto[project._id] ? "" : "d-none"}`}
+
                       >
                         <div className="row mb-3 text-center" key={"NewDia" + project._id}>
                           {!verificaDiaCalled && (
                             StringListaTrabalho.split(",").map((t, i) => (
                               <div className="row mb-3 text-center" key={"NovoDia" + i}>
-                                <div className="col-md-3 themed-grid-col">
+                                <div className="col-md-9 text-start themed-grid-col">
                                   <p>{t}</p>
                                 </div>
                                 <div className="col-md-3 themed-grid-col">
                                   <input
                                     type="number"
                                     min="0"
+                                    max="24"
                                     id="horas"
                                     className="horas"
                                     placeholder="0"
@@ -293,13 +293,14 @@ const ListaProjetos = () => {
                                             counter1++;
                                             return (
                                               <div className="row mb-3 text-center" key={"EditarDiaTTFound" + iId}>
-                                                <div className="col-md-3 themed-grid-col">
+                                                <div className="col-md-9 text-start themed-grid-col">
                                                   <p>{t}</p>
                                                 </div>
                                                 <div className="col-md-3 themed-grid-col">
                                                   <input
                                                     type="number"
                                                     min="0"
+                                                    max="24"
                                                     id={`horas-${item._id}`}
                                                     className="horas"
                                                     placeholder="0"
@@ -325,7 +326,7 @@ const ListaProjetos = () => {
                                               if (!matchFound[i]) {
                                                 return (
                                                   <div className="row mb-3 text-center" key={"EditarDiaTTNotFound" + iId}>
-                                                    <div className="col-md-3 themed-grid-col">
+                                                    <div className="col-md-9 text-start themed-grid-col">
                                                       <p>{t}</p>
                                                     </div>
                                                     <div className="col-md-3 themed-grid-col">
@@ -333,6 +334,7 @@ const ListaProjetos = () => {
                                                         key={i}
                                                         type="number"
                                                         min="0"
+                                                        max="24"
                                                         id={`horas-${item._id}`}
                                                         className="horas"
                                                         placeholder="0"
@@ -367,13 +369,14 @@ const ListaProjetos = () => {
                                         {StringListaTrabalho.split(",").map((t, i) => {
                                           return (
                                             <div className="row mb-3 text-center" key={"EditarDiaProjetoNotFoundList" + i}>
-                                              <div className="col-md-3 themed-grid-col" >
+                                              <div className="col-md-9 text-start themed-grid-col" >
                                                 <p>{t}</p>
                                               </div>
                                               <div className="col-md-3 themed-grid-col">
                                                 <input
                                                   type="number"
                                                   min="0"
+                                                  max="24"
                                                   id="horas"
                                                   className="horas"
                                                   placeholder="0"

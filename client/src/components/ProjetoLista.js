@@ -312,7 +312,7 @@ const Projeto = ({
                       <div className='row mb-2 text-center'>
                         <button
                           type='button'
-                          className='btn btn-outline-secondary'
+                          className='btn btn-outline-primary'
                           onClick={() => toggleEdit(_id)}
                         >
                           Editar
@@ -332,7 +332,7 @@ const Projeto = ({
                       <div className='row  text-center'>
                         <button
                           type='button'
-                          className='btn btn-outline-secondary'
+                          className='btn btn-outline-success'
                           onClick={() => toggleAddHoras(_id)}
                         >
                           Adicionar Horas

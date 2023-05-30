@@ -28,10 +28,7 @@ const Wrapper = styled.nav`
     font-size: 15px ; 
     line-height: 1;
 }
-  .modal {
-    display: none;
-    /* Other styles for the modal box */
-  }
+
   .horasP {
     background-color: transparent;
     align-items: center;

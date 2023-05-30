@@ -3,10 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Wrapper from '../assets/wrappers/VisualizarProjeto';
 import Loading from './Loading';
 import { getAllDias } from '../features/allDias/allDiasSlice';
-import Dia from './Dias';
 import Calendar from './Calendar'
-import { getProjetoList } from '../features/projetos/projetosSlice';
-import { getUser } from "../features/utilizadores/utilizadorSlice";
 
 function createInitialState(projeto) {
   return {
@@ -109,11 +106,12 @@ function VisualizarProjeto() {
     }
   }
 
-  const today = new Date();
-  const diaSelected = selectedDay ? selectedDay.dia : 0;
-  const month = selectedDay ? selectedDay.mes : today.getMonth();
-  const year = selectedDay ? selectedDay.ano : today.getFullYear();
-
+  //const today = new Date();
+  //const diaSelected = selectedDay ? selectedDay.dia : 0;
+  //const month = selectedDay ? selectedDay.mes : today.getMonth();
+  //const year = selectedDay ? selectedDay.ano : today.getFullYear();
+  console.log(values.Piloto)
+  console.log(projeto.projeto.Piloto)
   return (
     <Wrapper>
       <div className="mainVisualiza">
@@ -151,7 +149,7 @@ function VisualizarProjeto() {
                     </h5>
                   </div>
                   <div className="col-6 text-start">
-                    <p>{values.Pilotos ? values.Pilotos : "Sem Pilotos"}</p>
+                    <p>{values.Piloto ? values.Piloto : "Sem Pilotos"}</p>
                   </div>
                 </div>
 

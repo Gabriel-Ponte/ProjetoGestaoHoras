@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.section`
-  height: 75vh; /* Set height to 100% of viewport height */
+  height: 70vh; /* Set height to 100% of viewport height */
   width: 90vw; /* Set width to 90% of viewport width */
 
   @media (max-width: 1800px) {
@@ -45,7 +45,7 @@ const Wrapper = styled.section`
     overflow-x: hidden;
     scrollbar-color: rebeccapurple green;
     scrollbar-width: thin;
-    height: 60vh;
+    height:60vh;
     margin: auto;
     margin-right:2%;
     width: 40%;
@@ -56,7 +56,7 @@ const Wrapper = styled.section`
     overflow-x: hidden;
     scrollbar-color: rebeccapurple green;
     scrollbar-width: thin;
-    height:60vh;
+    height:65vh;
     width: 50%;
     margin: auto;
   }

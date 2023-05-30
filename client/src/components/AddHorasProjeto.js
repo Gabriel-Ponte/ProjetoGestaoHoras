@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import Wrapper from '../assets/wrappers/addDias';
+import Wrapper from '../assets/wrappers/addHorasProjeto';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAllProjetos, handleChange } from '../features/allProjetos/allProjetosSlice';
 import { toast } from 'react-toastify';
@@ -225,6 +225,7 @@ const ListaProjetos = () => {
                                                         <input
                                                             type="number"
                                                             min="0"
+                                                            max="24"
                                                             id="horas"
                                                             className="horas"
                                                             placeholder="0"
@@ -276,6 +277,7 @@ const ListaProjetos = () => {
                                                                             <input
                                                                                 type="number"
                                                                                 min="0"
+                                                                                max="24"
                                                                                 id={`horas-${item._id}`}
                                                                                 className="horas"
                                                                                 placeholder="0"
@@ -310,6 +312,7 @@ const ListaProjetos = () => {
                                                                                         key={i}
                                                                                         type="number"
                                                                                         min="0"
+                                                                                        max="24"
                                                                                         id={`horas-${item._id}`}
                                                                                         className="horas"
                                                                                         placeholder="0"
@@ -350,6 +353,7 @@ const ListaProjetos = () => {
                                                                         <input
                                                                             type="number"
                                                                             min="0"
+                                                                            max="24"
                                                                             id="horas"
                                                                             className="horas"
                                                                             placeholder="0"

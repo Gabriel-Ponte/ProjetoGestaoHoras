@@ -4,8 +4,8 @@ import { toast } from 'react-toastify';
 import Wrapper from '../assets/wrappers/LoginPage';
 import { FormRow, FormRowSelect, FormRowCheckbox } from '../components';
 import { useNavigate } from 'react-router-dom';
-import { updateProjeto, deleteProjeto } from '../features/projetos/projetosSlice';
-import { getTipoTrabalho, createTipoTrabalho } from '../features/tipoTrabalho/tipoTrabalhoSlice';
+import { updateProjeto } from '../features/projetos/projetosSlice';
+import { getTipoTrabalho } from '../features/tipoTrabalho/tipoTrabalhoSlice';
 import Loading from './Loading';
 import { listaUtilizadores, toggleSidebar } from '../features/utilizadores/utilizadorSlice';
 import DeleteFromDB from "./DeleteFromDB";
@@ -21,6 +21,7 @@ function VisualizarProjeto() {
 
   useEffect(() => {
     dispatch(listaUtilizadores());
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listaDeUtilizadores, projeto, isLoading]);
 
   const formattedListUtilizadores = Array.isArray(utilizadores) ? utilizadores : [];
@@ -31,11 +32,12 @@ function VisualizarProjeto() {
     dispatch(getTipoTrabalho()).then((res) => {
       setListaTipoTrabalho(Array.isArray(res.payload.tipoTrabalho) ? res.payload.tipoTrabalho : []);
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleLista = (e) => {
-    dispatch(createTipoTrabalho(e));
-  }
+  //const handleLista = (e) => {
+  //  dispatch(createTipoTrabalho(e));
+  //}
 
 
   let StringListaTrabalho = listaTipoTrabalho.map(item => item.TipoTrabalho).join(",");
@@ -83,6 +85,7 @@ function VisualizarProjeto() {
         setValues(initialState);
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projeto, listaTipoTrabalho]);
 
 
@@ -157,12 +160,22 @@ function VisualizarProjeto() {
       setValues({ ...values, [name]: valueC });
       return;
     }
+
+    if (target.name === "DataFim"){
+      const dataInicio  = new Date(values.DataInicio);
+      const dataFim  = new Date(target.value);
+
+      if (dataInicio > dataFim) {
+        toast.error("Data Final não pode ser antes da data inicial")
+        return;
+      }
+    }
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
   };
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <Loading />;
   }
 
   const toggleMember = e => {
@@ -182,16 +195,13 @@ function VisualizarProjeto() {
 
 
 
-
-
-
   return (
 
     <div className="bg-light">
       <div className="container">
         <main>
           <div className="form m-auto">
-            <h1 className="h3 mb-4 fw-normal">Editar Projeto</h1>
+            <h1 className="h3 mb-4 fw-normal text-center">Editar Projeto</h1>
             <form onSubmit={handleSubmit} className='form'>
               <div className="row mb-3 text-center" style={{ marginTop: '3%', textAlign: 'center' }}>
                 <div className="container">
@@ -200,7 +210,9 @@ function VisualizarProjeto() {
                     id="nomeProjeto"
                     name="Nome"
                     label="Nome"
+                    labelText = "Nome"
                     className="form-control"
+                    
                     value={values.Nome}
                     handleChange={handleChange}
                     feedbackMessage="Tema"
@@ -210,6 +222,7 @@ function VisualizarProjeto() {
                     id="temaProjeto"
                     name="Tema"
                     label="Tema"
+                    labelText = "Tema"
                     className="form-control"
                     value={values.Tema}
                     handleChange={handleChange}
@@ -220,31 +233,41 @@ function VisualizarProjeto() {
                     id="nomeCliente"
                     name="Cliente"
                     label="Cliente"
+                    labelText = "Cliente"
                     className="form-control"
                     value={values.Cliente}
                     handleChange={handleChange}
-                    feedbackMessage="Cliente"
+
                   />
+                  <div className="form-control">
                   <FormRow
                     type="date"
                     id="dataI"
                     name="DataInicio"
                     label="Data Inicio"
-                    className="form-control"
+                    labelText = "Data Inicio"
+                    className="row mb-3 mt-3 text-center" 
+                    classNameLabel='col-md-6 text-end' 
+                    classNameInput='col-md-6 text-start'
                     value={values.DataInicio ? new Date(values.DataInicio).toLocaleDateString('en-CA') : ''}
                     handleChange={handleChange}
-                    feedbackMessage="Data Inicio"
                   />
+                  </div>
+
+                  <div className="form-control">
                   <FormRow
                     type="date"
                     id="dataO"
                     name="DataObjetivo"
                     label="Data Objetivo"
-                    className="form-control"
+                    labelText = "Data Objetivo"
+                    className="row mb-3 mt-3 text-center" 
+                    classNameLabel='col-md-6 text-end' 
+                    classNameInput='col-md-6 text-start'
                     value={values.DataObjetivo ? new Date(values.DataObjetivo).toLocaleDateString('en-CA') : ''}
                     handleChange={handleChange}
-                    feedbackMessage="Data Objetivo"
                   />
+                  </div>
                   {
                   /*
                   <FormRowSelect
@@ -268,6 +291,7 @@ function VisualizarProjeto() {
                     id="Acao"
                     name="Acao"
                     placeholder="Ação"
+                    labelText = "Ação"
                     value={values.Acao}
                     handleChange={handleChange}
                   />
@@ -277,6 +301,7 @@ function VisualizarProjeto() {
                     className="form-control"
                     id="Notas"
                     name="Notas"
+                    labelText = "Notas"
                     placeholder="Notas"
                     value={values.Notas}
                     handleChange={handleChange}
@@ -288,23 +313,28 @@ function VisualizarProjeto() {
                     className="form-control"
                     id="Links"
                     name="Links"
+                    labelText = "Links"
                     placeholder="Links"
                     value={values.Links}
                     handleChange={handleChange}
                   />
-
+                  <div className="form-control">
                   <FormRowSelect
                     type="text"
-                    className="formRow" classNameLabel='formRowLabel' classNameInput='formRowInput'
+                    className="row mb-3 mt-3 text-center" 
+                    classNameLabel='col-md-3 text-end' 
+                    classNameInput='col-md-9'
+                    classNameResult='col-md-9'
                     id="piloto"
                     name="Piloto"
-                    labelText="Piloto"
+                    labelText = "Piloto:"
                     placeholder="Piloto"
                     value={values.Piloto}
                     list={formattedListUtilizadores}
                     multiple={true}
                     handleChange={handleChangeFormRowSelect}
                   />
+                  </div>
                   <FormRowCheckbox
                     type="checkbox"
                     className="form-control"
@@ -351,8 +381,9 @@ function VisualizarProjeto() {
 
             </form>
           </div>
+          <div className="text-end">
           <DeleteFromDB id={values._id} name={values.Nome} isLoading={isLoading} type="Projeto"/>
-
+          </div>
         </main>
       </div>
     </div>
