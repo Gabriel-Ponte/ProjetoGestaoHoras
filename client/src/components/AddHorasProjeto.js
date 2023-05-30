@@ -169,7 +169,7 @@ const ListaProjetos = () => {
         if (newHorasT > 24) {
             toast.error('Valor inserido excede as 24 Horas!');
             setValues({ ...values, [e.target.id]: 0 });
-            setHorasT(horasT - (showProjeto[projectId + tipoTrabalho] || 0));
+            //setHorasT(horasT - (showProjeto[projectId + tipoTrabalho] || 0));
             return;
         }
 
@@ -270,10 +270,10 @@ const ListaProjetos = () => {
                                                                 counter1++;
                                                                 return (
                                                                     <div className="row mb-3 text-center" key={"EditarDiaTTFound" + iId}>
-                                                                        <div className="col-md-3 themed-grid-col">
+                                                                        <div className="col-md-4 text-center themed-grid-col">
                                                                             <p>{t}</p>
                                                                         </div>
-                                                                        <div className="col-md-3 themed-grid-col">
+                                                                        <div className="col-md-8 text-center themed-grid-col">
                                                                             <input
                                                                                 type="number"
                                                                                 min="0"
@@ -304,10 +304,10 @@ const ListaProjetos = () => {
                                                                         console.log(valuesHorasTypeArray[i])
                                                                         return (
                                                                             <div className="row mb-3 text-center" key={"EditarDiaTTNotFound" + iId}>
-                                                                                <div className="col-md-3 themed-grid-col">
+                                                                                <div className="col-md-4 text-center themed-grid-col">
                                                                                     <p>{t}</p>
                                                                                 </div>
-                                                                                <div className="col-md-3 themed-grid-col">
+                                                                                <div className="col-md-8 text-center themed-grid-col">
                                                                                     <input
                                                                                         key={i}
                                                                                         type="number"
@@ -346,10 +346,10 @@ const ListaProjetos = () => {
                                                         {StringListaTrabalho.split(",").map((t, i) => {
                                                             return (
                                                                 <div className="row mb-3 text-center" key={"EditarDiaProjetoNotFoundList" + i}>
-                                                                    <div className="col-md-3 themed-grid-col" >
+                                                                    <div className="col-md-4 text-center themed-grid-col" >
                                                                         <p>{t}</p>
                                                                     </div>
-                                                                    <div className="col-md-3 themed-grid-col">
+                                                                    <div className="col-md-8 text-center themed-grid-col">
                                                                         <input
                                                                             type="number"
                                                                             min="0"

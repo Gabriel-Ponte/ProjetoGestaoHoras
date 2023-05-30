@@ -145,6 +145,7 @@ const ListaProjetos = () => {
     let newShowProjeto = { ...showProjeto };
 
     if (tipoTrabalhoArray.includes(tipoTrabalho)) {
+
       const index = tipoTrabalhoArray.indexOf(tipoTrabalho);
       const oldValue = Number(horasTipoTrabalhoArray[index]);
       const newValue = horasNumber;
@@ -174,11 +175,11 @@ const ListaProjetos = () => {
       };
       newHorasT = horasT + horasNumber;
     }
-
+    console.log(newHorasT)
     if (newHorasT > 24) {
       toast.error('Valor inserido excede as 24 Horas!');
       setValues({ ...values, [e.target.id]: 0 });
-      setHorasT(horasT - (showProjeto[projectId + tipoTrabalho] || 0));
+      //setHorasT(horasT - (showProjeto[projectId + tipoTrabalho] || 0));
       return;
     }
 
@@ -192,7 +193,7 @@ const ListaProjetos = () => {
     setHorasT(newHorasT);
     setShowProjeto(newShowProjeto);
   };
-
+  console.log(horasT)
   const matchFoundProjeto = new Array(projetos.length).fill(false);
   const arrayTipoTrabalho = Object.entries(values.tipoDeTrabalhoHoras).map(([key, value]) => ({ _id: key, ...value }));
   let counter = 0;
@@ -224,11 +225,11 @@ const ListaProjetos = () => {
                   <div className="col-md-4 text-end themed-grid-col">
                     <h5>{project.Nome}</h5>
                   </div>
-                  <div className="col-md-8 themed-grid-col">
+                  <div className="col-md-8  themed-grid-col">
                     <div className="btn-container">
                       <button
                         type="button"
-                        className="btn"
+                        className="btn button-Dropdown"
                         onClick={() => handleDropdownToggle(project._id)}
                       >
                         <FaCaretDown />

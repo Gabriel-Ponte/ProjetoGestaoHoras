@@ -1,6 +1,31 @@
 import styled from 'styled-components'
 
 const Wrapper = styled.nav`
+@media (max-width: 768px) {
+  .text-end {
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    justify-items: center;
+    text-align: center;
+    align-self:center;
+    width:auto;
+    text-align: center;
+    margin: auto;
+  }
+
+  .text-start {
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    justify-items: center;
+    text-align: center;
+    align-self:center;
+    width:auto;
+    text-align: center;
+    margin: auto;
+  }
+}
 
   height: var(--nav-height);
   display: flex;

@@ -168,10 +168,13 @@ const ListaHoras = () => {
             <h3 className='mb-5'>Escolha Utilizador</h3>
             <FormRowSelect
               type="text"
-              className="formRow" classNameLabel='formRowLabel' classNameInput='formRowInput'
+              className="row mb-3 text-center" 
+              classNameLabel='col-md-3 text-end' 
+              classNameInput='col-md-9'
+              classNameResult='col-md-9'
               id="piloto"
               name="Piloto"
-              labelText="Utilizador"
+              labelText="Utilizador:"
               value={selectedUser}
               list={formattedListUtilizadores}
               handleChange={handleChangeUtilizador}
