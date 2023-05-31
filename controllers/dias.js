@@ -17,7 +17,7 @@ const getAllDiasUtilizador = async (req, res) => {
   });
 
   if (!diasAllUtilizador.length) {
-    throw new NotFoundError(`No Dias found for ${u1.Nome}`);
+    throw new NotFoundError(`Não foram encontradas horas inseridas para: ${u1.Nome}`);
   }
   diasAllUtilizador.sort((a, b) => a.Data - b.Data);
   res.status(StatusCodes.OK).json({ diasAllUtilizador });
@@ -51,7 +51,7 @@ const getDiasUtilizador = async (req, res) => {
     }
   }
   if (!listaUtilizador) {
-    throw new NotFoundError(`User does not have days`);
+    throw new NotFoundError(`Utilizador não possui dias inseridos`);
   }
   res.status(StatusCodes.OK).json({ listaUtilizador });
 };
@@ -83,7 +83,7 @@ const getDia = async (req, res) => {
       Utilizador: login,
     });
     if (!dia) {
-      throw new NotFoundError(`No dia with data ${ChangeDiaData}`);
+      throw new NotFoundError(`Não existem horas nesta data ${ChangeDiaData}`);
     }
     res.status(StatusCodes.OK).json({ dia });
   } catch (error) {
@@ -128,7 +128,7 @@ const createDia = async (req, res) => {
   });
 
   if (!aUtilizador) {
-    throw new NotFoundError(`No Utilizador with id ${userID}`);
+    throw new NotFoundError(`Não existe um utilizador com id ${userID}`);
   }
   res.status(StatusCodes.CREATED).json({
     dia: {
@@ -182,7 +182,7 @@ const updateDia = async (req, res) => {
     );
  
     if (!dia) {
-      throw new NotFoundError(`No dia with id ${diaId}`);
+      throw new NotFoundError(`Não existe um dia com id ${diaId}`);
     }
     res.status(StatusCodes.OK).json({ dia });
   };
@@ -197,7 +197,7 @@ const deleteDia = async (req, res) => {
     _id: diaId,
   });
   if (!projeto) {
-    throw new NotFoundError(`No dia with id ${projetoId}`);
+    throw new NotFoundError(`Não existe um projeto com id ${projetoId}`);
   }
   res.status(StatusCodes.OK).send();
 };

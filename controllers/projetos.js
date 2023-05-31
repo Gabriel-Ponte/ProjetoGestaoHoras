@@ -50,7 +50,7 @@ const getProjeto = async (req, res) => {
     _id: projetoId,
   });
   if (!projeto) {
-    throw new NotFoundError(`No projeto with id ${projetoId}`);
+    throw new NotFoundError(`Não existe um projeto com id ${projetoId}`);
   }
   res.status(StatusCodes.OK).json({ projeto });
 };
@@ -62,7 +62,7 @@ const getTipoTrabalhoProjeto = async (req, res) => {
     _id: projetoId,
   });
   if (!projeto) {
-    throw new NotFoundError(`No projeto with id ${projetoId}`);
+    throw new NotFoundError(`Não existe um projeto com id ${projetoId}`);
   }
   res.status(StatusCodes.OK).json({ projeto });
 };
@@ -92,7 +92,7 @@ const updateProjeto = async (req, res) => {
   try {
     if (Nome === "" || Tema === "" || Cliente === "" || DataInicio === ""
       || DataObjetivo === "") {
-      throw new BadRequestError("Nome, Tema, Cliente, DataInicio, DataObjetivo cannot be empty");
+      throw new BadRequestError("Nome, Tema, Cliente, DataInicio, DataObjetivo precisam ser preenchidos");
     }
     const projeto = await Projeto.findByIdAndUpdate(
       {
@@ -102,7 +102,7 @@ const updateProjeto = async (req, res) => {
       { new: true, runValidators: true }
     );
     if (!projeto) {
-      throw new NotFoundError(`No projeto with id ${req.params.id}`);
+      throw new NotFoundError(`Não existe um projeto com id ${req.params.id}`);
     }
     res.status(StatusCodes.OK).json({ projeto });
   } catch (error) {
@@ -121,7 +121,7 @@ const deleteProjeto = async (req, res) => {
     _id: projetoId,
   });
   if (!projeto) {
-    throw new NotFoundError(`No projeto with id ${projetoId}`);
+    throw new NotFoundError(`Não existe um projeto com id ${projetoId}`);
   }
   res.status(StatusCodes.OK).send();
 };

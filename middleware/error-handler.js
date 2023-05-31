@@ -3,7 +3,7 @@ const errorHandlerMiddleware = (err, req, res, next) => {
   let customError = {
     // set default
     statusCode: err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
-    msg: err.message || 'Something went wrong try again later',
+    msg: err.message || 'Ocorreu um Erro! Tente outra vez',
   }
 
   // if (err instanceof CustomAPIError) {
@@ -17,13 +17,13 @@ const errorHandlerMiddleware = (err, req, res, next) => {
     customError.statusCode = 400
   }
   if (err.code && err.code === 11000) {
-    customError.msg = `Duplicate value entered for ${Object.keys(
+    customError.msg = `O valor inserido para ${Object.keys(
       err.keyValue
-    )} field, please choose another value`
+    )} já existe por favor escolha um diferente`
     customError.statusCode = 400
   }
   if (err.name === 'CastError') {
-    customError.msg = `No projeto found with id : ${err.value}`
+    customError.msg = `Não foi encontrado o id : ${err.value}`
     customError.statusCode = 404
   }
 

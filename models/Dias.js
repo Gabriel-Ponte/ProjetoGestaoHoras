@@ -33,7 +33,7 @@ const DiasSchema = new mongoose.Schema(
         },
         NumeroHoras: {
             type: Number,
-            required: [true, "Please provide a number of hours"],
+            required: [true, "Por favor insira um numero de Horas"],
         },
         tipoDeTrabalhoHoras: {
             type: [TipoTrabalhoHorasSchema],
@@ -43,7 +43,7 @@ const DiasSchema = new mongoose.Schema(
             //type: mongoose.Types.ObjectId,
             //ref: "Utilizador",
             type: String,
-            required: [true, "Please provide a Utilizador"],
+            required: [true, "Por favor insira um utilizador"],
             default:"",
         },
     },

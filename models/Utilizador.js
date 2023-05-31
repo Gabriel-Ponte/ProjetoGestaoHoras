@@ -12,7 +12,7 @@ const imageBuffer = fs.readFileSync(imagePath);
 const UserSchema = new mongoose.Schema({
     login: {
         type: String,
-        required: [true, "Please provide name"],
+        required: [true, "Por favor insira um Login"],
         maxlength: 50,
         minlength: 3,
         unique: true,
@@ -20,7 +20,7 @@ const UserSchema = new mongoose.Schema({
 
     password: {
         type: String,
-        required: [true, "Please provide password"],
+        required: [true, "Por favor insira uma password"],
         minlength: 6,
     },
 
@@ -30,7 +30,7 @@ const UserSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        required: [true, "Please provide email"],
+        required: [true, "Por favor insira um email"],
         match: [
             /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
             "Please provide a valid email",
@@ -51,7 +51,7 @@ const UserSchema = new mongoose.Schema({
       },
     nome: {
         type: String,
-        required: [true, "Please provide name"],
+        required: [true, "Por favor insira um nome"],
         maxlength: 50,
         minlength: 3,
     },

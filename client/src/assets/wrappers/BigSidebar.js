@@ -1,8 +1,32 @@
 import styled from 'styled-components'
 
 const Wrapper = styled.aside`
-  display: none;
-
+display: flex;
+position: relative;
+  @media (max-height: 610px) {
+    .nav-link {
+      display: flex;
+      align-items: center;
+      color: var(--grey-500);
+      padding: 0rem 0;
+      padding-left: 2.5rem;
+      padding-right: 2.5rem;
+      text-transform: capitalize;
+      transition: var(--transition);
+    }
+  }
+  @media (min-height: 610px) {
+    .nav-link {
+      display: flex;
+      align-items: center;
+      color: var(--grey-500);
+      padding: 0.6rem 0;
+      padding-left: 2.5rem;
+      padding-right: 2.5rem;
+      text-transform: capitalize;
+      transition: var(--transition);
+    }
+  }
   @media {
     display: inline-block;
     box-shadow: 1px 0px 0px 0px rgba(0, 0, 0, 0.1);
@@ -14,7 +38,8 @@ const Wrapper = styled.aside`
       background: var(--white);
       min-height: 100vh;
       height: 100%;
-      width: 30%;
+      width: auto;
+      min-width:20%;
       position: fixed;
       z-index: 9999;
       transition: var(--transition);
@@ -36,23 +61,16 @@ const Wrapper = styled.aside`
       padding-left: 2.5rem;
     }
     .nav-links {
-      padding-top: 2rem;
+      padding-top: 1rem;
       display: flex;
       flex-direction: column;
     }
-    .nav-link {
-      display: flex;
-      align-items: center;
-      color: var(--grey-500);
-      padding: 1rem 0;
-      padding-left: 2.5rem;
-      text-transform: capitalize;
-      transition: var(--transition);
-    }
+
     .nav-link:hover {
       background: var(--grey-50);
       padding-left: 3rem;
       color: var(--grey-900);
+      
     }
     .nav-link:hover .icon {
       color: var(--primary-500);
