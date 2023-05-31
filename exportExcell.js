@@ -19,6 +19,17 @@ const jsonData = XLSX.utils.sheet_to_json(worksheet,
 //Remove Row AlertaDias
 for(let i = 0 ; i< jsonData.length ; i++){
   delete jsonData[i].AlertaDias;
+  jsonData[i].TipoTrabalho = "Estudos,Orçamento,Trabalhos CTAG,Instalações";
+  if (jsonData[i].Finalizado && jsonData[i].Finalizado.toLowerCase() === "ok") {
+    jsonData[i].Finalizado = true
+  }else{
+    jsonData[i].Finalizado = false
+  }
+  if (jsonData[i].Resultado && jsonData[i].Resultado.toLowerCase() === "ok") {
+    jsonData[i].Resultado = true
+}else{
+    jsonData[i].Resultado= false
+}
 }
 
 // Write JSON data to a file
