@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-const mockData = require("./MOCK_DATA.json");
+const mockData = require("./data.json");
 
 const Job = require("./models/Projeto");
 const connectDB = require("./db/connectDB");
