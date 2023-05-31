@@ -10,13 +10,17 @@ const worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
 // Convert Excel data to JSON
 //const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, range: 2 });
-// Convert Excel data to JSON, ignoring the first column
+//const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 2, range: 2, raw: false }); // Remove the first two columns (column A and B) from each row
+
 const jsonData = XLSX.utils.sheet_to_json(worksheet, 
     { header: ['Empty','Codigo', 'Tema', 'Nome', 'Acao', 'DataInicio', 'DataObjetivo', 'AlertaDias', 'Piloto', 'Notas', 'Finalizado', 'Resultado', 'Links', 'TipoTrabalho', 'OrçamentoAprovado']
     , range: 3, raw: false });
 
-//const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 2, range: 2, raw: false }); // Remove the first two columns (column A and B) from each row
-console.log(jsonData[0].Codigo)
+//Remove Row AlertaDias
+for(let i = 0 ; i< jsonData.length ; i++){
+  delete jsonData[i].AlertaDias;
+}
+
 // Write JSON data to a file
 fs.writeFile('data.json', JSON.stringify(jsonData, null, 2), (err) => {
   if (err) {
