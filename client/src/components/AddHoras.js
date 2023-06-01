@@ -204,7 +204,9 @@ const ListaProjetos = () => {
           <h3>{verificaDiaCalled ? 'Editar Dia' : 'Adicionar Dia'}</h3>
           <FormRow
             type="date"
-            className="form-control"
+            className="form-control dataAddHoras"
+            classNameInputDate="form__field__date"
+            classNameLabel="form-field-label"
             id="Dia"
             name="Data"
             placeholder="Dia Adicionar Horas"

@@ -197,6 +197,8 @@ const ListaProjetos = () => {
                         <FormRow
                             type="date"
                             className="form-control"
+                            classNameLabel="form-field-label"
+                            classNameInputDate="form__field__date"
                             id="Dia"
                             name="Data"
                             placeholder="Dia Adicionar Horas"

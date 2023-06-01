@@ -1,6 +1,6 @@
 import Wrapper from '../assets/wrappers/FormRowSelect';
 
-const FormRow = ({ type, name, value, handleChange, labelText, className, classNameLabel, classNameInput, required }) => {
+const FormRow = ({ type, name, value, handleChange, labelText, className, classNameLabel, classNameInput,classNameInputDate, required }) => {
   // Calculate the content size
   const contentSize = value ? value.length : 0; // Assuming the value is a string
   // Calculate the input size based on content size
@@ -38,11 +38,14 @@ const FormRow = ({ type, name, value, handleChange, labelText, className, classN
             <input
               id={name}
               type={type}
-              className={"form-input"}
+              className={classNameInputDate ? classNameInputDate: "form-input"}
               name={name}
               value={value}
               onChange={handleChange}
-              style={{ width: inputSize + '%' , fontSize: textSize}} // Set the width dynamically
+              style={{
+                width: classNameInputDate ? '' : `${inputSize}%`,
+                fontSize: classNameInputDate ? '' : textSize
+              }} // Set the width dynamically
               required={required ? true : undefined} />
           </div>
         ) : (
@@ -52,8 +55,11 @@ const FormRow = ({ type, name, value, handleChange, labelText, className, classN
             name={name}
             value={value}
             onChange={handleChange}
-            className='form-input'
-            style={{ width: inputSize + '%', fontSize: textSize}} // Set the width dynamically
+            className={classNameInputDate ? classNameInputDate: 'form-input'}
+            style={{
+              width: classNameInputDate ? '' : `${inputSize}%`,
+              fontSize: classNameInputDate ? '' : textSize
+            }}// Set the width dynamically
             required={required ? true : undefined} />
             
         )}

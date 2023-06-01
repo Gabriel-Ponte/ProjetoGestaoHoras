@@ -221,6 +221,7 @@ const CalendarControl = ({ handleChange, inserted, feriados, inicio, fim , objet
                 const insertedDay = new Date(feriados[i].date);
                 const currentMonth = insertedDay?.getMonth() + 1;
                 const currentYear = insertedDay?.getFullYear();
+
                 if (
                     currentYear === changedYear &&
                     currentMonth === changedMonth &&
@@ -244,7 +245,6 @@ const CalendarControl = ({ handleChange, inserted, feriados, inicio, fim , objet
                     numberItems !== null &&
                     numberItems.length >= calendar.getDate()
                 ) {
-                console.log(insertedDay)
                 numberItems[insertedDay.getDate() - 1].classList.add("calendar-inicio");
                 }
             }catch{
@@ -263,7 +263,6 @@ const CalendarControl = ({ handleChange, inserted, feriados, inicio, fim , objet
                     numberItems !== null &&
                     numberItems.length >= calendar.getDate()
                 ) {
-                console.log(insertedDay)
                 numberItems[insertedDay.getDate() - 1].classList.add("calendar-objetivo");
                 }
             }catch{
@@ -282,7 +281,6 @@ const CalendarControl = ({ handleChange, inserted, feriados, inicio, fim , objet
                     numberItems !== null &&
                     numberItems.length >= calendar.getDate()
                 ) {
-                console.log(insertedDay)
                 numberItems[insertedDay.getDate() - 1].classList.add("calendar-fim");
                 }
             }catch{

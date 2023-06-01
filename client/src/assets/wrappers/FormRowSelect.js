@@ -187,6 +187,18 @@ export default Wrapper
     display: block;
   }
   
+  .form-field-label {
+    font-size: 200%;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    justify-items: center;
+    text-align: center;
+    align-self:center;
+    width:auto;
+    text-align: center;
+  }
+  
   #checkboxes label:hover {
     background-color: #1e90ff;
   }

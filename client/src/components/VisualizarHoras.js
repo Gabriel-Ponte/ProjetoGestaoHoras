@@ -14,7 +14,7 @@ const ListaHoras = () => {
 
   const [selectedUser, setSelectedUser] = useState(user?.user?.nome);
   const [selectedDay, setSelectedDay] = useState();
-  let [getFeriados, setGetFeriados] = useState([]);
+  const [getFeriados, setFeriados] = useState([]);
   const [listaDias, setListaDias] = useState([]);
   const [ horasRealizadas, setHorasRealizadas] = useState(0);
   const [ percentagemHoras, setPercentagemHoras] = useState(0);
@@ -44,24 +44,29 @@ const ListaHoras = () => {
   }
 
   function feriadosPortugal(date) {
-    const feriados = [
-      { name: "Ano Novo", date: new Date(date.getFullYear(), 0, 1) },
-      { name: "Dia da Liberdade", date: new Date(date.getFullYear(), 3, 25) },
-      { name: "Dia do Trabalhador", date: new Date(date.getFullYear(), 4, 1) },
-      { name: "Dia de Portugal", date: new Date(date.getFullYear(), 5, 10) },
-      { name: "Assunção de Nossa Senhora", date: new Date(date.getFullYear(), 7, 15) },
-      { name: "Implantação da República", date: new Date(date.getFullYear(), 9, 5) },
-      { name: "Dia de Todos os Santos", date: new Date(date.getFullYear(), 10, 1) },
-      { name: "Restauração da Independencia", date: new Date(date.getFullYear(), 11, 1) },
-      { name: "Dia da Imaculada Conceicao", date: new Date(date.getFullYear(), 11, 8) },
-      { name: "Natal", date: new Date(date.getFullYear(), 11, 25) },
+    
+    const feriados = [];
 
-      { name: "Sexta-feira Santa", date: calculateEaster(date.getFullYear(), "SextaFeiraSanta") },
-      { name: "Páscoa", date: calculateEaster(date.getFullYear(), "DomingoPascoa") },
-      { name: "Segunda-feira de Páscoa", date: calculateEaster(date.getFullYear(), "SegundaPascoa") },
-      { name: "Corpo de Deus", date: calculateCorpusChristi(date.getFullYear()) }
-    ];
-    getFeriados = feriados;
+    for (let i = date.getFullYear() - 5; i < date.getFullYear() + 5; i++) {
+      feriados.push(
+        { name: "Ano Novo", date: new Date(i, 0, 1) },
+        { name: "Dia da Liberdade", date: new Date(i, 3, 25) },
+        { name: "Dia do Trabalhador", date: new Date(i, 4, 1) },
+        { name: "Dia de Portugal", date: new Date(i, 5, 10) },
+        { name: "Assunção de Nossa Senhora", date: new Date(i, 7, 15) },
+        { name: "Implantação da República", date: new Date(i, 9, 5) },
+        { name: "Dia de Todos os Santos", date: new Date(i, 10, 1) },
+        { name: "Restauração da Independência", date: new Date(i, 11, 1) },
+        { name: "Dia da Imaculada Conceição", date: new Date(i, 11, 8) },
+        { name: "Natal", date: new Date(i, 11, 25) },
+        { name: "Sexta-feira Santa", date: calculateEaster(i, "SextaFeiraSanta") },
+        { name: "Páscoa", date: calculateEaster(i, "DomingoPascoa") },
+        { name: "Segunda-feira de Páscoa", date: calculateEaster(i, "SegundaPascoa") },
+        { name: "Corpo de Deus", date: calculateCorpusChristi(i) }
+      );
+    }
+
+    setFeriados(feriados);
     for (const feriado of feriados) {
       if (
         date.getDate() === feriado.date.getDate() &&
@@ -151,14 +156,15 @@ const ListaHoras = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listaDias, selectedDay]);
 
-  if (isLoading) {
-    return <Loading />;
-  }
+console.log(listaDias)
 
   const diaSelected = selectedDay ? selectedDay.dia : 0;
   const month = selectedDay ? selectedDay.mes : today.getMonth();
   const year = selectedDay ? selectedDay.ano : today.getFullYear();
-
+ 
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
     <Wrapper>
 

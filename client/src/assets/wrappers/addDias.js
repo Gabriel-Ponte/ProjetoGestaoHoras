@@ -50,7 +50,7 @@ const Wrapper = styled.nav`
     width: 100px;
   }
 
-  
+
   .horasT {
     background-color: transparent;
     align-items: center;
