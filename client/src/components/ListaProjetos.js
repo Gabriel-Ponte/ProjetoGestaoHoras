@@ -58,7 +58,7 @@ const ListaProjetos = () => {
         <div className="col-md-3 themed-grid-col">
           <h1>Gestão Projetos</h1>
         </div>
-        <div className="col-md-9 text-end themed-grid-col">
+        <div className="col-md-9 finalizado themed-grid-col">
           <h5>
             {totalProjetos} projeto{projetos.length > 1 && 's'} {projetoFinalizado === true ? " Finalizados " : " Em Curso "} encontrados
           </h5>
@@ -67,7 +67,7 @@ const ListaProjetos = () => {
           <FormRowCheckbox
             type="checkbox"
             className="row mb-3  text-center"
-            classNameLabel="col-md-11  text-end themed-grid-col"
+            classNameLabel="col-md-11  finalizado themed-grid-col"
             classNameInput="col-md-1 themed-grid-col"
             id="Finalizado"
             name="Finalizado"

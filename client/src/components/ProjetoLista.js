@@ -248,7 +248,6 @@ const Projeto = ({
               </div>
             </div>
 
-
             <div className="col-md-2 themed-grid-col">
               <div className="row text-center">
                 {finalizado === true ? (
@@ -312,7 +311,7 @@ const Projeto = ({
                       <div className='row mb-2 text-center'>
                         <button
                           type='button'
-                          className='btn btn-outline-primary'
+                          className='btn btn-outline-primary buttonProjeto'
                           onClick={() => toggleEdit(_id)}
                         >
                           Editar
@@ -321,7 +320,7 @@ const Projeto = ({
                       <div className='row mb-2 text-center'>
                         <button
                           type='button'
-                          className='btn btn-outline-secondary'
+                          className='btn btn-outline-secondary buttonProjeto'
                           onClick={() => toggleVisualize(_id)}
                         >
                           Visualizar
@@ -332,7 +331,7 @@ const Projeto = ({
                       <div className='row  text-center'>
                         <button
                           type='button'
-                          className='btn btn-outline-success'
+                          className='btn btn-outline-success buttonProjeto'
                           onClick={() => toggleAddHoras(_id)}
                         >
                           Adicionar Horas

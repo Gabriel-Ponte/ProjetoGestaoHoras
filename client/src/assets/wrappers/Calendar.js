@@ -34,28 +34,48 @@ const Wrapper = styled.section`
     border-radius: var(--calendar-border-radius);
 }
 
-.calendar-inner {
-    padding: 10px 10px;
-    width:100%
-}
+
 
 .calendar .calendar-inner .calendar-body {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     text-align: center;
 }
-
+@media (max-width: 750px) {
+.calendar-inner {
+    padding: 10px 10px;
+    width:100%;
+}
 .calendar .calendar-inner .calendar-body div {
-    padding: 4px;
-    min-height: 30px;
-    line-height: 30px;
+    padding: 0.2vw;
+    min-height: 2vw;
+    min-width: 1vw;
+    line-height: 3vw;
     border: 1px solid transparent;
     margin: 10px 2px 0px;
 }
-
+}
+@media (min-width: 750px) {
+    .calendar-inner {
+        padding: 10vw 10vw;
+        padding-top: 0;
+        padding-bottom: 0;
+        width:100%;
+    }
+    .calendar .calendar-inner .calendar-body div {
+        padding: 1vw;
+        min-height: 1vw;
+        min-width: 1vw;
+        max-width: 10vw;
+        line-height: 1vw;
+        border: 1px solid transparent;
+        margin: 10px 2px 0px;
+    }
+    }
 .calendar .calendar-inner .calendar-body div:nth-child(-n+7) {
     border: 1px solid transparent;
     border-bottom: 1px solid var(--weekdays-border-bottom-color);
+    font-size:2vw;
 }
 
 .calendar .calendar-inner .calendar-body div:nth-child(-n+7):hover {
@@ -73,7 +93,6 @@ const Wrapper = styled.section`
 
 .calendar .calendar-inner .calendar-body div:hover {
     border: 1px solid var(--calendar-date-hover-color);
-    border-radius: 4px;
     cursor: pointer;
 }
 
@@ -100,7 +119,7 @@ const Wrapper = styled.section`
 
 .calendar .calendar-inner .calendar-controls .calendar-year-month {
     display: flex;
-    min-width: 100px;
+    min-width: 10px;
     justify-content: space-evenly;
     align-items: center;
 }
@@ -112,7 +131,7 @@ const Wrapper = styled.section`
 .calendar .calendar-inner .calendar-controls .calendar-year-month .calendar-year-label,
 .calendar .calendar-inner .calendar-controls .calendar-year-month .calendar-month-label {
     font-weight: 500;
-    font-size: 20px;
+    font-size: 3vw;
 }
 
 .calendar .calendar-inner .calendar-body .calendar-today:hover {
@@ -176,7 +195,7 @@ const Wrapper = styled.section`
 .calendar .calendar-inner .calendar-controls .calendar-prev a {
     color: var(--calendar-font-color);
     font-family: arial, consolas, sans-serif;
-    font-size: 26px;
+    font-size: 1vw;
     text-decoration: none;
     padding: 4px 12px;
     display: inline-block;

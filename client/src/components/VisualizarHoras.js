@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import Wrapper from '../assets/wrappers/ProjetossContainer';
+import Wrapper from '../assets/wrappers/VisualizarHoras';
 import { useSelector, useDispatch } from 'react-redux';
 import Loading from './Loading';
 import Dia from './Dias';
@@ -156,7 +156,6 @@ const ListaHoras = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listaDias, selectedDay]);
 
-console.log(listaDias)
 
   const diaSelected = selectedDay ? selectedDay.dia : 0;
   const month = selectedDay ? selectedDay.mes : today.getMonth();
@@ -215,6 +214,7 @@ console.log(listaDias)
               feriados={getFeriados}
             />
             </div>
+            <hr></hr>
             <div>
               {dias.map((dia) => {
                 const data = new Date(dia.Data);
