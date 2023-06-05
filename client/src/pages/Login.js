@@ -27,7 +27,7 @@ function Login() {
     e.preventDefault();
     const { email, password } = values;
     if (!email || !password) {
-      toast.error('Please fill out all fields');
+      toast.error('Preencha todos os campos');
       return;
     }
     const result = await dispatch(loginUser({ email, password }));
@@ -54,29 +54,49 @@ const handleForget =()=>{
     <Wrapper className='full-page'>
       <Header />
       <div className="MainLogin">
-      <h1 className='mt-5'>Gestão Horas</h1>
-      <form className='loginForm' onSubmit={onSubmit}>
-        <h3 className='mb-5'>{'Login'}</h3>
-        
-        {/* email field */}
-        <FormRow className="formRow" classNameLabel='formRowLabel' classNameInput='formRowInput'
-        type='email' name='email' labelText='Email:' value={values.email} handleChange={handleChange} required="True"/>
-        
-        {/* password field */}
-        <FormRow className="formRow" classNameLabel='formRowLabel' classNameInput='formRowInput' 
-        type='password' name='password' labelText='Password:' value={values.password} handleChange={handleChange} required="True"/>
-        <div className='buttonPassword'>
-        <button type='button' className='buttonP btn btn-link' onClick={handleForget} disabled={isLoading}>
-          {isLoading ? 'loading...' : 'esqueceu password'}
-        </button>
-        </div>
-        <button type='submit' className='btn btn-outline-primary' disabled={isLoading}>
-          {isLoading ? 'loading...' : 'Submeter'}
-        </button>
+        <h1 className='mt-5 title'>Gestão Horas</h1>
+        <form className='loginForm' onSubmit={onSubmit}>
+          <h3 className='mb-5'>{'Login'}</h3>
+          
+          {/* email field */}
+          <FormRow 
+          className="row mb-3 text-center" 
+          classNameLabel='col-md-3 text-end' 
+          classNameInput='col-md-9'
+          type='email' 
+          name='email' 
+          labelText='Email:' 
+          value={values.email} 
+          handleChange={handleChange} 
+          required="True"
+          />
+          
+          {/* password field */}
+          <FormRow 
+          className="row mb-3 text-center" 
+          classNameLabel='col-md-3 text-end' 
+          classNameInput='col-md-9'
+          type='password' 
+          name='password' 
+          labelText='Password:' 
+          value={values.password} 
+          handleChange={handleChange} 
+          required="True"
+          />
 
-
-      
-      </form>
+          <div className='row'>
+          <button 
+          type='button' 
+          className='buttonP btn btn-link' 
+          onClick={handleForget} 
+          disabled={isLoading}>
+            {isLoading ? 'loading...' : 'esqueceu password'}
+          </button>
+          </div>
+          <button type='submit' className='btn btn-outline-primary' disabled={isLoading}>
+            {isLoading ? 'loading...' : 'Submeter'}
+          </button>
+        </form>
       </div>
       <Footer />
     </Wrapper>

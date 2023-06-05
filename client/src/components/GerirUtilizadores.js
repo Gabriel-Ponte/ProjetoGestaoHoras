@@ -6,6 +6,7 @@ import Wrapper from '../assets/wrappers/GerirUtilizador';
 import { AiFillDelete } from 'react-icons/ai';
 import FormRowSelectTipo from './FormRowSelectTipo';
 import { toast } from 'react-toastify';
+import Loading from './Loading';
 
 const GerirUtilizadores = () => {
   const [initialState, setInitialState] = useState([]);
@@ -13,7 +14,7 @@ const GerirUtilizadores = () => {
   const [listaDeUtilizadores, setListaUtilizadores] = useState([]);
   const dispatch = useDispatch();
   const [callUseEffect, setCallUseEffect] = useState();
-  const { user , isLoading} = useSelector((store) => store.utilizador.user);
+  const { user, isLoading } = useSelector((store) => store.utilizador.user);
 
   const navigate = useNavigate();
 
@@ -39,23 +40,23 @@ const GerirUtilizadores = () => {
 
 
 
-const handleConfirmDelete = async (id , nome) => {
-  try {
-    const confirmed = window.confirm("Tem a certeza que deseja apagar o utilizador: " + nome+ "?");
-    if (confirmed) {
-      const result = await dispatch(deleteUser(id));
-      if (!result.error) {
-        setTimeout(() => {
-          navigate('/PaginaPrincipal');
-        }, 2000);
-        return "Utilizador Apagado. Voltando para a pagina principal...";
+  const handleConfirmDelete = async (id, nome) => {
+    try {
+      const confirmed = window.confirm("Tem a certeza que deseja apagar o utilizador: " + nome + "?");
+      if (confirmed) {
+        const result = await dispatch(deleteUser(id));
+        if (!result.error) {
+          setTimeout(() => {
+            navigate('/PaginaPrincipal');
+          }, 2000);
+          return "Utilizador Apagado. Voltando para a pagina principal...";
+        }
       }
+    } catch (error) {
+      console.log(error);
+      return "Ocorreu um erro ao apagar o utilizador.";
     }
-  } catch (error) {
-    console.log(error);
-    return "Ocorreu um erro ao apagar o utilizador.";
-  }
-};
+  };
 
   const alterarUtilizador = async (utilizador) => {
     try {
@@ -72,13 +73,13 @@ const handleConfirmDelete = async (id , nome) => {
 
   const handleChangeUtilizador = (e, id) => {
     let { name, value } = e.target;
-    console.log(value ,name);
-    const updatedListaTipoTrabalho = listaDeUtilizadores.map((item, i) => {
-    if(value === "Administrador"){
+    console.log(value, name);
+    const updatedListaUtilizador = listaDeUtilizadores.map((item, i) => {
+      if (value === "Administrador") {
         value = 2;
-    }else if(value =="Funcionario"){
+      } else if (value === "Funcionario") {
         value = 1;
-    }
+      }
       if (item._id === id) {
         if (initialState && initialState[i]._id === id && initialState[i][name] === value) {
           setVerificaAlterado((prevState) => ({
@@ -99,65 +100,73 @@ const handleConfirmDelete = async (id , nome) => {
       return item;
     });
 
-    setListaUtilizadores(updatedListaTipoTrabalho);
+    setListaUtilizadores(updatedListaUtilizador);
   };
 
+  if(isLoading){
+    return <Loading />
+  }
   return (
     <Wrapper>
       <div className={'row mb-12 text-center tittle'}>
         <h1>Gerir Utilizadores</h1>
       </div>
-      <div className="listaTiposTrabalho">
-      {listaDeUtilizadores.map((t, i) => {
+      <div className="listaTiposUtilizador">
+        {listaDeUtilizadores.map((t, i) => {
           if (user.id !== t._id) {
-          return(
-          <div className="row text-center" key={i}>
-            <div className="col-md-8 text-center tiposTrabalho">
-              {
-                <p>
-                  {t.nome}
-                </p>
-              }
-              <FormRowSelectTipo
-                type="text"
-                className="form-row"
-                labelText=" "
-                id="tipo"
-                name ="tipo"
-                handleChange={(e) => handleChangeUtilizador(e, t._id)}   
-                placeholder ="Escolha um tipo"
-                value= {t.tipo}
-                list = {[["Funcionario"], ["Administrador"] ]}
-            />
+            return (
+              <div className="row text-center" key={i}>
+                <div className="col-md-8 text-center tiposUtilizador">
+                  {
+                    <>
+                      <p>
+                        {t.nome}
+                      </p>
+                      <p>
+                        {t.email}
+                      </p>
+                    </>
+                  }
+                  <FormRowSelectTipo
+                    type="text"
+                    className="form-row"
+                    labelText=" "
+                    id="tipo"
+                    name="tipo"
+                    handleChange={(e) => handleChangeUtilizador(e, t._id)}
+                    placeholder="Escolha um tipo"
+                    value={t.tipo}
+                    list={[["Funcionario"], ["Administrador"]]}
+                  />
 
-            </div>
-            <div className="col-md-4 text-center">
-              <div className='Buttons'>
-                {verificaAlterado[t._id] === true ? (
-                  <button type='submit'
-                    onClick={() => alterarUtilizador(t)}
-                    className="btn btn-outline-primary">
-                    Alterar 
-                  </button>
-                ) : (
-                  <button type='submit'
-                  onClick={() => handleConfirmDelete(t._id, t.nome)}
-                  className="btn">
-                  <AiFillDelete />
-                </button>
-                
-                )
-                }
+                </div>
+                <div className="col-md-4 text-center">
+                  <div className='Buttons'>
+                    {verificaAlterado[t._id] === true ? (
+                      <button type='submit'
+                        onClick={() => alterarUtilizador(t)}
+                        className="btn btn-outline-primary">
+                        Alterar
+                      </button>
+                    ) : (
+                      <button type='submit'
+                        onClick={() => handleConfirmDelete(t._id, t.nome)}
+                        className="btn">
+                        <AiFillDelete />
+                      </button>
+
+                    )
+                    }
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          );
-        } else {
-          return null;
+            );
+          } else {
+            return null;
+          }
         }
-      }
-      )
-      }
+        )
+        }
       </div>
     </Wrapper>
   );

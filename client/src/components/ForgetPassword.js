@@ -25,13 +25,11 @@ const ForgetPassword = () => {
         setTimeout(() => {
           navigate('/login');
         }, 5000);
-      }else{      
-      console.log("TESTE")
-      setMessage(`Email não encontrado!`);
-
+      }else{   
+        console.log(result);
+      setMessage(result.payload);
       }
     } catch (error) {
-
       console.log(error);
     }
   };
@@ -44,14 +42,23 @@ const ForgetPassword = () => {
         <Header />
     <div className='MainLogin'>
         
-      <h2 className='mt-5'>Esqueceu Password</h2>
+      <h2 className='mt-5 title'>Esqueceu Password</h2>
 
       <form className='loginForm' onSubmit={handleSubmit}>
         <p>Insira o Email associado á sua conta!</p>
       {message && <p className='mb-2'>{message}</p>}
 
-      <FormRow className="formRow" classNameLabel='formRowLabel' classNameInput='formRowInput'
-        type='email' name='email' labelText='Email:' value={email} handleChange={handleEmailChange} required="True"  />
+      <FormRow 
+      className="row mb-3 text-center" 
+      classNameLabel='col-md-3 text-end' 
+      classNameInput='col-md-9'
+      type='email' 
+      name='email' 
+      labelText='Email:' 
+      value={email} 
+      handleChange={handleEmailChange} 
+      required="True"
+      />
   
       <button type='submit' className='btn btn-outline-primary'>
               Reset Password

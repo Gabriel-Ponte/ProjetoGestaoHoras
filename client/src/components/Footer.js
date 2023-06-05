@@ -7,26 +7,39 @@ function Footer() {
   const Data = new Date().toISOString().slice(0, 10);
   return (
     <Wrapper>
-    <footer className="footer">
-      <div className="container">
-        <div className="topTextFooter">
-          <p className="textFooter float-end">
-           {Data} 
-          </p>
-          <p className="textFooter">Versão: 1.0.0 &copy;</p>
+      <footer className="footer">
+        <div className="row divFooter">
+          <div className="col-12">
+          <div className="row">
+          <div className="col-6 text-center">
+              <p className="">
+                {Data}
+              </p>
+            </div>
+
+            <div className="col-6 text-center">
+            <p><MdOutlineEmail />  info@isqctag.pt
+              </p>
+            </div>
+          </div>
+            <div className='row'>
+            <div className="col-6 text-end">
+            <p className="textFooter">Versão: 1.0.0</p>
+            </div>
+            <div className="col-6 text-end">
+              <p >
+                <BsTelephoneFill />
+                +351 927 752 803
+              </p>
+              <p >
+                <BsTelephoneFill />
+                +351 927 752 769
+              </p>
+            </div>
+          </div>
+          </div>
         </div>
-        <div className="middleTextFooter">
-          <p className="textFooter float-end">
-          <MdOutlineEmail />  info@isq.pt&copy;
-          </p>
-        </div>
-        <div className="bottonTextFooter">
-          <p className="textFooter float-end">
-            <BsTelephoneFill/>  +351 214 228 100&copy;
-          </p>
-        </div>
-      </div>
-    </footer>
+      </footer>
     </Wrapper>
   );
 }

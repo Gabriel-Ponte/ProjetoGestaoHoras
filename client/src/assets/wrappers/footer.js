@@ -2,47 +2,28 @@ import styled from 'styled-components';
 
 const Wrapper = styled.section`
 .footer{
-    position: absolute;
+    display: auto;
+    position: fixed;
     width: 100%;
-    height: 90px;
+    height: 10%;
     left: 0;
     bottom: 0;
     background-color: #E5E5E5;
+    font-size: auto;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    scrollbar-color: rebeccapurple green;
+    scrollbar-width: thin;
+}
+.divFooter{
+    margin-bottom:1%;
 }
 
-.textFooter{
+p {
     font-size: 70%;
-    margin-right: 3%;
-}
-
-.topTextFooter{
-    margin-top: 2%;
-    margin-bottom: .3%;
-}
-
-
-
-.bottonTextFooter{
-    margin-bottom: 2%;
-}
-
-
-.middleTextFooter{
-    margin-top: .3%;
-    margin-bottom: .3%;
-    align-items: right;
-}
-
-.float-start
-{float:left!important}
-
-.float-end{float:right!important}
-
-.float-none{float:none!important}
-
-.object-fit-contain{-o-object-fit:contain!important;
-    object-fit:contain!important}
-
+    margin: 0;
+    text-align: center;
+  }
     `
 
 export default Wrapper

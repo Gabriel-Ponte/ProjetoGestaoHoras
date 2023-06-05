@@ -346,7 +346,7 @@ function VisualizarProjeto() {
                   />
 
                   {values.Finalizado === true && (
-                    <div className="row mb-3">
+                    <div>
                       <FormRowCheckbox
                         type="checkbox"
                         className="form-control"

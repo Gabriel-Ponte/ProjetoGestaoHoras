@@ -14,7 +14,7 @@ const Wrapper = styled.section`
     margin-left: auto;
     margin-right: auto;
     height: auto;
-    width: 300px;
+    width: 25%;
 }
 
 .form-control-dark {

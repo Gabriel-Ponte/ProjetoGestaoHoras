@@ -204,11 +204,12 @@ const userSlice = createSlice({
         state.isLoadingU = false;
         toast.success("Email enviado!")
       })
-      .addCase(resetPassword.rejected, (state, { payload }) => {
+      .addCase(resetPassword.rejected, (state, payload) => {
         state.isLoadingU = false;
         if(payload && payload.error){
-        toast.error(payload);
+        toast.error(payload.payload);
       }else{
+
         toast.error("Ocorreu um erro");
       }
       })

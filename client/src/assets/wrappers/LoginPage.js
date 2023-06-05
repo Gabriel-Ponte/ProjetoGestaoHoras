@@ -6,9 +6,9 @@ const Wrapper = styled.section`
 
   .MainLogin {
     width: 100%;
-    display: flex;
+    height: auto;
     align-self: baseline;
-    position: relative;
+    position: flex;
     overflow: visible;
     flex-direction: column;
     align-content: center;
@@ -16,9 +16,18 @@ const Wrapper = styled.section`
     align-items: center;
     justify-items: center;
     flex-wrap: nowrap;
-    height: 100%;
+
   }
 
+  .title{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-items: center;
+    width: 100%;
+    align-self: center;
+  }
+  
   .buttonPassword{
     width: 15%;
     display: flex;
@@ -27,51 +36,31 @@ const Wrapper = styled.section`
     align-items: top;
     justify-items: start;
     flex-wrap: nowrap;
+    text-size: auto;
   }
   .buttonPassword .buttonP{
     margin-top:0;
   }
-  .logo {
-    display: block;
-    margin: 0 auto;
-    margin-bottom: 1.38rem;
-  }
-  .form {
-    max-width: 400px;
-    border-top: 5px solid var(--primary-500);
-  }
 
-  h3 {
-    text-align: center;
-  }
-  p {
-    margin: 0;
-    margin-top: 1rem;
-    text-align: center;
-  }
+
+
   .btn {
     margin-top: 1rem;
   }
-  .member-btn {
-    background: transparent;
-    border: transparent;
-    color: var(--primary-500);
-    cursor: pointer;
-    letter-spacing: var(--letterSpacing);
-  }
+
 
   .loginForm {
     display: flex;
+    width: 100%;
+    heigth: 70%;
+    margin:0;
     flex-direction: column;
     align-items: center;
     justify-items: center;
-    align-content: space-between;
-    justify-content: space-between;
     flex-wrap: nowrap;
-    width: 100%;
+
     align-self: center;
     position: relative;
-    margin: 10% 0%;
   }
 
   .formRowInput {
@@ -83,6 +72,7 @@ const Wrapper = styled.section`
     justify-content: space-evenly;
     flex-wrap: wrap;
   }
+  
   .formRow {
     display: grid;
     flex-direction: row;

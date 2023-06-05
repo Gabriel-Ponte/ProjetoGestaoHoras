@@ -32,15 +32,14 @@ export const updateResetedPasswordThunk = async (  thunkAPI, values ) => {
     return checkForUnauthorizedResponse(error, thunkAPI);
   }
 };
-export const postResetPasswordThunk = async (  thunkAPI, email ) => {
+export const postResetPasswordThunk = async (  url, email ,thunkAPI) => {
   try {
     const resp = await customFetch.post(`/inicio/resetPassword/${email}`);
-    console.log(resp.data)
     return resp.data;
 
   } catch (error) {
-    console.log(error)
-    return checkForUnauthorizedResponse(error, thunkAPI);
+
+    return checkForUnauthorizedResponse(error ,thunkAPI);
   }
 };
 export const getUtilizadorThunk = async ( thunkAPI, utilizadorId ) => {

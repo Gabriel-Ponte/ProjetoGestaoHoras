@@ -34,7 +34,7 @@ position: relative;
     .sidebar-container {
       background-color: #303030;
       background: var(--white);
-      margin-left: -100%;
+      margin-left: -1000%;
       background: var(--white);
       min-height: 100vh;
       height: 100%;

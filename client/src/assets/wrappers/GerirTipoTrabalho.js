@@ -7,8 +7,30 @@ const Wrapper = styled.section`
   margin-top: 2%;
 }
 
+@media (max-width: 850px) {
+  .listaTiposTrabalho {
+    display: grid;
+    align-content: space-evenly;
+    width: 100%;
+    grid-auto-flow: row;
+    justify-items: center;
+    font-size: auto;
+    line-height: auto;
+    text-align: center;
+    align-items: center;
+  }
+  .novoTrabalho{
+    font-size: auto;
+    align-self: stretch;
+    font-size: auto;
+    text-align: center;
+    align-items: center;
+    justify-items: center;
+    margin: auto;
+  }
+}
+@media (min-width: 850px) {
 .listaTiposTrabalho {
-
     display: grid;
     gap: 5px;
     flex-direction: row;
@@ -28,18 +50,18 @@ const Wrapper = styled.section`
     grid-auto-rows: minmax(1fr, auto);
     align-items: center;
   }
+}
   .listaTiposTrabalho > div {
     border: 1px solid black; /* Add border between grid items */
     margin-bottom:5%;
-        align-items: center;
+    align-items: center;
 }
 .tiposTrabalho {
   margin-top: 2%;
-  
 }
 
 .novoTrabalho{
-    font-size: 20px;;
+    font-size: auto;
 }
 
 .Buttons {

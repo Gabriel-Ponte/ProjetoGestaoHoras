@@ -128,7 +128,7 @@ function VisualizarProjeto() {
 
         for (let i = 0; i < listaDias.length; i++) {
           if (listaDias[i].tipoDeTrabalhoHoras) {
-            for (let j = 0; j < listaDias[i].tipoDeTrabalhoHoras. length; j++) {
+            for (let j = 0; j < listaDias[i].tipoDeTrabalhoHoras.length; j++) {
               if (listaDias[i].tipoDeTrabalhoHoras[j].projeto === values._id) {
                 const array = listaDias[i].tipoDeTrabalhoHoras[j].horas ? listaDias[i].tipoDeTrabalhoHoras[j].horas.split(',') : [];
                 const values = listaDias[i].tipoDeTrabalhoHoras[j].tipoTrabalho ? listaDias[i].tipoDeTrabalhoHoras[j].tipoTrabalho.split(',') : [];  

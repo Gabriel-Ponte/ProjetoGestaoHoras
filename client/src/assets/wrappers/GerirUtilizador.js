@@ -1,12 +1,34 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.section`
-
+font-size: auto;
 .tittle {
   margin: 5%;
   margin-top: 2%;
 }
-.listaTiposTrabalho {
+@media (max-width: 700px) {
+  .listaTiposUtilizador {
+    display: grid;
+    gap: 5px;
+    flex-direction: row;
+    align-content: space-evenly;
+    width: 100%;
+    align-items: end;
+    grid-auto-flow: row;
+    justify-items: center;
+    align-self: stretch;
+    gap: 2px;
+    font-size: auto;
+    line-height: auto;
+    text-align: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+}
+@media (min-width: 700px) {
+.listaTiposUtilizador {
     display: grid;
     gap: 5px;
     flex-direction: row;
@@ -25,21 +47,21 @@ const Wrapper = styled.section`
     margin-bottom: 3%;
     grid-auto-rows: minmax(1fr, auto);
     align-items: center;
+    flex-wrap: nowrap;
+    overflow-wrap: break-word;
+    word-break: break-word;
   }
-  .listaTiposTrabalho > div {
+}
+  .listaTiposUtilizador > div {
     width: 70%;
     border: 1px solid black; /* Add border between grid items */
     margin-bottom:5%;
         align-items: center;
 }
-.tiposTrabalho {
+}
+.tiposUtilizador {
   margin-top: 2%;
-  
-}
 
-.novoTrabalho{
-    font-size: 20px;;
-}
 
 .Buttons {
   display: inline;

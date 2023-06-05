@@ -86,7 +86,11 @@ const postResetPassword = async (req, res) => {
     res.json({ message: 'Foi enviado um email para resetar a password.' });
   } catch (error) {
     // Send an error response
-    res.status(500).json({ error: 'Ocorreu um erro ao tentar resetar a password, por favor tente outra vez.' });
+    if (error instanceof NotFoundError) {
+      res.status(404).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: 'Ocorreu um erro ao tentar resetar a senha, por favor tente novamente.' });
+    }
   }
 };
 

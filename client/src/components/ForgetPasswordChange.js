@@ -29,15 +29,15 @@ const ForgetPasswordChange = () => {
       setMessage('Passwords não equivalem.');
       return;
     }
-    if (password.length < 6){
+    if (password.length < 6) {
       setMessage('Insira pelo menos 6 caracteres!');
       return;
     }
     try {
 
 
-      const result = await dispatch(updatePassword({token , password}));
-      if(!result.error){
+      const result = await dispatch(updatePassword({ token, password }));
+      if (!result.error) {
         setMessage(`Password Alterada`);
         setTimeout(() => {
           navigate('/login');
@@ -51,24 +51,42 @@ const ForgetPasswordChange = () => {
 
   return (
     <Wrapper>
-    <Header />
-    <div className='MainLogin'>
-      <h1 className='mt-5'>Alterar Password</h1>
-      <form className='loginForm' onSubmit={handleSubmit}>
-      <p className='mb-3'>{message}</p>
+      <Header />
+      <div className='MainLogin'>
+        <h1 className='mt-5 title'>Alterar Password</h1>
+        <form className='loginForm' onSubmit={handleSubmit}>
+          <p className='mb-3'>{message}</p>
 
-      <FormRow className="formRow" classNameLabel='formRowLabel' classNameInput='formRowInput'
-        type='password' name='password' labelText='Nova Password:' value={password} handleChange={handlePasswordChange} required="True"/>
+          <FormRow
+            className="row mb-3 text-center" 
+            classNameLabel='col-md-3 text-end' 
+            classNameInput='col-md-9'
+            type='password'
+            name='password'
+            labelText='Nova Password:'
+            value={password}
+            handleChange={handlePasswordChange}
+            required="True" />
 
-      <FormRow className="formRow" classNameLabel='formRowLabel' classNameInput='formRowInput'
-        type='password' name='Confirmpassword' labelText='Confirmar Password:' value={confirmPassword} handleChange={handleConfirmPasswordChange} required="True"/>
-        <button type='submit' className='btn btn-outline-primary'>
-          Alterar Password
-        </button>
-      </form>
+          <FormRow
+            className="row mb-3 text-center" 
+            classNameLabel='col-md-3 text-end' 
+            classNameInput='col-md-9'
+            type='password'
+            name='Confirmpassword'
+            labelText='Confirmar Password:'
+            value={confirmPassword}
+            handleChange={handleConfirmPasswordChange}
+            required="True"
+          />
 
-    </div>
-    <Footer/>
+          <button type='submit' className='btn btn-outline-primary'>
+            Alterar Password
+          </button>
+        </form>
+
+      </div>
+      <Footer />
     </Wrapper>
   );
 };
