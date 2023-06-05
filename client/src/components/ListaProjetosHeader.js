@@ -139,7 +139,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                     <button
                                         type="button"
                                         name="VisualizarButton"
-                                        className="btn"
+                                        className="btn buttonHeader"
                                         onClick={() => toggleSort('Cliente')}
                                     >
                                         Cliente{' '}
@@ -154,7 +154,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                     <button
                                         type="button"
                                         name="VisualizarButton"
-                                        className="btn"
+                                        className="btn buttonHeader"
                                         onClick={() => toggleSort('Nome')}
                                     >
                                         Projeto{' '}
@@ -174,7 +174,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                     <button
                                         type="button"
                                         name="VisualizarButton"
-                                        className="btn"
+                                        className="btn buttonHeader"
                                         onClick={() => toggleSort('Acao')}
                                     >
                                         Ações{' '}
@@ -189,7 +189,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                     <button
                                         type="button"
                                         name="VisualizarButton"
-                                        className="btn"
+                                        className="btn buttonHeader"
                                         onClick={() => toggleSort('Notas')}
                                     >
                                         Notas{' '}
@@ -206,11 +206,11 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                             <div className="row text-center">
                                 {finalizado === true ? (
                                     <>
-                                        <div className="col-md-8 themed-grid-col">
+                                        <div className="col-md-7 themed-grid-col">
                                             <button
                                                 type="button"
                                                 name="VisualizarButton"
-                                                className="btn "
+                                                className="btn buttonHeader"
                                                 onClick={() => toggleSort('DataFim')}
                                             >
 
@@ -222,11 +222,11 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                                 }
                                             </button>
                                         </div>
-                                        <div className="col-md-4 themed-grid-col">
+                                        <div className="col-md-5 themed-grid-col">
                                         <button
                                                 type="button"
                                                 name="VisualizarButton"
-                                                className="btn "
+                                                className="btn buttonHeader"
                                                 onClick={() => toggleSort('Resultado')}
                                             >
 
@@ -245,7 +245,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                             <button
                                                 type="button"
                                                 name="VisualizarButton"
-                                                className="btn "
+                                                className="btn buttonHeader"
                                                 onClick={() => toggleSort('DataObjetivo')}
                                             >
                                                 Data Objetivo{' '}
@@ -258,7 +258,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                             </button>
                                         </div>
                                         <div className="col-md-4 themed-grid-col">
-                                        <p className="btn" disabled>
+                                        <p className="buttonHeader" disabled>
                                                 Alerta dias
                                             </p>
                                         </div>

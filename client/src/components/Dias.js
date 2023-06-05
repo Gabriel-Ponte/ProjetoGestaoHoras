@@ -53,12 +53,13 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPos
               <div className="col-md-9 themed-grid-col">
                 {projeto.map(({ tipoTrabalho, horas, projeto }) => (
                   <div className="row text-center" key={projeto._id}>
+                    <hr className='hrP'></hr>
                     <div className="col-md-6 themed-grid-col projeto">
                       <h4>{projeto.Nome}</h4>
                     </div>
-                    <div className="col-md-6 themed-grid-col tiposTrabalho">
+                    <div className="col-md-6 themed-grid-col">
                       <div className="row text-center">
-                        <div className="col-md-6 themed-grid-col ">
+                        <div className="col-md-6 themed-grid-col">
                           {tipoTrabalho.split(',').map((trabalho, index) => (
                             <p key={index}>{trabalho.trim()}</p>
                           ))}

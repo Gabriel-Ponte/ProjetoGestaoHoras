@@ -17,7 +17,7 @@ const FormRow = ({ type, name, value, handleChange, className, classNameInput })
 
   return (
     <Wrapper>
-      <div className={/*className ? className :*/ 'form__group field'}>
+      <div className={className ? className : 'form__group field'}>
         {type === 'textarea' ? (
           <textarea
             id={id}

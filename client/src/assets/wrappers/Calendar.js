@@ -67,7 +67,7 @@ const Wrapper = styled.section`
         min-height: 1vw;
         min-width: 1vw;
         max-width: 10vw;
-        line-height: 1vw;
+        line-height: 0.5vw;
         border: 1px solid transparent;
         margin: 10px 2px 0px;
     }
@@ -131,7 +131,7 @@ const Wrapper = styled.section`
 .calendar .calendar-inner .calendar-controls .calendar-year-month .calendar-year-label,
 .calendar .calendar-inner .calendar-controls .calendar-year-month .calendar-month-label {
     font-weight: 500;
-    font-size: 3vw;
+    font-size: 2vw;
 }
 
 .calendar .calendar-inner .calendar-body .calendar-today:hover {

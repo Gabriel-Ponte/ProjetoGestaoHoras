@@ -6,10 +6,10 @@ const Wrapper = styled.article`
   @media (max-width: 768px) {
     width: 100%;
     h3 {
-        font-size: 5vw;
+        font-size: 3vw;
     }
     h4 {
-        font-size: 3vw;
+        font-size: 2vw;
         overflow: hidden;
         overflow-wrap: break-word;
         word-break: break-word;
@@ -50,12 +50,7 @@ const Wrapper = styled.article`
         align-items: center;
     }
 
-    hr {
-        border: 1px solid #303030;
-        margin:0;
-        margin-top:2%;
-        margin-bottom:5%;
-      }
+
     }
 
 }

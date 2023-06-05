@@ -166,8 +166,7 @@ const ListaHoras = () => {
   }
   return (
     <Wrapper>
-
-      <div className='projetos'>
+      <div className='mainVisualiza'>
         {(user?.user?.tipo === 2) && (
           <div className='text-center mb-5'>
             <h3 className='mb-5'>Escolha Utilizador</h3>
@@ -188,16 +187,17 @@ const ListaHoras = () => {
           </div>
         )
         }
-        <div className='row'>
-
-          <h1>{userNome}</h1>
-          <div className='col-md-2'>
+        <div className='row mb-3'>
+          <h1 className='userName'>{userNome}</h1>
+          </div>
+          <div className='row'>
+          <div className='col-md-2 text-center'>
             <p>Horas Possiveis: {possibleHours}</p>
           </div>
-          <div className='col-md-2'>
+          <div className='col-md-2 text-center'>
             <p>Horas Realizadas: {horasRealizadas}</p>
           </div>
-          <div className='col-md-2'>
+          <div className='col-md-2 text-center'>
             {percentagemHoras >= 0 && <p>{percentagemHoras.toFixed(1)}%</p>}
           </div>
         </div>
