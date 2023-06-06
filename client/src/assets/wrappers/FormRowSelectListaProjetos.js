@@ -56,7 +56,7 @@ const Wrapper = styled.section`
   }
 
   .form__field[name="Cliente"]  {
-    font-size: 1.4rem;
+    font-size: 1.4vh;
     font-weight: bold;
   }
 
