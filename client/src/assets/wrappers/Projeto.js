@@ -15,7 +15,8 @@ const Wrapper = styled.article`
       height: 100%;
       border: 1px solid black;
       margin: auto; 
-      margin-top:auto;
+      margin-top:0;
+      margin-bottom:0;
     
       p {
         font-size: auto;

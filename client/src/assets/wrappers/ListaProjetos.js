@@ -55,8 +55,17 @@ hr {
     position: relative;
     flex-direction: row;
   }
+
+  .buttonHeader{
+    font-weight: bold;
+    align-items: center;
+    margin:0;
+
+    }
+
   @media (min-width: 1000px) {
     .buttonHeader{
+      font-weight: bold;
       align-items: center;
       margin:0;
       font-size: 1.5vw;
@@ -64,10 +73,10 @@ hr {
     }
   @media (min-width: 1500px) {
   .buttonHeader{
-
+    font-weight: bold;
     align-items: center;
     margin:0;
-    font-size: 1vw;
+    font-size: 1.2vw;
     }
   }
 
