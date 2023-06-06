@@ -56,13 +56,13 @@ const Wrapper = styled.section`
   }
   @media (min-width: 767px) {
   .form__field[name="Cliente"]  {
-    font-size: 3vh;
+    font-size: 2vw;
     font-weight: bold;
   }
 }
 @media (max-width: 767px) {
   .form__field[name="Cliente"]  {
-    font-size: 4vh;
+    font-size: 5vw;
     font-weight: bold;
   }
 }
