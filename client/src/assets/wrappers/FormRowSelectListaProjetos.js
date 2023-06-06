@@ -54,11 +54,18 @@ const Wrapper = styled.section`
       top: 20px;
     }
   }
-
+  @media (min-width: 767px) {
   .form__field[name="Cliente"]  {
-    font-size: 1.4vh;
+    font-size: 3vh;
     font-weight: bold;
   }
+}
+@media (max-width: 767px) {
+  .form__field[name="Cliente"]  {
+    font-size: 4vh;
+    font-weight: bold;
+  }
+}
 
   .form__field__date {
     font-family: inherit;
