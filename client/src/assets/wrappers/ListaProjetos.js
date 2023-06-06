@@ -57,7 +57,7 @@ hr {
   }
   @media (min-width: 1000px) {
     .buttonHeader{
-      display: flex;
+
       align-items: center;
       margin:0;
       font-size: 1.5vw;
@@ -65,7 +65,7 @@ hr {
     }
   @media (min-width: 1500px) {
   .buttonHeader{
-    display: flex;
+
     align-items: center;
     margin:0;
     font-size: 1vw;
