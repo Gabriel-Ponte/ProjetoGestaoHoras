@@ -57,7 +57,6 @@ hr {
   }
   @media (min-width: 1000px) {
     .buttonHeader{
-
       align-items: center;
       margin:0;
       font-size: 1.5vw;

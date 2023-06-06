@@ -6,19 +6,21 @@ const Wrapper = styled.article`
   @media (max-width: 768px) {
     width: 100%;
     h3 {
-        font-size: 3vw;
+        font-size: 7vw;
     }
     h4 {
-        font-size: 2vw;
+        font-size: 6vw;
         overflow: hidden;
         overflow-wrap: break-word;
         word-break: break-word;
     }
-
+    p{
+        font-size: 5vw;
+    }
     hr {
       border: 2px solid #303030;
       margin:0;
-      margin-top:3%;
+      margin-bottom:3%;
     }
     
   }
