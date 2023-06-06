@@ -97,9 +97,8 @@ const updateProjeto = async (req, res) => {
   } = req.body;
   const { id: projetoId } = req.params;
   try {
-    if (Nome === "" || Tema === "" || Cliente === "" || DataInicio === ""
-      || DataObjetivo === "") {
-      throw new BadRequestError("Nome, Tema, Cliente, DataInicio, DataObjetivo precisam ser preenchidos");
+    if (Nome === "" || Tema === "" || Cliente === "" || DataInicio === "") {
+      throw new BadRequestError("Nome, Tema, Cliente, DataInicio precisam ser preenchidos");
     }
     const projeto = await Projeto.findByIdAndUpdate(
       {

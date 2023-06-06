@@ -126,13 +126,18 @@ const Projeto = ({
     await dispatch(getProjeto(idP));
     window.location.reload(navigate('/PaginaAdicionarHorasProjeto'));
   };
+  let dias;
   const alertaDias = new Date(values.DataObjetivo).getTime() - new Date().getTime();
+  dias = Math.floor(alertaDias / (1000 * 60 * 60 * 24) + 1);
+  if (isNaN(dias)) {
+    dias = null;
+  }
 
-  let dias = Math.floor(alertaDias / (1000 * 60 * 60 * 24) + 1);
 
   if (Finalizado === true || !DataObjetivo) {
     dias = "";
   }
+
   let StringResultado;
   if (Resultado === true) {
     StringResultado = <FcCheckmark className='reactIcon'/>;
@@ -142,7 +147,7 @@ const Projeto = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!values.Nome || !values.Cliente || !values.DataObjetivo || !values.Acao) {
+    if (!values.Nome || !values.Cliente || !values.Acao) {
       toast.error('Por favor, preencha todos os campos obrigatórios!');
       return;
     }

@@ -33,7 +33,8 @@ const Wrapper = styled.section`
     padding: 0;
     margin-top: auto;
     margin-bottom: auto;
-    width: 100%;
+    min-width: 100%;
+    max-width: 300%;
     height: 100%
   }
     
@@ -66,9 +67,24 @@ const Wrapper = styled.section`
       top: 20px;
     }
   }
-
-
   
+
+  .form__field:focus {
+    position: relative;
+
+    width: 120%;
+    height:  150px; ;
+    resize: both;
+    z-index: 1;
+    padding-bottom: 6px;  
+    font-weight: 700;
+    border-width: 3px;
+    border-image: linear-gradient(to right, $primary, $secondary);
+    border-image-slice: 1;
+    background-color: #FFFFFF;
+    overflow: auto;
+  }
+
   .form__field__date {
     font-family: inherit;
     font-size: inherit;
@@ -103,25 +119,6 @@ const Wrapper = styled.section`
     }
   }
 
-  .form__field:focus {
-    position: relative;
-    min-width: 100%;
-    min-height: 100px;
-    width: 120%;
-    height:  150px; ;
-    resize: both;
-    z-index: 1;
-    padding-bottom: 6px;  
-    font-weight: 700;
-    border-width: 3px;
-    border-image: linear-gradient(to right, $primary, $secondary);
-    border-image-slice: 1;
-    background-color: #FFFFFF;
-    overflow: auto;
-  }
-
-
-
   /* reset input */
   .form__field{
     resize :none;
@@ -145,10 +142,6 @@ const Wrapper = styled.section`
     font-size: 5vw;
     font-weight: bold;
   }
-  
-
-  
-
   
   .font-family {
     font-family: 'Poppins', sans-serif;
@@ -237,10 +230,9 @@ const Wrapper = styled.section`
   .form__field:focus {
     position: relative;
     min-width: 100%;
-    min-height: 100px;
     width: 120%;
     height:  150px; ;
-    resize: both;
+    resize: vertical;
     z-index: 1;
     font-weight: 700;
     overflow: auto;
