@@ -28,10 +28,9 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPos
 
 
 
-  //console.log(horasTotal);
-  //console.log(horasPossiveis);
+
   const percentage = Math.round(horasTotal / horasPossiveis) * 100;
-  //console.log(percentage + "%");
+
 
 
 

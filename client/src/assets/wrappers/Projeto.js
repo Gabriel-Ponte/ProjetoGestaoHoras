@@ -3,7 +3,7 @@ import styled from 'styled-components';
 const Wrapper = styled.article`
 
 
-  @media (max-width: 768px) {
+  @media (max-width: 767px) {
     .dias {
       display: flex;
       flex-direction: column;
@@ -35,9 +35,13 @@ const Wrapper = styled.article`
       margin-top:2%;
       width: 50vw;
     }
+
+    .reactIcon{
+      font-size: 5vw;
+    }
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 767px) {
     background: var(--white);
     border-radius: var(--borderRadius);
     display: grid;
@@ -81,10 +85,14 @@ const Wrapper = styled.article`
         margin:0;
         margin-top:2%;
       }
-    }
 
+    }
   .buttonProjeto{
     font-size: 1vw;
+  }
+
+  .reactIcon{
+    font-size: 2vw;
   }
 }
 `;

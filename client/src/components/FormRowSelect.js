@@ -17,9 +17,12 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
   const [updatedList, setUpdatedList] = useState(list); // state to hold updated list
   const [selectedOption, setSelectedOption] = useState(Array.isArray(separatedArray) ? separatedArray : (value ? value.split(',') : []));
 
-  const handleMultiChange = async (event) => {
+
+
+  const handleMultiChange1 = async (event) => {
     const selectedOptions = Array.from(event.target.selectedOptions, (option) => option.value);
     const previousOptions = selectedOption.filter((option) => !selectedOptions.includes(option));
+    
     // Declare updatedOptions variable outside of the if/else block
     const updatedOptions = [...previousOptions, ...selectedOptions];
     // Remove duplicated setSelectedOption() call
@@ -28,9 +31,45 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
     if (updatedOptions[0] === null || updatedOptions[0] === '') {
       updatedOptions.shift();
     }
-
     handleChange(event.target.id, op);
   };
+
+
+  const handleMultiChange = async (event) => {
+    let selectedOptions = Array.from(event.target.selectedOptions, (option) => option.value);
+    let previousOptions = selectedOption.filter((option) => !selectedOptions.includes(option));
+    
+    let updatedOptions;
+    let op;
+    if (selectedOptions[0] === 'Todos') {
+      // If "todos" is selected, unselect all other options
+      updatedOptions = ['Todos'];
+      setSelectedOption(updatedOptions.length === selectedOption.length ? updatedOptions : updatedOptions);
+
+      op = updatedOptions.length === selectedOption.length ? updatedOptions : updatedOptions;
+    } else {
+      // If any other value is selected, unselect "todos"
+      selectedOptions = selectedOptions.filter(option => option !== 'Todos');
+      previousOptions = previousOptions.filter(option => option !== 'Todos');
+
+      updatedOptions = [...previousOptions, ...selectedOptions];
+      if(updatedOptions.length > 1){
+      setSelectedOption(updatedOptions.length === selectedOption.length ? previousOptions : updatedOptions);
+      op = updatedOptions.length === selectedOption.length ? previousOptions : updatedOptions;
+      }else{
+        setSelectedOption(updatedOptions);
+        op = updatedOptions;
+      }
+    }
+    
+ 
+    
+    if (updatedOptions[0] === null || updatedOptions[0] === '') {
+      updatedOptions.shift();
+    }
+    handleChange(event.target.id, op);
+  };
+
 
   const handleSingleChange = (event) => {
     handleChange(event);
@@ -56,9 +95,17 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
         }
       </option>
     ));
-
+    if(multiple){
+    selectOptions = [
+      <option key="default" value="Todos">
+        Todos
+      </option>,
+      ...listaUtilizador,
+    ];
+  }else{
     selectOptions = listaUtilizador.concat(
     );
+  }
   } else {
     // Add checkbox inputs for each option
     const lista = updatedList.map((itemValue, index) => (

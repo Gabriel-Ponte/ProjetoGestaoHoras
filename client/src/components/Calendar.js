@@ -110,7 +110,7 @@ const CalendarControl = ({ handleChange, inserted, feriados, inicio, fim , objet
     function plotDates(calendar) {
         const calendarBody = document.querySelector(".calendar .calendar-body");
         if (!calendarBody) {
-            console.log("Could not find calendar body element.");
+            console.log("Não foi possivel carregar o calendário.");
             return;
         }
         calendarBody.innerHTML = "";
@@ -296,37 +296,6 @@ const CalendarControl = ({ handleChange, inserted, feriados, inicio, fim , objet
             numberItems[day - 1].classList.add("calendar-fimSemana");
           }
         }
-        
-        /*
-        const currentMonth = localDate?.getMonth() + 1;
-        const currentYear = localDate?.getFullYear();
-        if (
-            currentYear === changedYear &&
-            currentMonth === changedMonth &&
-            numberItems !== null &&
-            numberItems.length >= calendar.getDate()
-          ) {
-        const diasRemoved = [];
-        for (let i = 0; i < localDate.getDate(); i++) {
-          let found = false;
-          for (let j = 0; j < dias.length; j++) {
-            if (dias[j].getDate() === i +1) {
-              found = true;
-              break;
-            }
-          }
-          if (!found) {
-            diasRemoved.push(numberItems[i]);
-          }
-        } 
-        
-        for (let i = 0; i < diasRemoved.length; i++) {
-            console.log(diasRemoved)
-            diasRemoved[i].classList.add("calendar-notFound");
-          }
-        }
-        // Add class to current day
-        //*/
     }
 
 

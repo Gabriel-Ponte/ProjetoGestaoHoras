@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import FormRowListaProjetos from './FormRowListaProjetos';
 import { updateProjeto } from '../features/projetos/projetosSlice';
+import { FcCheckmark } from 'react-icons/fc';
+import { IoMdClose } from 'react-icons/io';
 
 const Projeto = ({
   _id,
@@ -133,13 +135,12 @@ const Projeto = ({
   }
   let StringResultado;
   if (Resultado === true) {
-    StringResultado = "Sucesso";
+    StringResultado = <FcCheckmark className='reactIcon'/>;
   } else (
-    StringResultado = "Insucesso"
+    StringResultado = <IoMdClose className='reactIcon'/>
   )
 
   const handleSubmit = async (e) => {
-    console.log(e)
     e.preventDefault();
     if (!values.Nome || !values.Cliente || !values.DataObjetivo || !values.Acao) {
       toast.error('Por favor, preencha todos os campos obrigatórios!');

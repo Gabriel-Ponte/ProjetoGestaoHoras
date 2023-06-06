@@ -17,7 +17,6 @@ export const deleteDiaThunk = async (diaId, thunkAPI) => {
 };
 export const editDiaThunk = async (dia ,thunkAPI) => {
   try {
-    console.log(dia._id);
     const resp = await customFetch.patch(`/dia/${dia._id}`, dia);
     thunkAPI.dispatch(clearValues());
     return resp.data;

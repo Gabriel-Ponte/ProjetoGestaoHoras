@@ -26,7 +26,6 @@ const ForgetPassword = () => {
           navigate('/login');
         }, 5000);
       }else{   
-        console.log(result);
       setMessage(result.payload);
       }
     } catch (error) {

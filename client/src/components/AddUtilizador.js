@@ -53,8 +53,6 @@ const AddUtilizador = () => {
     }
 
     const handleChangeFoto = (name ,file) => {
-      //const imageUrl = URL.createObjectURL(file);
-      //console.log(imageUrl);
 
       setValues({ ...values, [name]:  { data: file, contentType: "image/png"} });
     };

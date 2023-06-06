@@ -80,7 +80,6 @@ const tipoTrabalhoSlice = createSlice({
         toast.success('Tipo de Trabalho Apagado');
       })
       .addCase(deleteTipoTrabalho.rejected, (state, { payload }) => {
-        console.log("TESTE")
         toast.error(payload);
       })
       .addCase(editTipoTrabalho.pending, (state) => {

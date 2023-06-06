@@ -4,7 +4,7 @@ const { BadRequestError, NotFoundError } = require("../errors");
 
 
 const getAllProjetos = async (req, res) => {
-  const { search, Finalizado, tipoTrabalho, sort } = req.query;
+  const { search, Finalizado, tipoTrabalho, sort ,DataObjetivo} = req.query;
   const queryObject = {
   };
 
@@ -18,6 +18,13 @@ const getAllProjetos = async (req, res) => {
 
   if (Finalizado ==="false" || Finalizado ==="true") {
     queryObject.Finalizado = Finalizado;
+  }
+
+
+  if (DataObjetivo === "false") {
+    queryObject.DataObjetivo = null;
+  } else if (DataObjetivo === "true") {
+    queryObject.DataObjetivo = { $ne: null };
   }
 
   let result;

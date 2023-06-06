@@ -19,7 +19,6 @@ const DeleteFromDB = ({ id, name, isLoading, type }) => {
   };
 
   const handleModal = (id, name, type) => {
-    console.log(name);
     setModalName(name);
     setModalType(type);
     setModalId(id);
@@ -97,8 +96,3 @@ const DeleteFromDB = ({ id, name, isLoading, type }) => {
 
 
 export default DeleteFromDB;
-
-
-/*
-                  <DeleteFromDB id={t._id} name={t.nome} isLoading={isLoading} type="Utilizador"/>
-*/

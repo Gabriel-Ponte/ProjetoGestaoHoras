@@ -8,6 +8,7 @@ const initialFiltersState = {
   searchType: 'all',
   sort: 'DataObjetivo',
   projetoFinalizado: 'false',
+  DataObjetivoC: 'true',
   tipoTrabalho:'',
   limit:'1000',
 };

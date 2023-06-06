@@ -60,7 +60,6 @@ const GerirUtilizadores = () => {
 
   const alterarUtilizador = async (utilizador) => {
     try {
-      console.log(utilizador)
       const result = await dispatch(updateUserType(utilizador));
       if (!result.error) {
         setVerificaAlterado(false);
@@ -73,7 +72,6 @@ const GerirUtilizadores = () => {
 
   const handleChangeUtilizador = (e, id) => {
     let { name, value } = e.target;
-    console.log(value, name);
     const updatedListaUtilizador = listaDeUtilizadores.map((item, i) => {
       if (value === "Administrador") {
         value = 2;
@@ -86,14 +84,12 @@ const GerirUtilizadores = () => {
             ...prevState,
             [id]: false,
           }));
-          console.log(value)
           return { ...item, [name]: value };
         } else {
           setVerificaAlterado((prevState) => ({
             ...prevState,
             [id]: true,
           }));
-          console.log(value)
           return { ...item, [name]: value };
         }
       }

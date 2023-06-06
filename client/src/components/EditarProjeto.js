@@ -23,8 +23,8 @@ function VisualizarProjeto() {
     dispatch(listaUtilizadores());
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listaDeUtilizadores, projeto, isLoading]);
-
-  const formattedListUtilizadores = Array.isArray(utilizadores) ? utilizadores : [];
+  
+  const formattedListUtilizadores = Array.isArray(utilizadores) ? utilizadores.filter(user => user.email.endsWith('isqctag.pt')) : [];
 
   const [values, setValues] = useState(null);
   // //////////////////////////////////////////////////////////////////////////////////

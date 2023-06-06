@@ -49,7 +49,6 @@ const EditarUtilizador = () => {
       if(values.foto.data.data){
         const nameFoto ="foto"
         const novaFoto = new Uint8Array(values.foto.data.data);
-        console.log(novaFoto)
         await setValues({
           ...values,
           [name]: value,
@@ -79,7 +78,6 @@ const EditarUtilizador = () => {
     };
 
   const handleSubmit = async(e) => {
-      console.log(values.foto)
       e.preventDefault();
       if (!values.login || !values.email || !values.nome || !values.password ) {
         toast.error('Por favor, preencha todos os campos obrigatórios!');

@@ -57,7 +57,8 @@ const AddProjectForm = () => {
   }
 
 
-  const formattedListUtilizadores = Array.isArray(utilizadores) ? utilizadores : [];
+  //const formattedListUtilizadores = Array.isArray(utilizadores) ? utilizadores : [];
+  const formattedListUtilizadores = Array.isArray(utilizadores) ? utilizadores.filter(user => user.email.endsWith('isqctag.pt')) : [];
 
   //const handleLista = (e) => {
   //  dispatch(createTipoTrabalho(e));

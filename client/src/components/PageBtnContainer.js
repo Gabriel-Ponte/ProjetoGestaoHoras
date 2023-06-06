@@ -10,7 +10,6 @@ const PageBtnContainer = ({ small }) => {
   const pages = Array.from({ length: numOfPages }, (_, index) => {
     return index + 1;
   });
-  //console.log(small.small);
   if (small) {
     console.log(small);
   }

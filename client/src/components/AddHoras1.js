@@ -116,7 +116,6 @@ const ListaProjetos = () => {
     values.Utilizador = user.user.login;
 
     if (verificaDiaCalled) {
-      console.log(values)
       await dispatch(editDia(values));
     } else {
       await dispatch(createDia(values));

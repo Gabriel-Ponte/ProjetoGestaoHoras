@@ -56,7 +56,7 @@ const Wrapper = styled.section`
   }
   @media (min-width: 767px) {
   .form__field[name="Cliente"]  {
-    font-size: 2vw;
+    font-size: 1.2vw;
     font-weight: bold;
   }
 }

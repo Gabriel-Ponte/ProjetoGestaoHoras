@@ -75,7 +75,6 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
     const toggleSort = async (button) => {
         switch (button) {
             case 'Nome': 
-                console.log(verificaSortNome)
                 setVerificaActivo('Nome');
                 setVerificaSortNome((prevState) => !prevState);
                 await handleChange(verificaSortNome ? '-Nome' : 'Nome');

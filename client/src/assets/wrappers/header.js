@@ -1,13 +1,17 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.section`
-.header{
-    position: relative;
-    width: 100%;
-    left: 0;
-    top: 0;
-    background-color: #E5E5E5;
+
+@media (min-width: 700px) {
+  .imageLogo {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    height: auto;
+    width: 50%;
 }
+}
+@media (min-width: 1000px) {
 
 .imageLogo {
     display: block;
@@ -15,6 +19,26 @@ const Wrapper = styled.section`
     margin-right: auto;
     height: auto;
     width: 25%;
+}
+}
+
+
+
+@media (max-width: 700px) {
+  .imageLogo {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    height: auto;
+    width: 60%;
+}
+}
+  .header{
+    position: relative;
+    width: 100%;
+    left: 0;
+    top: 0;
+    background-color: #E5E5E5;
 }
 
 .form-control-dark {

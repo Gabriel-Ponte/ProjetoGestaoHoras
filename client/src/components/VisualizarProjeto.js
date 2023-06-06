@@ -176,7 +176,6 @@ function VisualizarProjeto() {
       return null;
     }
   }
-  console.log(selectedDay)
   return (
     <Wrapper>
       <div className="mainVisualiza">

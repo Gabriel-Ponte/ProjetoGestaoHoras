@@ -175,7 +175,6 @@ const ListaProjetos = () => {
       };
       newHorasT = horasT + horasNumber;
     }
-    console.log(newHorasT)
     if (newHorasT > 24) {
       toast.error('Valor inserido excede as 24 Horas!');
       setValues({ ...values, [e.target.id]: 0 });

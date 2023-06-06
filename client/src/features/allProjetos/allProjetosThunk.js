@@ -1,9 +1,9 @@
 import customFetch, { checkForUnauthorizedResponse } from '../../utils/axios';
 
 export const getAllProjetosThunk = async (_, thunkAPI) => {
-  const { page, search, projetoFinalizado, searchType,tipoTrabalho, sort , limit } =
+  const { page, search, projetoFinalizado, searchType,tipoTrabalho, sort , limit , DataObjetivoC} =
   thunkAPI.getState().allProjetos;
-  let url= `/projetos?page=${page}&limit=${limit}&sort=${sort}&Finalizado=${projetoFinalizado}`
+  let url= `/projetos?page=${page}&limit=${limit}&sort=${sort}&Finalizado=${projetoFinalizado}&DataObjetivo=${DataObjetivoC}`
   if (search) {
     url = url + `&search=${search}`;
   }
