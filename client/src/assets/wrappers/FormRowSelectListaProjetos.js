@@ -21,7 +21,7 @@ const Wrapper = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 130px;
+  min-height: 100px;
   height:100%;
 
 

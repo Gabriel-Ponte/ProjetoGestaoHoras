@@ -90,6 +90,7 @@ const Wrapper = styled.article`
     }
   .buttonProjeto{
     font-size: 1vw;
+    padding: 0;
   }
 
   .reactIcon{
