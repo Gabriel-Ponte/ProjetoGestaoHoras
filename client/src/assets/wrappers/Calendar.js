@@ -47,7 +47,11 @@ const Wrapper = styled.section`
     width:100%;
 }
 
-
+.calendar .calendar-inner .calendar-body div:nth-child(-n+7) {
+    border: 1px solid transparent;
+    border-bottom: 1px solid var(--weekdays-border-bottom-color);
+    font-size:2vw;
+}
 .calendar .calendar-inner .calendar-body div {
     padding: 0.2vw;
     min-height: 2vw;
@@ -85,13 +89,42 @@ const Wrapper = styled.section`
     font-weight: 500;
     font-size: 3vw;
 }
-
-    }
 .calendar .calendar-inner .calendar-body div:nth-child(-n+7) {
     border: 1px solid transparent;
     border-bottom: 1px solid var(--weekdays-border-bottom-color);
     font-size:2vw;
 }
+    }
+
+    @media (min-width: 1300px) {
+        .calendar-inner {
+            padding: 10vw 10vw;
+            padding-top: 0;
+            padding-bottom: 0;
+            width:100%;
+        }
+        .calendar .calendar-inner .calendar-body div {
+            padding: 1vw;
+            min-height: 1vw;
+            min-width: 1vw;
+            max-width: 10vw;
+            line-height: 0.5vw;
+            border: 1px solid transparent;
+            margin: 10px 2px 0px;
+        }
+    
+        .calendar .calendar-inner .calendar-controls .calendar-year-month .calendar-year-label,
+    .calendar .calendar-inner .calendar-controls .calendar-year-month .calendar-month-label {
+        font-weight: 500;
+        font-size: 1.5vw;
+    }
+    .calendar .calendar-inner .calendar-body div:nth-child(-n+7) {
+        border: 1px solid transparent;
+        border-bottom: 1px solid var(--weekdays-border-bottom-color);
+        font-size:0.8vw;
+    }
+    }
+
 
 .calendar .calendar-inner .calendar-body div:nth-child(-n+7):hover {
     border: 1px solid transparent;
