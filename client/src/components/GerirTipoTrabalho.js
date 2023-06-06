@@ -174,14 +174,14 @@ const GerirTipoTrabalho = () => {
 
       </div>
         <div className={'row text-center novoTrabalho'}>
-          <div className={'col-md-6 text-end'}>
+          <div className={'col-md-6 ttLabel'}>
             <div className={'form-row'}>
               <label  className="form-label">
                 Adicionar Tipo de Trabalho:
               </label>
             </div>
           </div>
-          <div className={'col-md-6 text-start'}>
+          <div className={'col-md-6 ttInput'}>
             <div className={'form-row'}>
               <input
                 type="text"

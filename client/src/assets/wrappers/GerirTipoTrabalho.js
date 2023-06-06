@@ -6,6 +6,24 @@ const Wrapper = styled.section`
   margin: 5%;
   margin-top: 2%;
 }
+@media (max-width: 768px) {
+  .ttLabel{
+    text-align:center;
+  }
+  .ttInput{
+    text-align:center;
+  }
+
+}
+
+@media (min-width: 768px) {
+  .ttLabel{
+    text-align:end;
+  }
+  .ttInput{
+    text-align:start;
+  }
+}
 
 @media (max-width: 850px) {
   .listaTiposTrabalho {
