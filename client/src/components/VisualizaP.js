@@ -5,56 +5,70 @@ import Loading from './Loading';
 import { getAllDias, getAllDiasProjetoUtilizador } from '../features/allDias/allDiasSlice';
 import { listaUtilizadores } from '../features/utilizadores/utilizadorSlice';
 import { FormRowSelect } from '../components';
-import Dia from './Dias';
 import Calendar from './Calendar'
-import { getTipoTrabalho } from '../features/tipoTrabalho/tipoTrabalhoSlice';
 
-
+function createInitialState(projeto) {
+  return {
+    _id: projeto._id,
+    Nome: projeto.Nome,
+    Cliente: projeto.Cliente,
+    DataInicio: projeto.DataInicio,
+    DataObjetivo: projeto.DataObjetivo,
+    TipoTrabalho: projeto.TipoTrabalho,
+    DataFim: projeto.DataFim,
+    Tema: projeto.Tema,
+    Acao: projeto.Acao,
+    Piloto: projeto.Piloto,
+    Links: projeto.Links,
+    Finalizado: projeto.Finalizado,
+    Resultado: projeto.Resultado,
+    Notas: projeto.Notas,
+    NumeroHorasTotal: "Sem Horas Inseridas no Projeto",
+    NumeroHorasTipoTrabalho: "",
+  };
+}
 
 
 function VisualizarProjeto() {
-
-  function createInitialState(projeto) {
-    return {
-      _id: projeto._id,
-      Nome: projeto.Nome,
-      Cliente: projeto.Cliente,
-      DataInicio: projeto.DataInicio,
-      DataObjetivo: projeto.DataObjetivo,
-      TipoTrabalho: projeto.TipoTrabalho,
-      DataFim: projeto.DataFim,
-      Tema: projeto.Tema,
-      Acao: projeto.Acao,
-      Piloto: projeto.Piloto,
-      Links: projeto.Links,
-      Finalizado: projeto.Finalizado,
-      Resultado: projeto.Resultado,
-      Notas: projeto.Notas,
-      NumeroHorasTotal: "Sem Horas Inseridas no Projeto",
-      NumeroHorasTipoTrabalho: "",
-    };
-  }
-
   const { user, utilizadores } = useSelector((store) => store.utilizador);
-  const { projeto, isLoading } = useSelector((store) => store.projeto);
+  const { projeto , isLoading } = useSelector((store) => store.projeto);
   const [selectedUser, setSelectedUser] = useState(user?.user?.nome);
-  const [dias, setDias] = useState([]);
   const [values, setValues] = useState(null);
   const [getFeriados, setFeriados] = useState([]);
   const [listaDias, setListaDias] = useState([]);
   const [selectedDay, setSelectedDay] = useState();
-  const [listaTipoTrabalho, setListaTipoTrabalho] = useState([]);
   const formattedListUtilizadores = Array.isArray(utilizadores) ? utilizadores : [];
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    if (projeto) {
+      const today = new Date();
+      const month = selectedDay ? selectedDay.mes : today.getMonth();
+      const year = selectedDay ? selectedDay.ano : today.getFullYear();
+      const dayFer = new Date(year, month, 0);
+      feriadosPortugal(dayFer);
+      setValues(createInitialState(projeto.projeto));
+      const userLogin = user?.user?.login;
+      console.log(userLogin)
+      const projetoId = projeto?.projeto?._id;
+      dispatch(getAllDias({ projetoId, userLogin })).then((res) => {
+        setListaDias(res.payload.diasAllProjeto);
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projeto]);
 
   useEffect(() => {
-    dispatch(getTipoTrabalho()).then((res) => {
-      const tipoTrabalhoArray = Array.isArray(res.payload.tipoTrabalho) ? res.payload.tipoTrabalho : [];
-      setListaTipoTrabalho(tipoTrabalhoArray);
+    if (projeto) {
+    const projetoId = projeto?.projeto?._id;
+    dispatch(getAllDiasProjetoUtilizador({ projetoId, selectedUser })).then((res) => {
+      console.log(res.payload)
+      setListaDias(res.payload.diasAllProjeto);
     });
-  }, []);
-
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedUser ]);
+  
 
   function feriadosPortugal(date) {
 
@@ -78,7 +92,6 @@ function VisualizarProjeto() {
         { name: "Corpo de Deus", date: calculateCorpusChristi(i) }
       );
     }
-    
     setFeriados(feriados);
     for (const feriado of feriados) {
       if (
@@ -122,62 +135,10 @@ function VisualizarProjeto() {
 
 
   useEffect(() => {
-
-    if (projeto) {
-      const today = new Date();
-      const month = selectedDay ? selectedDay.mes : today.getMonth();
-      const year = selectedDay ? selectedDay.ano : today.getFullYear();
-      const dayFer = new Date(year, month, 0);
-      feriadosPortugal(dayFer);
-      setValues(createInitialState(projeto.projeto));
-      const userLogin = user?.user?.login;
-      const projetoId = projeto?.projeto?._id;
-      dispatch(getAllDias({ projetoId, userLogin })).then((res) => {
-        if (res.payload.diasAllProjeto && typeof projeto !== 'undefined') {
-          setListaDias(res.payload.diasAllProjeto);
-        } else {
-          setListaDias([]);
-        }
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projeto]);
-
-  useEffect(()=>{
-    setDias(listaDias);
-  }, [listaDias]);
-
-  useEffect(() => {
-    if (projeto) {
-      const projetoId = projeto?.projeto?._id;
-      if (selectedUser === "Todos") {
-        const userLogin = user?.user?.login;
-        dispatch(getAllDias({ projetoId, userLogin })).then((res) => {
-          if (res.payload.diasAllProjeto && typeof projeto !== 'undefined') {
-            setListaDias(res.payload.diasAllProjeto);
-          } else {
-            setListaDias([]);
-          }
-        })
-      } else {
-        dispatch(getAllDiasProjetoUtilizador({ projetoId, selectedUser })).then((res) => {
-          if (res.payload.diasAllProjeto && typeof projeto !== 'undefined') {
-            setListaDias(res.payload.diasAllProjeto);
-          } else {
-            setListaDias([]);
-          }
-        });
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedUser]);
-
-
-  useEffect(() => {
     if (values) {
       const arrayTT = values.TipoTrabalho ? values.TipoTrabalho.split(',') : [];
       const arrayTTH = new Array(arrayTT.length).fill(0);
-      if (listaDias && listaDias.length > 0) {
+      if (listaDias) {
         let totalHours = 0;
 
         for (let i = 0; i < listaDias.length; i++) {
@@ -185,7 +146,7 @@ function VisualizarProjeto() {
             for (let j = 0; j < listaDias[i].tipoDeTrabalhoHoras.length; j++) {
               if (listaDias[i].tipoDeTrabalhoHoras[j].projeto === values._id) {
                 const array = listaDias[i].tipoDeTrabalhoHoras[j].horas ? listaDias[i].tipoDeTrabalhoHoras[j].horas.split(',') : [];
-                const values = listaDias[i].tipoDeTrabalhoHoras[j].tipoTrabalho ? listaDias[i].tipoDeTrabalhoHoras[j].tipoTrabalho.split(',') : [];
+                const values = listaDias[i].tipoDeTrabalhoHoras[j].tipoTrabalho ? listaDias[i].tipoDeTrabalhoHoras[j].tipoTrabalho.split(',') : [];  
                 if (array !== null) {
                   for (let h = 0; h < array.length; h++) {
                     totalHours += Number(array[h]);
@@ -204,18 +165,10 @@ function VisualizarProjeto() {
             NumeroHorasTipoTrabalho: arrayTTH,
           });
         }
-      } else {
-        setValues({
-          ...values,
-          NumeroHorasTotal: selectedUser === "Todos" ? "Não existem horas inseridas no projeto" : "Utilizador não possui horas inseridas no projeto",
-          NumeroHorasTipoTrabalho: "",
-        });
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listaDias, selectedDay]);
-
-
 
   const handleChangeCalendario = useCallback((dia, mes, ano) => {
     const [selectedDia, selectedMes, selectedAno] = [dia, mes, ano];
@@ -249,12 +202,6 @@ function VisualizarProjeto() {
     }
   }
 
-
-
-  const today = new Date();
-  const diaSelected = selectedDay ? selectedDay.dia : 0;
-  const month = selectedDay ? selectedDay.mes : today.getMonth();
-  const year = selectedDay ? selectedDay.ano : today.getFullYear();
   return (
     <Wrapper>
       <div className="mainVisualiza">
@@ -298,7 +245,7 @@ function VisualizarProjeto() {
 
                 <div className="row mb-3">
                   <div className="col-6 text-center">
-                    <h5 className="">
+                    <h5 htmlFor="acao" className="">
                       Ação
                     </h5>
                   </div>
@@ -309,7 +256,7 @@ function VisualizarProjeto() {
 
                 <div className="row mb-3">
                   <div className="col-6 text-center">
-                    <h5 className="">
+                    <h5 htmlFor="country" className="">
                       Notas
                     </h5>
                   </div>
@@ -320,7 +267,7 @@ function VisualizarProjeto() {
 
                 <div className="row mb-3">
                   <div className="col-6 text-center">
-                    <h5 className="">
+                    <h5 htmlFor="link" className="">
                       Links
                     </h5>
                   </div>
@@ -330,24 +277,24 @@ function VisualizarProjeto() {
                 </div>
                 <div className="row mb-3">
                   <div className="col-6 text-center">
-                    <h5 className="">
+                    <h5 className="" htmlFor="orcamento">
                       Realizado
                     </h5>
                   </div>
                   <div className="col-6 text-start">
                     <p>{values.Finalizado === true ? "Sim" : "Não"}</p>
                   </div>
-                </div>
-                {values.Finalizado === true ? (
-                  <div className="row mb-3">
-                    <div className="col-7 text-center">
-                      <h5>Resultado</h5>
-                    </div>
-                    <div className="col-5 text-start">
-                      <p style={{ width: "100%" }}> {values.Resultado === true ? "Sucesso" : "Insucesso"}</p>
-                    </div>
                   </div>
-                ) : null}
+                  {values.Finalizado === true ? (
+                    <div className="row mb-3">
+                      <div className="col-7 text-center">
+                        <h5>Resultado</h5>
+                      </div>
+                      <div className="col-5 text-start">
+                        <p style={{ width: "100%" }}> {values.Resultado === true ? "Sucesso" : "Insucesso"}</p>
+                      </div>
+                    </div>
+                  ) : null}
               </div>
 
               <div className="col-5 text-center right">
@@ -355,52 +302,32 @@ function VisualizarProjeto() {
                   <Calendar
                     handleChange={handleChangeCalendario}
                     feriados={getFeriados}
-                    vProjeto={dias}
+                    inserted={listaDias}
                     inicio={values?.DataInicio}
                     objetivo={values?.DataObjetivo}
                     fim={values?.DataFim}
                   />
                 </div>
-                {(user?.user?.tipo === 2) ? (
-                  <div className='text-center mb-5'>
-                    <h3 className='mb-5'>Escolha Utilizador</h3>
-                    <FormRowSelect
-                      type="text"
-                      className="row mb-3 text-center"
-                      classNameLabel='col-md-3 text-end'
-                      classNameInput='col-md-9'
-                      classNameResult='col-md-6'
-                      id="piloto"
-                      name="Piloto"
-                      labelText="Utilizador:"
-                      value={selectedUser}
-                      list={formattedListUtilizadores}
-                      handleChange={handleChangeUtilizador}
-                      multiple={false}
-                      todos={true}
-                    />
-                  </div>
-                ) : (
-                  <div className='text-center mb-5'>
-                    <h3 className='mb-5'>Escolha Utilizador</h3>
-                    <FormRowSelect
-                      type="text"
-                      className="row mb-3 text-center"
-                      classNameLabel='col-md-3 text-end'
-                      classNameInput='col-md-9'
-                      classNameResult='col-md-6'
-                      id="piloto"
-                      name="Piloto"
-                      labelText="Utilizador:"
-                      value={selectedUser}
-                      list={[user?.user]}
-                      handleChange={handleChangeUtilizador}
-                      multiple={false}
-                      todos={true}
-                    />
-                  </div>
-                )
-                }
+                {(user?.user?.tipo === 2) && (
+                <div className='text-center mb-5'>
+                  <h3 className='mb-5'>Escolha Utilizador</h3>
+                  <FormRowSelect
+                    type="text"
+                    className="row mb-3 text-center" 
+                    classNameLabel='col-md-3 text-end' 
+                    classNameInput='col-md-9'
+                    classNameResult='col-md-9'
+                    id="piloto"
+                    name="Piloto"
+                    labelText="Utilizador:"
+                    value={selectedUser}
+                    list={formattedListUtilizadores}
+                    handleChange={handleChangeUtilizador}
+                    multiple={false}
+                  />
+                </div>
+              )
+              }
                 <div className="row mb-3 ">
                   <div className="col-3">
                     <h5>Data Inicio</h5>
@@ -437,43 +364,34 @@ function VisualizarProjeto() {
                     <p>{values.NumeroHorasTotal}</p>
                   </div>
                 </div>
-
-
-                {typeof values.NumeroHorasTotal === 'number' && (
-                  <div className="row mb-3">
-                    <div className="col-3">
-                      <h5>Tipos de Trabalho</h5>
-                    </div>
-                    <div>
-                  {listaTipoTrabalho && listaTipoTrabalho.length > 0 ? (
-                    listaTipoTrabalho.map((t, i) => {
-                      console.log(values.NumeroHorasTipoTrabalho);
-                      console.log(t.TipoTrabalho);
-                      console.log(values.NumeroHorasTipoTrabalho[i])
-                      console.log(values.NumeroHorasTipoTrabalho[i]);
-                      return (
-                        values.NumeroHorasTipoTrabalho[t.TipoTrabalho] && values.NumeroHorasTipoTrabalho[t.TipoTrabalho] > 0 ? (
-                          <div className="row mb-3" key={i}>
-                            <div className="col-6">
-                              <p>{t.TipoTrabalho}</p>
-                            </div>
-                            <div className="col-6">
-                              <p>{values.NumeroHorasTipoTrabalho[t.TipoTrabalho]}</p>
-                            </div>
-                          </div>
-                        ) :
-                          null
-                      );
-                    })
+                {typeof values.NumeroHorasTotal === 'number' &&(
+                <div className="row mb-3">
+                  <div className="col-3">
+                    <h5>Tipos de Trabalho</h5>
+                  </div>
+                  {values.TipoTrabalho && values.TipoTrabalho.length > 0 ? (
+                    values.TipoTrabalho.split(",").map((t, i) => (
+                      
+                      values.NumeroHorasTipoTrabalho[t] && values.NumeroHorasTipoTrabalho[t]> 0 ? (
+                      <div className="row mb-3" key={i}>
+                        <div className="col-6">
+                          <p>{t}</p>
+                        </div>
+                        <div className="col-6">
+                          <p>{values.NumeroHorasTipoTrabalho[t]}</p>
+                        </div>
+                      </div>                      
+                      ):
+                        null
+                    ))
                   ) : (
                     <div>
                       <p>Sem Tipos de Trabalho definidos</p>
                     </div>
                   )}
-                  </div>
+                </div>
+              )}
 
-                  </div>
-                )}
               </div>
 
 
@@ -487,3 +405,51 @@ function VisualizarProjeto() {
 }
 
 export default VisualizarProjeto;
+
+/*
+
+
+              <div>
+              {listaDias.map((dia) => {
+                const data = new Date(dia.Data);
+                const isSameMonth = month === data.getMonth() && year === data.getFullYear();
+                const isSameDate = diaSelected === 0 || Number(diaSelected) === data.getDate();
+                const projetoList = dia.tipoDeTrabalhoHoras.map(({ tipoTrabalho, horas, projeto }) => {
+                  return dispatch(getUser(dia.Utilizador)).then((res) => 
+                    {
+                    const user = res.payload.projeto;
+                  }
+                  );
+                  console.log(user)
+                });
+                if (isSameMonth && isSameDate) {
+                  console.log(dia)
+                  console.log(dia.tipoDeTrabalhoHoras )
+
+                }
+
+                return null;
+              })}
+            </div>
+              <div className='text-center'>
+              {listaDias && listaDias === 'undefined' && listaDias.filter((dia) => {
+                const data = new Date(dia.Data);
+                const isSameMonth = month === data.getMonth() && year === data.getFullYear();
+                const isSameDate = diaSelected === 0 || Number(diaSelected) === data.getDate();
+
+                return isSameMonth && isSameDate;
+              }).length === 0 && diaSelected === 0 && (
+                  <h2>Sem Horas inseridas neste mês</h2>
+                )}
+
+              {listaDias && listaDias === 'undefined' && listaDias.filter((dia) => {
+                const data = new Date(dia.Data);
+                const isSameMonth = month === data.getMonth() && year === data.getFullYear();
+                const isSameDate = diaSelected === 0 || Number(diaSelected) === data.getDate();
+
+                return isSameMonth && isSameDate;
+              }).length === 0  && diaSelected !== 0 && (
+                  <h2>Sem Horas inseridas neste dia {diaSelected}</h2>
+                )}
+            </div>
+*/

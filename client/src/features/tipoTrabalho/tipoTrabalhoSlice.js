@@ -87,7 +87,7 @@ const tipoTrabalhoSlice = createSlice({
       })
       .addCase(editTipoTrabalho.fulfilled, (state, { payload }) => {
         state.isLoading = false;
-        const tipoTrabalho = payload;
+        //const tipoTrabalho = payload;
         toast.success('Tipo de Trabalho modificado...');
       })
       .addCase(editTipoTrabalho.rejected, (state, { payload }) => {

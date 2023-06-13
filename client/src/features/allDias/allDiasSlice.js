@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
-import { getAllDiasProjetoThunk, getAllDiasUtilizadorThunk } from './allDiasThunk';
+import { getAllDiasProjetoThunk, getAllDiasUtilizadorThunk ,getAllDiasProjetoUtilizadorThunk} from './allDiasThunk';
 
 const initialState = {
   isLoading: true,
@@ -9,20 +9,26 @@ const initialState = {
 };
 
 export const getAllDias = createAsyncThunk(
-  'allDias/getDias', 
+  '/dia/dias/', 
   async ({ projetoId, userLogin }, thunkAPI) => {
     return getAllDiasProjetoThunk(projetoId, userLogin, thunkAPI);
   }
 );
 
 export const getAllDiasUtilizador = createAsyncThunk(
-  'allDias/getDiasUtilizador',
+  '/dia/diasUtilizador/',
   async ({ userNome }, thunkAPI) => {
     return getAllDiasUtilizadorThunk(userNome, thunkAPI);
   }
    );
 
-
+  export const getAllDiasProjetoUtilizador = createAsyncThunk(
+    '/dia/diasUtilizador/',
+    async ({ projetoId, selectedUser }, thunkAPI) => {
+      return getAllDiasProjetoUtilizadorThunk(selectedUser, projetoId, thunkAPI);
+    }
+  );
+  
 const allDiasSlice = createSlice({
   name: 'AllDias',
   initialState,

@@ -2,20 +2,20 @@ import React, { useEffect, useState } from "react";
 import Wrapper from "../assets/wrappers/Calendar";
 import { MdKeyboardArrowLeft } from 'react-icons/md';
 import { MdKeyboardArrowRight } from 'react-icons/md';
-const CalendarControl = ({ handleChange, inserted, feriados, inicio, fim , objetivo }) => {
+const CalendarControl = ({ handleChange, inserted, feriados, inicio, fim , objetivo, vProjeto }) => {
     const [calendar, setCalendar] = useState(new Date());
     const calWeekDays = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
     const calMonthName = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
     const localDate = new Date();
-
+    
     useEffect(() => {
         plotDates(calendar);
-    }, []);
+    }, [vProjeto]);
 
     useEffect(() => {
         displayMonth();
         displayYear();
-    }, [calendar]);
+    }, [calendar, vProjeto]);
 
     function daysInMonth(month, year) {
         return new Date(year, month, 0).getDate();
@@ -285,6 +285,24 @@ const CalendarControl = ({ handleChange, inserted, feriados, inicio, fim , objet
                 }
             }catch{
                 console.log("Fim não é uma data")
+            }
+        }
+
+        if(vProjeto){
+            for (let i = 0; i < vProjeto.length; i++) {
+                const insertedDay = new Date(vProjeto[i].Data);
+                const currentMonth = insertedDay?.getMonth() + 1;
+                const currentYear = insertedDay?.getFullYear();
+
+                if (
+                    currentYear === changedYear &&
+                    currentMonth === changedMonth &&
+                    numberItems !== null &&
+                    numberItems.length >= calendar.getDate()
+                ) {
+                    dias.push(insertedDay);
+                    numberItems[insertedDay.getDate() - 1].classList.add("calendar-projeto");
+                }
             }
         }
 

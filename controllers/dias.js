@@ -25,6 +25,7 @@ const getAllDiasUtilizador = async (req, res) => {
 
 
 const getAllDiasProjeto = async (req, res) => {
+
   const {
     params: { projeto },
   } = req;
@@ -63,8 +64,12 @@ const getDiasProjetoUtilizador = async (req, res) => {
     params: { projeto, utilizador },
   } = req;
 
+  const u1 = await User.findOne({
+    nome: utilizador,
+  });
+
   const diasAllProjeto = await Dias.find({
-    utilizador: utilizador, "tipoDeTrabalhoHoras.projeto": projeto
+    Utilizador:  u1._id, "tipoDeTrabalhoHoras.projeto": projeto
   });
 
   if (!diasAllProjeto.length) {

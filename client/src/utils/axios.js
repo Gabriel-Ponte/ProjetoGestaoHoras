@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { clearStore } from '../features/utilizadores/utilizadorSlice';
 import { getUserFromLocalStorage } from './localStorage';
-import { rejectWithValue } from '@reduxjs/toolkit';
+//import { rejectWithValue } from '@reduxjs/toolkit';
 
 const customFetch = axios.create({
   baseURL: 'http://localhost:8080/',

@@ -257,7 +257,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                             </button>
                                         </div>
                                         <div className="col-md-4 themed-grid-col">
-                                        <p className="buttonHeader" disabled>
+                                        <p className="btn buttonHeader" disabled>
                                                 Alerta dias
                                             </p>
                                         </div>

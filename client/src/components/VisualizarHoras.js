@@ -22,9 +22,9 @@ const ListaHoras = () => {
   const [userNome, setUserNome] = useState(user?.user?.nome); // add state for user name
   const dispatch = useDispatch();
   const formattedListUtilizadores = Array.isArray(utilizadores) ? utilizadores : [];
-
   const today = new Date();
 
+  
   function getWeekdayCount(month, year) {
     const daysInMonth = new Date(year, month + 1, 0).getDate(); // number of days in the month
     let count = 0;
@@ -164,6 +164,9 @@ const ListaHoras = () => {
   if (isLoading) {
     return <Loading />;
   }
+  if (!dias){
+    return <Loading />;
+  }
   return (
     <Wrapper>
       <div className='mainVisualiza'>
@@ -175,7 +178,7 @@ const ListaHoras = () => {
               className="row mb-3 text-center" 
               classNameLabel='col-md-3 text-end' 
               classNameInput='col-md-9'
-              classNameResult='col-md-9'
+              classNameResult='col-md-6 text-start'
               id="piloto"
               name="Piloto"
               labelText="Utilizador:"

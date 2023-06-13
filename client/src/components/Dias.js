@@ -28,7 +28,6 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPos
 
 
 
-
   const percentage = Math.round(horasTotal / horasPossiveis) * 100;
 
 

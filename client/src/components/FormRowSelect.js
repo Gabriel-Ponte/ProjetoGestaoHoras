@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import Wrapper from '../assets/wrappers/FormRowSelect';
 
-const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, handleLista, className, classNameLabel, classNameInput, classNameResult }) => {
+const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, handleLista, className, classNameLabel, classNameInput, classNameResult, todos }) => {
 
   if (multiple === null) {
     multiple = true;
   }
+
   let separatedArray;
   if (Array.isArray(value)) {
     separatedArray = value.length > 0 ? value[0].split(/[,\/]/) : [];
@@ -13,28 +14,15 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
     separatedArray = value.split(/[,\/]/);
   }
 
+
   const [newOption, setNewOption] = useState(''); // state to hold new option value
   const [updatedList, setUpdatedList] = useState(list); // state to hold updated list
   const [selectedOption, setSelectedOption] = useState(Array.isArray(separatedArray) ? separatedArray : (value ? value.split(',') : []));
 
-
-
-  const handleMultiChange1 = async (event) => {
-    const selectedOptions = Array.from(event.target.selectedOptions, (option) => option.value);
-    const previousOptions = selectedOption.filter((option) => !selectedOptions.includes(option));
-    
-    // Declare updatedOptions variable outside of the if/else block
-    const updatedOptions = [...previousOptions, ...selectedOptions];
-    // Remove duplicated setSelectedOption() call
-    setSelectedOption(updatedOptions.length === selectedOption.length ? previousOptions : updatedOptions);
-    const op = updatedOptions.length === selectedOption.length ? previousOptions : updatedOptions;
-    if (updatedOptions[0] === null || updatedOptions[0] === '') {
-      updatedOptions.shift();
-    }
-    handleChange(event.target.id, op);
-  };
-
-
+  useEffect(() => {
+    setSelectedOption(Array.isArray(separatedArray) ? separatedArray : (value ? value.split(',') : []));
+  }, [value]);
+  
   const handleMultiChange = async (event) => {
     let selectedOptions = Array.from(event.target.selectedOptions, (option) => option.value);
     let previousOptions = selectedOption.filter((option) => !selectedOptions.includes(option));
@@ -95,6 +83,7 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
         }
       </option>
     ));
+
     if(multiple){
     selectOptions = [
       <option key="default" value="Todos">
@@ -103,8 +92,17 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
       ...listaUtilizador,
     ];
   }else{
+    if(todos){
+      selectOptions = [
+        <option key="default" value="Todos">
+          Todos
+        </option>,
+        ...listaUtilizador,
+      ];
+    }else{
     selectOptions = listaUtilizador.concat(
     );
+  }
   }
   } else {
     // Add checkbox inputs for each option
@@ -138,7 +136,6 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
       setNewOption('');
     }
   };
-
   return (
     <Wrapper>
       <div className={className ? className : 'form-row'}>
@@ -184,7 +181,6 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
                 </p>
               </div>
               <div className={classNameResult ? classNameResult : 'form-label'}>
-
                 <p>
                   {Array.isArray(value) ? value.join(', ') : value}
                 </p>

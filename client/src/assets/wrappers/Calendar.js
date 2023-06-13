@@ -119,9 +119,10 @@ const Wrapper = styled.section`
         font-size: 1.5vw;
     }
     .calendar .calendar-inner .calendar-body div:nth-child(-n+7) {
-        border: 1px solid transparent;
+        text-align:start;
         border-bottom: 1px solid var(--weekdays-border-bottom-color);
         font-size:0.8vw;
+        margin:auto;
     }
     }
 
@@ -197,6 +198,11 @@ const Wrapper = styled.section`
 
 .calendar .calendar-inner .calendar-body .calendar-inserted {
     background: #588157;
+    border-radius: 4px;
+}
+
+.calendar .calendar-inner .calendar-body .calendar-projeto {
+    background: #898121;
     border-radius: 4px;
 }
 
