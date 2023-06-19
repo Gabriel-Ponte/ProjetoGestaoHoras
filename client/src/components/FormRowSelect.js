@@ -18,15 +18,21 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
   const [newOption, setNewOption] = useState(''); // state to hold new option value
   const [updatedList, setUpdatedList] = useState(list); // state to hold updated list
   const [selectedOption, setSelectedOption] = useState(Array.isArray(separatedArray) ? separatedArray : (value ? value.split(',') : []));
+  
+ 
+
 
   useEffect(() => {
     setSelectedOption(Array.isArray(separatedArray) ? separatedArray : (value ? value.split(',') : []));
   }, [value]);
   
   const handleMultiChange = async (event) => {
+
     let selectedOptions = Array.from(event.target.selectedOptions, (option) => option.value);
+    console.log(event.target.selectedOptions)
     let previousOptions = selectedOption.filter((option) => !selectedOptions.includes(option));
-    
+    console.log(selectedOption)
+    console.log(previousOptions)
     let updatedOptions;
     let op;
     if (selectedOptions[0] === 'Todos') {

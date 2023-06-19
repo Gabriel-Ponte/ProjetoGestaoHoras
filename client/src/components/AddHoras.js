@@ -39,7 +39,9 @@ const ListaProjetos = () => {
   const [listaDias, setListaDias] = useState([]);
   const [verificaDiaCalled, setVerificaDiaCalled] = useState(false);
   const [listaTipoTrabalho, setListaTipoTrabalho] = useState([]);
+ 
   let StringListaTrabalho = listaTipoTrabalho.map(item => item.TipoTrabalho).join(",");
+
 
   useEffect(() => {
     dispatch(handleChange({ name: 'projetoFinalizado', value: "false" }));
@@ -116,12 +118,12 @@ const ListaProjetos = () => {
       return;
     }
 
-    values.Utilizador = user.user.login;
-
+    values.Utilizador = user.user.id;
+    console.log(values)
     if (verificaDiaCalled) {
       await dispatch(editDia(values));
     } else {
-      await dispatch(createDia(values));
+     await dispatch(createDia(values));
     }
     setTimeout(() => {
       window.location.reload();
@@ -192,7 +194,7 @@ const ListaProjetos = () => {
     setHorasT(newHorasT);
     setShowProjeto(newShowProjeto);
   };
-  console.log(horasT)
+
   const matchFoundProjeto = new Array(projetos.length).fill(false);
   const arrayTipoTrabalho = Object.entries(values.tipoDeTrabalhoHoras).map(([key, value]) => ({ _id: key, ...value }));
   let counter = 0;
@@ -247,7 +249,7 @@ const ListaProjetos = () => {
                             StringListaTrabalho.split(",").map((t, i) => (
                               <div className="row mb-3 text-center" key={"NovoDia" + i}>
                                 <div className="col-md-9 text-start themed-grid-col">
-                                  <p>{t}</p>
+                                  <p>{t} </p>
                                 </div>
                                 <div className="col-md-3 themed-grid-col">
                                   <input
@@ -261,7 +263,7 @@ const ListaProjetos = () => {
                                     onChange={(e) =>
                                       handleHorasChange(
                                         project._id,
-                                        t,
+                                        listaTipoTrabalho[i]._id,
                                         project.Nome,
                                         e
                                       )
@@ -280,6 +282,7 @@ const ListaProjetos = () => {
                               
                                 counter++;
                                 const itemTypeArray = item.tipoTrabalho ? item.tipoTrabalho.split(",") : [];
+                                console.log(itemTypeArray)
                                 const matchFound = new Array(itemTypeArray.length + 1).fill(false);
 
                                 if (project._id === item.projeto) {
@@ -290,7 +293,7 @@ const ListaProjetos = () => {
                                     <div key={"EditarDia" + ID}>
                                       {StringListaTrabalho.split(",").map((t, i) =>
                                         itemTypeArray.map((iT, iId) => {
-                                          if (t === iT) {
+                                          if (listaTipoTrabalho[i]._id === iT) {
                                             matchFound[i] = true;
                                             counter1++;
                                             return (
@@ -314,7 +317,7 @@ const ListaProjetos = () => {
                                                     onChange={(e) =>
                                                       handleHorasChange(
                                                         project._id,
-                                                        t,
+                                                        listaTipoTrabalho[i]._id,
                                                         project.Nome,
                                                         e
                                                       )
@@ -346,7 +349,7 @@ const ListaProjetos = () => {
                                                         onChange={(e) =>
                                                           handleHorasChange(
                                                             project._id,
-                                                            t,
+                                                            listaTipoTrabalho[i]._id,
                                                             project.Nome,
                                                             e
                                                           )
@@ -386,7 +389,7 @@ const ListaProjetos = () => {
                                                   onChange={(e) =>
                                                     handleHorasChange(
                                                       project._id,
-                                                      t,
+                                                      listaTipoTrabalho[i]._id,
                                                       project.Nome,
                                                       e
                                                     )

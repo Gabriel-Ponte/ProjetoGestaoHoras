@@ -14,7 +14,7 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: [true, "Por favor insira um Login"],
         maxlength: 50,
-        minlength: 3,
+        minlength: 1,
         unique: true,
     },
 

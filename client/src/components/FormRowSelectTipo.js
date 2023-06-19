@@ -1,6 +1,6 @@
 import Wrapper from '../assets/wrappers/FormRowSelectTipo';
 
-const FormRowSelect = ({ labelText, name, value, handleChange, list, className}) => {
+const FormRowSelectTipo = ({ labelText, name, value, handleChange, list, className}) => {
 
   if(value === 1 && name === "tipo"){
     value = "Funcionario";
@@ -43,5 +43,5 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, className})
   );
 };
 
-export default FormRowSelect;
+export default FormRowSelectTipo;
   

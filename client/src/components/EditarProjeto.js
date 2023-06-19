@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import Wrapper from '../assets/wrappers/LoginPage';
-import { FormRow, FormRowSelect, FormRowCheckbox } from '../components';
+import { FormRow, FormRowSelect, FormRowCheckbox, FormRowCheckboxMultiple } from '../components';
+
 import { useNavigate } from 'react-router-dom';
 import { updateProjeto } from '../features/projetos/projetosSlice';
 import { getTipoTrabalho } from '../features/tipoTrabalho/tipoTrabalhoSlice';
@@ -62,8 +63,8 @@ function VisualizarProjeto() {
           Resultado: projeto.projeto.Resultado,
           Notas: projeto.projeto.Notas,
         };
-
         setValues(initialState);
+
       } else {
         const initialState = {
           _id: projeto._id,
@@ -192,9 +193,6 @@ function VisualizarProjeto() {
   }
 
 
-
-
-
   return (
 
     <div className="bg-light">
@@ -319,7 +317,7 @@ function VisualizarProjeto() {
                     handleChange={handleChange}
                   />
                   <div className="form-control">
-                  <FormRowSelect
+                  <FormRowCheckboxMultiple
                     type="text"
                     className="row mb-3 mt-3 text-center" 
                     classNameLabel='col-md-3 text-end' 

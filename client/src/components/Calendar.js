@@ -10,12 +10,12 @@ const CalendarControl = ({ handleChange, inserted, feriados, inicio, fim , objet
     
     useEffect(() => {
         plotDates(calendar);
-    }, [vProjeto]);
+    }, []);
 
     useEffect(() => {
         displayMonth();
         displayYear();
-    }, [calendar, vProjeto]);
+    }, [calendar,inicio]);
 
     function daysInMonth(month, year) {
         return new Date(year, month, 0).getDate();

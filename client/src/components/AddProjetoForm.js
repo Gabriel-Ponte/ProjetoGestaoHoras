@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Wrapper from '../assets/wrappers/AddProjetoForm';
-import { FormRow, FormRowSelect, } from '../components';
+import { FormRow, FormRowSelect, FormRowCheckboxMultiple } from '../components';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { createProjeto } from '../features/projetos/projetosSlice';
@@ -231,7 +231,7 @@ const AddProjectForm = () => {
           />
           <hr/>
 
-          <FormRowSelect
+          <FormRowCheckboxMultiple
             type="text"
             className="row mb-3 text-center" 
             classNameLabel='col-md-3 text-end' 

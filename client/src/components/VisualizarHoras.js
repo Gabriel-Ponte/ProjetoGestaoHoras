@@ -24,7 +24,11 @@ const ListaHoras = () => {
   const formattedListUtilizadores = Array.isArray(utilizadores) ? utilizadores : [];
   const today = new Date();
 
-  
+
+
+
+
+
   function getWeekdayCount(month, year) {
     const daysInMonth = new Date(year, month + 1, 0).getDate(); // number of days in the month
     let count = 0;

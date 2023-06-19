@@ -221,27 +221,35 @@ const login = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
+
   const { login, password, codigo, email, nome, tipo, _id } = req.body;
   const foto = req.body.foto;
   const buffer = Buffer.from(new Uint8Array(Object.values(foto.data)));// convert the Uint8Array to a Buffer
+   // Generate a password reset token
+  const tokenP = crypto.randomBytes(20).toString('hex');
 
-  if (!login || !email || !codigo || !email || !foto || !nome || !tipo) {
+  try{
+   // Set the token and its expiration date in the user's document
+
+  if (!login || !email || !email || !foto || !nome || !tipo) {
+    console.log("Insira Todos os valores")
     throw new BadRequestError("Insira todos os valores");
   }
+  console.log(_id);
   const user = await User.findOne({ _id: _id });
   user.id = _id;
   user.login = login;
   user.password = password;
   user.codigo = codigo;
   user.email = email;
+  user.nome = nome;
+  user.tipo = tipo;
   user.foto = {
     data: buffer,
     contentType: 'image/png' // set the content type of the file to the foto.contentType property
   };
-  user.nome = nome;
-  user.tipo = tipo;
   await user.save();
-
+  console.log("user")
 
   const token = user.createJWT();
   res.status(StatusCodes.OK).json({
@@ -257,6 +265,10 @@ const updateUser = async (req, res) => {
       token,
     },
   });
+  }catch (error) {
+    console.error(error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Falha no registo.' });
+  }
 };
 
 

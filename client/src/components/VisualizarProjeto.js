@@ -5,6 +5,7 @@ import Loading from './Loading';
 import { getAllDias, getAllDiasProjetoUtilizador } from '../features/allDias/allDiasSlice';
 import { listaUtilizadores } from '../features/utilizadores/utilizadorSlice';
 import { FormRowSelect } from '../components';
+
 import Dia from './Dias';
 import Calendar from './Calendar'
 import { getTipoTrabalho } from '../features/tipoTrabalho/tipoTrabalhoSlice';
@@ -174,29 +175,41 @@ function VisualizarProjeto() {
 
 
   useEffect(() => {
-    if (values) {
+    if (values && listaTipoTrabalho) {
       const arrayTT = values.TipoTrabalho ? values.TipoTrabalho.split(',') : [];
       const arrayTTH = new Array(arrayTT.length).fill(0);
       if (listaDias && listaDias.length > 0) {
         let totalHours = 0;
 
+
         for (let i = 0; i < listaDias.length; i++) {
-          if (listaDias[i].tipoDeTrabalhoHoras) {
-            for (let j = 0; j < listaDias[i].tipoDeTrabalhoHoras.length; j++) {
-              if (listaDias[i].tipoDeTrabalhoHoras[j].projeto === values._id) {
-                const array = listaDias[i].tipoDeTrabalhoHoras[j].horas ? listaDias[i].tipoDeTrabalhoHoras[j].horas.split(',') : [];
-                const values = listaDias[i].tipoDeTrabalhoHoras[j].tipoTrabalho ? listaDias[i].tipoDeTrabalhoHoras[j].tipoTrabalho.split(',') : [];
+          const dia = listaDias[i];
+          if (dia.tipoDeTrabalhoHoras) {
+            for (let j = 0; j < dia.tipoDeTrabalhoHoras.length; j++) {
+              const tipoDeTrabalhoHora = dia.tipoDeTrabalhoHoras[j];
+              if (tipoDeTrabalhoHora.projeto === values._id) {
+                const array = tipoDeTrabalhoHora.horas ? tipoDeTrabalhoHora.horas.split(',') : [];
+                let values = tipoDeTrabalhoHora.tipoTrabalho ? tipoDeTrabalhoHora.tipoTrabalho.split(',') : [];
+        
+                const filteredValues = values
+                  .filter(value => listaTipoTrabalho.some(item => item._id === value))
+                  .map(value => {
+                    const matchedItem = listaTipoTrabalho.find(item => item._id === value);
+                    return matchedItem ? matchedItem.TipoTrabalho : null;
+                  });
+        
                 if (array !== null) {
                   for (let h = 0; h < array.length; h++) {
-                    totalHours += Number(array[h]);
-                    arrayTTH[values[h]] = (arrayTTH[values[h]] || 0) + Number(array[h]);
+                    const horas = Number(array[h]);
+                    totalHours += horas;
+                    arrayTTH[filteredValues[h]] = (arrayTTH[filteredValues[h]] || 0) + horas;
                   }
                 }
               }
             }
           }
         }
-
+        
         if (totalHours !== 0) {
           setValues({
             ...values,
@@ -255,6 +268,8 @@ function VisualizarProjeto() {
   const diaSelected = selectedDay ? selectedDay.dia : 0;
   const month = selectedDay ? selectedDay.mes : today.getMonth();
   const year = selectedDay ? selectedDay.ano : today.getFullYear();
+
+ 
   return (
     <Wrapper>
       <div className="mainVisualiza">
@@ -457,10 +472,7 @@ function VisualizarProjeto() {
                     <div>
                   {listaTipoTrabalho && listaTipoTrabalho.length > 0 ? (
                     listaTipoTrabalho.map((t, i) => {
-                      console.log(values.NumeroHorasTipoTrabalho);
-                      console.log(t.TipoTrabalho);
-                      console.log(values.NumeroHorasTipoTrabalho[i])
-                      console.log(values.NumeroHorasTipoTrabalho[i]);
+
                       return (
                         values.NumeroHorasTipoTrabalho[t.TipoTrabalho] && values.NumeroHorasTipoTrabalho[t.TipoTrabalho] > 0 ? (
                           <div className="row mb-3" key={i}>

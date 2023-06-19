@@ -97,8 +97,9 @@ const getDia = async (req, res) => {
 };
 
 const createDia = async (req, res) => {
+  console.log(req.body.Utilizador)
   const aUtilizador = await User.findOne({
-    login: req.body.Utilizador,
+    _id: req.body.Utilizador,
   });
   const tipoDeTrabalhoHorasArray = [];
   for (let index = 0; index < Object.keys(req.body.tipoDeTrabalhoHoras).length; index++) {
