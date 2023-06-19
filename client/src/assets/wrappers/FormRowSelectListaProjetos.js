@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 const Wrapper = styled.section`
-
+  position: relative;
   @media (min-width: 767px) {
   .form__field[name="Cliente"]  {
     font-size: 1.5vw;
@@ -10,7 +10,7 @@ const Wrapper = styled.section`
 
   @media (min-width: 1200px) {
     .form__field[name="Cliente"]  {
-      font-size: 1.2vw;
+      font-size: 90%;
       font-weight: bold;
     }
   }
@@ -96,7 +96,7 @@ const Wrapper = styled.section`
     border-bottom: 2px solid $gray;
     outline: 0;
     border: 0;
-    font-size: 1rem;
+    font-size: 80%;
     color: $white;
     background: transparent;
     flex-direction: column;

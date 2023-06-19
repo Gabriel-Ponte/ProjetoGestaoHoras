@@ -192,7 +192,9 @@ const Projeto = ({
               <div className="row text-center">
                 <div className="col-md-6 themed-grid-col">
                 {finalizado === true ? (
+                  <div className='Cliente'>
                   <h5>{values.Cliente}</h5>
+                  </div>
                 ):(
                   <FormRowListaProjetos
                     type="textarea"

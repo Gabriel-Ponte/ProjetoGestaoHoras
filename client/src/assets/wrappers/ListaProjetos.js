@@ -60,7 +60,7 @@ hr {
     font-weight: bold;
     align-items: center;
     margin:0;
-
+    font-size: 1.2vw;
     }
 
   @media (min-width: 1000px) {
@@ -68,7 +68,7 @@ hr {
       font-weight: bold;
       align-items: center;
       margin:0;
-      font-size: 1.5vw;
+      font-size: 1.2vw;
       }
     }
   @media (min-width: 1500px) {
@@ -76,7 +76,7 @@ hr {
     font-weight: bold;
     align-items: center;
     margin:0;
-    font-size: 1.2vw;
+    font-size: 130%;
     }
   }
 

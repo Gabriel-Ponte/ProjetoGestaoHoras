@@ -352,6 +352,7 @@ function VisualizarProjeto() {
 
               <div className="col-5 text-center right">
                 <div className="col-12 mb-5 text-center">
+                {(dias.length > 0) ? (
                   <Calendar
                     handleChange={handleChangeCalendario}
                     feriados={getFeriados}
@@ -360,6 +361,15 @@ function VisualizarProjeto() {
                     objetivo={values?.DataObjetivo}
                     fim={values?.DataFim}
                   />
+                ):(                  
+                <Calendar
+                  handleChange={handleChangeCalendario}
+                  feriados={getFeriados}
+                  inicio={values?.DataInicio}
+                  objetivo={values?.DataObjetivo}
+                  fim={values?.DataFim}
+                />)
+                }
                 </div>
                 {(user?.user?.tipo === 2) ? (
                   <div className='text-center mb-5'>

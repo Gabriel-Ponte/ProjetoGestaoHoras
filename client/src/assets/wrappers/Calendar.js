@@ -116,7 +116,7 @@ const Wrapper = styled.section`
         .calendar .calendar-inner .calendar-controls .calendar-year-month .calendar-year-label,
     .calendar .calendar-inner .calendar-controls .calendar-year-month .calendar-month-label {
         font-weight: 500;
-        font-size: 1.5vw;
+        font-size: 1.2vw;
     }
     .calendar .calendar-inner .calendar-body div:nth-child(-n+7) {
         text-align:start;
@@ -250,6 +250,7 @@ const Wrapper = styled.section`
     display: inline-block;
     background: var(--calendar-nextprev-bg-color);
     margin: 10px 0 10px 0;
+    cursor: pointer;
 }
 
 .calendar .calendar-inner .calendar-controls .calendar-next a svg,
