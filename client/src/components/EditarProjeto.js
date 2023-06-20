@@ -97,8 +97,6 @@ function VisualizarProjeto() {
   }, [projeto]);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-
     if (!values.Nome || !values.Cliente || !values.DataInicio || !values.DataObjetivo || !values.Tema || !values.Piloto) {
       const requiredFields = ['Nome', 'Cliente', 'DataInicio', 'DataObjetivo', 'Tema', 'Piloto'];
       const emptyField = requiredFields.find(field => !values[field]);
@@ -108,44 +106,48 @@ function VisualizarProjeto() {
       } else {
         toast.error('Por favor, preencha todos os campos obrigatórios!');
       }
+      return;
+    }
 
-      return;
-    }
-    if (!values.Nome || !values.Cliente || !values.DataInicio
-      || !values.DataObjetivo || !values.Tema || !values.Piloto) {
-      toast.error('Por favor, preencha todos os campos obrigatórios!');
-      return;
-    }
     if (values.Finalizado === true && !values.DataFim) {
       values.DataFim = new Date().toISOString().slice(0, 10);
       //toast.error('Por favor insira a Data Final do Projeto!');
       //return;
     }
-    if (!values.Finalizado) {
-      values.Resultado = false;
-      values.DataFim = "";
-    }
-
+    if (!values.Finalizado) 
+      {
+      try{
+        values.Resultado = false;
+        values.DataFim = "";
+      }catch{
+        await setValues({ ...values, ["Resultado"]: false , ["DataFim"]: "" });
+      }
+      }
+ 
     try {
-      const result = await dispatch(updateProjeto(values));
+      console.log(values.Piloto)
+      /*
+      
+            const result = await dispatch(updateProjeto(values));
       if (!result.error) {
         setTimeout(() => {
           dispatch(toggleSidebar(false));
           navigate('/PaginaPrincipal');
         }, 2000);
       }
+      */
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleChangeFormRowSelect = (nome, selectedOptions) => {
+  const handleChangeFormRowSelect = async(nome, selectedOptions) => {
     if (nome === "Piloto") {
       const strSO = selectedOptions.join(",");
-      setValues({ ...values, [nome]: strSO });
+      await setValues({ ...values, [nome]: strSO });
     } else if (nome === "TipoTrabalho") {
       const strT = selectedOptions.join(",");
-      setValues({ ...values, [nome]: strT });
+      await setValues({ ...values, [nome]: strT });
     }
   }
 
@@ -331,6 +333,7 @@ function VisualizarProjeto() {
                     list={formattedListUtilizadores}
                     multiple={true}
                     handleChange={handleChangeFormRowSelect}
+                    handleChangeSubmit={handleSubmit}
                   />
                   </div>
                   <FormRowCheckbox
