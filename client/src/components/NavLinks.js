@@ -8,7 +8,9 @@ import { getProjeto } from '../features/projetos/projetosSlice';
 import PageBtnContainer from './PageBtnContainer';
 import { useNavigate } from 'react-router-dom';
 import { toggleSidebar } from '../features/utilizadores/utilizadorSlice';
+import { exportProjeto } from '../features/projetos/projetosSlice';
 import Wrapper from '../assets/wrappers/NavLinks';
+
 const NavLinks = () => {
   const {
     projetos,
@@ -58,22 +60,58 @@ const NavLinks = () => {
     }
   };
   const toggleSidebarClose = ()=>{
-    dispatch(toggleSidebar(false));
+     dispatch(toggleSidebar(false));
   }
 
+  const handleChangeExportProjetos = () => {
+    dispatch(exportProjeto({ userID: user.id }));
+  };
   return (
     <Wrapper>
     <div className='nav-links'>
       {links.map((link) => {
 
         const { text, path, id, icon } = link;
-        if(user.tipo === 1 && (id === 2 || id === 3 || id === 4)){
+        if(user.tipo === 1 && (id === 2 || id === 3 || id === 4 || id === 8)){
           return null;
         }
+
+        if(user.tipo === 2 && id === 8){
+          return (
+            <React.Fragment key={id}>
+          <button style={{ marginTop: '5%' }}
+              className={({ isActive }) => {
+                return isActive ? "nav-link active" : "nav-link";
+              }}
+              onClick={handleChangeExportProjetos}
+            >
+
+          <NavLink
+            
+            to={path}
+            className={({ isActive }) => {
+              return isActive ? "nav-link active" : "nav-link";
+            }}
+            onClick={toggleSidebarClose}
+            key={id}
+          >
+            <span className="icon">{icon}</span>
+            {text}
+          </NavLink>
+            </button>
+
+
+          </React.Fragment>
+          
+          )
+      }
+
         if (id === 6 || id === 7) {
           return (
             <React.Fragment key={id}>
-              <button type="button" className="btn btn-link" onClick={id === 6 ? handleShowProjetos : id === 7 ? handleShowProjetosV : null} >
+              <button type="button" 
+              className="btn btn-link" 
+              onClick={id === 6 ? handleShowProjetos : id === 7 ? handleShowProjetosV : null} >
                 <NavLink
                   className={({ isActive }) => {
                     return isActive ? "nav-link active" : "nav-link";
@@ -147,7 +185,12 @@ const NavLinks = () => {
             </NavLink>
           );
         }
-      })}
+
+      }
+
+      )
+      }
+
     </div>
     </Wrapper>
   );

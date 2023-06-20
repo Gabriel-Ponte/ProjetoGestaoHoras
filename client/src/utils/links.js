@@ -6,6 +6,7 @@ import { RiSearchEyeLine } from 'react-icons/ri';
 import { AiFillFileAdd } from 'react-icons/ai';
 import { CgWorkAlt } from 'react-icons/cg';
 import { TbUserExclamation } from 'react-icons/tb';
+import { SiMicrosoftexcel } from 'react-icons/si';
 
 const links = [
   { id: 1, text: 'Editar Perfil', path: '/PaginaEditarPerfil', icon: <ImProfile /> },
@@ -15,7 +16,7 @@ const links = [
   { id: 5, text: 'Adicionar Projeto', path: '/PaginaAdicionarProjeto', icon: <AiFillFileAdd /> },
   { id: 6, text: 'Editar Projetos', path: '/PaginaEditarProjeto', icon: <FiEdit /> },
   { id: 7, text: 'Visualizar Projetos', path: '/PaginaVisualizarProjeto', icon: <RiSearchEyeLine /> },
-  { id: 8, text: 'Adicionar Horas', path: '/PaginaAdicionarHoras', icon: <IoStopwatchSharp /> },
+  { id: 8, text: 'Exportar dados para Excell', path: '/PaginaPrincipal', icon: <SiMicrosoftexcel /> },
 ];
 
 

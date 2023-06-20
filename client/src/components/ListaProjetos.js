@@ -4,12 +4,11 @@ import Wrapper from '../assets/wrappers/ProjetossContainer';
 import { useSelector, useDispatch } from 'react-redux';
 import Loading from './Loading';
 import { getAllProjetos } from '../features/allProjetos/allProjetosSlice';
-import { exportProjeto } from '../features/projetos/projetosSlice';
 import PageBtnContainer from './PageBtnContainer';
 import ListaProjetosHeader from './ListaProjetosHeader.js';
 import { handleChange } from '../features/allProjetos/allProjetosSlice';
 import FormRowCheckbox from './FormRowCheckbox';
-import { FaFileExport } from 'react-icons/fa';
+
 
 const ListaProjetos = () => {
 
@@ -36,13 +35,6 @@ const ListaProjetos = () => {
     return <Loading />;
   }
 
-  if (projetos.length === 0) {
-    return (
-      <Wrapper>
-        <h2>Sem projetos para apresentar</h2>
-      </Wrapper>
-    );
-  }
 
   const handleSort = (tipo) => {
     if (isLoading) return;
@@ -67,25 +59,62 @@ const ListaProjetos = () => {
   };
 
 
-  const handleChangeExportProjetos = () => {
-    dispatch(exportProjeto({ userID: user.id }));
-  };
+  
+  if (projetos.length === 0) {
+    return (
+      <Wrapper>
+      <div className="row text-center">
+        
+        <div className="col-md-3 themed-grid-col">
+          <h1>Gestão Projetos</h1>
+        </div>
 
+        <div className="col-md-9 finalizado themed-grid-col">
+          <h5>
+            {totalProjetos} projeto{projetos.length > 1 && 's'} {projetoFinalizado === true ? " Finalizados " : " Em Curso "} encontrados
+          </h5>
+        </div>
+
+
+          <div className="col-md-12 text-end themed-grid-col">
+            <FormRowCheckbox
+              type="checkbox"
+              className="row mb-3 text-center"
+              classNameLabel="col-md-11 finalizado themed-grid-col"
+              classNameInput="col-md-1 themed-grid-col"
+              id="Finalizado"
+              name="Finalizado"
+              placeholder="Finalizado"
+              value={projetoFinalizado}
+              handleChange={handleChangeCheckbox}
+            />
+          </div>
+
+        {projetoFinalizado !== true && (
+        <div className="col-md-12 text-end themed-grid-col">
+          <FormRowCheckbox
+            type="checkbox"
+            className="row mb-3  text-center"
+            classNameLabel="col-md-11  finalizado themed-grid-col"
+            classNameInput="col-md-1 themed-grid-col"
+            id="DataObjetivoC"
+            name="DataObjetivoC"
+            labelText="Possui Data Objetivo"
+            placeholder="Possui Data Objetivo"
+            value={DataObjetivoC}
+            handleChange={handleChangeCheckboxDataObjetivo}
+          />
+        </div>
+        )}
+      </div>
+
+        <h2>Sem projetos para apresentar</h2>
+      </Wrapper>
+    );
+  }
+  
   return (
     <Wrapper>
-      {user && user.tipo === 2 && (
-        <div className="col-md-3  text-center themed-grid-col">
-          <button
-            type="button"
-            name="VisualizarButton"
-            className="btn buttonHeader"
-            onClick={handleChangeExportProjetos}
-          >
-            <FaFileExport size={24} />
-          </button>
-        </div>
-      )}
-
       <div className="row text-center">
         
         <div className="col-md-3 themed-grid-col">
