@@ -19,6 +19,7 @@ const  initialState = {
     foto: '',
     nome: '',
     tipo: 1,
+    estado: true,
   };
 
 const AddUtilizador = () => {

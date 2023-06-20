@@ -7,7 +7,7 @@ const Wrapper = styled.aside`
 @media (max-width: 991px) {
   position: static;
   top:0;
-  z-index: 9999;
+  z-index: 9988;
   width: 100%;
   height: auto;
     .nav-link {
@@ -29,7 +29,7 @@ const Wrapper = styled.aside`
       background: var(--white);
       height: auto;
       width: 100%;
-      z-index: 9999;
+      z-index: 9988;
       transition: var(--transition);
       position: fixed;
       top:0;
@@ -112,7 +112,7 @@ const Wrapper = styled.aside`
       width: auto;
       min-width:20vw;
       position: fixed;
-      z-index: 9999;
+      z-index: 9988;
       transition: var(--transition);
     }
   }

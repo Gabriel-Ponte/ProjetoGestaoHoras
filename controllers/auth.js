@@ -4,6 +4,7 @@ const { BadRequestError, UnauthenticatedError, NotFoundError } = require("../err
 const { formToJSON } = require("axios");
 const multer = require("multer");
 const nodemailer = require('nodemailer');
+const sgMail = require('@sendgrid/mail');
 const crypto = require('crypto');
 
 const getAllUser = async (req, res) => {
@@ -43,6 +44,10 @@ const postResetPassword = async (req, res) => {
       throw new NotFoundError(`Nenhum utilizador com email: ${email} encontrado`);
     }
 
+    if (user.estado === false) {
+      throw new Error('Conta encontra-se inativa!');
+    }
+    
     // Generate a password reset token
     const token = crypto.randomBytes(20).toString('hex');
 
@@ -53,9 +58,11 @@ const postResetPassword = async (req, res) => {
 
     // Save the updated user document
     await user.save();
+    // Set SendGrid API key
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
     // Create a nodemailer transporter
-    const transporter = nodemailer.createTransport({
+    /*const transporter = nodemailer.createTransport({
       // Configure your email service provider details
       service: process.env.SERVICE,
       auth: {
@@ -64,9 +71,11 @@ const postResetPassword = async (req, res) => {
       }
     });
 
+    */
+
     // Generate a password reset link
-    //const resetLink = `https://${process.env.LOCALHOST}/PaginaResetPassword/${token}`;
     const resetLink = `${process.env.LOCALHOST}/paginaResetPasswordChange/${token}`;
+    
     // Configure the email details
     const mailOptions = {
       from: process.env.EMAIL, // Sender's email address
@@ -80,15 +89,18 @@ const postResetPassword = async (req, res) => {
         `
     };
     // Send the email
-    await transporter.sendMail(mailOptions);
-
+    //await transporter.sendMail(mailOptions);
+    await sgMail.send(mailOptions);
+    //console.log(transporter);
     // Send a success response
     res.json({ message: 'Foi enviado um email para resetar a password.' });
   } catch (error) {
     // Send an error response
     if (error instanceof NotFoundError) {
       res.status(404).json({ error: error.message });
+      console.log(error)
     } else {
+      console.log(error)
       res.status(500).json({ error: 'Ocorreu um erro ao tentar resetar a senha, por favor tente novamente.' });
     }
   }
@@ -111,6 +123,9 @@ const updateResetedPassword = async (req, res) => {
       throw new Error('Token inválido ou expirado!');
     }
 
+    if (user.estado === false) {
+      throw new Error('Conta encontra-se inativa!');
+    }
     // Update the user's password
     user.password = password;
 
@@ -162,7 +177,8 @@ const register = async (req, res) => {
       foto: {
         data: buffer,
         contentType: 'image/png'
-      }
+      },
+      estado
     });
 
     res.status(StatusCodes.CREATED).json({
@@ -176,7 +192,8 @@ const register = async (req, res) => {
           contentType: 'image/png'
         },
         nome: user.nome,
-        tipo: user.tipo
+        tipo: user.tipo,
+        estado: user.estado
       },
     });
   } catch (error) {
@@ -215,6 +232,7 @@ const login = async (req, res) => {
       foto: user.foto,
       nome: user.nome,
       tipo: user.tipo,
+      estado: user.estado,
       token,
     },
   });
@@ -248,8 +266,8 @@ const updateUser = async (req, res) => {
     data: buffer,
     contentType: 'image/png' // set the content type of the file to the foto.contentType property
   };
+  user.estado = estado;
   await user.save();
-  console.log("user")
 
   const token = user.createJWT();
   res.status(StatusCodes.OK).json({
@@ -262,6 +280,7 @@ const updateUser = async (req, res) => {
       foto: user.foto,
       nome: user.nome,
       tipo: user.tipo,
+      estado: user.estado,
       token,
     },
   });

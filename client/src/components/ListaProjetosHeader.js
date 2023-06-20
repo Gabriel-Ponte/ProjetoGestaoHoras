@@ -2,7 +2,7 @@ import { AiOutlineArrowDown } from 'react-icons/ai';
 import { AiOutlineArrowUp } from 'react-icons/ai';
 import { BsArrowLeftShort } from 'react-icons/bs';
 import { useState } from 'react';
-import Wrapper from '../assets/wrappers/ListaProjetos';
+import Wrapper from '../assets/wrappers/ListaProjetosHeader';
 
 const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
 

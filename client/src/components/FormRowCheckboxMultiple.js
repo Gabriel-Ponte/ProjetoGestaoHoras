@@ -36,10 +36,12 @@ const FormRowCheckboxMultiple = ({ labelText, name, value, handleChange, list, c
 
 
 
-    const handleCheckboxChange = (option) => {
+    const handleCheckboxChange = (option , id) => {
         let selectedOptions = option;
+        let selectedID = id;
         let previousOptions = selectedOption.filter((option) => !selectedOptions.includes(option));
         let updatedOptions;
+        let updatedOptionsID;
         let op;
 
         if (selectedOptions.includes('Todos')) {
@@ -52,14 +54,16 @@ const FormRowCheckboxMultiple = ({ labelText, name, value, handleChange, list, c
             previousOptions = previousOptions.filter(option => option !== 'Todos');
 
             updatedOptions = [...previousOptions, selectedOptions];
+            updatedOptionsID = [...previousOptions, selectedID];
             setSelectedOption(updatedOptions);
 
             if (updatedOptions.length > 1) {
-                setSelectedOption(updatedOptions.length === selectedOption.length ? previousOptions : updatedOptions);
-                op = updatedOptions.length === selectedOption.length ? previousOptions : updatedOptions;
+                setSelectedOption(updatedOptions.length === selectedOption.length ? previousOptions : updatedOptionsID);
+                //op = updatedOptions.length === selectedOption.length ? previousOptions : updatedOptions;
+                op = updatedOptions.length === selectedOption.length ? previousOptions : updatedOptionsID;
             } else {
-                setSelectedOption(updatedOptions);
-                op = updatedOptions;
+                setSelectedOption(updatedOptionsID);
+                op = updatedOptionsID;
             }
         }
         if (updatedOptions[0] === null || updatedOptions[0] === '') {
@@ -97,7 +101,7 @@ const FormRowCheckboxMultiple = ({ labelText, name, value, handleChange, list, c
                   name={name}
                   value={ids[index]}
                   checked={selectedOption.includes(option)}
-                  onChange={() => handleCheckboxChange(option)}
+                  onChange={() => handleCheckboxChange(option , ids[index])}
                 />
               </div>
             </div>
