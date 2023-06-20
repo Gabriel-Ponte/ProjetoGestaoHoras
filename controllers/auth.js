@@ -70,7 +70,6 @@ const postResetPassword = async (req, res) => {
         pass: process.env.PASSWORD_EMAIL // Enter your email password
       }
     });
-
     */
 
     // Generate a password reset link

@@ -1,7 +1,28 @@
 const Projeto = require("../models/Projeto");
+const User = require("../models/Utilizador");
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, NotFoundError } = require("../errors");
+const { updateExcell } = require("../exportMongoDB")
+require('dotenv').config();
 
+const exportProjetos = async(req, res) =>{
+  const { userID: userID } = req.body;
+  
+  const user = await User.findOne({
+    _id: userID,
+  });
+  if(!user){
+    throw new NotFoundError(`Não foi encontrado o utilizador com id ${userID}`);
+  }
+
+  if(user.tipo == 2){
+    updateExcell();
+    res.status(StatusCodes.OK).json(`Ficheiro exportado para ${process.env.EXCEL_EXPORT}`);
+  }
+  else{
+    throw new NotFoundError(`O utilizador ${user.nome} não possui permissões para exportar`);
+  }
+}
 
 const getAllProjetos = async (req, res) => {
   const { search, Finalizado, tipoTrabalho, sort ,DataObjetivo} = req.query;
@@ -139,4 +160,5 @@ module.exports = {
   createProjeto,
   updateProjeto,
   deleteProjeto,
+  exportProjetos,
 };

@@ -9,11 +9,13 @@ const {
   createProjeto,
   updateProjeto,
   deleteProjeto,
+  exportProjetos,
 } = require("../controllers/projetos");
 
 router.route("/").post(createProjeto).get(getAllProjetos);
 //router.route("/").get(getAllProjetos);
 
+router.route("/export/").post(exportProjetos);
 router
   .route("/:id")
   .get(getProjeto)

@@ -9,7 +9,8 @@ import {
   createProjetoThunk, 
   deleteProjetoThunk, 
   editProjetoThunk, 
-  getProjetoThunk 
+  getProjetoThunk,
+  exportProjetosThunk
 } from './projetosThunk';
 
 
@@ -17,6 +18,14 @@ const initialState = {
   isLoading: false,
   projeto: getProjetoFromLocalStorage(),
 };
+
+
+export const exportProjeto = createAsyncThunk(
+  'projeto/export/',
+  async (id ,thunkAPI) => {
+    return exportProjetosThunk(thunkAPI, id);
+  }
+  );
 
 export const createProjeto = createAsyncThunk(
   'projeto/createProjeto',
@@ -130,6 +139,19 @@ const projetoSlice = createSlice({
         state.isLoading = false;
         toast.error(payload);
       })
+      
+      .addCase(exportProjeto.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(exportProjeto.fulfilled, (state, { payload }) => {
+        console.log(payload);
+        toast.success(payload);
+      })
+      .addCase(exportProjeto.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(payload);
+      })
+
   },
 });
 

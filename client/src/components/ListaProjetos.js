@@ -4,10 +4,12 @@ import Wrapper from '../assets/wrappers/ProjetossContainer';
 import { useSelector, useDispatch } from 'react-redux';
 import Loading from './Loading';
 import { getAllProjetos } from '../features/allProjetos/allProjetosSlice';
+import { exportProjeto } from '../features/projetos/projetosSlice';
 import PageBtnContainer from './PageBtnContainer';
 import ListaProjetosHeader from './ListaProjetosHeader.js';
 import { handleChange } from '../features/allProjetos/allProjetosSlice';
 import FormRowCheckbox from './FormRowCheckbox';
+import { FaFileExport } from 'react-icons/fa';
 
 const ListaProjetos = () => {
 
@@ -25,7 +27,7 @@ const ListaProjetos = () => {
     DataObjetivoC,
   } = useSelector((store) => store.allProjetos);
   const dispatch = useDispatch();
-
+  const { user } = useSelector((store) => store.utilizador.user);
   useEffect(() => {
     dispatch(getAllProjetos());
   }, [page, search, searchStatus, searchType, sort, projetoFinalizado, DataObjetivoC]);
@@ -64,17 +66,38 @@ const ListaProjetos = () => {
     dispatch(handleChange({ name: 'DataObjetivoC', value: DataObjetivo }));
   };
 
+
+  const handleChangeExportProjetos = () => {
+    dispatch(exportProjeto({ userID: user.id }));
+  };
+
   return (
     <Wrapper>
+      {user && user.tipo === 2 && (
+        <div className="col-md-3  text-center themed-grid-col">
+          <button
+            type="button"
+            name="VisualizarButton"
+            className="btn buttonHeader"
+            onClick={handleChangeExportProjetos}
+          >
+            <FaFileExport size={24} />
+          </button>
+        </div>
+      )}
+
       <div className="row text-center">
+        
         <div className="col-md-3 themed-grid-col">
           <h1>Gestão Projetos</h1>
         </div>
+
         <div className="col-md-9 finalizado themed-grid-col">
           <h5>
             {totalProjetos} projeto{projetos.length > 1 && 's'} {projetoFinalizado === true ? " Finalizados " : " Em Curso "} encontrados
           </h5>
         </div>
+
 
           <div className="col-md-12 text-end themed-grid-col">
             <FormRowCheckbox

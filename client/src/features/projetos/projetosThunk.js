@@ -41,3 +41,12 @@ export const getProjetoThunk = async ( thunkAPI ,projetoId) => {
     return checkForUnauthorizedResponse(error, thunkAPI);
   }
 };
+
+export const exportProjetosThunk = async ( url, userID ,thunkAPI) => {
+  try {
+    const resp = await customFetch.post(`/projetos/export/` , userID);
+    return resp.data;
+  } catch (error) {
+    return checkForUnauthorizedResponse(error, thunkAPI);
+  }
+};
