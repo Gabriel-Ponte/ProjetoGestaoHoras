@@ -28,7 +28,7 @@ function Login(){
     e.preventDefault();
     const { login, password } = values;
     if (!login || !password) {
-      toast.error('Please fill out all fields');
+      toast.error('Preencha todos os campos');
       return;
     }
       dispatch(loginUser({ login: login, password: password }));

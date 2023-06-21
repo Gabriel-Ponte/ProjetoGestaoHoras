@@ -39,7 +39,6 @@ function ModalFoto({ label, name, value, handleChange, className }) {
     const reader = new FileReader();
     reader.onload = function (event) {
       const novaFoto = new Uint8Array(event.target.result);
-      console.log(novaFoto)
       if (novaFoto.length > 10000) {
         resizeImage(event.target.result)
           .then((resizedDataUrl) => {

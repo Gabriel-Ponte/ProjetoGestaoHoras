@@ -46,7 +46,7 @@ const diasSlice = createSlice({
     })
     .addCase(createDia.fulfilled, (state) => {
       state.isLoading = false;
-      toast.success('Dia Created');
+      toast.success('Dia adicionado!');
     })
     .addCase(createDia.rejected, (state, { payload }) => {
       state.isLoading = false;
@@ -63,7 +63,7 @@ const diasSlice = createSlice({
     })
     .addCase(editDia.fulfilled, (state) => {
       state.isLoading = false;
-      toast.success('Dia Modified...');
+      toast.success('Dia alterado!');
     })
     .addCase(editDia.rejected, (state, { payload }) => {
       state.isLoading = false;

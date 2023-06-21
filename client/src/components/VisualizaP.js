@@ -49,7 +49,6 @@ function VisualizarProjeto() {
       feriadosPortugal(dayFer);
       setValues(createInitialState(projeto.projeto));
       const userLogin = user?.user?.login;
-      console.log(userLogin)
       const projetoId = projeto?.projeto?._id;
       dispatch(getAllDias({ projetoId, userLogin })).then((res) => {
         setListaDias(res.payload.diasAllProjeto);
@@ -62,7 +61,6 @@ function VisualizarProjeto() {
     if (projeto) {
     const projetoId = projeto?.projeto?._id;
     dispatch(getAllDiasProjetoUtilizador({ projetoId, selectedUser })).then((res) => {
-      console.log(res.payload)
       setListaDias(res.payload.diasAllProjeto);
     });
     }
@@ -405,51 +403,3 @@ function VisualizarProjeto() {
 }
 
 export default VisualizarProjeto;
-
-/*
-
-
-              <div>
-              {listaDias.map((dia) => {
-                const data = new Date(dia.Data);
-                const isSameMonth = month === data.getMonth() && year === data.getFullYear();
-                const isSameDate = diaSelected === 0 || Number(diaSelected) === data.getDate();
-                const projetoList = dia.tipoDeTrabalhoHoras.map(({ tipoTrabalho, horas, projeto }) => {
-                  return dispatch(getUser(dia.Utilizador)).then((res) => 
-                    {
-                    const user = res.payload.projeto;
-                  }
-                  );
-                  console.log(user)
-                });
-                if (isSameMonth && isSameDate) {
-                  console.log(dia)
-                  console.log(dia.tipoDeTrabalhoHoras )
-
-                }
-
-                return null;
-              })}
-            </div>
-              <div className='text-center'>
-              {listaDias && listaDias === 'undefined' && listaDias.filter((dia) => {
-                const data = new Date(dia.Data);
-                const isSameMonth = month === data.getMonth() && year === data.getFullYear();
-                const isSameDate = diaSelected === 0 || Number(diaSelected) === data.getDate();
-
-                return isSameMonth && isSameDate;
-              }).length === 0 && diaSelected === 0 && (
-                  <h2>Sem Horas inseridas neste mês</h2>
-                )}
-
-              {listaDias && listaDias === 'undefined' && listaDias.filter((dia) => {
-                const data = new Date(dia.Data);
-                const isSameMonth = month === data.getMonth() && year === data.getFullYear();
-                const isSameDate = diaSelected === 0 || Number(diaSelected) === data.getDate();
-
-                return isSameMonth && isSameDate;
-              }).length === 0  && diaSelected !== 0 && (
-                  <h2>Sem Horas inseridas neste dia {diaSelected}</h2>
-                )}
-            </div>
-*/

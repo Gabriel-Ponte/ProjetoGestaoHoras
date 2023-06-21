@@ -98,7 +98,6 @@ function VisualizarProjeto() {
   }, [projeto]);
 
   const handleSubmit = async (e) => {
-    console.log(e)
     if (!values.Nome || !values.Cliente || !values.DataInicio || !values.DataObjetivo || !values.Tema || !values.Piloto) {
       const requiredFields = ['Nome', 'Cliente', 'DataInicio', 'DataObjetivo', 'Tema', 'Piloto'];
       const emptyField = requiredFields.find(field => !values[field]);
@@ -149,7 +148,6 @@ function VisualizarProjeto() {
       catch{
           await setValues({ ...values, [nome]: strSO });
       }
-      console.log(values.Piloto);
       return true;
     } else if (nome === "TipoTrabalho") {
       const strT = selectedOptions.join(",");

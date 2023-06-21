@@ -120,7 +120,6 @@ const ListaProjetos = () => {
     }
 
     values.Utilizador = user.user.id;
-    console.log(values)
     if (verificaDiaCalled) {
       await dispatch(editDia(values));
     } else {
@@ -283,7 +282,6 @@ const ListaProjetos = () => {
                               
                                 counter++;
                                 const itemTypeArray = item.tipoTrabalho ? item.tipoTrabalho.split(",") : [];
-                                console.log(itemTypeArray)
                                 const matchFound = new Array(itemTypeArray.length + 1).fill(false);
 
                                 if (project._id === item.projeto) {

@@ -107,7 +107,7 @@ const Wrapper = styled.aside`
       background-color: #303030;
       margin-left: -1000%;
       background: var(--white);
-      min-height: 100vh;
+   
       height: auto;
       width: auto;
       min-width:20vw;
@@ -118,7 +118,7 @@ const Wrapper = styled.aside`
   }
 
     .content {
-      height: 100vh;
+      height: 75vh;
       overflow: auto;
       position: sticky;
       top: 74px;

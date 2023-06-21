@@ -171,6 +171,7 @@ const ListaHoras = () => {
   if (!dias){
     return <Loading />;
   }
+
   return (
     <Wrapper>
       <div className='mainVisualiza'>
@@ -224,6 +225,7 @@ const ListaHoras = () => {
             <hr></hr>
             <div>
               {dias.map((dia) => {
+
                 const data = new Date(dia.Data);
                 const isSameMonth = month === data.getMonth() && year === data.getFullYear();
                 const isSameDate = diaSelected === 0 || Number(diaSelected) === data.getDate();

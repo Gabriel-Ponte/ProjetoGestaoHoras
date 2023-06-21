@@ -101,9 +101,9 @@ function updateExcell() {
       // Save Excel file
       await workbook.xlsx.writeFile(excelFilePath);
 
-      console.log('Excel file created successfully!');
+      //console.log('Excel file created successfully!');
     } catch (error) {
-      console.error('An error occurred:', error);
+      //console.error('An error occurred:', error);
     } finally {
       //mongoose.connection.close();
     }

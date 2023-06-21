@@ -39,7 +39,7 @@ function VisualizarProjeto() {
   const { user, utilizadores } = useSelector((store) => store.utilizador);
   const { projeto, isLoading } = useSelector((store) => store.projeto);
   const [selectedUser, setSelectedUser] = useState(user?.user?.nome);
-  const [dias, setDias] = useState([]);
+  const [verificaDias, setVerificaDias] = useState(0);
   const [values, setValues] = useState(null);
   const [getFeriados, setFeriados] = useState([]);
   const [listaDias, setListaDias] = useState([]);
@@ -47,11 +47,21 @@ function VisualizarProjeto() {
   const [listaTipoTrabalho, setListaTipoTrabalho] = useState([]);
   const formattedListUtilizadores = Array.isArray(utilizadores) ? utilizadores : [];
   const dispatch = useDispatch();
-
+  
 
   useEffect(() => {
     dispatch(getTipoTrabalho()).then((res) => {
       const tipoTrabalhoArray = Array.isArray(res.payload.tipoTrabalho) ? res.payload.tipoTrabalho : [];
+      let verifica = false;
+      for(let i = 0; i<tipoTrabalhoArray.length; i++){
+        if(tipoTrabalhoArray[i].TipoTrabalho.toLowerCase() === "outro"){
+          verifica = true;
+        }
+      }
+
+      if (verifica === false){
+        tipoTrabalhoArray.push({ TipoTrabalho: "Outro" })
+      }
       setListaTipoTrabalho(tipoTrabalhoArray);
     });
   }, []);
@@ -123,7 +133,6 @@ function VisualizarProjeto() {
 
 
   useEffect(() => {
-
     if (projeto) {
       const today = new Date();
       const month = selectedDay ? selectedDay.mes : today.getMonth();
@@ -136,6 +145,11 @@ function VisualizarProjeto() {
       dispatch(getAllDias({ projetoId, userLogin })).then((res) => {
         if (res.payload.diasAllProjeto && typeof projeto !== 'undefined') {
           setListaDias(res.payload.diasAllProjeto);
+          if (res.payload.diasAllProjeto.length>0){
+            setVerificaDias(1)
+          }else{
+            setVerificaDias(2)
+          }
         } else {
           setListaDias([]);
         }
@@ -144,9 +158,7 @@ function VisualizarProjeto() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projeto]);
 
-  useEffect(()=>{
-    setDias(listaDias);
-  }, [listaDias]);
+
 
   useEffect(() => {
     if (projeto) {
@@ -164,8 +176,11 @@ function VisualizarProjeto() {
         dispatch(getAllDiasProjetoUtilizador({ projetoId, selectedUser })).then((res) => {
           if (res.payload.diasAllProjeto && typeof projeto !== 'undefined') {
             setListaDias(res.payload.diasAllProjeto);
+            setVerificaDias(1)            
           } else {
-            setListaDias([]);
+            setListaDias([]);          
+            setVerificaDias(2)
+
           }
         });
       }
@@ -190,17 +205,19 @@ function VisualizarProjeto() {
               if (tipoDeTrabalhoHora.projeto === values._id) {
                 const array = tipoDeTrabalhoHora.horas ? tipoDeTrabalhoHora.horas.split(',') : [];
                 let values = tipoDeTrabalhoHora.tipoTrabalho ? tipoDeTrabalhoHora.tipoTrabalho.split(',') : [];
-        
                 const filteredValues = values
                   .filter(value => listaTipoTrabalho.some(item => item._id === value))
                   .map(value => {
                     const matchedItem = listaTipoTrabalho.find(item => item._id === value);
                     return matchedItem ? matchedItem.TipoTrabalho : null;
                   });
-        
+                  
                 if (array !== null) {
                   for (let h = 0; h < array.length; h++) {
                     const horas = Number(array[h]);
+                    if(!filteredValues[h]){
+                      filteredValues[h] = "Outro";
+                    }
                     totalHours += horas;
                     arrayTTH[filteredValues[h]] = (arrayTTH[filteredValues[h]] || 0) + horas;
                   }
@@ -209,7 +226,6 @@ function VisualizarProjeto() {
             }
           }
         }
-        
         if (totalHours !== 0) {
           setValues({
             ...values,
@@ -262,21 +278,17 @@ function VisualizarProjeto() {
     }
   }
 
-
-
   const today = new Date();
   const diaSelected = selectedDay ? selectedDay.dia : 0;
   const month = selectedDay ? selectedDay.mes : today.getMonth();
   const year = selectedDay ? selectedDay.ano : today.getFullYear();
-
- 
   return (
     <Wrapper>
       <div className="mainVisualiza">
 
         <div className="col-12">
           <main>
-            <div className="row mb-3 " >
+            <div className="row mb-3" >
 
               <div className="col-12 text-center mb-5 ">
                 <h1>{values.Nome}</h1>
@@ -367,24 +379,25 @@ function VisualizarProjeto() {
 
               <div className="col-5 text-center right">
                 <div className="col-12 mb-5 text-center">
-                {(dias.length > 0) ? (
+                {verificaDias === 1 ? (
                   <Calendar
                     handleChange={handleChangeCalendario}
                     feriados={getFeriados}
-                    vProjeto={dias}
+                    vProjeto={listaDias}
                     inicio={values?.DataInicio}
                     objetivo={values?.DataObjetivo}
                     fim={values?.DataFim}
                   />
-                ):(                  
-                <Calendar
-                  handleChange={handleChangeCalendario}
-                  feriados={getFeriados}
-                  inicio={values?.DataInicio}
-                  objetivo={values?.DataObjetivo}
-                  fim={values?.DataFim}
-                />)
-                }
+                ) : verificaDias === 2 ? (
+                  <Calendar
+                    handleChange={handleChangeCalendario}
+                    feriados={getFeriados}
+                    inicio={values?.DataInicio}
+                    objetivo={values?.DataObjetivo}
+                    fim={values?.DataFim}
+                  />
+                ) : null}
+
                 </div>
                 {(user?.user?.tipo === 2) ? (
                   <div className='text-center mb-5'>

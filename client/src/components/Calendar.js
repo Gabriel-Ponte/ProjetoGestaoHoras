@@ -2,12 +2,15 @@ import React, { useEffect, useState } from "react";
 import Wrapper from "../assets/wrappers/Calendar";
 import { MdKeyboardArrowLeft } from 'react-icons/md';
 import { MdKeyboardArrowRight } from 'react-icons/md';
+import { toast } from 'react-toastify';
+
 const CalendarControl = ({ handleChange, inserted, feriados, inicio, fim , objetivo, vProjeto }) => {
     const [calendar, setCalendar] = useState(new Date());
     const calWeekDays = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
     const calMonthName = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
     const localDate = new Date();
-    
+
+
     useEffect(() => {
         plotDates(calendar);
     }, []);
@@ -15,7 +18,7 @@ const CalendarControl = ({ handleChange, inserted, feriados, inicio, fim , objet
     useEffect(() => {
         displayMonth();
         displayYear();
-    }, [calendar,inicio]);
+    }, [calendar, inicio, vProjeto]);
 
     function daysInMonth(month, year) {
         return new Date(year, month, 0).getDate();
@@ -110,7 +113,6 @@ const CalendarControl = ({ handleChange, inserted, feriados, inicio, fim , objet
     function plotDates(calendar) {
         const calendarBody = document.querySelector(".calendar .calendar-body");
         if (!calendarBody) {
-            console.log("Não foi possivel carregar o calendário.");
             return;
         }
         calendarBody.innerHTML = "";
@@ -248,7 +250,7 @@ const CalendarControl = ({ handleChange, inserted, feriados, inicio, fim , objet
                 numberItems[insertedDay.getDate() - 1].classList.add("calendar-inicio");
                 }
             }catch{
-                console.log("Inicio não é uma data")
+                toast.error("Inicio não é uma data")
             }
         }
 
@@ -266,7 +268,7 @@ const CalendarControl = ({ handleChange, inserted, feriados, inicio, fim , objet
                 numberItems[insertedDay.getDate() - 1].classList.add("calendar-objetivo");
                 }
             }catch{
-                console.log("Objetivo não é uma data")
+                toast.log("Objetivo não é uma data")
             }
         }
 
@@ -284,7 +286,7 @@ const CalendarControl = ({ handleChange, inserted, feriados, inicio, fim , objet
                 numberItems[insertedDay.getDate() - 1].classList.add("calendar-fim");
                 }
             }catch{
-                console.log("Fim não é uma data")
+                toast.log("Fim não é uma data")
             }
         }
 

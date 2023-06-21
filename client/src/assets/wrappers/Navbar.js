@@ -14,6 +14,16 @@ const Wrapper = styled.nav`
     align-items: center;
     width: 100px;
   }
+  
+  .middleButton {
+    margin: auto;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  
   .nav-center {
     display: flex;
     width: 90vw;
@@ -109,7 +119,6 @@ const Wrapper = styled.nav`
     justify-content: space-around;
     gap: 0px;
     position: relative;
-    margin: px;
     padding: 0px;
     font-weight: 200;
     text-align: end;

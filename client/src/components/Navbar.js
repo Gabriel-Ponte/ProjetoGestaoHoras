@@ -22,7 +22,6 @@ const Navbar = () => {
     dispatch(toggleSidebar());
   };
 
-
   const handleShowLogoutClick = () => {
     setShowLogout(!showLogout);
     setDisableAddHoras(!disableAddHoras);
@@ -69,12 +68,16 @@ const Navbar = () => {
   return (
     <Wrapper>
       <div className='subheader'>
+
+        <div className='col-4 middleButton'>
         <button type='button' className='toggle-btn' onClick={toggle}>
           <FaAlignLeft />
         </button>
-        <div>
+        </div>
+        <div className='col-4 middleButton' >
           <button className='btn btn-light' style={{fontSize : "250%"}} type='button' onClick={returnMain}>Gestão Projetos</button>
         </div>
+        <div className='col-4'>
         <div className='btn-container'>
           <div className='divButtonUtilizador'>
           <button
@@ -133,6 +136,7 @@ const Navbar = () => {
               logout
             </button>
           </div>
+        </div>
         </div>
       </div>
     </Wrapper>

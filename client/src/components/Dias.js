@@ -24,26 +24,37 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPos
   useEffect(() => {
     const projetoList = tipoDeTrabalhoHoras.map(({ tipoTrabalho, horas, projeto }) => {
       horasT += Number(horas);
-      return dispatch(getProjetoList(projeto)).then((res) => (
-        {
-          tipoTrabalho,
-          horas,
-          projeto: res.payload.projeto,
+      const horasArray = horas.split(',') || [];
+      const tipoTrabalhoArray = tipoTrabalho.split(',') || [];
+  
+      for (let a = horasArray.length - 1; a >= 0; a--) {
+        if (horasArray[a] == 0) {
+          tipoTrabalhoArray.splice(a, 1);
+          horasArray.splice(a, 1);
         }
-      ));
-    });
+      }
+  
+      if (tipoTrabalhoArray.length === 0) {
+        return null;
+      }
+  
+      tipoTrabalho = tipoTrabalhoArray.join(",");
+      horas = horasArray.join(",");
+  
+      return dispatch(getProjetoList(projeto)).then((res) => ({
+        tipoTrabalho,
+        horas,
+        projeto: res.payload.projeto,
+      }));
+    }) // Filter out any null values
+  
     sethorasTotal(horasT);
+  
     Promise.all(projetoList).then((projetoArray) => {
-      setProjeto(projetoArray);
+      const filteredProjetoArray = projetoArray.filter((projeto) => projeto !== null);
+      setProjeto(filteredProjetoArray);
     });
   }, [tipoDeTrabalhoHoras, dispatch]);
-
-
-
-  const percentage = Math.round(horasTotal / horasPossiveis) * 100;
-
-
-
 
   return (
     <Wrapper>

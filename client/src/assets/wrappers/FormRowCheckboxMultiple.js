@@ -26,10 +26,11 @@ const Wrapper = styled.section`
     margin: auto;
   }
 }
+
 .checkboxRow{
     height : 20vh;
     overflow: auto;
-    width:40vw;
+    width:30vw;
     text-align:center;
     items-align:center;
     padding-top:5px;
@@ -139,14 +140,7 @@ const Wrapper = styled.section`
     width: auto;
   }
 
-  input[type=date] {
-    font-size: 30px;
-    height: 30px;
-    position: relative;
-    min-width : 0%;
-    width : auto;
-    
-  }
+
 
 
   .formRowInput {
@@ -161,31 +155,7 @@ const Wrapper = styled.section`
     flex-wrap: wrap;
   }
 
-  .formRow {
-    display: grid;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-content: center;
-    grid-template-columns: 1fr 1fr;
-    gap: 1px;
-    justify-items: center;
-    align-items: center;
-    overflow: auto;
-    align-self: center;
-    position: relative;
-    grid-auto-flow: row;
-    text-align: start;
-  }
 
-  .formRowLabel {
-    display: flex;
-    flex-direction: row;
-    align-items: start;
-    justify-items: start;
-    align-content: start;
-    justify-content: start;
-  }
 
 export default Wrapper
   #checkboxes {

@@ -97,7 +97,6 @@ const getDia = async (req, res) => {
 };
 
 const createDia = async (req, res) => {
-  console.log(req.body.Utilizador)
   const aUtilizador = await User.findOne({
     _id: req.body.Utilizador,
   });

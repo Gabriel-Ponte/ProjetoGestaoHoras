@@ -32,7 +32,7 @@ const ListaProjetos = () => {
     const { user } = useSelector((store) => store.utilizador);
     const [listaDias, setListaDias] = useState([]);
     const [verificaDiaCalled, setVerificaDiaCalled] = useState(false);
-    console.log(listaDias)
+
     useEffect(() => {
         dispatch(handleChange({ name: 'projetoFinalizado', value: "false" }));
         dispatch(getAllProjetos({ ProjetoFinalizado: false }))
@@ -303,7 +303,6 @@ const ListaProjetos = () => {
                                                             } else {
                                                                 if (iId === itemTypeArray.length - 1) {
                                                                     if (!matchFound[i]) {
-                                                                        console.log(valuesHorasTypeArray[i])
                                                                         return (
                                                                             <div className="row mb-3 text-center" key={"EditarDiaTTNotFound" + iId}>
                                                                                 <div className="col-md-4 text-center themed-grid-col">

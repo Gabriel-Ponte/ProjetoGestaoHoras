@@ -11,7 +11,7 @@ const PageBtnContainer = ({ small }) => {
     return index + 1;
   });
   if (small) {
-    console.log(small);
+
   }
 
   const nextPage = () => {

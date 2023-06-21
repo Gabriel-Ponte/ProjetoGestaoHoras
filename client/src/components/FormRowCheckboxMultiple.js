@@ -108,10 +108,11 @@ useEffect(() => {
           <div key={index}>
             <div className='row'>
               <div className='col-9'>
-                <label htmlFor={option}>{option}</label>
+                <label htmlFor={option} style={{ cursor: 'pointer' }}>{option}</label>
               </div>
               <div className='col-3'>
                 <input
+                  style={{ cursor: 'pointer' }}
                   type="checkbox"
                   id={option}
                   name={name}

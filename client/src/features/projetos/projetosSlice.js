@@ -65,7 +65,6 @@ const projetoSlice = createSlice({
   reducers: {
     handleChange: (state, { payload: { name, value } }) => {
       state[name] = value;
-      console.log(state.projeto);
     },
     clearValues: (state, { payload }) => {
       state.projeto = null;
@@ -107,7 +106,7 @@ const projetoSlice = createSlice({
         state.isLoading = false;
         const projeto = payload;
         addProjetoToLocalStorage(projeto);
-        toast.success('Projeto Modified...');
+        toast.success('Projeto alterado!');
       })
       .addCase(updateProjeto.rejected, (state, { payload }) => {
         state.isLoading = false;
@@ -144,7 +143,6 @@ const projetoSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(exportProjeto.fulfilled, (state, { payload }) => {
-        console.log(payload);
         toast.success(payload);
       })
       .addCase(exportProjeto.rejected, (state, { payload }) => {

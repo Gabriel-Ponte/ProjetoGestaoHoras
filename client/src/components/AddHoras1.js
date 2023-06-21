@@ -190,7 +190,6 @@ const ListaProjetos = () => {
     setShowProjeto(newShowProjeto);
   };
 
-    console.log(projetos)
   const matchFoundProjeto = new Array(projetos.length).fill(false);
   const arrayTipoTrabalho = Object.entries(values.tipoDeTrabalhoHoras).map(([key, value]) => ({ _id: key, ...value }));
   let counter = 0;

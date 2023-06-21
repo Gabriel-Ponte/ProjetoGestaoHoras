@@ -249,10 +249,9 @@ const updateUser = async (req, res) => {
    // Set the token and its expiration date in the user's document
 
   if (!login || !email || !email || !foto || !nome || !tipo) {
-    console.log("Insira Todos os valores")
     throw new BadRequestError("Insira todos os valores");
   }
-  console.log(_id);
+
   const user = await User.findOne({ _id: _id });
   user.id = _id;
   user.login = login;

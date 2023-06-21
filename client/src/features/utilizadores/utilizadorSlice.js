@@ -264,7 +264,7 @@ const userSlice = createSlice({
       })
 
       .addCase(clearStore.rejected, (state, action) => {
-        toast.error('There was an error..');
+        toast.error('Ocorreu um erro!');
       })
 
   },
