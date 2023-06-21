@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import Wrapper from '../assets/wrappers/FormRowSelect';
+import Wrapper from '../assets/wrappers/FormRowCheckboxMultiple';
 
-const FormRowCheckboxMultiple = ({ labelText, name, value, handleChange,handleChangeSubmit, list, className, classNameLabel, classNameInput, classNameResult }) => {
+const FormRowCheckboxMultiple = ({ labelText, name, value, handleChange,handleChangeSubmit, list, className,classNameLabelResult, classNameLabel, classNameInput, classNameResult }) => {
 
     const [separatedArray, setSeparatedArray] = useState(Array.isArray(value) ? (value.length > 0 ? value[0].split(/[,\/]/) : []) : value.split(/[,\/]/));
     const [selectedOption, setSelectedOption] = useState(Array.isArray(separatedArray) ? separatedArray : (value ? value.split(',') : []));
@@ -107,7 +107,7 @@ useEffect(() => {
         return (
           <div key={index}>
             <div className='row'>
-              <div className='col-6'>
+              <div className='col-9'>
                 <label htmlFor={option}>{option}</label>
               </div>
               <div className='col-3'>
@@ -141,18 +141,18 @@ useEffect(() => {
                     <div>
                         {checkboxOptions}
                     </div>
-                    {value && (
-                        <div className={className ? className : 'row mb-3 text-center'}>
-                            <div className={classNameLabel ? classNameLabel : 'form-label'}>
-                                <p>{'Selecionado: ' || name + ': '}</p>
+                </div>
+                {value && (
+                        <div className={'row text-end'}>
+                            <div className={classNameLabelResult ? classNameLabelResult : 'form-label text-end'}>
+                                <p className="text-end">{'Selecionado: ' || name + ': '}</p>
                             </div>
                             <div className={classNameResult ? classNameResult : 'form-label'}>
-                                <p>{Array.isArray(separatedArray) ? separatedArray.join(', ') : separatedArray}</p>
+                                <p className="text-center">{Array.isArray(separatedArray) ? separatedArray.join(', ') : separatedArray}</p>
                             </div>
                         </div>
-                    )}
-                </div>
-            </div>
+                  )}
+                  </div>
         </Wrapper>
     );
 };

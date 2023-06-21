@@ -325,12 +325,14 @@ function VisualizarProjeto() {
                     handleChange={handleChange}
                   />
                   <div className="form-control">
+
                   <FormRowCheckboxMultiple
                     type="text"
                     className="row mb-3 mt-3 text-center" 
                     classNameLabel='col-md-3 text-end' 
-                    classNameInput='col-md-9'
-                    classNameResult='col-md-9'
+                    classNameInput=' checkboxRow'
+                    classNameResult='col-md-6 text-start'
+                    classNameLabelResult="col-md-6 text-start"
                     id="piloto"
                     name="Piloto"
                     labelText = "Piloto:"

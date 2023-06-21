@@ -45,7 +45,8 @@ const ListaProjetos = () => {
 
   useEffect(() => {
     dispatch(handleChange({ name: 'projetoFinalizado', value: "false" }));
-    dispatch(getAllProjetos({ ProjetoFinalizado: false }))
+    dispatch(handleChange({ name: 'DataObjetivoC', value: "true" }));
+    dispatch(getAllProjetos({ ProjetoFinalizado: false,  }))
     dispatch(getTipoTrabalho()).then((res) => {
       const tipoTrabalhoArray = Array.isArray(res.payload.tipoTrabalho) ? res.payload.tipoTrabalho : [];
       setListaTipoTrabalho(tipoTrabalhoArray);

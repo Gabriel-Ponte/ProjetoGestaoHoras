@@ -71,7 +71,7 @@ const ListaProjetos = () => {
 
         <div className="col-md-9 finalizado themed-grid-col">
           <h5>
-            {totalProjetos} projeto{projetos.length > 1 && 's'} {projetoFinalizado === true ? " Finalizados " : " Em Curso "} encontrados
+          {totalProjetos} projeto{projetos.length > 1 && 's'} {projetoFinalizado === true ? " Finalizados " : DataObjetivoC=== true ? " Em Curso " : "em espera"} encontrado{projetos.length > 1 && 's'}
           </h5>
         </div>
 
@@ -112,7 +112,7 @@ const ListaProjetos = () => {
       </Wrapper>
     );
   }
-  
+
   return (
     <Wrapper>
       <div className="row text-center">
@@ -123,7 +123,7 @@ const ListaProjetos = () => {
 
         <div className="col-md-9 finalizado themed-grid-col">
           <h5>
-            {totalProjetos} projeto{projetos.length > 1 && 's'} {projetoFinalizado === true ? " Finalizados " : " Em Curso "} encontrados
+            {totalProjetos} projeto{projetos.length > 1 && 's'} {projetoFinalizado === true ? " Finalizados " : DataObjetivoC=== true ? " Em Curso " : "em Espera"} encontrado{projetos.length > 1 && 's'}
           </h5>
         </div>
 
