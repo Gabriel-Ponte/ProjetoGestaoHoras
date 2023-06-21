@@ -80,9 +80,7 @@ const NavLinks = () => {
           return (
             <React.Fragment key={id}>
           <button style={{ marginTop: '5%' }}
-              className={({ isActive }) => {
-                return isActive ? "nav-link active" : "nav-link";
-              }}
+
               onClick={handleChangeExportProjetos}
             >
 
