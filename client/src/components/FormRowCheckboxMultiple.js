@@ -6,48 +6,44 @@ const FormRowCheckboxMultiple = ({ labelText, name, value, handleChange,handleCh
     const [separatedArray, setSeparatedArray] = useState(Array.isArray(value) ? (value.length > 0 ? value[0].split(/[,\/]/) : []) : value.split(/[,\/]/));
     const [selectedOption, setSelectedOption] = useState(Array.isArray(separatedArray) ? separatedArray : (value ? value.split(',') : []));
 
+useEffect(() => {
+    const updatedSeparatedArray = Array.isArray(value) ? (value.length > 0 ? value[0].split(/[,\/]/) : []) : value.split(/[,\/]/);
+    const newSeparatedArray = [...updatedSeparatedArray];
 
-    useEffect( () => {
-      const updatedSeparatedArray = Array.isArray(value) ? (value.length > 0 ? value[0].split(/[,\/]/) : []) : value.split(/[,\/]/);
-      const newSeparatedArray = [...updatedSeparatedArray];
-    
-      let nome = false;
-      for (let a = 0; a < updatedSeparatedArray.length; a++) {
-        let matchFound = false;
-        for (let i = 0; i < list.length; i++) {
-          if (updatedSeparatedArray[a] === list[i]._id) {
-            updatedSeparatedArray[a] = list[i].nome;
-            matchFound = true;
-            break;
-          }
-          if (updatedSeparatedArray[a] === list[i].nome || updatedSeparatedArray[a] === list[i].login) {
-            updatedSeparatedArray[a] = list[i].nome;
-            newSeparatedArray[a] = list[i]._id;
-            matchFound = true;
-            nome = true;
-            break;
-          }
+    let nome = false;
+    for (let a = 0; a < updatedSeparatedArray.length; a++) {
+      let matchFound = false;
+      for (let i = 0; i < list.length; i++) {
+        if (updatedSeparatedArray[a] === list[i]._id) {
+          updatedSeparatedArray[a] = list[i].nome;
+          matchFound = true;
+          break;
         }
-        if (!matchFound) {
-          if (updatedSeparatedArray[a].length > 5) {
-            updatedSeparatedArray[a] = "Não encontrado";
-          }
+        if (updatedSeparatedArray[a] === list[i].nome || updatedSeparatedArray[a] === list[i].login) {
+          updatedSeparatedArray[a] = list[i].nome;
+          newSeparatedArray[a] = list[i]._id;
+          matchFound = true;
+          nome = true;
+          break;
         }
       }
-    
-      if (nome && JSON.stringify(updatedSeparatedArray) !== JSON.stringify(newSeparatedArray)) {
-        const handleC = async(name , newSeparatedArray) => {
-          await handleChange(name, newSeparatedArray);
+      if (!matchFound) {
+        if (updatedSeparatedArray[a].length > 5) {
+          updatedSeparatedArray[a] = "Não encontrado";
         }
-        const handleS = async() => {
-          await handleChangeSubmit();
-        }
-        handleC(name , newSeparatedArray);
-        handleS();
       }
-    
-      setSeparatedArray(updatedSeparatedArray);
-    }, [value, list]);
+    }
+
+    if (nome && JSON.stringify(updatedSeparatedArray) !== JSON.stringify(newSeparatedArray)) {
+      let verifica = false;
+      verifica = handleChange(name, newSeparatedArray);
+      if(verifica){
+      handleChangeSubmit(1);
+    }
+    }
+    setSeparatedArray(updatedSeparatedArray);
+}, [value, list]);
+
     
 
       useEffect(() => {
@@ -62,8 +58,8 @@ const FormRowCheckboxMultiple = ({ labelText, name, value, handleChange,handleCh
         let selectedOptions = option;
         let selectedID = id;
         let previousOptions = selectedOption.filter((option) => !selectedOptions.includes(option));
-        let updatedOptions;
         let updatedOptionsID;
+        let updatedOptions;
         let op;
 
         if (selectedOptions.includes('Todos')) {

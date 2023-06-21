@@ -28,6 +28,7 @@ function VisualizarProjeto() {
   const formattedListUtilizadores = Array.isArray(utilizadores) ? utilizadores.filter(user => user.email.endsWith('isqctag.pt')) : [];
 
   const [values, setValues] = useState(null);
+
   // //////////////////////////////////////////////////////////////////////////////////
   useEffect(() => {
     dispatch(getTipoTrabalho()).then((res) => {
@@ -97,6 +98,7 @@ function VisualizarProjeto() {
   }, [projeto]);
 
   const handleSubmit = async (e) => {
+    console.log(e)
     if (!values.Nome || !values.Cliente || !values.DataInicio || !values.DataObjetivo || !values.Tema || !values.Piloto) {
       const requiredFields = ['Nome', 'Cliente', 'DataInicio', 'DataObjetivo', 'Tema', 'Piloto'];
       const emptyField = requiredFields.find(field => !values[field]);
@@ -125,17 +127,13 @@ function VisualizarProjeto() {
       }
  
     try {
-      console.log(values.Piloto)
-      /*
-      
-            const result = await dispatch(updateProjeto(values));
+      const result = await dispatch(updateProjeto(values));
       if (!result.error) {
         setTimeout(() => {
           dispatch(toggleSidebar(false));
           navigate('/PaginaPrincipal');
         }, 2000);
       }
-      */
     } catch (error) {
       console.log(error);
     }
@@ -144,7 +142,15 @@ function VisualizarProjeto() {
   const handleChangeFormRowSelect = async(nome, selectedOptions) => {
     if (nome === "Piloto") {
       const strSO = selectedOptions.join(",");
-      await setValues({ ...values, [nome]: strSO });
+      try{
+          await setValues({ ...values, [nome]: strSO });
+          values.Piloto = strSO;
+        }
+      catch{
+          await setValues({ ...values, [nome]: strSO });
+      }
+      console.log(values.Piloto);
+      return true;
     } else if (nome === "TipoTrabalho") {
       const strT = selectedOptions.join(",");
       await setValues({ ...values, [nome]: strT });
