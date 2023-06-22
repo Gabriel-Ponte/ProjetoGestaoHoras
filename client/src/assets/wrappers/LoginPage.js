@@ -4,28 +4,43 @@ const Wrapper = styled.section`
   display: grid;
   align-items: center;
 
+  @media (max-height: 500px) {
   .MainLogin {
     width: 100%;
-    height: auto;
-    align-self: baseline;
-    position: flex;
-    overflow: visible;
+    height: 150%;
+    overflow: auto;
+    display: flex;
+    position:relative;
     flex-direction: column;
-    align-content: center;
     justify-content: center;
     align-items: center;
-    justify-items: center;
-    flex-wrap: nowrap;
-
+    text-align: center;
+    margin:auto;
   }
-
+}
+@media (min-height: 500px) {
+  .MainLogin {
+    width: 100%;
+    height: 70vh;
+    overflow: auto;
+    display: flex;
+    position:relative;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin:auto;
+  }
+}
   .title{
+    height: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-items: center;
     width: 100%;
     align-self: center;
+    margin-bottom:2%;
   }
   
   .buttonPassword{

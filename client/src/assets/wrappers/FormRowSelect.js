@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 const Wrapper = styled.section`
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .text-end {
     align-content: center;
     justify-content: center;
