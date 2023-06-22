@@ -21,9 +21,10 @@ const Wrapper = styled.nav`
     display: flex;
     justify-content: center;
     align-items: center;
+    max-heigth:70px;
   }
   
-  
+
   .nav-center {
     display: flex;
     width: 90vw;
@@ -60,26 +61,27 @@ const Wrapper = styled.nav`
     display: inline;
     position: absolute;
     left: 0;
-    width: 100%;
+    rigth: 0;
+    width: 50%;
     align-items: top;
-    background: var(--primary-100);
-    box-shadow: var(--shadow-2);
     padding: 0.5rem;
     text-align: center;
     visibility: hidden;
-    border-radius: var(--borderRadius);
-    background-color: #E5E5E5;
     z-index: 9998;
   }
   .show-dropdown {
-    display: inline;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: absolute;
-    height: 100%;
+    top: 70%;
+    left: 35%;
+    width:30%;
     visibility: visible;
-    background-color: #FFFFFF;
-    z-index: 9998;
     background-color: #E5E5E5;
+    z-index: 9998;
   }
+
   .dropdown-btn {
     background: transparent;
     border-color: transparent;

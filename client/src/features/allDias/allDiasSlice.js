@@ -23,7 +23,7 @@ export const getAllDiasUtilizador = createAsyncThunk(
    );
 
   export const getAllDiasProjetoUtilizador = createAsyncThunk(
-    '/dia/diasUtilizador/',
+    '/dia/diasUtilizadorProjeto/',
     async ({ projetoId, selectedUser }, thunkAPI) => {
       return getAllDiasProjetoUtilizadorThunk(selectedUser, projetoId, thunkAPI);
     }
@@ -54,7 +54,7 @@ const allDiasSlice = createSlice({
     })
     .addCase(getAllDias.fulfilled, (state, { payload }) => {
       state.isLoading = false;
-      state.totalDias = payload.diasAllProjeto;
+      state.dias = payload.diasAllProjeto;
     })
     .addCase(getAllDias.rejected, (state, { payload }) => {
       state.isLoading = false;
@@ -67,10 +67,25 @@ const allDiasSlice = createSlice({
     })
 
     .addCase(getAllDiasUtilizador.fulfilled, (state, { payload }) => {
-      state.isLoading = false;
       state.dias = payload.diasAllUtilizador;
+      state.isLoading = false;
+
     })
     .addCase(getAllDiasUtilizador.rejected, (state, { payload }) => {
+      state.isLoading = false;
+      //toast.error(payload);
+    })
+
+    .addCase(getAllDiasProjetoUtilizador.pending, (state) => {
+      state.isLoading = true;
+    })
+
+    .addCase(getAllDiasProjetoUtilizador.fulfilled, (state, { payload }) => {
+      state.dias = payload.diasAllProjeto;
+      state.isLoading = false;
+
+    })
+    .addCase(getAllDiasProjetoUtilizador.rejected, (state, { payload }) => {
       state.isLoading = false;
       //toast.error(payload);
     })

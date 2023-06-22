@@ -10,7 +10,6 @@ const CalendarControl = ({ handleChange, inserted, feriados, inicio, fim , objet
     const calMonthName = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
     const localDate = new Date();
 
-
     useEffect(() => {
         plotDates(calendar);
     }, []);

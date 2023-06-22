@@ -75,7 +75,7 @@ const Navbar = () => {
         </button>
         </div>
         <div className='col-4 middleButton' >
-          <button className='btn btn-light' style={{fontSize : "250%"}} type='button' onClick={returnMain}>Gestão Projetos</button>
+          <button className='btn btn-light' style={{fontSize : "250%", maxHeight: "80px"}} type='button' onClick={returnMain}>Gestão Projetos</button>
         </div>
         <div className='col-4'>
         <div className='btn-container'>
@@ -119,7 +119,9 @@ const Navbar = () => {
           </button>
           </div>
           </div>
+
           <div className={showLogout ? 'dropdown show-dropdown' : 'dropdown'} >
+            <div className='row drop'>
             <button
               type='button'
               className='dropdown-btn'
@@ -127,7 +129,6 @@ const Navbar = () => {
             >
               Editar Perfil
             </button>
-
             <button
               type='button'
               className='dropdown-btn'
@@ -135,6 +136,8 @@ const Navbar = () => {
             >
               logout
             </button>
+            </div>
+
           </div>
         </div>
         </div>

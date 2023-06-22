@@ -5,68 +5,68 @@ import Loading from './Loading';
 import { getAllDias, getAllDiasProjetoUtilizador } from '../features/allDias/allDiasSlice';
 import { listaUtilizadores } from '../features/utilizadores/utilizadorSlice';
 import { FormRowSelect } from '../components';
+import Dia from './Dias';
 import Calendar from './Calendar'
+import { getTipoTrabalho } from '../features/tipoTrabalho/tipoTrabalhoSlice';
 
-function createInitialState(projeto) {
-  return {
-    _id: projeto._id,
-    Nome: projeto.Nome,
-    Cliente: projeto.Cliente,
-    DataInicio: projeto.DataInicio,
-    DataObjetivo: projeto.DataObjetivo,
-    TipoTrabalho: projeto.TipoTrabalho,
-    DataFim: projeto.DataFim,
-    Tema: projeto.Tema,
-    Acao: projeto.Acao,
-    Piloto: projeto.Piloto,
-    Links: projeto.Links,
-    Finalizado: projeto.Finalizado,
-    Resultado: projeto.Resultado,
-    Notas: projeto.Notas,
-    NumeroHorasTotal: "Sem Horas Inseridas no Projeto",
-    NumeroHorasTipoTrabalho: "",
-  };
-}
+
 
 
 function VisualizarProjeto() {
+
+  function createInitialState(projeto) {
+    return {
+      _id: projeto._id,
+      Nome: projeto.Nome,
+      Cliente: projeto.Cliente,
+      DataInicio: projeto.DataInicio,
+      DataObjetivo: projeto.DataObjetivo,
+      TipoTrabalho: projeto.TipoTrabalho,
+      DataFim: projeto.DataFim,
+      Tema: projeto.Tema,
+      Acao: projeto.Acao,
+      Piloto: projeto.Piloto,
+      Links: projeto.Links,
+      Finalizado: projeto.Finalizado,
+      Resultado: projeto.Resultado,
+      Notas: projeto.Notas,
+      NumeroHorasTotal: "Sem Horas Inseridas no Projeto",
+      NumeroHorasTipoTrabalho: "",
+    };
+  }
+
   const { user, utilizadores } = useSelector((store) => store.utilizador);
-  const { projeto , isLoading } = useSelector((store) => store.projeto);
+  const { projeto, isLoading } = useSelector((store) => store.projeto);
   const [selectedUser, setSelectedUser] = useState(user?.user?.nome);
+  const [verificaDias, setVerificaDias] = useState(0);
   const [values, setValues] = useState(null);
   const [getFeriados, setFeriados] = useState([]);
   const [listaDias, setListaDias] = useState([]);
   const [selectedDay, setSelectedDay] = useState();
+  const [listaTipoTrabalho, setListaTipoTrabalho] = useState([]);
   const formattedListUtilizadores = Array.isArray(utilizadores) ? utilizadores : [];
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (projeto) {
-      const today = new Date();
-      const month = selectedDay ? selectedDay.mes : today.getMonth();
-      const year = selectedDay ? selectedDay.ano : today.getFullYear();
-      const dayFer = new Date(year, month, 0);
-      feriadosPortugal(dayFer);
-      setValues(createInitialState(projeto.projeto));
-      const userLogin = user?.user?.login;
-      const projetoId = projeto?.projeto?._id;
-      dispatch(getAllDias({ projetoId, userLogin })).then((res) => {
-        setListaDias(res.payload.diasAllProjeto);
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projeto]);
+
+  
 
   useEffect(() => {
-    if (projeto) {
-    const projetoId = projeto?.projeto?._id;
-    dispatch(getAllDiasProjetoUtilizador({ projetoId, selectedUser })).then((res) => {
-      setListaDias(res.payload.diasAllProjeto);
+    dispatch(getTipoTrabalho()).then((res) => {
+      const tipoTrabalhoArray = Array.isArray(res.payload.tipoTrabalho) ? res.payload.tipoTrabalho : [];
+      let verifica = false;
+      for(let i = 0; i<tipoTrabalhoArray.length; i++){
+        if(tipoTrabalhoArray[i].TipoTrabalho.toLowerCase() === "outro"){
+          verifica = true;
+        }
+      }
+
+      if (verifica === false){
+        tipoTrabalhoArray.push({ TipoTrabalho: "Outro" })
+      }
+      setListaTipoTrabalho(tipoTrabalhoArray);
     });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedUser ]);
-  
+  }, [selectedUser]);
+
 
   function feriadosPortugal(date) {
 
@@ -90,6 +90,7 @@ function VisualizarProjeto() {
         { name: "Corpo de Deus", date: calculateCorpusChristi(i) }
       );
     }
+    
     setFeriados(feriados);
     for (const feriado of feriados) {
       if (
@@ -133,27 +134,126 @@ function VisualizarProjeto() {
 
 
   useEffect(() => {
-    if (values) {
+    if (projeto) {
+      const today = new Date();
+      const month = selectedDay ? selectedDay.mes : today.getMonth();
+      const year = selectedDay ? selectedDay.ano : today.getFullYear();
+      const dayFer = new Date(year, month, 0);
+      feriadosPortugal(dayFer);
+      setValues(createInitialState(projeto.projeto));
+      const userLogin = user?.user?.login;
+      const projetoId = projeto?.projeto?._id;
+      dispatch(getAllDias({ projetoId, userLogin })).then((res) => {
+        if (res.payload.diasAllProjeto && typeof projeto !== 'undefined') {
+          setListaDias(res.payload.diasAllProjeto);
+          if (res.payload.diasAllProjeto.length>0){
+            setVerificaDias(1)
+          }else{
+            setVerificaDias(2)
+          }
+        } else {
+          setListaDias([]);
+        }
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projeto, selectedUser]);
+
+
+
+  useEffect(() => {
+    if (projeto) {
+      const projetoId = projeto?.projeto?._id;
+      
+      if (selectedUser !== "Todos") {
+        dispatch(getAllDiasProjetoUtilizador({ projetoId, selectedUser }))
+          .then((res) => {
+            console.log(res.payload.diasAllProjeto);
+            if (res.payload.diasAllProjeto) {
+              setListaDias(res.payload.diasAllProjeto);
+              setVerificaDias(1);
+            } else {
+              setListaDias([]);
+              setVerificaDias(2);
+            }
+          })
+          .catch((error) => {
+            // Handle error if necessary
+            console.error(error);
+          });
+      } else {
+        const userLogin = user?.user?.login;
+        dispatch(getAllDias({ projetoId, userLogin }))
+          .then((res) => {
+            console.log(res.payload.diasAllProjeto);
+            if (res.payload.diasAllProjeto) {
+              setListaDias(res.payload.diasAllProjeto);
+            } else {
+              setListaDias([]);
+            }
+          })
+          .catch((error) => {
+            // Handle error if necessary
+            console.error(error);
+          });
+      }
+    }
+  }, [selectedUser]);
+
+
+  useEffect(() => {
+
+    if (values && listaTipoTrabalho) {
       const arrayTT = values.TipoTrabalho ? values.TipoTrabalho.split(',') : [];
       const arrayTTH = new Array(arrayTT.length).fill(0);
-      if (listaDias) {
+      if (listaDias && listaDias.length > 0) {
         let totalHours = 0;
 
+
         for (let i = 0; i < listaDias.length; i++) {
-          if (listaDias[i].tipoDeTrabalhoHoras) {
-            for (let j = 0; j < listaDias[i].tipoDeTrabalhoHoras.length; j++) {
-              if (listaDias[i].tipoDeTrabalhoHoras[j].projeto === values._id) {
-                const array = listaDias[i].tipoDeTrabalhoHoras[j].horas ? listaDias[i].tipoDeTrabalhoHoras[j].horas.split(',') : [];
-                const values = listaDias[i].tipoDeTrabalhoHoras[j].tipoTrabalho ? listaDias[i].tipoDeTrabalhoHoras[j].tipoTrabalho.split(',') : [];  
+          const dia = listaDias[i];
+          const data = new Date(dia.Data);
+          let dataSelected = new Date();
+          let condicao;
+          let diaSelected;
+          if(selectedDay && selectedDay.dia !== 0){
+            diaSelected = selectedDay ? selectedDay.dia : 0;
+            const month = selectedDay.mes;
+            const year = selectedDay.ano;
+            dataSelected = new Date(year, month, diaSelected);
+            dataSelected.setHours(data.getHours());
+            condicao = dia.tipoDeTrabalhoHoras && dataSelected.getTime() === data.getTime();
+          } else {
+            condicao = dia.tipoDeTrabalhoHoras;
+          }
+          
+          if (condicao) {
+            for (let j = 0; j < dia.tipoDeTrabalhoHoras.length; j++) {
+              const tipoDeTrabalhoHora = dia.tipoDeTrabalhoHoras[j];
+              if (tipoDeTrabalhoHora.projeto === values._id) {
+                const array = tipoDeTrabalhoHora.horas ? tipoDeTrabalhoHora.horas.split(',') : [];
+                let values = tipoDeTrabalhoHora.tipoTrabalho ? tipoDeTrabalhoHora.tipoTrabalho.split(',') : [];
+                const filteredValues = values
+                  .filter(value => listaTipoTrabalho.some(item => item._id === value))
+                  .map(value => {
+                    const matchedItem = listaTipoTrabalho.find(item => item._id === value);
+                    return matchedItem ? matchedItem.TipoTrabalho : null;
+                  });
+                  
                 if (array !== null) {
                   for (let h = 0; h < array.length; h++) {
-                    totalHours += Number(array[h]);
-                    arrayTTH[values[h]] = (arrayTTH[values[h]] || 0) + Number(array[h]);
+                    const horas = Number(array[h]);
+                    if(!filteredValues[h]){
+                      filteredValues[h] = "Outro";
+                    }
+                    totalHours += horas;
+                    arrayTTH[filteredValues[h]] = (arrayTTH[filteredValues[h]] || 0) + horas;
                   }
                 }
               }
             }
           }
+
         }
 
         if (totalHours !== 0) {
@@ -162,11 +262,25 @@ function VisualizarProjeto() {
             NumeroHorasTotal: totalHours,
             NumeroHorasTipoTrabalho: arrayTTH,
           });
+        }else{
+          setValues({
+            ...values,
+            NumeroHorasTotal: selectedUser === "Todos" ? `Não existem horas inseridas no projeto neste dia ${selectedDay.dia}/${selectedDay.mes}/${selectedDay.ano}` : `${selectedUser} não possui horas inseridas no projeto neste dia ${selectedDay.dia}/${selectedDay.mes}/${selectedDay.ano}`,
+            NumeroHorasTipoTrabalho: ""
+          });
         }
+      } else {
+        setValues({
+          ...values,
+          NumeroHorasTotal: selectedUser === "Todos" ? "Não existem horas inseridas no projeto" : `${selectedUser} não possui horas inseridas no projeto`,
+          NumeroHorasTipoTrabalho: "",
+        });
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [listaDias, selectedDay]);
+  }, [listaDias, selectedDay, selectedUser]);
+
+
 
   const handleChangeCalendario = useCallback((dia, mes, ano) => {
     const [selectedDia, selectedMes, selectedAno] = [dia, mes, ano];
@@ -199,14 +313,14 @@ function VisualizarProjeto() {
       return null;
     }
   }
-
+  console.log(user.user.nome)
   return (
     <Wrapper>
       <div className="mainVisualiza">
 
         <div className="col-12">
           <main>
-            <div className="row mb-3 " >
+            <div className="row mb-3" >
 
               <div className="col-12 text-center mb-5 ">
                 <h1>{values.Nome}</h1>
@@ -243,7 +357,7 @@ function VisualizarProjeto() {
 
                 <div className="row mb-3">
                   <div className="col-6 text-center">
-                    <h5 htmlFor="acao" className="">
+                    <h5 className="">
                       Ação
                     </h5>
                   </div>
@@ -254,7 +368,7 @@ function VisualizarProjeto() {
 
                 <div className="row mb-3">
                   <div className="col-6 text-center">
-                    <h5 htmlFor="country" className="">
+                    <h5 className="">
                       Notas
                     </h5>
                   </div>
@@ -265,7 +379,7 @@ function VisualizarProjeto() {
 
                 <div className="row mb-3">
                   <div className="col-6 text-center">
-                    <h5 htmlFor="link" className="">
+                    <h5 className="">
                       Links
                     </h5>
                   </div>
@@ -275,57 +389,91 @@ function VisualizarProjeto() {
                 </div>
                 <div className="row mb-3">
                   <div className="col-6 text-center">
-                    <h5 className="" htmlFor="orcamento">
+                    <h5 className="">
                       Realizado
                     </h5>
                   </div>
                   <div className="col-6 text-start">
                     <p>{values.Finalizado === true ? "Sim" : "Não"}</p>
                   </div>
-                  </div>
-                  {values.Finalizado === true ? (
-                    <div className="row mb-3">
-                      <div className="col-7 text-center">
-                        <h5>Resultado</h5>
-                      </div>
-                      <div className="col-5 text-start">
-                        <p style={{ width: "100%" }}> {values.Resultado === true ? "Sucesso" : "Insucesso"}</p>
-                      </div>
+                </div>
+                {values.Finalizado === true ? (
+                  <div className="row mb-3">
+                    <div className="col-7 text-center">
+                      <h5>Resultado</h5>
                     </div>
-                  ) : null}
+                    <div className="col-5 text-start">
+                      <p style={{ width: "100%" }}> {values.Resultado === true ? "Sucesso" : "Insucesso"}</p>
+                    </div>
+                  </div>
+                ) : null}
               </div>
 
               <div className="col-5 text-center right">
+                
+              {(user?.user?.tipo === 2) ? (
+                  <div className='text-center mb-5'>
+                    <h3 className='mb-5'>Escolha Utilizador</h3>
+                    <FormRowSelect
+                      type="text"
+                      className="row mb-3 text-center"
+                      classNameLabel='col-md-3 text-end'
+                      classNameInput='col-md-9'
+                      classNameResult='col-md-6'
+                      id="piloto"
+                      name="Piloto"
+                      labelText="Utilizador:"
+                      value={selectedUser}
+                      list={formattedListUtilizadores}
+                      handleChange={handleChangeUtilizador}
+                      multiple={false}
+                      todos={true}
+                    />
+                  </div>
+                ) : (
+                  <div className='text-center mb-5'>
+                    <h3 className='mb-5'>Escolha Utilizador</h3>
+                    <FormRowSelect
+                      type="text"
+                      className="row mb-3 text-center"
+                      classNameLabel='col-md-3 text-end'
+                      classNameInput='col-md-9'
+                      classNameResult='col-md-6'
+                      id="piloto"
+                      name="Piloto"
+                      labelText="Utilizador:"
+                      value={selectedUser}
+                      list={[user?.user]}
+                      handleChange={handleChangeUtilizador}
+                      multiple={false}
+                      todos={true}
+                    />
+                  </div>
+                )
+                }
+                
+                
                 <div className="col-12 mb-5 text-center">
+                {verificaDias === 1 ? (
                   <Calendar
                     handleChange={handleChangeCalendario}
                     feriados={getFeriados}
-                    inserted={listaDias}
+                    vProjeto={listaDias}
                     inicio={values?.DataInicio}
                     objetivo={values?.DataObjetivo}
                     fim={values?.DataFim}
                   />
-                </div>
-                {(user?.user?.tipo === 2) && (
-                <div className='text-center mb-5'>
-                  <h3 className='mb-5'>Escolha Utilizador</h3>
-                  <FormRowSelect
-                    type="text"
-                    className="row mb-3 text-center" 
-                    classNameLabel='col-md-3 text-end' 
-                    classNameInput='col-md-9'
-                    classNameResult='col-md-9'
-                    id="piloto"
-                    name="Piloto"
-                    labelText="Utilizador:"
-                    value={selectedUser}
-                    list={formattedListUtilizadores}
-                    handleChange={handleChangeUtilizador}
-                    multiple={false}
+                ) : verificaDias === 2 ? (
+                  <Calendar
+                    handleChange={handleChangeCalendario}
+                    feriados={getFeriados}
+                    inicio={values?.DataInicio}
+                    objetivo={values?.DataObjetivo}
+                    fim={values?.DataFim}
                   />
+                ) : null}
+
                 </div>
-              )
-              }
                 <div className="row mb-3 ">
                   <div className="col-3">
                     <h5>Data Inicio</h5>
@@ -355,6 +503,8 @@ function VisualizarProjeto() {
                   )}
                 </div>
                 <div className="row g-5">
+                  {selectedDay && selectedDay.dia !== 0 &&
+                  <h5>{selectedDay.dia}/{selectedDay.mes}/{selectedDay.ano}</h5>}
                   <div className="col-6">
                     <h5>Numero total Horas</h5>
                   </div>
@@ -362,34 +512,40 @@ function VisualizarProjeto() {
                     <p>{values.NumeroHorasTotal}</p>
                   </div>
                 </div>
-                {typeof values.NumeroHorasTotal === 'number' &&(
-                <div className="row mb-3">
-                  <div className="col-3">
-                    <h5>Tipos de Trabalho</h5>
-                  </div>
-                  {values.TipoTrabalho && values.TipoTrabalho.length > 0 ? (
-                    values.TipoTrabalho.split(",").map((t, i) => (
-                      
-                      values.NumeroHorasTipoTrabalho[t] && values.NumeroHorasTipoTrabalho[t]> 0 ? (
-                      <div className="row mb-3" key={i}>
-                        <div className="col-6">
-                          <p>{t}</p>
-                        </div>
-                        <div className="col-6">
-                          <p>{values.NumeroHorasTipoTrabalho[t]}</p>
-                        </div>
-                      </div>                      
-                      ):
-                        null
-                    ))
+
+
+                {typeof values.NumeroHorasTotal === 'number' && (
+                  <div className="row mb-3">
+                    <div className="col-3">
+                      <h5>Tipos de Trabalho</h5>
+                    </div>
+                    <div>
+                  {listaTipoTrabalho && listaTipoTrabalho.length > 0 ? (
+                    listaTipoTrabalho.map((t, i) => {
+
+                      return (
+                        values.NumeroHorasTipoTrabalho[t.TipoTrabalho] && values.NumeroHorasTipoTrabalho[t.TipoTrabalho] > 0 ? (
+                          <div className="row mb-3" key={i}>
+                            <div className="col-6">
+                              <p>{t.TipoTrabalho}</p>
+                            </div>
+                            <div className="col-6">
+                              <p>{values.NumeroHorasTipoTrabalho[t.TipoTrabalho]}</p>
+                            </div>
+                          </div>
+                        ) :
+                          null
+                      );
+                    })
                   ) : (
                     <div>
                       <p>Sem Tipos de Trabalho definidos</p>
                     </div>
                   )}
-                </div>
-              )}
+                  </div>
 
+                  </div>
+                )}
               </div>
 
 
