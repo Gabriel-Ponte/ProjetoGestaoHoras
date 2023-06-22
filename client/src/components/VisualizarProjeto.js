@@ -206,7 +206,7 @@ const VisualizarProjeto = () => {
           const dia = listaDias[i];
           const data = new Date(dia.Data);
           let dataSelected = new Date();
-          let condicao;
+          let condicao = null;
           let diaSelected;
           if(selectedDay && selectedDay.dia !== 0){
             diaSelected = selectedDay ? selectedDay.dia : 0;
@@ -257,7 +257,7 @@ const VisualizarProjeto = () => {
         }else{
           setValues({
             ...values,
-            NumeroHorasTotal: selectedUser === "Todos" ? `Não existem horas inseridas no projeto neste dia ${selectedDay.dia}/${selectedDay.mes}/${selectedDay.ano}` : `${selectedUser} não possui horas inseridas no projeto neste dia ${selectedDay.dia}/${selectedDay.mes}/${selectedDay.ano}`,
+            NumeroHorasTotal: selectedUser === "Todos" ? `Não existem horas inseridas no projeto neste dia ${selectedDay?.dia}/${selectedDay?.mes}/${selectedDay?.ano}` : `${selectedUser} não possui horas inseridas no projeto neste dia ${selectedDay?.dia}/${selectedDay?.mes}/${selectedDay?.ano}`,
             NumeroHorasTipoTrabalho: ""
           });
         }
@@ -279,6 +279,9 @@ const VisualizarProjeto = () => {
     return <Loading />;
   }
   if (!projeto){
+    return <Loading />;
+  }
+  if(!dias){
     return <Loading />;
   }
   if(!values){
@@ -500,8 +503,8 @@ const VisualizarProjeto = () => {
                   )}
                 </div>
                 <div className="row g-5">
-                  {selectedDay && selectedDay.dia !== 0 &&
-                  <h5>{selectedDay.dia}/{selectedDay.mes}/{selectedDay.ano}</h5>}
+                  {selectedDay && selectedDay?.dia !== 0 &&
+                  <h5>{selectedDay?.dia}/{selectedDay?.mes}/{selectedDay?.ano}</h5>}
                   <div className="col-6">
                     <h5>Numero total Horas</h5>
                   </div>
