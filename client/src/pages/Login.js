@@ -90,7 +90,7 @@ const handleForget =()=>{
           className='buttonP btn btn-link' 
           onClick={handleForget} 
           disabled={isLoading}>
-            {isLoading ? 'loading...' : 'esqueceu password'}
+            {isLoading ? 'loading...' : 'Repor password'}
           </button>
           </div>
           <button type='submit' className='btn btn-outline-primary' disabled={isLoading}>

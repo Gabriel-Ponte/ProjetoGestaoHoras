@@ -43,11 +43,11 @@ const VisualizarProjeto = () => {
   const [selectedDay, setSelectedDay] = useState();
   const [getFeriados, setFeriados] = useState([]);
   const [listaDias, setListaDias] = useState([]);
+  const [updatedListaDias, setUpdatedListaDias] = useState([]);
   const [listaTipoTrabalho, setListaTipoTrabalho] = useState([]);
   const dispatch = useDispatch();
   const formattedListUtilizadores = Array.isArray(utilizadores) ? utilizadores : [];
-  let updatedListaDias = [];
-  
+
   useEffect(() => {
     if (projeto) {
       const today = new Date();
@@ -56,7 +56,7 @@ const VisualizarProjeto = () => {
       const dayFer = new Date(year, month, 0);
       feriadosPortugal(dayFer);
       setValues(createInitialState(projeto.projeto));
-
+      setUpdatedListaDias(listaDias);
       const projetoId = projeto?.projeto?._id;
       
       if (selectedUser !== "Todos") {
@@ -64,11 +64,11 @@ const VisualizarProjeto = () => {
           .then((res) => {
             if (res.payload.diasAllProjeto) {
               setListaDias(res.payload.diasAllProjeto);
-              updatedListaDias = res.payload.diasAllProjeto;
+              
               setVerificaDias(1);
             } else {
               setListaDias([]);
-              updatedListaDias = [];
+
               setVerificaDias(2);
             }
           })
@@ -81,10 +81,8 @@ const VisualizarProjeto = () => {
           .then((res) => {
             if (res.payload.diasAllProjeto) {
               setListaDias(res.payload.diasAllProjeto);
-              updatedListaDias = res.payload.diasAllProjeto;
             } else {
               setListaDias([]);
-              updatedListaDias = [];
             }
           })
           .catch((error) => {
@@ -104,7 +102,6 @@ const VisualizarProjeto = () => {
           verifica = true;
         }
       }
-
       if (verifica === false){
         tipoTrabalhoArray.push({ TipoTrabalho: "Outro" })
       }
@@ -287,11 +284,9 @@ const VisualizarProjeto = () => {
   if(!values){
     return <Loading />;
   }
-  /*if(listaDias !== updatedListaDias){
-    console.log(listaDias)
-    console.log(updatedListaDias)
+  if(listaDias === updatedListaDias){
     return <Loading />
-  }*/
+  }
 
   return (
     <Wrapper>

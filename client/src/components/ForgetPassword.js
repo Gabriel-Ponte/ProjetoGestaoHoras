@@ -41,7 +41,7 @@ const ForgetPassword = () => {
         <Header />
     <div className='MainLogin'>
         
-      <h2 className='mt-5 title'>Esqueceu Password</h2>
+      <h2 className='mt-5 title'>Repor Password</h2>
 
       <form className='loginForm' onSubmit={handleSubmit}>
         <p>Insira o Email associado á sua conta!</p>

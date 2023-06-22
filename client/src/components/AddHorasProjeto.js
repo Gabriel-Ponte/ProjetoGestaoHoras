@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { getTipoTrabalho } from '../features/tipoTrabalho/tipoTrabalhoSlice';
 import { createDia, getDia, editDia } from '../features/dias/diasSlice';
 import { FormRow } from '../components';
+import Loading from './Loading';
 
 const initialState = {
     _id: '',
@@ -17,13 +18,11 @@ const initialState = {
 
 const ListaProjetos = () => {
     const [values, setValues] = useState(initialState);
-    const { projeto, isLoading } = useSelector((store) => store.projeto.projeto);
+    const { projeto, isLoading } = useSelector((store) => store.projeto);
+
     const [listaTipoTrabalho, setListaTipoTrabalho] = useState([]);
     let StringListaTrabalho = listaTipoTrabalho.map(item => item.TipoTrabalho).join(",");
-    const {
-        projetos,
-        totalProjetos,
-    } = useSelector((store) => store.allProjetos);
+    const { projetos, totalProjetos } = useSelector((store) => store.allProjetos);
 
     const dispatch = useDispatch();
 
@@ -56,7 +55,7 @@ const ListaProjetos = () => {
             if (value === DataRecebida) {
                 const tipoDeTrabalhoHoras = {};
                 for (let j = 0; j < listaDias[i].tipoDeTrabalhoHoras.length; j++) {
-                    const val = listaDias[i].tipoDeTrabalhoHoras[j].projeto;
+                    const val = listaDias[i].tipoDeTrabalhoHoras[j]?.projeto;
                     tipoDeTrabalhoHoras[val] = listaDias[i].tipoDeTrabalhoHoras[j];
                 }
                 setValues({
@@ -113,13 +112,7 @@ const ListaProjetos = () => {
         }, 1000);
     };
 
-    if (projeto === null || typeof projeto === 'undefined') {
-        return (
-            <Wrapper>
-                <h2>Sem projeto para Adicionar Horas</h2>
-            </Wrapper>
-        );
-    }
+
 
     const handleHorasChange = (projectId, tipoTrabalho, projectName, e) => {
         let newHorasT = horasT;
@@ -184,6 +177,26 @@ const ListaProjetos = () => {
         setShowProjeto(newShowProjeto);
     };
 
+  
+
+
+
+    if (isLoading) {
+        return <Loading />;
+      }
+      if (!projeto){
+        return <Loading />;
+      }
+      if(!values){
+        return <Loading />;
+      }
+    if (projeto && projeto.projeto === null || typeof projeto.projeto === 'undefined') {
+        return <Loading />;
+    }
+    if(!projetos){
+        return <Loading />;
+    }
+    console.log(projeto.projeto._id)
     const matchFoundProjeto = new Array(projetos.length).fill(false);
     const arrayTipoTrabalho = Object.entries(values.tipoDeTrabalhoHoras).map(([key, value]) => ({ _id: key, ...value }));
     let counter = 0;
@@ -211,12 +224,12 @@ const ListaProjetos = () => {
                     <div className="list-group-item">
                         <div className="row mb-3 text-start">
                             <div className="col-md-12 themed-grid-col">
-                                <h3>{projeto.Nome}</h3>
+                                <h3>{projeto?.projeto?.Nome}</h3>
                                 <br></br>
                             </div>
                             <div className="col-md-12 themed-grid-col text-center">
                                 <div className="btn-container">
-                                    <div className="row mb-3 text-center" key={"NewDia" + projeto._id}>
+                                    <div className="row mb-3 text-center" key={"NewDia" + projeto?.projeto?._id}>
                                         {!verificaDiaCalled && (
                                             StringListaTrabalho.split(",").map((t, i) => (
                                                 <div className="row mb-3 text-center" key={"NovoDia" + i}>
@@ -231,12 +244,12 @@ const ListaProjetos = () => {
                                                             id="horas"
                                                             className="horas"
                                                             placeholder="0"
-                                                            value={values.tipoDeTrabalhoHoras[projeto.Nome]?.[t]}
+                                                            value={values.tipoDeTrabalhoHoras[projeto?.projeto?.Nome]?.[t]}
                                                             onChange={(e) =>
                                                                 handleHorasChange(
-                                                                    projeto._id,
+                                                                    projeto?.projeto?._id,
                                                                     listaTipoTrabalho[i]._id,
-                                                                    projeto.Nome,
+                                                                    projeto?.projeto?.Nome,
                                                                     e
                                                                 )
                                                             }
@@ -251,16 +264,16 @@ const ListaProjetos = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div key={"Edit" + projeto._id}>
+                            <div key={"Edit" + projeto?.projeto?._id}>
                                 {verificaDiaCalled && values.tipoDeTrabalhoHoras.length !== 0 && Array.isArray(arrayTipoTrabalho) &&
                                     arrayTipoTrabalho.map((item, ID) => {
                                         counter++;
                                         const itemTypeArray = item.tipoTrabalho ? item.tipoTrabalho.split(",") : [];
                                         const matchFound = new Array(itemTypeArray.length + 1).fill(false);
                                         
-                                        if (projeto._id === item.projeto) {
+                                        if (projeto?.projeto?._id === item.projeto) {
 
-                                            const valuesHorasTypeArray = values.tipoDeTrabalhoHoras[projeto._id].horas ? values.tipoDeTrabalhoHoras[projeto._id].horas.split(",") : [];
+                                            const valuesHorasTypeArray = values.tipoDeTrabalhoHoras[projeto?.projeto?._id].horas ? values.tipoDeTrabalhoHoras[projeto?.projeto?._id].horas.split(",") : [];
                                             matchFoundProjeto[projeto._id] = true;
                                             let counter1 = -1;
                                             return (
@@ -290,9 +303,9 @@ const ListaProjetos = () => {
                                                                                 }
                                                                                 onChange={(e) =>
                                                                                     handleHorasChange(
-                                                                                        projeto._id,
+                                                                                        projeto?.projeto?._id,
                                                                                         listaTipoTrabalho[i]._id,
-                                                                                        projeto.Nome,
+                                                                                        projeto?.projeto?.Nome,
                                                                                         e
                                                                                     )
                                                                                 }
@@ -317,12 +330,12 @@ const ListaProjetos = () => {
                                                                                         id={`horas-${item._id}`}
                                                                                         className="horas"
                                                                                         placeholder="0"
-                                                                                        value={isNaN(values.tipoDeTrabalhoHoras[projeto.Nome]?.[t])}
+                                                                                        value={isNaN(values.tipoDeTrabalhoHoras[projeto?.projeto?.Nome]?.[t])}
                                                                                         onChange={(e) =>
                                                                                             handleHorasChange(
-                                                                                                projeto._id,
+                                                                                                projeto?.projeto?._id,
                                                                                                 listaTipoTrabalho[i]._id,
-                                                                                                projeto.Nome,
+                                                                                                projeto?.projeto?.Nome,
                                                                                                 e
                                                                                             )
                                                                                         }
@@ -341,9 +354,9 @@ const ListaProjetos = () => {
                                             );
                                         }
                                         else {
-                                            if (!matchFoundProjeto[projeto._id] && ID === arrayTipoTrabalho.length - 1) {
+                                            if (!matchFoundProjeto[projeto?.projeto?._id] && ID === arrayTipoTrabalho.length - 1) {
                                                 return (
-                                                    <div key={"EditarDiaProjetoNotFound" + projeto._id}>
+                                                    <div key={"EditarDiaProjetoNotFound" + projeto?.projeto?._id}>
                                                         {StringListaTrabalho.split(",").map((t, i) => {
                                                             return (
                                                                 <div className="row mb-3 text-center" key={"EditarDiaProjetoNotFoundList" + i}>
@@ -358,12 +371,12 @@ const ListaProjetos = () => {
                                                                             id="horas"
                                                                             className="horas"
                                                                             placeholder="0"
-                                                                            value={values.tipoDeTrabalhoHoras[projeto.Nome]?.t}
+                                                                            value={values.tipoDeTrabalhoHoras[projeto?.projeto?.Nome]?.t}
                                                                             onChange={(e) =>
                                                                                 handleHorasChange(
-                                                                                    projeto._id,
+                                                                                    projeto?.projeto?._id,
                                                                                     listaTipoTrabalho[i]._id,
-                                                                                    projeto.Nome,
+                                                                                    projeto?.projeto?.Nome,
                                                                                     e
                                                                                 )
                                                                             }

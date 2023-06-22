@@ -103,9 +103,9 @@ const projetoSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(updateProjeto.fulfilled, (state, { payload }) => {
-        state.isLoading = false;
         const projeto = payload;
         addProjetoToLocalStorage(projeto);
+        state.isLoading = false;
         toast.success('Projeto alterado!');
       })
       .addCase(updateProjeto.rejected, (state, { payload }) => {
@@ -118,8 +118,8 @@ const projetoSlice = createSlice({
       })
       .addCase(getProjeto.fulfilled, (state, { payload }) => {
         const projeto = payload;
-        state.isLoading = false;
         addProjetoToLocalStorage(projeto)
+        state.isLoading = false;
       })
       .addCase(getProjeto.rejected, (state, { payload }) => {
         state.isLoading = false;
@@ -143,6 +143,7 @@ const projetoSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(exportProjeto.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
         toast.success(payload);
       })
       .addCase(exportProjeto.rejected, (state, { payload }) => {
