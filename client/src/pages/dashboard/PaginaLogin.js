@@ -46,7 +46,6 @@ function Login(){
     }, 2000);
   }
 }, [user]);
-console.log("TESTE")
 return (
   <Wrapper className='full-page'>
   <form onSubmit={onSubmit}>

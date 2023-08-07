@@ -81,7 +81,6 @@ const AddProjectForm = () => {
       const strT = selectedOptions.join(",");
       setValues({ ...values, [nome]: strT });
     } else if (nome === "Cliente" && selectedOptions.length > 1 && selectedOptions !== null) {
-      console.log(selectedOptions)
       const strC = selectedOptions;
       setValues({ ...values, [nome]: strC });
     }

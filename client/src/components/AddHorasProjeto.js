@@ -196,7 +196,6 @@ const ListaProjetos = () => {
     if(!projetos){
         return <Loading />;
     }
-    console.log(projeto.projeto._id)
     const matchFoundProjeto = new Array(projetos.length).fill(false);
     const arrayTipoTrabalho = Object.entries(values.tipoDeTrabalhoHoras).map(([key, value]) => ({ _id: key, ...value }));
     let counter = 0;

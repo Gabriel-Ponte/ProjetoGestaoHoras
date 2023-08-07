@@ -168,7 +168,6 @@ function VisualizarProjeto() {
       if (selectedUser !== "Todos") {
         dispatch(getAllDiasProjetoUtilizador({ projetoId, selectedUser }))
           .then((res) => {
-            console.log(res.payload.diasAllProjeto);
             if (res.payload.diasAllProjeto) {
               setListaDias(res.payload.diasAllProjeto);
               setVerificaDias(1);
@@ -185,7 +184,6 @@ function VisualizarProjeto() {
         const userLogin = user?.user?.login;
         dispatch(getAllDias({ projetoId, userLogin }))
           .then((res) => {
-            console.log(res.payload.diasAllProjeto);
             if (res.payload.diasAllProjeto) {
               setListaDias(res.payload.diasAllProjeto);
             } else {
@@ -313,7 +311,6 @@ function VisualizarProjeto() {
       return null;
     }
   }
-  console.log(user.user.nome)
   return (
     <Wrapper>
       <div className="mainVisualiza">

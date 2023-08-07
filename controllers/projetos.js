@@ -129,7 +129,6 @@ const updateProjeto = async (req, res) => {
   } = req.body;
   const { id: projetoId } = req.params;
 
-  console.log(req.body)
   try {
     if (Nome === "" || Tema === "" || Cliente === "" || DataInicio === "") {
       throw new BadRequestError("Nome, Tema, Cliente, DataInicio precisam ser preenchidos");

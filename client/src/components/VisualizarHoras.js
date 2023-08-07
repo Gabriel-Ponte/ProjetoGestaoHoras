@@ -225,11 +225,9 @@ const ListaHoras = () => {
             <hr></hr>
             <div>
               {dias.map((dia) => {
-                console.log(dia.tipoDeTrabalhoHoras)
                 for(let a = 0; a< dia.tipoDeTrabalhoHoras.length ; a++){
                     if(dia.tipoDeTrabalhoHoras[a].length > 0){
                       for(let j= 0; j<dia.tipoDeTrabalhoHoras[a].length;j++){
-                        console.log(dia.tipoDeTrabalhoHoras[a][j])
                       }
                     }
                 }
