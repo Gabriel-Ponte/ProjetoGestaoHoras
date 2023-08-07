@@ -271,7 +271,7 @@ const Projeto = ({
 
                 <div className="col-md-2 themed-grid-col">
                 {
-                  <div className='text-center'>
+                  <div className='text-center piloto'>
                     {
                     PilotosList.map((part, index) => (
                       <p key={index}>{part}</p>

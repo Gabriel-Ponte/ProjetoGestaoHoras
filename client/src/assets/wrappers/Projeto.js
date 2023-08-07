@@ -71,7 +71,6 @@ const Wrapper = styled.article`
       margin: auto;
     }
     .dias {
-
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -110,6 +109,14 @@ const Wrapper = styled.article`
     font-size: 1vw;
     padding: 0;
   }
+}
+.piloto{
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width:100%;
 }
 
 `;
