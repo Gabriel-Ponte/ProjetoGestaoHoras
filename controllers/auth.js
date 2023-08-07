@@ -177,7 +177,7 @@ const register = async (req, res) => {
         data: buffer,
         contentType: 'image/png'
       },
-      estado
+      estado: true
     });
 
     res.status(StatusCodes.CREATED).json({
