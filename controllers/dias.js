@@ -71,7 +71,6 @@ const getDiasProjetoUtilizador = async (req, res) => {
   const diasAllProjeto = await Dias.find({
     Utilizador:  u1._id, "tipoDeTrabalhoHoras.projeto": projeto
   });
-  console.log(diasAllProjeto);
   if (!diasAllProjeto.length) {
     throw new NotFoundError(`Utilizador ${utilizador} não possui horas inseridas neste projeto`);
   }

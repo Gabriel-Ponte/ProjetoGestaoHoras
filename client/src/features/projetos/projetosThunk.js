@@ -24,7 +24,7 @@ export const deleteProjetoThunk = async (thunkAPI, projetoId) => {
 };
 export const editProjetoThunk = async (url, projeto, thunkAPI) => {
   try {
-    console.log(projeto)
+    console.log(projeto);
     const resp = await customFetch.patch(`/projetos/${projeto._id}`, projeto);
     thunkAPI.dispatch(clearValues());
     return resp.data;
@@ -37,6 +37,16 @@ export const editProjetoThunk = async (url, projeto, thunkAPI) => {
 export const getProjetoThunk = async ( thunkAPI ,projetoId) => {
   try {
     const resp = await customFetch.get(`/projetos/${projetoId}`);
+    return resp.data;
+  } catch (error) {
+    return checkForUnauthorizedResponse(error, thunkAPI);
+  }
+};
+
+
+export const getClientesThunk = async ( thunkAPI ,projetoId) => {
+  try {
+    const resp = await customFetch.get(`/projetos/clientes`);
     return resp.data;
   } catch (error) {
     return checkForUnauthorizedResponse(error, thunkAPI);

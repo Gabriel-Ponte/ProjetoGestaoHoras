@@ -34,10 +34,6 @@ function VisualizarProjeto() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  //const handleLista = (e) => {
-  //  dispatch(createTipoTrabalho(e));
-  //}
-
 
   let StringListaTrabalho = listaTipoTrabalho.map(item => item.TipoTrabalho).join(",");
 
@@ -87,7 +83,6 @@ function VisualizarProjeto() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projeto, listaTipoTrabalho]);
 
-  console.log(values)
 
   useEffect(() => {
     if (projeto !== null) {
@@ -97,9 +92,7 @@ function VisualizarProjeto() {
 
   const handleSubmitPiloto = async (e) =>{
     try {
-      console.log(values)
       const result = await dispatch(updateProjeto(values));
-      console.log(result)
       if (!result.error) {
         setTimeout(() => {
           dispatch(toggleSidebar(false));
@@ -155,6 +148,7 @@ function VisualizarProjeto() {
 
   const handleChangeFormRowSelect = async(nome, selectedOptions) => {
     if (nome === "Piloto") {
+      console.log(selectedOptions)
       const strSO = selectedOptions.join(",");
       try{
           await setValues({ ...values, [nome]: strSO });

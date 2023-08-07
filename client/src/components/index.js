@@ -5,6 +5,7 @@ import FormRowSelect from './FormRowSelect';
 import FormRowSelectTipo from './FormRowSelectTipo';
 import FormRowCheckbox from './FormRowCheckbox';
 import FormRowCheckboxMultiple from './FormRowCheckboxMultiple';
+import FormRowCheckboxListaClientes from './FormRowCheckboxListaClientes';
 import AddUtilizador from './AddUtilizador';
 import Footer from './Footer';
 import Header from './header';
@@ -31,6 +32,7 @@ export {
   FormRowSelect,
   FormRowCheckbox,
   FormRowCheckboxMultiple,
+  FormRowCheckboxListaClientes,
   AddUtilizador,
   Footer,
   Header,

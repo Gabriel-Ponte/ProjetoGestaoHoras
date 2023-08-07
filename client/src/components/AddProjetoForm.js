@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import Wrapper from '../assets/wrappers/AddProjetoForm';
-import { FormRow, FormRowSelect, FormRowCheckboxMultiple } from '../components';
+import { FormRow, FormRowSelect, FormRowCheckboxMultiple, FormRowCheckboxListaClientes } from '../components';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
-import { createProjeto } from '../features/projetos/projetosSlice';
+import { createProjeto , getClientes } from '../features/projetos/projetosSlice';
 //import { getTipoTrabalho, createTipoTrabalho } from '../features/tipoTrabalho/tipoTrabalhoSlice';
 import { listaUtilizadores, toggleSidebar} from '../features/utilizadores/utilizadorSlice';
 import { useNavigate } from 'react-router-dom';
@@ -28,11 +28,10 @@ const initialState = {
 
 const AddProjectForm = () => {
   const [values, setValues] = useState(initialState);
-  //const { isLoading } = useSelector((store) => store.projeto);
+  const { listaClientes } = useSelector((store) => store.projeto);
   //const [listaTipoTrabalho, setListaTipoTrabalho] = useState([]);
   const { isLoadingU, utilizadores, listaDeUtilizadores } = useSelector((store) => store.utilizador)
   //const { isLoading } = useSelector((store) => store.projetos);
-
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -52,6 +51,11 @@ const AddProjectForm = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listaDeUtilizadores]);
 
+  useEffect(() => {
+    dispatch(getClientes());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listaClientes]);
+
   if (isLoadingU) {
     return <Loading />;
   }
@@ -60,9 +64,7 @@ const AddProjectForm = () => {
   //const formattedListUtilizadores = Array.isArray(utilizadores) ? utilizadores : [];
   const formattedListUtilizadores = Array.isArray(utilizadores) ? utilizadores.filter(user => user.email.endsWith('isqctag.pt')) : [];
 
-  //const handleLista = (e) => {
-  //  dispatch(createTipoTrabalho(e));
-  //}
+
 
   const handleChange = (e) => {
     const nome = e.target.id;
@@ -71,19 +73,31 @@ const AddProjectForm = () => {
   };
 
   const handleChangeFormRowSelect = (nome, selectedOptions) => {
+ 
     if (nome === "Piloto") {
       const strSO = selectedOptions.join(",");
       setValues({ ...values, [nome]: strSO });
     } else if (nome === "TipoTrabalho") {
       const strT = selectedOptions.join(",");
       setValues({ ...values, [nome]: strT });
+    } else if (nome === "Cliente" && selectedOptions.length > 1 && selectedOptions !== null) {
+      console.log(selectedOptions)
+      const strC = selectedOptions;
+      setValues({ ...values, [nome]: strC });
     }
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!values.Nome || !values.Tema || !values.Acao) {
-      toast.error('Por favor, preencha todos os campos obrigatórios!');
+    if (!values.Nome || !values.Cliente || !values.DataInicio || !values.DataObjetivo || !values.Tema) {
+      const requiredFields = ['Nome', 'Cliente', 'DataInicio', 'DataObjetivo', 'Tema', 'Piloto'];
+      const emptyField = requiredFields.find(field => !values[field]);
+
+      if (emptyField) {
+        toast.error(`Por favor, preencha o campo obrigatório: ${emptyField}!`);
+      } else {
+        toast.error('Por favor, preencha todos os campos obrigatórios!');
+      }
       return;
     }
 
@@ -100,7 +114,7 @@ const AddProjectForm = () => {
     }
     //navigate('/');
   };
-
+  
   const toggleMember = () => {
     setValues({ ...values });
   };
@@ -148,24 +162,37 @@ const AddProjectForm = () => {
             handleChange={handleChange}
           />
 
-
           {
-          /*
-            <FormRowSelect
-            type="text"
-            className="formRow" classNameLabel='formRowLabel' classNameInput='formRowInput'
-            id="tiposTrabalhoProjeto"
-            name="TipoTrabalho"
-            placeholder="Tipos de Trabalho"
-            labelText = "Tipos de Trabalho"
-            value={[values.TipoTrabalho]}
-            list={listaTipoTrabalho}
-            handleChange={handleChangeFormRowSelect}
-            handleLista={handleLista}
-            multiple={true}
-          />
-          */
+          //   <FormRow
+          //   type="text"
+          //   className="row mb-3 text-center" 
+          //   classNameLabel='col-md-3 text-end' 
+          //   classNameInput='col-md-9'
+          //   id="Cliente"
+          //   name="Cliente"
+          //   labelText="Cliente:"
+          //   placeholder="Cliente Projeto"
+          //   value={values.Cliente}
+          //   handleChange={handleChange}
+          // />
           }
+
+          <FormRowCheckboxListaClientes
+            type="text"
+            className="row mb-3 mt-3 text-center" 
+            classNameLabel='col-md-3 text-end' 
+            classNameInput=' checkboxRow'
+            classNameResult='col-md-6 text-start'
+            classNameLabelResult="col-md-6 text-start"
+            id="Cliente"
+            name="Cliente"
+            placeholder="Cliente"
+            labelText = "Cliente: "
+            value={[values.Cliente]}
+            list={listaClientes}
+            handleChange={handleChangeFormRowSelect}
+            multiple={false}
+          />
 
           <FormRow
             type="date"
@@ -217,19 +244,7 @@ const AddProjectForm = () => {
             value={values.Links}
             handleChange={handleChange}
           />
-          <FormRow
-            type="text"
-            className="row mb-3 text-center" 
-            classNameLabel='col-md-3 text-end' 
-            classNameInput='col-md-9'
-            id="Cliente"
-            name="Cliente"
-            labelText="Cliente:"
-            placeholder="Cliente Projeto"
-            value={values.Cliente}
-            handleChange={handleChange}
-          />
-          <hr/>
+
 
           <FormRowCheckboxMultiple
             type="text"

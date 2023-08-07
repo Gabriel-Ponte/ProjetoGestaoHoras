@@ -331,7 +331,7 @@ const VisualizarProjeto = () => {
                     {values.Piloto &&
                     (() => {
                       const updatedSeparatedArray = Array.isArray(values.Piloto)? values.Piloto.length > 0 ? values.Piloto[0].split(/[,\/]/) : [] : values.Piloto.split(/[,\/]/);
-                   
+                      if (updatedSeparatedArray && utilizadores) {
                         for (let i = 0; i < updatedSeparatedArray.length; i++) {
                           for (let a = 0; a < utilizadores.length; a++) {
                             if (updatedSeparatedArray[i] === utilizadores[a]._id) {
@@ -339,6 +339,7 @@ const VisualizarProjeto = () => {
                             }
                           }
                         }
+                      }
                         return (
                           <>
                             {values.Piloto ? (

@@ -10,10 +10,11 @@ const {
   updateProjeto,
   deleteProjeto,
   exportProjetos,
+  getClientesProjeto,
 } = require("../controllers/projetos");
 
 router.route("/").post(createProjeto).get(getAllProjetos);
-//router.route("/").get(getAllProjetos);
+router.route("/clientes").get(getClientesProjeto);
 
 router.route("/export/").post(exportProjetos);
 router

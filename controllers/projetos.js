@@ -84,6 +84,17 @@ const getProjeto = async (req, res) => {
 };
 
 
+const getClientesProjeto = async (req, res) => {
+
+  // Use the distinct method to get unique clientes from the projetos
+  const uniqueClientes = await Projeto.distinct('Cliente');
+
+  // Filter out null values from the uniqueClientes array
+  const filteredClientes = uniqueClientes.filter(cliente => cliente !== "");
+
+  res.status(StatusCodes.OK).json({ clientes: filteredClientes });
+};
+
 const getTipoTrabalhoProjeto = async (req, res) => {
   const { tipoTrabalho: tipoTrabalho } = req.params;
   const projeto = await Projeto.find({
@@ -118,7 +129,7 @@ const updateProjeto = async (req, res) => {
   } = req.body;
   const { id: projetoId } = req.params;
 
-
+  console.log(req.body)
   try {
     if (Nome === "" || Tema === "" || Cliente === "" || DataInicio === "") {
       throw new BadRequestError("Nome, Tema, Cliente, DataInicio precisam ser preenchidos");
@@ -163,4 +174,5 @@ module.exports = {
   updateProjeto,
   deleteProjeto,
   exportProjetos,
+  getClientesProjeto,
 };
