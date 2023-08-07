@@ -105,6 +105,8 @@ const Wrapper = styled.article`
       word-break: break-word;
     }
   .buttonProjeto{
+    margin: auto;
+    width:80%;
     font-size: 1vw;
     padding: 0;
   }

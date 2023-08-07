@@ -24,6 +24,7 @@ export const deleteProjetoThunk = async (thunkAPI, projetoId) => {
 };
 export const editProjetoThunk = async (url, projeto, thunkAPI) => {
   try {
+    console.log(projeto)
     const resp = await customFetch.patch(`/projetos/${projeto._id}`, projeto);
     thunkAPI.dispatch(clearValues());
     return resp.data;

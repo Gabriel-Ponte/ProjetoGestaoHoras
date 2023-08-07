@@ -19,6 +19,7 @@ const Wrapper = styled.section`
     font-weight: 700;
   }
   .projetos {
+    width:100%;
     display: grid;
     grid-template-columns: 1fr;
     row-gap: 2rem;

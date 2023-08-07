@@ -2,14 +2,12 @@ import { useState, useEffect } from 'react';
 import Wrapper from '../assets/wrappers/FormRowCheckboxMultiple';
 
 const FormRowCheckboxMultiple = ({ labelText, name, value, handleChange,handleChangeSubmit, list, className,classNameLabelResult, classNameLabel, classNameInput, classNameResult }) => {
-
     const [separatedArray, setSeparatedArray] = useState(Array.isArray(value) ? (value.length > 0 ? value[0].split(/[,\/]/) : []) : value.split(/[,\/]/));
     const [selectedOption, setSelectedOption] = useState(Array.isArray(separatedArray) ? separatedArray : (value ? value.split(',') : []));
 
 useEffect(() => {
     const updatedSeparatedArray = Array.isArray(value) ? (value.length > 0 ? value[0].split(/[,\/]/) : []) : value.split(/[,\/]/);
     const newSeparatedArray = [...updatedSeparatedArray];
-
     let nome = false;
     for (let a = 0; a < updatedSeparatedArray.length; a++) {
       let matchFound = false;
@@ -19,7 +17,7 @@ useEffect(() => {
           matchFound = true;
           break;
         }
-        if (updatedSeparatedArray[a] === list[i].nome || updatedSeparatedArray[a] === list[i].login) {
+        if (updatedSeparatedArray[a] === list[i].login && list[i].login.length < 4) {
           updatedSeparatedArray[a] = list[i].nome;
           newSeparatedArray[a] = list[i]._id;
           matchFound = true;
@@ -38,7 +36,7 @@ useEffect(() => {
       let verifica = false;
       verifica = handleChange(name, newSeparatedArray);
       if(verifica){
-      handleChangeSubmit(1);
+      handleChangeSubmit();
     }
     }
     setSeparatedArray(updatedSeparatedArray);

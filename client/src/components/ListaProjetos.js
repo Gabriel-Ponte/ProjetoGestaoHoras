@@ -7,6 +7,7 @@ import { getAllProjetos } from '../features/allProjetos/allProjetosSlice';
 import PageBtnContainer from './PageBtnContainer';
 import ListaProjetosHeader from './ListaProjetosHeader.js';
 import { handleChange } from '../features/allProjetos/allProjetosSlice';
+import { listaUtilizadores } from '../features/utilizadores/utilizadorSlice';
 import FormRowCheckbox from './FormRowCheckbox';
 
 
@@ -27,10 +28,18 @@ const ListaProjetos = () => {
   } = useSelector((store) => store.allProjetos);
   const dispatch = useDispatch();
   const { user } = useSelector((store) => store.utilizador.user);
+  const { utilizadores, listaDeUtilizadores } = useSelector((store) => store.utilizador);
+
+  const formattedListUtilizadores = Array.isArray(utilizadores) ? utilizadores.filter(user => user.email.endsWith('isqctag.pt')) : [];
+ 
   useEffect(() => {
     dispatch(getAllProjetos());
   }, [page, search, searchStatus, searchType, sort, projetoFinalizado, DataObjetivoC]);
-
+  
+  
+  useEffect(() => {
+    dispatch(listaUtilizadores());
+  }, []);
   if (isLoading) {
     return <Loading />;
   }
@@ -165,6 +174,7 @@ const ListaProjetos = () => {
           sortValue={sort}
           handleChange={handleSort}
           finalizado={projetoFinalizado}
+          utilizadores={formattedListUtilizadores}
         />
 
         {projetos.map((projeto) => {
@@ -172,6 +182,7 @@ const ListaProjetos = () => {
             key={projeto._id}
             {...projeto}
             finalizado={projetoFinalizado}
+            utilizadores={formattedListUtilizadores}
           />;
         })}
       </div>

@@ -13,8 +13,6 @@ import DeleteFromDB from "./DeleteFromDB";
 
 function VisualizarProjeto() {
   const { projeto, isLoading } = useSelector((store) => store.projeto);
-
-
   const { utilizadores, listaDeUtilizadores } = useSelector((store) => store.utilizador);
   const [listaTipoTrabalho, setListaTipoTrabalho] = useState([]);
   const dispatch = useDispatch();
@@ -26,7 +24,6 @@ function VisualizarProjeto() {
   }, [listaDeUtilizadores, projeto, isLoading]);
   
   const formattedListUtilizadores = Array.isArray(utilizadores) ? utilizadores.filter(user => user.email.endsWith('isqctag.pt')) : [];
-
   const [values, setValues] = useState(null);
 
   // //////////////////////////////////////////////////////////////////////////////////
@@ -90,6 +87,7 @@ function VisualizarProjeto() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projeto, listaTipoTrabalho]);
 
+  console.log(values)
 
   useEffect(() => {
     if (projeto !== null) {
@@ -97,6 +95,23 @@ function VisualizarProjeto() {
     }
   }, [projeto]);
 
+  const handleSubmitPiloto = async (e) =>{
+    try {
+      console.log(values)
+      const result = await dispatch(updateProjeto(values));
+      console.log(result)
+      if (!result.error) {
+        setTimeout(() => {
+          dispatch(toggleSidebar(false));
+          navigate('/PaginaEditarProjeto');
+        }, 2000);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  
   const handleSubmit = async (e) => {
     if (!values.Nome || !values.Cliente || !values.DataInicio || !values.DataObjetivo || !values.Tema || !values.Piloto) {
       const requiredFields = ['Nome', 'Cliente', 'DataInicio', 'DataObjetivo', 'Tema', 'Piloto'];
@@ -339,7 +354,7 @@ function VisualizarProjeto() {
                     list={formattedListUtilizadores}
                     multiple={true}
                     handleChange={handleChangeFormRowSelect}
-                    handleChangeSubmit={handleSubmit}
+                    handleChangeSubmit={handleSubmitPiloto}
                   />
                   </div>
                   <FormRowCheckbox

@@ -169,7 +169,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
 
                         <div className="col-md-6 themed-grid-col">
                             <div className="row text-center">
-                                <div className="col-md-6 themed-grid-col">
+                                <div className="col-md-5 themed-grid-col">
                                     <button
                                         type="button"
                                         name="VisualizarButton"
@@ -184,7 +184,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                         }
                                     </button>
                                 </div>
-                                <div className="col-md-6 themed-grid-col">
+                                <div className="col-md-5 themed-grid-col">
                                     <button
                                         type="button"
                                         name="VisualizarButton"
@@ -199,13 +199,23 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                         }
                                     </button>
                                 </div>
+
+                                <div className="col-md-2 themed-grid-col">
+                                    <button
+                                        type="button"
+                                        name="VisualizarButton"
+                                        className="btn buttonHeader"
+                                    >
+                                        Piloto
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <div className="col-md-2 themed-grid-col">
                             <div className="row text-center">
                                 {finalizado === true ? (
                                     <>
-                                        <div className="col-md-7 themed-grid-col">
+                                        <div className="col-md-8 themed-grid-col">
                                             <button
                                                 type="button"
                                                 name="VisualizarButton"
@@ -221,7 +231,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                                 }
                                             </button>
                                         </div>
-                                        <div className="col-md-5 themed-grid-col">
+                                        <div className="col-md-4 themed-grid-col">
                                         <button
                                                 type="button"
                                                 name="VisualizarButton"
@@ -261,9 +271,14 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                                 Alerta dias
                                             </p>
                                         </div>
+
+
                                     </>
                                 )}
                             </div>
+
+                        </div>
+                        <div className="col-md-1 themed-grid-col " >
                         </div>
                     </div>
                     <hr></hr>

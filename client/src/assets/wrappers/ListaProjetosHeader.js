@@ -7,7 +7,7 @@ justify-content: center;
 box-shadow: 0 1px 0px 0px rgba(0, 0, 0, 0.1);
 z-index: 9998;
 height:100%;
-width:101%;
+width:100%;
 padding:0px;
 
 
@@ -18,6 +18,7 @@ hr {
 }
 
 .ListaProjetosHeader {
+  width:100%;
   background-color: #E5E5E5;
   align-self: center;
   vertical-align: baseline;
@@ -43,6 +44,7 @@ hr {
     }
   @media (min-width: 1500px) {
   .buttonHeader{
+
     font-weight: bold;
     align-items: center;
     margin:0;

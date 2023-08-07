@@ -6,7 +6,7 @@ const initialFiltersState = {
   search: '',
   searchStatus: 'all',
   searchType: 'all',
-  sort: 'Cliente',
+  sort: '-Cliente',
   projetoFinalizado: 'false',
   DataObjetivoC: 'true',
   tipoTrabalho:'',

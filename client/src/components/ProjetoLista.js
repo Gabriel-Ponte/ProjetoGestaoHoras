@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Wrapper from '../assets/wrappers/Projeto';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getProjeto, handleChange } from '../features/projetos/projetosSlice';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -26,7 +26,8 @@ const Projeto = ({
   Links,
   NumeroHorasTotal,
   Finalizado,
-  finalizado
+  finalizado,
+  utilizadores
 }) => {
 
   const initialState = {
@@ -46,7 +47,8 @@ const Projeto = ({
     Links,
     NumeroHorasTotal,
     Finalizado,
-    finalizado
+    finalizado,
+    utilizadores
   };
 
   const dispatch = useDispatch();
@@ -68,7 +70,8 @@ const Projeto = ({
     Links,
     NumeroHorasTotal,
     Finalizado,
-    finalizado
+    finalizado,
+    utilizadores
   });
   const [verificaResultado, setVerificaResultado] = useState(1);
   const [verificaAlterado, setVerificaAlterado] = useState(false);
@@ -181,6 +184,21 @@ const Projeto = ({
     }
   }
 
+  const PilotosList = Array.isArray(values.Piloto) ? (values.Piloto.length > 0 ? values.Piloto[0].split(/[,\/]/) : []) : values.Piloto.split(/[,\/]/);
+  const listUpdated = [...PilotosList];
+
+  for (let a = 0; a < PilotosList.length; a++) {
+    for (let i = 0; i < utilizadores.length; i++) {
+      if (PilotosList[a] === utilizadores[i]._id) {
+        PilotosList[a] = utilizadores[i].nome;
+        break;
+      }
+      if (PilotosList[a] === utilizadores[i].login && utilizadores[i].login.length < 4) {
+        PilotosList[a] = utilizadores[i].nome;
+        listUpdated[a] = utilizadores[i]._id;
+        break;
+      }
+    }}
   return (
     <Wrapper>
       <div className={verificaResultado === 1 ? '' : verificaResultado ? 'resultadoProjetoP' : 'resultadoProjetoN'}>
@@ -225,7 +243,7 @@ const Projeto = ({
 
             <div className="col-md-6 themed-grid-col">
               <div className="row text-center">
-                <div className="col-md-6 themed-grid-col">
+                <div className="col-md-5 themed-grid-col">
                 {finalizado === true ? (
                   <p>{values.Acao}</p>
                 ):(
@@ -239,20 +257,28 @@ const Projeto = ({
                 )
               }
                 </div>
-                <div className="col-md-6 themed-grid-col">
-                {finalizado === true ? (
-                  <p>{values.Notas}</p>
-                ):
-                (                
+                <div className="col-md-5 themed-grid-col">
+                {                
                 <FormRowListaProjetos
                   type="textarea"
                   id="NotasProjeto"
                   name="Notas"
                   value={values.Notas}
                   handleChange={handleChangeProjeto}
-                />)
+                />
                   }
                 </div>
+
+                <div className="col-md-2 themed-grid-col">
+                {
+                  <div className='text-center'>
+                    {
+                    PilotosList.map((part, index) => (
+                      <p key={index}>{part}</p>
+                    ))}
+                  </div>
+                }
+              </div>
               </div>
             </div>
 
