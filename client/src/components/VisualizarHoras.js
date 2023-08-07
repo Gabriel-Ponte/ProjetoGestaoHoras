@@ -16,9 +16,9 @@ const ListaHoras = () => {
   const [selectedDay, setSelectedDay] = useState();
   const [getFeriados, setFeriados] = useState([]);
   const [listaDias, setListaDias] = useState([]);
-  const [ horasRealizadas, setHorasRealizadas] = useState(0);
-  const [ percentagemHoras, setPercentagemHoras] = useState(0);
-  const [ possibleHours, setPossibleHours] = useState(0);
+  const [horasRealizadas, setHorasRealizadas] = useState(0);
+  const [percentagemHoras, setPercentagemHoras] = useState(0);
+  const [possibleHours, setPossibleHours] = useState(0);
   const [userNome, setUserNome] = useState(user?.user?.nome); // add state for user name
   const dispatch = useDispatch();
   const formattedListUtilizadores = Array.isArray(utilizadores) ? utilizadores : [];
@@ -48,7 +48,7 @@ const ListaHoras = () => {
   }
 
   function feriadosPortugal(date) {
-    
+
     const feriados = [];
 
     for (let i = date.getFullYear() - 5; i < date.getFullYear() + 5; i++) {
@@ -144,15 +144,15 @@ const ListaHoras = () => {
     const weekdayCount = getWeekdayCount(month, year);
     const possibleHoursCount = weekdayCount * 8;
     let horasRealizadasCount = 0;
-    if(listaDias?.diasAllUtilizador){
-    for (let i = 0; i < listaDias?.diasAllUtilizador.length; i++) {
-      const data = new Date(listaDias?.diasAllUtilizador[i].Data);
-  
-      if (year === data.getFullYear() && month === data.getMonth()) {
-        horasRealizadasCount += dias[i].NumeroHoras;
+    if (listaDias?.diasAllUtilizador) {
+      for (let i = 0; i < listaDias?.diasAllUtilizador.length; i++) {
+        const data = new Date(listaDias?.diasAllUtilizador[i].Data);
+
+        if (year === data.getFullYear() && month === data.getMonth()) {
+          horasRealizadasCount += dias[i].NumeroHoras;
+        }
       }
     }
-  }
     setPossibleHours(possibleHoursCount);
     setHorasRealizadas(horasRealizadasCount);
     setPercentagemHoras((horasRealizadasCount / possibleHoursCount) * 100);
@@ -164,11 +164,11 @@ const ListaHoras = () => {
   const diaSelected = selectedDay ? selectedDay.dia : 0;
   const month = selectedDay ? selectedDay.mes : today.getMonth();
   const year = selectedDay ? selectedDay.ano : today.getFullYear();
- 
+
   if (isLoading) {
     return <Loading />;
   }
-  if (!dias){
+  if (!dias) {
     return <Loading />;
   }
 
@@ -180,8 +180,8 @@ const ListaHoras = () => {
             <h3 className='mb-5'>Escolha Utilizador</h3>
             <FormRowSelect
               type="text"
-              className="row mb-3 text-center" 
-              classNameLabel='col-md-3 text-end' 
+              className="row mb-3 text-center"
+              classNameLabel='col-md-3 text-end'
               classNameInput='col-md-9'
               classNameResult='col-md-6 text-start'
               id="piloto"
@@ -196,17 +196,70 @@ const ListaHoras = () => {
         )
         }
         <div className='row mb-3'>
-          <h1 className='userName'>{userNome}</h1>
+          <div className='col-6'>
+            <h1 className='userName'>{userNome}</h1>
+
+            <div className='row'>
+              <div className='col-md-4 text-center'>
+                <p>Horas Possiveis: {possibleHours}</p>
+              </div>
+              <div className='col-md-4 text-center'>
+                <p>Horas Realizadas: {horasRealizadas}</p>
+              </div>
+              <div className='col-md-4 text-center'>
+                {percentagemHoras >= 0 && <p>{percentagemHoras.toFixed(1)}%</p>}
+              </div>
+            </div>
           </div>
-          <div className='row'>
-          <div className='col-md-2 text-center'>
-            <p>Horas Possiveis: {possibleHours}</p>
-          </div>
-          <div className='col-md-2 text-center'>
-            <p>Horas Realizadas: {horasRealizadas}</p>
-          </div>
-          <div className='col-md-2 text-center'>
-            {percentagemHoras >= 0 && <p>{percentagemHoras.toFixed(1)}%</p>}
+
+
+          <div className='col-6 description'>
+            <div className='row mb'>
+              <div className='col-9 text-end'>
+                <p>Fim de Semana</p>
+              </div>
+              <div className='col-3'>
+                <p className='fimSemana'></p>
+              </div>
+            </div>
+
+            <div className='row'>
+              <div className='col-9 text-end'>
+                <p>Feriados</p>
+              </div>
+              <div className='col-3'>
+                <p className='feriados'></p>
+              </div>
+            </div>
+            
+            <div className='row'>
+              <div className='col-9 text-end'>
+                <p>8 Horas</p>
+              </div>
+              <div className='col-3'>
+                <p className='normal'></p>
+              </div>
+            </div>
+
+            <div className='row'>
+              <div className='col-9 text-end'>
+                <p>&gt; 8 Horas</p>
+              </div>
+              <div className='col-3'>
+                <p className='extra'></p>
+              </div>
+            </div>
+ 
+            <div className='row'>
+              <div className='col-9 text-end'>
+              <p>&lt; 8 Horas</p>
+              </div>
+
+              <div className='col-3'>
+                <p className='menos'></p>
+              </div>
+            </div>
+
           </div>
         </div>
         {(listaDias.length > 0) ? (
@@ -216,20 +269,20 @@ const ListaHoras = () => {
         ) : (
           <>
             <div className='col-12'>
-            <Calendar
-              handleChange={handleChangeCalendario}
-              inserted={dias}
-              feriados={getFeriados}
-            />
+              <Calendar
+                handleChange={handleChangeCalendario}
+                inserted={dias}
+                feriados={getFeriados}
+              />
             </div>
             <hr></hr>
             <div>
               {dias.map((dia) => {
-                for(let a = 0; a< dia.tipoDeTrabalhoHoras.length ; a++){
-                    if(dia.tipoDeTrabalhoHoras[a].length > 0){
-                      for(let j= 0; j<dia.tipoDeTrabalhoHoras[a].length;j++){
-                      }
+                for (let a = 0; a < dia.tipoDeTrabalhoHoras.length; a++) {
+                  if (dia.tipoDeTrabalhoHoras[a].length > 0) {
+                    for (let j = 0; j < dia.tipoDeTrabalhoHoras[a].length; j++) {
                     }
+                  }
                 }
 
                 const data = new Date(dia.Data);
@@ -271,7 +324,7 @@ const ListaHoras = () => {
         }
       </div>
 
-    </Wrapper>
+    </Wrapper >
   );
 };
 

@@ -37,6 +37,54 @@ const Wrapper = styled.section`
     }
   }
 
+  .description{
+    font-size:0.8rem;
+  }
+  .fimSemana {
+    width: 10px;
+    height: 10px;
+    background-color: #BCB8B1;
+    display: inline-block;
+    vertical-align: middle;
+    margin-top:auto;
+    margin-bottom:auto;
+  }
+  .extra{
+    width:10px;
+    height:10px;
+    background-color: #1A4301;
+    display: inline-block;
+    vertical-align: middle;
+    margin-top:auto;
+    margin-bottom:auto;
+  }
+  .normal{
+    width:10px;
+    height:10px;
+    background-color: #588157;
+    display: inline-block;
+    vertical-align: middle;
+    margin-top:auto;
+    margin-bottom:auto;
+  }
+  .menos{
+    width:10px;
+    height:10px;
+    background-color: #DDDF00;
+    display: inline-block;
+    vertical-align: middle;
+    margin-top:auto;
+    margin-bottom:auto;
+  }
+  .feriados{
+    width:10px;
+    height:10px;
+    background-color: #c26c18;
+    display: inline-block;
+    vertical-align: middle;
+    margin-top:auto;
+    margin-bottom:auto;
+  }
 
 `;
 
