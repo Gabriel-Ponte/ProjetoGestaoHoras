@@ -152,7 +152,6 @@ const ListaHoras = () => {
             const tiposTrabalho = dia.tipoDeTrabalhoHoras[0].tipoTrabalho?.split(',');
             return tiposTrabalho.includes(idFerias);
           });
-          //const updatedFerias = dias.filter((dia) => dia.tipoDeTrabalhoHoras[0].tipoTrabalho?.split(',') === idFerias);
           if (!arrayEquals(ferias, updatedFerias)) {
             setFerias(updatedFerias);
           }
