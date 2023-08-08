@@ -75,7 +75,6 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPos
 
                         {tipoTrabalho.split(',').map((trabalho, index) => {
                           let counter = 0;
-                          console.log(listaTT)
                           if(listaTT){
                           for (let i = 0; i < listaTT.length; i++) {
                             

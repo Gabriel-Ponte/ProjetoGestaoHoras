@@ -204,6 +204,9 @@ const ListaHoras = () => {
   const month = selectedDay ? selectedDay.mes : today.getMonth();
   const year = selectedDay ? selectedDay.ano : today.getFullYear();
 
+
+
+  //Change to refresh
   if (isLoading) {
     return <Loading />;
   }
