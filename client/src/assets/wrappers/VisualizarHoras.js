@@ -76,6 +76,16 @@ const Wrapper = styled.section`
     margin-top:auto;
     margin-bottom:auto;
   }
+  .ferias{
+    width:10px;
+    height:10px;
+    background-color: #B7B5E4;
+    display: inline-block;
+    vertical-align: middle;
+    margin-top:auto;
+    margin-bottom:auto;
+  }
+
   .feriados{
     width:10px;
     height:10px;

@@ -2,24 +2,14 @@ import { useState, useEffect } from 'react';
 import Wrapper from '../assets/wrappers/Dias';
 import { useDispatch } from 'react-redux';
 import { getProjetoList } from '../features/projetos/projetosSlice';
-import { getTipoTrabalho } from '../features/tipoTrabalho/tipoTrabalhoSlice';
 
-const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPossiveis }) => {
+const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPossiveis, listaTT }) => {
 
   const dispatch = useDispatch();
   const [projeto, setProjeto] = useState([]);
   const [horasTotal, sethorasTotal] = useState([]);
   let horasT = 0;
 
-  const [listaTipoTrabalho, setListaTipoTrabalho] = useState([]);
-  let StringListaTrabalho = listaTipoTrabalho.map(item => item.TipoTrabalho).join(",");
-
-  useEffect(() => {
-    dispatch(getTipoTrabalho()).then((res) => {
-        const tipoTrabalhoArray = Array.isArray(res.payload.tipoTrabalho) ? res.payload.tipoTrabalho : [];
-        setListaTipoTrabalho(tipoTrabalhoArray);
-    });
-  }, []);
 
   useEffect(() => {
     const projetoList = tipoDeTrabalhoHoras.map(({ tipoTrabalho, horas, projeto }) => {
@@ -56,6 +46,7 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPos
     });
   }, [tipoDeTrabalhoHoras, dispatch]);
 
+
   return (
     <Wrapper>
       <div key={_id}>
@@ -84,12 +75,15 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPos
 
                         {tipoTrabalho.split(',').map((trabalho, index) => {
                           let counter = 0;
-                          for (let i = 0; i < listaTipoTrabalho.length; i++) {
-                            if (trabalho === listaTipoTrabalho[i]._id) {
-                              return <p key={index}>{listaTipoTrabalho[i].TipoTrabalho.trim()}</p>;
+                          console.log(listaTT)
+                          if(listaTT){
+                          for (let i = 0; i < listaTT.length; i++) {
+                            
+                            if (trabalho === listaTT[i]._id) {
+                              return <p key={index}>{listaTT[i].TipoTrabalho.trim()}</p>;
                               counter++;
                             }
-                          }
+                          }}
                           if (counter === 0) {
                             return <p key={index}>Tipo de Trabalho Apagado</p>;
                           }

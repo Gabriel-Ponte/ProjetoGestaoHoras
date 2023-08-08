@@ -211,6 +211,13 @@ const Wrapper = styled.section`
     border-radius: 4px;
 }
 
+.calendar .calendar-inner .calendar-body .calendar-ferias {
+    cursor: default;
+    background: #B7B5E4;
+    border-radius: 4px;
+    
+}
+
 .calendar .calendar-inner .calendar-body .calendar-inicio {
     background: #588157;
     border-radius: 4px;

@@ -4,7 +4,7 @@ import { MdKeyboardArrowLeft } from 'react-icons/md';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import { toast } from 'react-toastify';
 
-const CalendarControl = ({ handleChange, inserted, feriados, inicio, fim , objetivo, vProjeto }) => {
+const CalendarControl = ({ handleChange, inserted, feriados,ferias, inicio, fim , objetivo, vProjeto }) => {
     const [calendar, setCalendar] = useState(new Date());
     const calWeekDays = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
     const calMonthName = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
@@ -234,6 +234,24 @@ const CalendarControl = ({ handleChange, inserted, feriados, inicio, fim , objet
                 }
             }
         }
+
+        if (ferias) {
+            for (let i = 0; i < ferias.length; i++) {
+                const insertedDay = new Date(ferias[i].Data);
+                const currentMonth = insertedDay?.getMonth() + 1;
+                const currentYear = insertedDay?.getFullYear();
+                if (
+                    currentYear === changedYear &&
+                    currentMonth === changedMonth &&
+                    numberItems !== null &&
+                    numberItems.length >= calendar.getDate()
+                ) {
+                    dias.push(insertedDay);
+                    numberItems[insertedDay.getDate() - 1].classList.add("calendar-ferias");
+                }
+            }
+        }
+
 
         if (inicio){
             try{

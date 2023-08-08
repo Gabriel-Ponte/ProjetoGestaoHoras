@@ -7,24 +7,25 @@ import { getAllDiasUtilizador } from '../features/allDias/allDiasSlice';
 import { listaUtilizadores } from '../features/utilizadores/utilizadorSlice';
 import { FormRowSelect } from '../components';
 import Calendar from './Calendar'
+import { getTipoTrabalho } from '../features/tipoTrabalho/tipoTrabalhoSlice';
 
 const ListaHoras = () => {
   const { user, utilizadores } = useSelector((store) => store.utilizador);
   const { dias, isLoading } = useSelector((store) => store.allDias);
-
   const [selectedUser, setSelectedUser] = useState(user?.user?.nome);
   const [selectedDay, setSelectedDay] = useState();
   const [getFeriados, setFeriados] = useState([]);
   const [listaDias, setListaDias] = useState([]);
+  const [listaTipoTrabalho, setListaTipoTrabalho] = useState(null);
   const [horasRealizadas, setHorasRealizadas] = useState(0);
   const [percentagemHoras, setPercentagemHoras] = useState(0);
   const [possibleHours, setPossibleHours] = useState(0);
+  const [ferias, setFerias] = useState([]);
   const [userNome, setUserNome] = useState(user?.user?.nome); // add state for user name
   const dispatch = useDispatch();
+  
   const formattedListUtilizadores = Array.isArray(utilizadores) ? utilizadores : [];
   const today = new Date();
-
-
 
 
 
@@ -124,19 +125,56 @@ const ListaHoras = () => {
   }, []);
 
 
+  // useEffect(() => {
+  //   dispatch(listaUtilizadores());
+  // }, [ferias]);
+
+
+
   useEffect(() => {
     dispatch(listaUtilizadores());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedUser]);
+    let tipoTrabalhoArray = [];
+  
+    dispatch(getTipoTrabalho()).then((res) => {
+      tipoTrabalhoArray = Array.isArray(res.payload.tipoTrabalho) ? res.payload.tipoTrabalho : [];
+      
+      setUserNome(selectedUser); // Update userNome state with the selected user name
+      
+      dispatch(getAllDiasUtilizador({ userNome: selectedUser })).then((res) => {
 
+        const listaDiasA = (typeof res.payload.diasAllUtilizador !== "undefined") ? res.payload.diasAllUtilizador : [];
+        const idFerias = tipoTrabalhoArray.find((tipo) => tipo.TipoTrabalho === "Ferias")?._id;
+        
+        if (idFerias && dias) {
+          // Filter the dias array to get the matching ferias and update the state
+          const updatedFerias = dias.filter((dia) => dia.tipoDeTrabalhoHoras[0].tipoTrabalho === idFerias);
+          if (!arrayEquals(ferias, updatedFerias)) {
+            setFerias(updatedFerias);
+          }
 
-  useEffect(() => {
-    dispatch(getAllDiasUtilizador({ userNome: selectedUser })).then((res) => {
-      setListaDias(res.payload);
+          // Remove the matching ferias from listaDias
+          if (listaDiasA) {
+            const updatedListaDias = listaDiasA.filter((dia) => dia.tipoDeTrabalhoHoras[0].tipoTrabalho !== idFerias);
+            if (!arrayEquals(listaDias, updatedListaDias)) {
+              setListaDias(updatedListaDias);
+            }
+          }
+          setListaTipoTrabalho(tipoTrabalhoArray);
+        }
+      });
     });
-    setUserNome(selectedUser); // update userNome state with selected user name
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedUser]);
+  }, [selectedUser, listaDias, ferias]);
+  
+  function arrayEquals(a, b) {
+    if (a === b) return true;
+    if (a == null || b == null) return false;
+    if (a.length !== b.length) return false;
+  
+    for (let i = 0; i < a.length; ++i) {
+      if (a[i]._id_D !== b[i]._id_D) return false;
+    }
+    return true;
+  }
 
   useEffect(() => {
     const month = selectedDay ? selectedDay.mes : today.getMonth();
@@ -144,9 +182,9 @@ const ListaHoras = () => {
     const weekdayCount = getWeekdayCount(month, year);
     const possibleHoursCount = weekdayCount * 8;
     let horasRealizadasCount = 0;
-    if (listaDias?.diasAllUtilizador) {
-      for (let i = 0; i < listaDias?.diasAllUtilizador.length; i++) {
-        const data = new Date(listaDias?.diasAllUtilizador[i].Data);
+    if (listaDias) {
+      for (let i = 0; i < listaDias.length; i++) {
+        const data = new Date(listaDias[i].Data);
 
         if (year === data.getFullYear() && month === data.getMonth()) {
           horasRealizadasCount += dias[i].NumeroHoras;
@@ -158,7 +196,8 @@ const ListaHoras = () => {
     setPercentagemHoras((horasRealizadasCount / possibleHoursCount) * 100);
     //const percentagemHoras = Math.round((horasRealizadas / possibleHours) * 100);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [listaDias, selectedDay]);
+  }, [listaDias, selectedDay, selectedUser]);
+
 
 
   const diaSelected = selectedDay ? selectedDay.dia : 0;
@@ -169,6 +208,10 @@ const ListaHoras = () => {
     return <Loading />;
   }
   if (!dias) {
+    return <Loading />;
+  }
+
+  if (!listaTipoTrabalho) {
     return <Loading />;
   }
 
@@ -231,7 +274,15 @@ const ListaHoras = () => {
                 <p className='feriados'></p>
               </div>
             </div>
-            
+
+            <div className='row'>
+              <div className='col-9 text-end'>
+                <p>Ferias</p>
+              </div>
+              <div className='col-3'>
+                <p className='ferias'></p>
+              </div>
+            </div>
             <div className='row'>
               <div className='col-9 text-end'>
                 <p>8 Horas</p>
@@ -262,7 +313,7 @@ const ListaHoras = () => {
 
           </div>
         </div>
-        {(listaDias.length > 0) ? (
+        {(listaDias && listaDias.length < 1) ? (
           <div className='projetos'>
             <h2>Utilizador não possui horas inseridas</h2>
           </div>
@@ -271,8 +322,9 @@ const ListaHoras = () => {
             <div className='col-12'>
               <Calendar
                 handleChange={handleChangeCalendario}
-                inserted={dias}
+                inserted={listaDias}
                 feriados={getFeriados}
+                ferias={ferias}
               />
             </div>
             <hr></hr>
@@ -290,7 +342,7 @@ const ListaHoras = () => {
                 const isSameDate = diaSelected === 0 || Number(diaSelected) === data.getDate();
 
                 if (isSameMonth && isSameDate) {
-                  return <Dia key={dia.Data} {...dia} horasPossiveis={possibleHours} />;
+                  return <Dia key={dia.Data} {...dia} horasPossiveis={possibleHours} listaTT={listaTipoTrabalho} />;
                 }
 
                 return null;
