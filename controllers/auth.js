@@ -239,7 +239,7 @@ const login = async (req, res) => {
 
 const updateUser = async (req, res) => {
 
-  const { login, password, codigo, email, nome, tipo, _id } = req.body;
+  const { login, password, codigo, email, nome, tipo,estado, _id } = req.body;
   const foto = req.body.foto;
   const buffer = Buffer.from(new Uint8Array(Object.values(foto.data)));// convert the Uint8Array to a Buffer
    // Generate a password reset token

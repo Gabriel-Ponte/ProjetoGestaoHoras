@@ -19,6 +19,7 @@ const EditarUtilizador = () => {
       foto: user.user.foto,
       nome: user.user.nome,
       tipo: user.user.tipo,
+      estado:true,
     };
 
     const [values, setValues] = useState(initialState);
@@ -83,6 +84,11 @@ const EditarUtilizador = () => {
         toast.error('Por favor, preencha todos os campos obrigatórios!');
         return;
       }
+      if(values.password.length < 6){
+        toast.error('Password necessita ter pelo menos 6 caracteres!');
+        return;
+      }
+
       try {
        const result = await dispatch(updateUser(values));
         if (!result.error) {

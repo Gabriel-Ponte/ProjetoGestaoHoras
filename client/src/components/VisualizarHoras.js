@@ -147,10 +147,11 @@ const ListaHoras = () => {
         
         if (idFerias && dias) {
           // Filter the dias array to get the matching ferias and update the state
-
           const updatedFerias = dias.filter((dia) => {
-            const tiposTrabalho = dia.tipoDeTrabalhoHoras[0].tipoTrabalho?.split(',');
+            for (let i=0 ; i < dia.tipoDeTrabalhoHoras.length; i++){
+            const tiposTrabalho = dia.tipoDeTrabalhoHoras[i].tipoTrabalho?.split(',');
             return tiposTrabalho.includes(idFerias);
+            }
           });
           if (!arrayEquals(ferias, updatedFerias)) {
             setFerias(updatedFerias);
