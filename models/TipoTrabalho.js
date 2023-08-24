@@ -9,6 +9,12 @@ const TipoTrabalhoSchema = new mongoose.Schema({
         minlength: 1,
         unique: true,
         },
+        tipo: {
+            type: Number,
+            trim: true,
+            maxlength: 2,
+            default: "1",
+        },
     }
 );
 

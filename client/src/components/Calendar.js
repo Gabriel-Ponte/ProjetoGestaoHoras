@@ -63,7 +63,6 @@ const CalendarControl = ({ handleChange, inserted, feriados,ferias, inicio, fim 
             plotDates(newCalendar);
             return newCalendar;
         });
-
     }
 
     function navigateToCurrentMonth() {

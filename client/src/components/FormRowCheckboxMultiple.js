@@ -80,11 +80,12 @@ const FormRowCheckboxMultiple = ({ labelText, name, value, handleChange, handleC
   const handleCheckboxChange = (option, id) => {
     let updatedOptions;
     let updatedIDs;
-
+    
     if (option === 'Todos') {
+
       // If "Todos" is selected, select all other options
       updatedOptions = ['Todos'];
-      updatedIDs = list.map((item) => item._id);
+      updatedIDs = ['Todos'];
     } else {
       // If any other value is selected, unselect "Todos" and update the selected options
       updatedOptions = selectedOptions.includes(option)

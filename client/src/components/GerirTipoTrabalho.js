@@ -5,6 +5,7 @@ import { getTipoTrabalho, createTipoTrabalho, deleteTipoTrabalho, editTipoTrabal
 import { AiFillDelete } from 'react-icons/ai';
 import Wrapper from '../assets/wrappers/GerirTipoTrabalho';
 import FormRowListaTipoTrabalho from './FormRowListaTipoTrabalho';
+import FormRowSelectTipo from './FormRowSelectTipo';
 import { toast } from 'react-toastify';
 
 const GerirTipoTrabalho = () => {
@@ -87,9 +88,30 @@ const GerirTipoTrabalho = () => {
 
   const handleChangeTipoTrabalho = (e, id) => {
     const value = e.target.value;
-
+    const name = e.target.id;
+    
     const updatedListaTipoTrabalho = listaTipoTrabalho.map((item, i) => {
       if (item._id === id) {
+        if(name === "tipoT"){
+          let valueTipo;
+          if(value === "Projetos"){
+            valueTipo = 1
+          }else{
+            valueTipo = 2
+          }
+          if (initialState[i]._id === id && initialState[i].tipo === valueTipo) {
+            setVerificaAlterado((prevState) => ({
+              ...prevState,
+              [id]: false,
+            }));
+        } else{
+          setVerificaAlterado((prevState) => ({
+            ...prevState,
+            [id]: true,
+          }));
+          }
+          return { ...item, tipo: valueTipo };
+        }
         if (initialState[i]._id === id && initialState[i].TipoTrabalho === value) {
           setVerificaAlterado((prevState) => ({
             ...prevState,
@@ -137,7 +159,7 @@ const GerirTipoTrabalho = () => {
       <div className="listaTiposTrabalho">
         {listaTipoTrabalho.map((t, i) => (
           <div className="row text-center" key={i}>
-            <div className="col-md-6 text-center tiposTrabalho">
+            <div className="col-md-8 text-center tiposTrabalho">
               {
                 <FormRowListaTipoTrabalho
                   type="textarea"
@@ -146,9 +168,24 @@ const GerirTipoTrabalho = () => {
                   value={t.TipoTrabalho}
                   handleChange={(e) => handleChangeTipoTrabalho(e, t._id)}
                 />
+                
               }
+              <div className="col-md-12 text-center tiposTrabalho">
+                <FormRowSelectTipo
+                    type="text"
+                    className="col-md-12"
+                    labelText=" "
+                    id="tipo"
+                    name="tipoT"
+                    handleChange={(e) => handleChangeTipoTrabalho(e, t._id)}
+                    placeholder="Escolha um tipo"
+                    value={t.tipo}
+                    list={[["Projetos"], ["Geral"]]}
+                />
+                </div>
             </div>
-            <div className="col-md-6 text-center">
+
+            <div className="col-md-4 text-center">
               <div className='Buttons'>
                 {verificaAlterado[t._id] === true ? (
 

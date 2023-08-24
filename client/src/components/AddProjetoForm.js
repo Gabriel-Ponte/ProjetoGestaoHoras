@@ -88,8 +88,8 @@ const AddProjectForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!values.Nome || !values.Cliente || !values.DataInicio || !values.DataObjetivo || !values.Tema) {
-      const requiredFields = ['Nome', 'Cliente', 'DataInicio', 'DataObjetivo', 'Tema', 'Piloto'];
+    if (!values.Nome || !values.Acao || !values.Cliente || !values.DataInicio || !values.DataObjetivo || !values.Tema) {
+      const requiredFields = ['Nome', 'Acao', 'Cliente', 'DataInicio', 'DataObjetivo', 'Tema', 'Piloto'];
       const emptyField = requiredFields.find(field => !values[field]);
 
       if (emptyField) {

@@ -176,8 +176,8 @@ const ListaProjetos = () => {
           finalizado={projetoFinalizado}
           utilizadores={formattedListUtilizadores}
         />
-
-        {projetos.map((projeto) => {
+        
+        {projetos.filter(projeto => projeto.Nome !== "Geral").map(projeto => {
           return <Projeto
             key={projeto._id}
             {...projeto}

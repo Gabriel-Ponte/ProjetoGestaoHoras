@@ -95,6 +95,24 @@ const getDia = async (req, res) => {
   }
 };
 
+
+const getDiaInf = async (req, res) => {
+  try {
+    const {
+      params: { user: login },
+    } = req;
+    const dia = await Dias.find({
+      Utilizador: login,
+    });
+    if (!dia) {
+      throw new NotFoundError(`Não existem horas nesta data ${ChangeDiaData}`);
+    }
+    res.status(StatusCodes.OK).json({ dia });
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message });
+  }
+};
+
 const createDia = async (req, res) => {
   const aUtilizador = await User.findOne({
     _id: req.body.Utilizador,
@@ -192,19 +210,32 @@ const updateDia = async (req, res) => {
   };
 
 
-const deleteDia = async (req, res) => {
-  const {
-    params: { id: projetoId },
-  } = req;
+  const deleteDia = async (req, res) => {
+    const { id } = req.params;
+    try {
+    const dia = await Dias.findById(id);
+  
+    if (!dia) {
+      throw new NotFoundError(`Não existe um dia com id ${id}`);
+    }
+  
+    const tipoDeTrabalhoHorasIds = dia.tipoDeTrabalhoHoras.map(item => item._id);
 
-  const projeto = await Projeto.findByIdAndRemove({
-    _id: diaId,
-  });
-  if (!projeto) {
-    throw new NotFoundError(`Não existe um projeto com id ${projetoId}`);
+    const promises = tipoDeTrabalhoHorasIds.map(async tipoDeTrabalhoHoraId => {
+      await TipoTrabalhoHoras.findByIdAndRemove(tipoDeTrabalhoHoraId);
+    });
+  
+    await Promise.all(promises);
+
+    await Dias.findByIdAndRemove(id);
+  
+    res.status(StatusCodes.OK).send();
+  }catch (error) {
+    res.status(StatusCodes.KO).send();
+    console.error(error);
   }
-  res.status(StatusCodes.OK).send();
 };
+  
 
 
 module.exports = {

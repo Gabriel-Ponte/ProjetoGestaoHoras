@@ -108,14 +108,14 @@ const Navbar = () => {
           style={{float: 'right', width:"20", height:"20", textAlign: "center"
           ,visibility: disableAddHoras ? 'hidden' : 'visible' }} 
           disabled={disableAddHoras} >
-                <GiHourglass/>
+                Visualizar Horas
           </button>
           <button 
           onClick={addHoras} 
           style={{float: 'right', width:"20", height:"20", textAlign: "center"
           ,visibility: disableAddHoras ? 'hidden' : 'visible' }} 
           disabled={disableAddHoras} >
-                <GoDiffAdded/>
+                Adicionar Horas
           </button>
           </div>
           </div>

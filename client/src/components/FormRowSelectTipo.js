@@ -8,6 +8,11 @@ const FormRowSelectTipo = ({ labelText, name, value, handleChange, list, classNa
     value = "Administrador";
   }
 
+  if(value === 1 && name === "tipoT"){
+    value = "Projetos";
+  }else if(value === 2 && name === "tipoT"){
+    value = "Geral";
+  }
   return (
     <Wrapper>
     <div className={className ? className : 'form-row text-center'} style={{ width: '100%' }}>

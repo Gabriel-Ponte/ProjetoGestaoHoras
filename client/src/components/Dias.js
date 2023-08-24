@@ -2,6 +2,10 @@ import { useState, useEffect } from 'react';
 import Wrapper from '../assets/wrappers/Dias';
 import { useDispatch } from 'react-redux';
 import { getProjetoList } from '../features/projetos/projetosSlice';
+import { AiFillDelete } from 'react-icons/ai';
+import { deleteDia } from '../features/dias/diasSlice';
+
+
 
 const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPossiveis, listaTT }) => {
 
@@ -46,6 +50,23 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPos
     });
   }, [tipoDeTrabalhoHoras, dispatch]);
 
+  
+  const deleteDiaConfirm = async (id ,data) => {
+    try {
+      const confirmed = window.confirm("Tem a certeza que deseja apagar o Dia: "+ data +"?");
+      if (confirmed) {
+        const result = await dispatch(deleteDia(id));
+        if (!result.error) {
+
+          return "Dia Apagado";
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      return "Ocorreu um erro ao apagar o Tipo de Trabalho.";
+    }
+  };
+  
 
   return (
     <Wrapper>
@@ -55,6 +76,14 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPos
             <div className="row text-center">
               <div className="col-md-3 themed-grid-col">
                 <h3>{Data ? new Date(Data).toLocaleDateString('en-CA') : ''}</h3>
+              </div>
+              <div>
+                <button type='submit'
+                  onClick={() => deleteDiaConfirm(_id , Data)}
+                  className="btn">
+                  <AiFillDelete />
+                </button>
+
               </div>
             </div>
 
@@ -93,6 +122,7 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPos
                             <p key={index}>{horas.trim()}</p>
                           ))}
                         </div>
+
                       </div>
                     </div>
                   </div>

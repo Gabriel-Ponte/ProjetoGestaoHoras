@@ -148,7 +148,6 @@ function VisualizarProjeto() {
 
   const handleChangeFormRowSelect = async(nome, selectedOptions) => {
     if (nome === "Piloto") {
-      console.log(selectedOptions)
       const strSO = selectedOptions.join(",");
       try{
           await setValues({ ...values, [nome]: strSO });

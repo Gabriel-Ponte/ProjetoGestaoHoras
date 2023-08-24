@@ -149,7 +149,12 @@ const ListaHoras = () => {
           // Filter the dias array to get the matching ferias and update the state
           const updatedFerias = dias.filter((dia) => {
             for (let i=0 ; i < dia.tipoDeTrabalhoHoras.length; i++){
-            const tiposTrabalho = dia.tipoDeTrabalhoHoras[i].tipoTrabalho?.split(',');
+              const tiposTrabalho = dia.tipoDeTrabalhoHoras[i]?.tipoTrabalho?.split(',')
+              .filter((tipo, index) => {
+                const horasArray = dia.tipoDeTrabalhoHoras[i]?.horas?.split(',');
+                return horasArray && horasArray[index] > 0;
+              });
+              
             return tiposTrabalho.includes(idFerias);
             }
           });
@@ -159,7 +164,17 @@ const ListaHoras = () => {
 
           // Remove the matching ferias from listaDias
           if (listaDiasA) {
-            const updatedListaDias = listaDiasA.filter((dia) => dia.tipoDeTrabalhoHoras[0].tipoTrabalho !== idFerias);
+            const updatedListaDias = listaDiasA.filter((dia) => {
+            for (let i=0 ; i < dia.tipoDeTrabalhoHoras.length; i++){
+              const aListaDias = dia.tipoDeTrabalhoHoras[i]?.tipoTrabalho?.split(',')
+              .filter((tipo, index) => {
+
+                const horasArray = dia.tipoDeTrabalhoHoras[i]?.horas?.split(',');
+                return horasArray && horasArray[index] > 0;
+              });
+              return !aListaDias.includes(idFerias);
+            }})
+
             if (!arrayEquals(listaDias, updatedListaDias)) {
               setListaDias(updatedListaDias);
             }
