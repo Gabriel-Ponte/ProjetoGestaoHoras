@@ -101,21 +101,21 @@ const Navbar = () => {
             <FaCaretDown />
           </button>
           </div>
-          <div className='divButtonUtilizador'>
+          <div className='divButtonUtilizador text-center'>
             <div>
           <button 
-          onClick={visualizarHoras} 
-          style={{float: 'right', width:"20", height:"20", textAlign: "center"
-          ,visibility: disableAddHoras ? 'hidden' : 'visible' }} 
-          disabled={disableAddHoras} >
-                Visualizar Horas
-          </button>
-          <button 
+          className=''
           onClick={addHoras} 
-          style={{float: 'right', width:"20", height:"20", textAlign: "center"
-          ,visibility: disableAddHoras ? 'hidden' : 'visible' }} 
+          style={{width:'auto',visibility: disableAddHoras ? 'hidden' : 'visible' }} 
           disabled={disableAddHoras} >
                 Adicionar Horas
+          </button>
+          <button 
+          className=''
+          onClick={visualizarHoras} 
+          style={{width:'auto',visibility: disableAddHoras ? 'hidden' : 'visible' }} 
+          disabled={disableAddHoras} >
+                Visualizar Horas
           </button>
           </div>
           </div>

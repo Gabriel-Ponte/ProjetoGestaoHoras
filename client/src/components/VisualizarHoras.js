@@ -16,6 +16,7 @@ const ListaHoras = () => {
   const [selectedDay, setSelectedDay] = useState();
   const [getFeriados, setFeriados] = useState([]);
   const [listaDias, setListaDias] = useState([]);
+  const [listaDiasT , setListaDiasT] = useState([])
   const [listaTipoTrabalho, setListaTipoTrabalho] = useState(null);
   const [horasRealizadas, setHorasRealizadas] = useState(0);
   const [percentagemHoras, setPercentagemHoras] = useState(0);
@@ -144,7 +145,7 @@ const ListaHoras = () => {
 
         const listaDiasA = (typeof res.payload.diasAllUtilizador !== "undefined") ? res.payload.diasAllUtilizador : [];
         const idFerias = tipoTrabalhoArray.find((tipo) => tipo.TipoTrabalho === "Ferias")?._id;
-        
+        setListaDiasT(listaDiasA);
         if (idFerias && dias) {
           // Filter the dias array to get the matching ferias and update the state
           const updatedFerias = dias.filter((dia) => {
@@ -202,9 +203,9 @@ const ListaHoras = () => {
     const weekdayCount = getWeekdayCount(month, year);
     const possibleHoursCount = weekdayCount * 8;
     let horasRealizadasCount = 0;
-    if (listaDias) {
-      for (let i = 0; i < listaDias.length; i++) {
-        const data = new Date(listaDias[i].Data);
+    if (listaDiasT) {
+      for (let i = 0; i < listaDiasT.length; i++) {
+        const data = new Date(listaDiasT[i].Data);
 
         if (year === data.getFullYear() && month === data.getMonth()) {
           horasRealizadasCount += dias[i].NumeroHoras;

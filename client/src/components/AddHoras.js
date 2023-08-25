@@ -283,6 +283,7 @@ const ListaProjetos = () => {
 
 
   const verificaDia = useCallback((e) => {
+    setVerificaCopiarHoras(false);
     const sProjetos = projetos.slice().sort((a, b) => {
       const pilotoAArray = a?.Piloto.split(',') || [];
       const pilotoBArray = b?.Piloto.split(',') || [];
@@ -457,10 +458,16 @@ const ListaProjetos = () => {
 
 
   const copiar = (value) => {
+
     if (value === true) {
+      if(!lastDate?.tipoDeTrabalhoHoras){
+        toast.error("Utilizador não possui horas inseridas para copiar");
+        return;
+      }
+
       const tipoDeTrabalhoHoras = {};
       let sSProjetos = sortedProjetos;
-      for (let j = 0; j < lastDate.tipoDeTrabalhoHoras.length; j++) {
+      for (let j = 0; j < lastDate?.tipoDeTrabalhoHoras?.length; j++) {
         const val = lastDate.tipoDeTrabalhoHoras[j].projeto;
 
         sSProjetos = sortedProjetos.slice().sort((a, b) => {
@@ -550,7 +557,7 @@ const ListaProjetos = () => {
               ) : (
                 <div className='row'>
                   <div className='col-8 '>
-                    {DataCopy.DataCopy !== null ? (
+                    {DataCopy.DataCopy !== null && DataCopy.DataCopy !== undefined ? (
                       <div>
                         <FormRow
                           type="date"
@@ -822,7 +829,7 @@ const ListaProjetos = () => {
                           horasP[project._id] += +t;
                           return null;
                         })}
-                        <h3>{horasP[project._id] != 0 ? horasP[project._id] : ''}</h3>
+                        <h3>{horasP[project._id] !== 0 ? horasP[project._id] : ''}</h3>
                       </div>
                     </div>
 

@@ -4,14 +4,15 @@ import { useDispatch } from 'react-redux';
 import { getProjetoList } from '../features/projetos/projetosSlice';
 import { AiFillDelete } from 'react-icons/ai';
 import { deleteDia } from '../features/dias/diasSlice';
-
-
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPossiveis, listaTT }) => {
 
   const dispatch = useDispatch();
   const [projeto, setProjeto] = useState([]);
   const [horasTotal, sethorasTotal] = useState([]);
+  const navigate = useNavigate();
   let horasT = 0;
 
 
@@ -53,12 +54,18 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPos
   
   const deleteDiaConfirm = async (id ,data) => {
     try {
-      const confirmed = window.confirm("Tem a certeza que deseja apagar o Dia: "+ data +"?");
+      const dataString = (data ? new Date(data).toLocaleDateString('en-CA') : '')
+
+      const confirmed = window.confirm("Tem a certeza que deseja apagar o Dia: "+ dataString +"?");
+
       if (confirmed) {
         const result = await dispatch(deleteDia(id));
         if (!result.error) {
-
-          return "Dia Apagado";
+          toast.success("Dia Apagado")
+            setTimeout(() => {
+              window.location.href = '/PaginaVisualizarHoras';
+            }, 1000);
+          ;
         }
       }
     } catch (error) {
