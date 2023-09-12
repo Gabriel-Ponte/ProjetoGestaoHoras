@@ -6,19 +6,19 @@ const Wrapper = styled.article`
   @media (max-width: 768px) {
     width: 100%;
     h3 {
-        font-size: 7vw;
+        font-size: 3vw;
     }
     h4 {
-        font-size: 6vw;
+        font-size: 2vw;
         overflow: hidden;
         overflow-wrap: break-word;
         word-break: break-word;
     }
     p{
-        font-size: 5vw;
+        font-size: 1.5vw;
     }
     hr {
-      border: 2px solid #303030;
+      border: 1px solid #04417c;
       margin:0;
       margin-bottom:3%;
     }
@@ -34,24 +34,28 @@ const Wrapper = styled.article`
     margin-bottom: 0px;
     
     h3 {
-        font-size: 3vw;
+        font-size: 1.5vw;
     }
 
     h4 {
-        font-size: 2vw;
+        font-size: 1vw;
         overflow: hidden;
         overflow-wrap: break-word;
         word-break: break-word;
     }
     .projeto{
-        margin-bottom:2%;
+        margin-bottom:1%;
     }
 
     .tiposTrabalho {
         display: flex;
         align-items: center;
     }
-
+    hr {
+        border: 1px solid #04417c;
+        margin:0;
+        margin-bottom:2%;
+      }
 
     }
 

@@ -16,7 +16,8 @@ const links = [
   { id: 5, text: 'Adicionar Projeto', path: '/PaginaAdicionarProjeto', icon: <AiFillFileAdd /> },
   { id: 6, text: 'Editar Projetos', path: '/PaginaEditarProjeto', icon: <FiEdit /> },
   { id: 7, text: 'Visualizar Projetos', path: '/PaginaVisualizarProjeto', icon: <RiSearchEyeLine /> },
-  { id: 8, text: 'Exportar dados para Excell', path: '/PaginaPrincipal', icon: <SiMicrosoftexcel /> },
+  { id: 8, text: 'Exportar Projetos para Excell', path: '/PaginaPrincipal', icon: <SiMicrosoftexcel /> },
+  { id: 9, text: 'Exportar Horas para Excell', path: '/PaginaPrincipal', icon: <SiMicrosoftexcel /> },
 ];
 
 

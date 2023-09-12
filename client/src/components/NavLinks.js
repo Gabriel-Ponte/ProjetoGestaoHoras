@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { toggleSidebar } from '../features/utilizadores/utilizadorSlice';
 import { exportProjeto } from '../features/projetos/projetosSlice';
 import Wrapper from '../assets/wrappers/NavLinks';
+import { exportDia } from '../features/allDias/allDiasSlice';
 
 const NavLinks = () => {
   const {
@@ -66,6 +67,11 @@ const NavLinks = () => {
   const handleChangeExportProjetos = () => {
     dispatch(exportProjeto({ userID: user.id }));
   };
+
+  const handleChangeExportHoras = () => {
+    dispatch(exportDia({ userID: user.id }));
+  };
+
   return (
     <Wrapper>
     <div className='nav-links'>
@@ -103,6 +109,34 @@ const NavLinks = () => {
           
           )
       }
+
+      if(user.tipo === 2 && id === 9){
+        return (
+          <React.Fragment key={id}>
+        <button style={{ marginTop: '5%' }}
+
+            onClick={handleChangeExportHoras}
+          >
+
+        <NavLink
+          
+          to={path}
+          className={({ isActive }) => {
+            return isActive ? "nav-link active" : "nav-link";
+          }}
+          onClick={toggleSidebarClose}
+          key={id}
+        >
+          <span className="icon">{icon}</span>
+          {text}
+        </NavLink>
+          </button>
+
+
+        </React.Fragment>
+        
+        )
+    }
 
         if (id === 6 || id === 7) {
           return (

@@ -73,7 +73,7 @@ const postResetPassword = async (req, res) => {
     */
 
     // Generate a password reset link
-    const resetLink = `${process.env.LOCALHOST}/paginaResetPasswordChange/${token}`;
+    const resetLink = `${process.env.LOCALHOSTCLIENT}/paginaResetPasswordChange/${token}`;
     
     // Configure the email details
     const mailOptions = {

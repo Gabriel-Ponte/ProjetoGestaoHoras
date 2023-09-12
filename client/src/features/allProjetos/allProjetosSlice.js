@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
-import { getAllProjetosThunk } from './allProjetosThunk';
+import { getAllProjetosThunk, getAllProjetosThunkAdd } from './allProjetosThunk';
 
 const initialFiltersState = {
   search: '',
@@ -26,13 +26,12 @@ const initialState = {
 
 
 export const getAllProjetos = createAsyncThunk(
-  'allProjetos/getProjetos', getAllProjetosThunk
-  );
+  'allProjetos/getProjetos', getAllProjetosThunk  );
 
 export const getAllProjetos1 = createAsyncThunk(
   'allProjetos/getProjetos', async (sort, { rejectWithValue }) => {
     try {
-      const getAllP = getAllProjetosThunk('/projetos', sort);
+      const getAllP = getAllProjetosThunkAdd(sort);
       return getAllP;
     }
     catch (error) {

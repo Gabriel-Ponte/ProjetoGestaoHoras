@@ -3,7 +3,7 @@ import { AiOutlineClose } from 'react-icons/ai';
 import Wrapper from '../assets/wrappers/addDias';
 import { FaCaretDown } from 'react-icons/fa';
 import { useSelector, useDispatch } from 'react-redux';
-import { getAllProjetos, handleChange } from '../features/allProjetos/allProjetosSlice';
+import { getAllProjetos1, handleChange } from '../features/allProjetos/allProjetosSlice';
 import { getTipoTrabalho } from '../features/tipoTrabalho/tipoTrabalhoSlice';
 import { toast } from 'react-toastify';
 import { createDia, getDia, editDia } from '../features/dias/diasSlice';
@@ -42,6 +42,7 @@ const ListaProjetos = () => {
   const [copyExists, setCopyExists] = useState(true);
   const { user } = useSelector((store) => store.utilizador);
   const [listaDias, setListaDias] = useState([]);
+  const [filteredProjetos, setFilteredProjetos] = useState([]);
   const [verificaDiaCalled, setVerificaDiaCalled] = useState(false);
   const [verificaChange, setVerificaChange] = useState(false);
   const [verificaCopiarHoras, setVerificaCopiarHoras] = useState(false);
@@ -62,12 +63,37 @@ const ListaProjetos = () => {
   useEffect(() => {
     dispatch(handleChange({ name: 'projetoFinalizado', value: "false" }));
     dispatch(handleChange({ name: 'DataObjetivoC', value: "true" }));
-    dispatch(getAllProjetos({ ProjetoFinalizado: false, }))
+    dispatch(getAllProjetos1( "" ))
     dispatch(getTipoTrabalho()).then((res) => {
       const tipoTrabalhoArray = Array.isArray(res.payload.tipoTrabalho) ? res.payload.tipoTrabalho : [];
       setListaTipoTrabalho(tipoTrabalhoArray);
     });
   }, [totalProjetos]);
+
+
+  useEffect(() => {
+    const dateP = values.Data ? new Date(values.Data) : new Date();
+    const filteredP = projetos.filter((p) => {
+      const dataI = new Date(p.DataInicio);
+      if (p.DataFim) {
+        const dataF = new Date(p.DataFim);
+        if (dataF < dateP) {
+          return false;
+        }
+      } else if (p.Finalizado) {
+        return false;
+      }
+      if (dataI > dateP) {
+
+        return false;
+      }
+      return true;
+    });
+    
+
+    setFilteredProjetos(filteredP);
+  }, [values.Data]);
+
 
   useEffect(() => {
 
@@ -164,7 +190,6 @@ const ListaProjetos = () => {
   }, [totalProjetos]);
 
   function feriadosPortugal(date) {
-
     const feriados = [];
 
     for (let i = date.getFullYear() - 5; i < date.getFullYear() + 5; i++) {
@@ -279,17 +304,28 @@ const ListaProjetos = () => {
     }
 
 
-  }, [listaDias, DataCopy]);
+  }, [listaDias, DataCopy, filteredProjetos]);
 
 
   const verificaDia = useCallback((e) => {
     setVerificaCopiarHoras(false);
-    const sProjetos = projetos.slice().sort((a, b) => {
+
+    const sProjetos = filteredProjetos.slice().sort((a, b) => {
       const pilotoAArray = a?.Piloto.split(',') || [];
       const pilotoBArray = b?.Piloto.split(',') || [];
+      const nomeA = a?.Nome || [];
+      const nomeB = b?.Nome || [];
 
-      const pilotoAIncludesUser = pilotoAArray.includes(user.user.id) || pilotoAArray.includes(user.user.nome) || pilotoAArray.includes(user.user.login);
-      const pilotoBIncludesUser = pilotoBArray.includes(user.user.id) || pilotoBArray.includes(user.user.nome) || pilotoBArray.includes(user.user.login);
+      const pilotoAIncludesUser = pilotoAArray.includes(user.user.id) || pilotoAArray.includes(user.user.nome) || pilotoAArray.includes(user.user.login) || pilotoAArray.includes("Todos");
+      const pilotoBIncludesUser = pilotoBArray.includes(user.user.id) || pilotoBArray.includes(user.user.nome) || pilotoBArray.includes(user.user.login) || pilotoAArray.includes("Todos");
+
+      if (nomeA === "Geral") {
+        console.log("nomeA");
+        return -1;
+      } else if (nomeB === "Geral") {
+        console.log("nomeB");
+        return 1;
+      }
 
       if (pilotoAIncludesUser && !pilotoBIncludesUser) {
         return -1;
@@ -351,13 +387,13 @@ const ListaProjetos = () => {
     setVerificaDiaCalled(false);
     return;
 
-  }, [listaDias]);
+  }, [listaDias, filteredProjetos]);
 
 
 
   useEffect(() => {
     verificaDia({ target: { name: 'Data', value: values.Data } });
-  }, [listaDias]);
+  }, [listaDias, filteredProjetos]);
 
 
 
@@ -458,7 +494,6 @@ const ListaProjetos = () => {
 
 
   const copiar = (value) => {
-
     if (value === true) {
       if(!lastDate?.tipoDeTrabalhoHoras){
         toast.error("Utilizador não possui horas inseridas para copiar");
@@ -510,7 +545,7 @@ const ListaProjetos = () => {
     return <Loading />;
   }
 
-
+  
   const matchFoundProjeto = new Array(sortedProjetos.length).fill(false);
   const arrayTipoTrabalho = Object.entries(values.tipoDeTrabalhoHoras).map(([key, value]) => ({ _id: key, ...value }));
   let counter = 0;
@@ -613,10 +648,6 @@ const ListaProjetos = () => {
         </div>
         <div className="list-group mx-1 w-auto">
           {sortedProjetos.map((project, idProjeto) => {
-            if (project.Finalizado === true) {
-              return;
-            }
-
 
             // initialize the counter
             return (

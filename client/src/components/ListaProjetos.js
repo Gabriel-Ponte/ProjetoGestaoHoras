@@ -59,7 +59,6 @@ const ListaProjetos = () => {
       dispatch(handleChange({ name: 'projetoFinalizado', value: finalizado }));
       dispatch(handleChange({ name: 'DataObjetivoC', value: true }));
     }
-
   };
 
   const handleChangeCheckboxDataObjetivo = (event) => {

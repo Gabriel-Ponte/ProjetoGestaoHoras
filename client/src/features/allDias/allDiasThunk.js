@@ -27,3 +27,14 @@ export const getAllDiasProjetoUtilizadorThunk = async (utilizadorId,projeto, thu
     return checkForUnauthorizedResponse(error, thunkAPI);
   }
 };
+
+export const exportDiasThunk = async ( url, userID ,thunkAPI) => {
+  try {
+    const resp = await customFetch.post(`/dia/exportDias/` , userID);
+    console.log(resp, +"RESP");
+    return resp.data;
+  } catch (error) {
+    console.log(error.response.data.msg)
+    throw { error: error.response.data.msg };
+  }
+};

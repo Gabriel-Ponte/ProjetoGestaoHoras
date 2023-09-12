@@ -3,6 +3,7 @@ const User = require("../models/Utilizador");
 const Projeto = require("../models/Projeto");
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, NotFoundError } = require("../errors");
+const { exportExcell } = require("../exportExcellHours");
 
 const getAllDiasUtilizador = async (req, res) => {
   const {
@@ -236,7 +237,28 @@ const updateDia = async (req, res) => {
   }
 };
   
+const exportDias = async(req, res) =>{
+  const { userId: userId } = req.user;
 
+  const user = await User.findOne({
+    _id: userId,
+  });
+
+  if(!user){
+    throw new NotFoundError(`Não foi encontrado o utilizador com id ${userId}`);
+  }
+  if(user.tipo == 2){
+    const exp = await exportExcell();
+    if(exp){
+    res.status(StatusCodes.OK).json(`Ficheiro exportado para: ${process.env.EXTRACTION_FOLDER}`);
+    }else{
+      throw new BadRequestError(`Ocorreu um erro ao exportar o ficheiro. Verifique se este se encontra aberto!`);
+    }
+  }
+  else{
+    throw new NotFoundError(`O utilizador ${user.nome} não possui permissões para exportar`);
+  }
+}
 
 module.exports = {
   getAllDiasProjeto,
@@ -247,4 +269,5 @@ module.exports = {
   deleteDia,
   getDiasProjetoUtilizador,
   getDiasUtilizador,
+  exportDias,
 };

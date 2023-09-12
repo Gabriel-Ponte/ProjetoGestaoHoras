@@ -3,11 +3,12 @@ import Wrapper from '../assets/wrappers/VisualizarHoras';
 import { useSelector, useDispatch } from 'react-redux';
 import Loading from './Loading';
 import Dia from './Dias';
-import { getAllDiasUtilizador } from '../features/allDias/allDiasSlice';
+import { getAllDiasUtilizador, exportDia } from '../features/allDias/allDiasSlice';
 import { listaUtilizadores } from '../features/utilizadores/utilizadorSlice';
 import { FormRowSelect } from '../components';
 import Calendar from './Calendar'
 import { getTipoTrabalho } from '../features/tipoTrabalho/tipoTrabalhoSlice';
+
 
 const ListaHoras = () => {
   const { user, utilizadores } = useSelector((store) => store.utilizador);
@@ -130,7 +131,9 @@ const ListaHoras = () => {
   //   dispatch(listaUtilizadores());
   // }, [ferias]);
 
-
+  const exportHoras = () => {
+    dispatch(exportDia(user?.user?.id));
+  };
 
   useEffect(() => {
     dispatch(listaUtilizadores());
@@ -239,11 +242,25 @@ const ListaHoras = () => {
     return <Loading />;
   }
 
+
+  // <div className='text-end col-md-3 mb-3'>
+  // <button
+  //     type="button"
+  //     disabled={isLoading}
+  //     onClick={(e) => { exportHoras(e) }}
+  //     className="w-60 btn btn-outline-success"
+  // >
+  //   Exportar Horas
+  // </button>
+  
+  // </div>
+  
   return (
     <Wrapper>
       <div className='mainVisualiza'>
         {(user?.user?.tipo === 2) && (
           <div className='text-center mb-5'>
+
             <h3 className='mb-5'>Escolha Utilizador</h3>
             <FormRowSelect
               type="text"
@@ -259,7 +276,9 @@ const ListaHoras = () => {
               handleChange={handleChangeUtilizador}
               multiple={false}
             />
+
           </div>
+          
         )
         }
         <div className='row mb-3'>

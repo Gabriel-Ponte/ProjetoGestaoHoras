@@ -17,7 +17,13 @@ const Wrapper = styled.section`
   .font-family {
     font-family: 'Poppins', sans-serif;
   }
+  .form__field[name="Acao"]  {
+    text-align:left;
+  }
   
+  .form__field[name="Notas"]  {
+    text-align:left;
+  }
   display: flex;
   flex-direction: column;
   align-items: center;

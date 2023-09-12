@@ -251,21 +251,23 @@ const Projeto = ({
                   type="textarea"
                   id="AcaoProjeto"
                   name="Acao"
+                  classNameInput="form__field"
                   value={values.Acao}
                   handleChange={handleChangeProjeto}
                 />
                 )
               }
                 </div>
-                <div className="col-md-5 themed-grid-col">
-                {                
-                <FormRowListaProjetos
-                  type="textarea"
-                  id="NotasProjeto"
-                  name="Notas"
-                  value={values.Notas}
-                  handleChange={handleChangeProjeto}
-                />
+                <div className="col-md-5 text-start themed-grid-col">
+                {
+                  <FormRowListaProjetos
+                    type="textarea"
+                    id="NotasProjeto"
+                    name="Notas"
+                    classNameInput="form__field"
+                    value={values.Notas}
+                    handleChange={handleChangeProjeto}
+                  />
                   }
                 </div>
 
