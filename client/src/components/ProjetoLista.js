@@ -31,7 +31,7 @@ const Projeto = ({
   handleAlterado,
 }) => {
 
-  const initialState = {
+  const [initialState, setInitialState] = useState({
     _id,
     Cliente,
     DataInicio,
@@ -51,7 +51,7 @@ const Projeto = ({
     finalizado,
     utilizadores,
     handleAlterado
-  };
+  });
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -98,7 +98,9 @@ const Projeto = ({
       handleAlterado(false);
       setVerificaAlterado(false);
     }else{
+      if(verificaAlterado === false){
       handleAlterado(true);
+      }
       setVerificaAlterado(true);
     }
     setValues({ ...values, [nome]: value });
@@ -166,8 +168,10 @@ const Projeto = ({
       if (!result.error) {
         handleAlterado(false);
         setVerificaAlterado(false);
+        setInitialState(values)
       }
     } catch (error) {
+      toast.error('Erro ao atualizar!');
       console.error(error);
     }
   };

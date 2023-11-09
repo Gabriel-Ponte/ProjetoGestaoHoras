@@ -47,11 +47,12 @@ const ListaProjetos = () => {
   }
 
   const handleAlterado = (alterado) => {
+    let alt = 0;
       if(alterado === true){
-        let alt = verificaAlterado + 1;
+        alt = verificaAlterado + 1;
         setVerificaAlterado(alt);
       }else{
-        let alt = verificaAlterado - 1;
+        alt = verificaAlterado - 1;
         setVerificaAlterado(alt);
       }
   };
@@ -199,7 +200,7 @@ const ListaProjetos = () => {
       </div>
       {verificaAlterado > 0 && (
          <div className='text-center mt-3'>
-        <p><b>Possui projetos por confirmar alteração </b></p>
+        <p><b>Possui {verificaAlterado} projeto{verificaAlterado > 1 ? "s" : ""} por confirmar alteração! </b></p>
       </div> 
       )}
       {numOfPages > 1 && <PageBtnContainer />}
