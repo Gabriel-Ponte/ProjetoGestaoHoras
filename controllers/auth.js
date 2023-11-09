@@ -1,8 +1,6 @@
 const User = require("../models/Utilizador");
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, UnauthenticatedError, NotFoundError } = require("../errors");
-const { formToJSON } = require("axios");
-const multer = require("multer");
 const nodemailer = require('nodemailer');
 const sgMail = require('@sendgrid/mail');
 const crypto = require('crypto');

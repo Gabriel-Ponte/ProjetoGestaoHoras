@@ -33,12 +33,10 @@
     "mongodb": "^5.6.0",
     "mongodb-tools": "^1.0.6",
     "mongoose": "^5.13.20",
-    "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.2",
     "rate-limiter": "^0.2.0",
     "react": "^18.2.0",
     "sendgrid": "^5.2.3",
-
     "xlsx": "^0.18.5",
     "xss-clean": "^0.1.1",
     "yamljs": "^0.3.0"
