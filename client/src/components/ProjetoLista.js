@@ -122,7 +122,9 @@ const Projeto = ({
       handleAlterado(false);
       setVerificaAlterado(false);
     }else{
-      handleAlterado(true);
+      if(verificaAlterado === false){
+        handleAlterado(true);
+        }
       setVerificaAlterado(true);
     }
     setValues({ ...values, [nome]: value });
