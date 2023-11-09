@@ -5,7 +5,7 @@ const ExcelJS = require('exceljs');
 
   let ret = false;
   // MongoDB connection settings
-  const dbName = 'myproject'; // Replace with your database name
+  //const dbName = 'myproject'; // Replace with your database name
   const collectionProjetos = 'projetos'; // Replace with your collection name
   const collectionDias = 'dias';
   const collectionTipoTrabalhoHoras = 'tipotrabalhohoras';

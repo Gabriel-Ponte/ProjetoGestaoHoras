@@ -30,8 +30,6 @@
     "joi": "^17.4.0",
     "jsonwebtoken": "^9.0.2",
     "moment": "^2.29.4",
-    "mongodb": "^5.6.0",
-    "mongodb-tools": "^1.0.6",
     "mongoose": "^5.13.20",
     "nodemailer": "^6.9.2",
     "rate-limiter": "^0.2.0",
