@@ -8,9 +8,10 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
 
   let separatedArray;
   if (Array.isArray(value)) {
-    separatedArray = value.length > 0 ? value[0].split(/[,\/]/) : [];
+    separatedArray = value.length > 0 ? value[0].split(/[,/]/) : [];
+
   } else {
-    separatedArray = value.split(/[,\/]/);
+    separatedArray = value.split(/[,/]/);
   }
 
 
@@ -23,7 +24,7 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
 
   useEffect(() => {
     setSelectedOption(Array.isArray(separatedArray) ? separatedArray : (value ? value.split(',') : []));
-  }, [value]);
+  }, [value, separatedArray]);
   
   const handleMultiChange = async (event) => {
 

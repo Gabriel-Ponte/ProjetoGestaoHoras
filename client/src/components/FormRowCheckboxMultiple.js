@@ -2,13 +2,13 @@ import { useState, useEffect } from 'react';
 import Wrapper from '../assets/wrappers/FormRowCheckboxMultiple';
 
 const FormRowCheckboxMultiple = ({ labelText, name, value, handleChange, handleChangeSubmit, list, className, classNameLabelResult, classNameLabel, classNameInput, classNameResult }) => {
-  const [controlArray, setControlArray] = useState(Array.isArray(value) ? (value.length > 0 ? value[0].split(/[,\/]/) : []) : value.split(/[,\/]/));
+  const [controlArray] = useState(Array.isArray(value) ? (value.length > 0 ? value[0].split(/[,\/]/) : []) : value.split(/[,\/]/));
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [separatedArray, setSeparatedArray] = useState(Array.isArray(value) ? (value.length > 0 ? value[0].split(/[,\/]/) : []) : value.split(/[,\/]/));
-  const [selectedIDs, setSelectedIDs] = useState([]);
+  //const [selectedIDs, setSelectedIDs] = useState([]);
  
   useEffect(() => {
-    const updatedSeparatedArray = Array.isArray(value) ? (value.length > 0 ? value[0].split(/[,\/]/) : []) : value.split(/[,\/]/);
+    const updatedSeparatedArray = Array.isArray(value) ? (value.length > 0 ? value[0].split(/[,/]/) : []) : value.split(/[,/]/);
     const separatedArrayId = [...updatedSeparatedArray];
 
     let nome = false;
@@ -98,7 +98,6 @@ const FormRowCheckboxMultiple = ({ labelText, name, value, handleChange, handleC
       });
     }
     setSelectedOptions(updatedOptions);
-    setSelectedIDs(updatedIDs);
     handleChange(name, updatedIDs);
   };
 

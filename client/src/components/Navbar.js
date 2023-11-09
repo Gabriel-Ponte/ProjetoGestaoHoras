@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleSidebar, clearStore } from '../features/utilizadores/utilizadorSlice';
-import { GiHourglass } from 'react-icons/gi';
-import { GoDiffAdded } from 'react-icons/go';
+// import { GiHourglass } from 'react-icons/gi';
+// import { GoDiffAdded } from 'react-icons/go';
 import { handleChange } from '../features/allProjetos/allProjetosSlice';
 
 

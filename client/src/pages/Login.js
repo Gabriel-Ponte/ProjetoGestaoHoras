@@ -45,7 +45,7 @@ function Login() {
     if (user) {
         navigate('/PaginaPrincipal');
     }
-  }, [user]);
+  }, [user, navigate]);
 
 const handleForget =()=>{
   navigate('/PaginaResetPassword');

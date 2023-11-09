@@ -46,6 +46,6 @@ export const exportDiasThunk = async ( url, userID ,thunkAPI) => {
     return resp.data;
   } catch (error) {
     console.error(error.response.data.msg)
-    throw { error: error.response.data.msg };
+    return { error: error.response.data.msg };
   }
 };

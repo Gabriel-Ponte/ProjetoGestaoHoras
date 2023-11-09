@@ -1,25 +1,9 @@
 import { useState, useEffect } from 'react';
 import Wrapper from '../assets/wrappers/Dias';
 import { useDispatch } from 'react-redux';
-import { getProjetoList } from '../features/projetos/projetosSlice';
-import { AiFillDelete } from 'react-icons/ai';
-import { deleteDia } from '../features/dias/diasSlice';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 
-const DiasTodos = ({ _id, Dias,horasPossiveis, NumeroHoras, Utilizador, diaSelected }) => {
-
-  const dispatch = useDispatch();
-  const [projeto, setProjeto] = useState([]);
-  const [horasTotal, sethorasTotal] = useState([]);
-  const navigate = useNavigate();
-  let horasT = 0;
-
-
-
-  useEffect(() => {
-    sethorasTotal(horasT);
-  }, [Utilizador, dispatch]);
+const DiasTodos = ({ _id,horasPossiveis, NumeroHoras, Utilizador, diaSelected }) => {
 
   function convertToMinutes(timeString) {
     if (timeString) {

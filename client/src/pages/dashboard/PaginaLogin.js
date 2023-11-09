@@ -45,7 +45,7 @@ function Login(){
       navigate('/PaginaPrincipal');
     }, 2000);
   }
-}, [user]);
+}, [user, navigate]);
 return (
   <Wrapper className='full-page'>
   <form onSubmit={onSubmit}>

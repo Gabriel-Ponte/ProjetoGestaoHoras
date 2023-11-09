@@ -73,7 +73,7 @@ const diasSlice = createSlice({
       state.isLoading = true;
     })
     .addCase(getDia.fulfilled, (state , { payload }) => {
-      const dia = payload.dia;
+      //const dia = payload.dia;
       state.isLoading = false;
     })
     .addCase(getDia.rejected, (state, { payload }) => {

@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 import {
-  getUserFromLocalStorage, addProjetoToLocalStorage,
+  addProjetoToLocalStorage,
   getProjetoFromLocalStorage, removeProjetoFromLocalStorage
 } from '../../utils/localStorage';
 

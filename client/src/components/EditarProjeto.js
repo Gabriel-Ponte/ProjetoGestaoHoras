@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import Wrapper from '../assets/wrappers/LoginPage';
-import { FormRow, FormRowSelect, FormRowCheckbox, FormRowCheckboxMultiple } from '../components';
+import { FormRow, FormRowCheckbox, FormRowCheckboxMultiple } from '../components';
 
 import { useNavigate } from 'react-router-dom';
 import { updateProjeto } from '../features/projetos/projetosSlice';
@@ -227,9 +227,9 @@ function VisualizarProjeto() {
                     
                     value={values.Nome}
                     handleChange={handleChange}
-                    feedbackMessage="Tema"
+                    feedbackMessage="Nome"
                   />
-                  <FormRow
+                  {/* <FormRow
                     type="text"
                     id="temaProjeto"
                     name="Tema"
@@ -239,7 +239,7 @@ function VisualizarProjeto() {
                     value={values.Tema}
                     handleChange={handleChange}
                     feedbackMessage="Tema"
-                  />
+                  /> */}
                   <FormRow
                     type="text"
                     id="nomeCliente"

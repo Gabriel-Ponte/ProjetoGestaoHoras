@@ -33,7 +33,7 @@ const GerirUtilizadores = () => {
       setListaUtilizadores(lista);
       setInitialState(lista)
     });
-  }, [callUseEffect]);
+  }, [callUseEffect ,dispatch]);
 
 
   //let StringListaUtilizadores = listaUtilizadores.map(item => item.Utilizador).join(",");

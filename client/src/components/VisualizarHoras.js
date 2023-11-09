@@ -1,15 +1,14 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import Wrapper from '../assets/wrappers/VisualizarHoras';
 import { useSelector, useDispatch } from 'react-redux';
 import Loading from './Loading';
 import Dia from './Dias';
 import DiaTodos from './DiasTodos';
-import { getAllDiasUtilizador, getAllDiasTodos, exportDia } from '../features/allDias/allDiasSlice';
+import { getAllDiasUtilizador, getAllDiasTodos } from '../features/allDias/allDiasSlice';
 import { listaUtilizadores } from '../features/utilizadores/utilizadorSlice';
 import { FormRowSelect } from '../components';
 import Calendar from './Calendar'
 import { getTipoTrabalho } from '../features/tipoTrabalho/tipoTrabalhoSlice';
-import { date } from 'joi';
 
 
 const ListaHoras = () => {
@@ -28,29 +27,16 @@ const ListaHoras = () => {
   const [ferias, setFerias] = useState([]);
   const [horasExtra, setHorasExtra] = useState(null);
   const [userNome, setUserNome] = useState(user?.user?.nome); // add state for user name
+
+
+  const [change, setChange] = useState(false);
   const dispatch = useDispatch();
 
   const formattedListUtilizadores = Array.isArray(utilizadores) ? utilizadores : [];
   const today = new Date();
 
 
-  // function getWeekdayCount(month, year) {
-  //   const daysInMonth = new Date(year, month + 1, 0).getDate(); // number of days in the month
-  //   let count = 0;
 
-  //   for (let day = 1; day <= daysInMonth; day++) {
-  //     const date = new Date(year, month, day);
-  //     const dayOfWeek = date.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-  //     const isHoliday = feriadosPortugal(date); // Check if the date is a Portuguese holiday
-  //     if (date >= today) {
-  //       break;
-  //     }
-  //     if (dayOfWeek !== 0 && dayOfWeek !== 6 && !isHoliday) {
-  //       count++;
-  //     }
-  //   }
-  //   return count;
-  // }
 
   function getPossibleHoursCount(month, year) {
     const daysInMonth = new Date(year, month + 1, 0).getDate(); // number of days in the month
@@ -69,7 +55,6 @@ const ListaHoras = () => {
         } else {
           count += 8.5;
         }
-
       }
     }
     return count;
@@ -139,22 +124,17 @@ const ListaHoras = () => {
     return new Date(ano, domingoPascoa.getMonth(), domingoPascoa.getDate() + 60);
   }
 
-
-  const handleChangeCalendario = useCallback((dia, mes, ano) => {
+  const handleChangeCalendario = ((dia, mes, ano) => {
     const [selectedDia, selectedMes, selectedAno] = [dia, mes, ano];
     setSelectedDay({ dia: selectedDia, mes: selectedMes, ano: selectedAno });
-  }, []);
+  });
 
 
-  const handleChangeUtilizador = useCallback((e) => {
+  const handleChangeUtilizador = ((e) => {
     const { value } = e.target;
+    setChange(!change);
     setSelectedUser(value);
-  }, []);
-
-
-  const exportHoras = () => {
-    dispatch(exportDia(user?.user?.id));
-  };
+  });
 
   useEffect(() => {
     dispatch(listaUtilizadores());
@@ -172,13 +152,13 @@ const ListaHoras = () => {
           if (listaDiasA) {
             const updatedListaDias = listaDiasA.filter((dia) => {
               for (let i = 0; i < dia.tipoDeTrabalhoHoras.length; i++) {
-                const aListaDias = dia.tipoDeTrabalhoHoras[i]?.tipoTrabalho?.split(',')
-                  .filter((tipo, index) => {
+                const aListaDias = dia.tipoDeTrabalhoHoras[i]?.tipoTrabalho?.split(',').filter((tipo, index) => {
                     const horasArray = dia.tipoDeTrabalhoHoras[i]?.horas?.split(',');
                     return horasArray && horasArray[index] > 0;
                   });
                 return aListaDias;
               }
+              return null;
             })
             if (!arrayEquals(listaDias, updatedListaDias)) {
               setListaDias(updatedListaDias);
@@ -204,7 +184,7 @@ const ListaHoras = () => {
           const startMonth = dayStart.getMonth();
           const startYear = dayStart.getFullYear();
 
-          const extraHours = listaDiasA.filter(item => {
+          listaDiasA.filter(item => {
             const date = new Date(item.Data)
             const dayOfWeek = date.getDay();
             const isWeekend = dayOfWeek === 0 || dayOfWeek === 1;
@@ -252,7 +232,9 @@ const ListaHoras = () => {
               return true;
             }
             return false;
-          }});
+          }
+          return false;
+        });
           setHorasExtra(countHours)
 
           if (idFerias && dias) {
@@ -267,6 +249,7 @@ const ListaHoras = () => {
 
                 return tiposTrabalho.includes(idFerias);
               }
+              return null;
             });
             if (!arrayEquals(ferias, updatedFerias)) {
               setFerias(updatedFerias);
@@ -276,14 +259,15 @@ const ListaHoras = () => {
             if (listaDiasA) {
               const updatedListaDias = listaDiasA.filter((dia) => {
                 for (let i = 0; i < dia.tipoDeTrabalhoHoras.length; i++) {
-                  const aListaDias = dia.tipoDeTrabalhoHoras[i]?.tipoTrabalho?.split(',')
-                    .filter((tipo, index) => {
+                  const aListaDias = dia.tipoDeTrabalhoHoras[i]?.tipoTrabalho?.split(',').filter((tipo, index) => {
 
                       const horasArray = dia.tipoDeTrabalhoHoras[i]?.horas?.split(',');
                       return horasArray && horasArray[index] > 0;
                     });
+
                   return !aListaDias.includes(idFerias);
                 }
+                return null;
               })
 
               if (!arrayEquals(listaDias, updatedListaDias)) {
@@ -295,7 +279,7 @@ const ListaHoras = () => {
         });
       }
     });
-  }, [selectedUser, listaDias, ferias]);
+  }, [selectedUser, listaDias, ferias, dispatch]);
 
   function arrayEquals(a, b) {
     if (a === b) return true;
@@ -369,7 +353,7 @@ const ListaHoras = () => {
         let [hours, minutes] = timeString.toString().split(".");
 
         // Convert the hours to an integer
-        const hoursInt = parseInt(hours, 10);
+        let hoursInt = parseInt(hours, 10);
         // Convert the fraction of an hour to minutes
         if (!minutes) {
           minutes = 0;
@@ -377,7 +361,7 @@ const ListaHoras = () => {
         let formattedMinutes = Math.round(minutes * 60) / 10;
         if (formattedMinutes === 60) {
           formattedMinutes = 0;
-          formattedHours += 1;
+          hoursInt += 1;
         }
         // Use String.padStart to format hours and minutes with leading zeros
         const formattedHours = hoursInt.toString().padStart(2, "0");
@@ -581,6 +565,8 @@ const ListaHoras = () => {
                         if (isSameMonth && isSameDate) {
                           count += dia.NumeroHoras;
                         }
+
+                        return null;
                       });
                     }
                     return { user, count, dias };

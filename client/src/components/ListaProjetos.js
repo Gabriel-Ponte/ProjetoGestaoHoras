@@ -27,8 +27,8 @@ const ListaProjetos = () => {
     DataObjetivoC,
   } = useSelector((store) => store.allProjetos);
   const dispatch = useDispatch();
-  const { user } = useSelector((store) => store.utilizador.user);
-  const { utilizadores, listaDeUtilizadores } = useSelector((store) => store.utilizador);
+  //const { user } = useSelector((store) => store.utilizador.user);
+  const { utilizadores } = useSelector((store) => store.utilizador);
 
   const [verificaAlterado, setVerificaAlterado] = useState(0);
 
@@ -36,12 +36,11 @@ const ListaProjetos = () => {
  
   useEffect(() => {
     dispatch(getAllProjetos());
-  }, [page, search, searchStatus, searchType, sort, projetoFinalizado, DataObjetivoC]);
-  
+  }, [page, search, searchStatus, searchType, sort, projetoFinalizado, DataObjetivoC, dispatch]);
   
   useEffect(() => {
     dispatch(listaUtilizadores());
-  }, []);
+  }, [dispatch]);
   if (isLoading) {
     return <Loading />;
   }

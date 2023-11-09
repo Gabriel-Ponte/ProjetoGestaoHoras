@@ -25,13 +25,8 @@ const ListaProjetos = () => {
   const {
     projetos,
     isLoading,
-    page,
     totalProjetos,
     numOfPages,
-    search,
-    searchStatus,
-    searchType,
-    sort,
   } = useSelector((store) => store.allProjetos);
 
   const dispatch = useDispatch();
@@ -45,7 +40,6 @@ const ListaProjetos = () => {
   const [listaDias, setListaDias] = useState([]);
   const [filteredProjetos, setFilteredProjetos] = useState([]);
 
-  const [dataAtual, setDataAtual] = useState([]);
 
   const [verificaDiaCalled, setVerificaDiaCalled] = useState(false);
   const [verificaChange, setVerificaChange] = useState(false);
@@ -58,7 +52,7 @@ const ListaProjetos = () => {
   const [ListaTrabalhoGeralOther, setListaTrabalhoGeralOther] = useState([]);
   const [horasExtra, setHorasExtra] = useState(null);
   const [horasExtraAfter, setHorasExtraAfter] = useState(null);
-  const [selectedOption, setSelectedOption] = useState();
+  //const [selectedOption, setSelectedOption] = useState();
   const [inputValue, setInputValue] = useState('');
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [compensacaoID, setcompensacaoID] = useState();
@@ -100,7 +94,7 @@ const ListaProjetos = () => {
   };
 
   const handleSelectOption = (option) => {
-    setSelectedOption(option);
+    //setSelectedOption(option);
     setInputValue(option);
     setDropdownOpen(false);
   };
@@ -1049,7 +1043,7 @@ const ListaProjetos = () => {
                                 return (
                                   <div className="row mb-3 text-center" key={"NovoDia" + i}>
                                     <div className="col-md-9 text-start themed-grid-col">
-                                      <p>{t}teste</p>
+                                      <p>{t}</p>
                                     </div>
                                     <div className="col-md-3 themed-grid-col">
                                       <input

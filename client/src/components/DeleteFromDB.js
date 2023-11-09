@@ -1,11 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { deleteProjeto } from '../features/projetos/projetosSlice';
 import { deleteUser } from "../features/utilizadores/utilizadorSlice";
 import { toggleSidebar } from '../features/utilizadores/utilizadorSlice';
 import { AiFillDelete } from 'react-icons/ai';
-import Wrapper from '../assets/wrappers/ModalFoto';
 
 const DeleteFromDB = ({ id, name, isLoading, type }) => {
   const dispatch = useDispatch();

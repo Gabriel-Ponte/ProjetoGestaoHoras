@@ -25,7 +25,7 @@ const GerirTipoTrabalho = () => {
     }
   }, [user, navigate]);
 
-  let StringListaTrabalho = listaTipoTrabalho.map(item => item.TipoTrabalho).join(",");
+  //let StringListaTrabalho = listaTipoTrabalho.map(item => item.TipoTrabalho).join(",");
 
 
   useEffect(() => {
@@ -34,7 +34,7 @@ const GerirTipoTrabalho = () => {
       setListaTipoTrabalho(tipoTrabalhoArray);
       setInitialState(tipoTrabalhoArray)
     });
-  }, [callUseEffect]);
+  }, [callUseEffect, dispatch]);
 
 
   const handleLista = async (e) => {

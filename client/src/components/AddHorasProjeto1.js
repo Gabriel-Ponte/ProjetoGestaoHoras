@@ -1,12 +1,10 @@
 import { useEffect, useState, useCallback } from 'react';
 import Wrapper from '../assets/wrappers/addDias';
-import { FaCaretDown } from 'react-icons/fa';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAllProjetos, handleChange } from '../features/allProjetos/allProjetosSlice';
 import { toast } from 'react-toastify';
 import { createDia, getDia, editDia } from '../features/dias/diasSlice';
 import { FormRow } from '../components';
-import PageBtnContainer from './PageBtnContainer';
 
 const initialState = {
     _id: '',

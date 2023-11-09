@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Wrapper from '../assets/wrappers/Projeto';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { getProjeto, handleChange } from '../features/projetos/projetosSlice';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -76,7 +76,7 @@ const Projeto = ({
     utilizadores,
     handleAlterado
   });
-  const [verificaResultado, setVerificaResultado] = useState(1);
+  //const [verificaResultado, setVerificaResultado] = useState(1);
   const [verificaAlterado, setVerificaAlterado] = useState(false);
 
   const toggleEdit = async (idP) => {
@@ -198,7 +198,8 @@ const Projeto = ({
     }
   }
 
-  const PilotosList = Array.isArray(values.Piloto) ? (values.Piloto.length > 0 ? values.Piloto[0].split(/[,\/]/) : []) : values.Piloto.split(/[,\/]/);
+  //const PilotosList = Array.isArray(values.Piloto) ? (values.Piloto.length > 0 ? values.Piloto[0].split(/[,\/]/) : []) : values.Piloto.split(/[,\/]/);
+  const PilotosList = Array.isArray(values.Piloto) ? values.Piloto.length > 0 ? values.Piloto[0].split(/[,/]/) : [] : values.Piloto.split(/[,/]/);
   const listUpdated = [...PilotosList];
 
   for (let a = 0; a < PilotosList.length; a++) {
@@ -213,9 +214,11 @@ const Projeto = ({
         break;
       }
     }}
+
   return (
     <Wrapper>
-      <div className={verificaResultado === 1 ? '' : verificaResultado ? 'resultadoProjetoP' : 'resultadoProjetoN'}>
+      {/* <div className={verificaResultado === 1 ? '' : verificaResultado ? 'resultadoProjetoP' : 'resultadoProjetoN'}> */}
+      <div className='resultadoProjetoP'>
         <div className="listaProjetos">
           <div className="row ">
 

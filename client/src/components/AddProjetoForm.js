@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Wrapper from '../assets/wrappers/AddProjetoForm';
-import { FormRow, FormRowSelect, FormRowCheckboxMultiple, FormRowCheckboxListaClientes } from '../components';
+import { FormRow, FormRowCheckboxMultiple, FormRowCheckboxListaClientes } from '../components';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { createProjeto , getClientes } from '../features/projetos/projetosSlice';

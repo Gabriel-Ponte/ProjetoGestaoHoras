@@ -28,17 +28,17 @@ const CalendarControl = ({ handleChange, inserted, feriados,ferias, inicio, fim 
         return new Date(calendar.getFullYear(), calendar.getMonth(), 1);
     }
 
-    function lastDay(calendar) {
-        return new Date(calendar.getFullYear(), calendar.getMonth() + 1, 0);
-    }
+    // function lastDay(calendar) {
+    //     return new Date(calendar.getFullYear(), calendar.getMonth() + 1, 0);
+    // }
 
     function firstDayNumber(calendar) {
         return firstDay(calendar).getDay();
     }
 
-    function lastDayNumber(calendar) {
-        return lastDay(calendar).getDay();
-    }
+    // function lastDayNumber(calendar) {
+    //     return lastDay(calendar).getDay();
+    // }
 
     function getPreviousMonthLastDate(calendar) {
         return new Date(calendar.getFullYear(), calendar.getMonth(), 0).getDate();
@@ -116,7 +116,7 @@ const CalendarControl = ({ handleChange, inserted, feriados,ferias, inicio, fim 
         calendarBody.innerHTML = "";
         plotDayNames();
         let count = 1;
-        let prevDateCount = 0;
+        //let prevDateCount = 0;
 
         const prevMonthLastDate = getPreviousMonthLastDate(calendar);
         let prevMonthDatesArray = [];
@@ -129,7 +129,7 @@ const CalendarControl = ({ handleChange, inserted, feriados,ferias, inicio, fim 
             const prevDateHTML = `<div class="prev-dates">${prevDate}</div>`;
             calendarBody.insertAdjacentHTML("beforeend", prevDateHTML);
             prevMonthDatesArray.push(prevDate);
-            prevDateCount++;
+            //prevDateCount++;
         }
 
         // plot dates of current month
@@ -154,21 +154,21 @@ const CalendarControl = ({ handleChange, inserted, feriados,ferias, inicio, fim 
         attachEvents();
     }
 
-    function plotPrevMonthDates(dates) {
-        const prevDates = document.querySelectorAll(".prev-dates");
-        for (let i = 0; i < prevDates.length; i++) {
-            prevDates[i].textContent = dates[i];
-        }
-    }
+    // function plotPrevMonthDates(dates) {
+    //     const prevDates = document.querySelectorAll(".prev-dates");
+    //     for (let i = 0; i < prevDates.length; i++) {
+    //         prevDates[i].textContent = dates[i];
+    //     }
+    // }
 
-    function plotNextMonthDates() {
-        const lastDay = lastDayNumber(calendar);
-        if (lastDay !== 6) {
-            for (let i = 1; i <= 6 - lastDay; i++) {
-                document.querySelector(".calendar .calendar-body").innerHTML += `<div class="next-dates">${i}</div>`;
-            }
-        }
-    }
+    // function plotNextMonthDates() {
+    //     const lastDay = lastDayNumber(calendar);
+    //     if (lastDay !== 6) {
+    //         for (let i = 1; i <= 6 - lastDay; i++) {
+    //             document.querySelector(".calendar .calendar-body").innerHTML += `<div class="next-dates">${i}</div>`;
+    //         }
+    //     }
+    // }
 
     function highlightToday(calendar) {
         let currentMonth = localDate.getMonth() + 1;

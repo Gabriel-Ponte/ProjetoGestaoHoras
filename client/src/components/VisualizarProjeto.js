@@ -2,10 +2,8 @@ import { useEffect, useState, useCallback } from 'react';
 import Wrapper from '../assets/wrappers/VisualizarProjeto';
 import { useSelector, useDispatch } from 'react-redux';
 import Loading from './Loading';
-import Dia from './Dias';
 import { getAllDias, getAllDiasProjetoUtilizador } from '../features/allDias/allDiasSlice';
 import { getTipoTrabalho } from '../features/tipoTrabalho/tipoTrabalhoSlice';
-import { getAllDiasUtilizador } from '../features/allDias/allDiasSlice';
 import { listaUtilizadores } from '../features/utilizadores/utilizadorSlice';
 import { FormRowSelect } from '../components';
 import Calendar from './Calendar'
@@ -91,7 +89,7 @@ const VisualizarProjeto = () => {
           });
       }
     }
-  }, [selectedUser , projeto]);
+  }, [selectedUser , projeto, dispatch]);
 
   useEffect(() => {
     dispatch(getTipoTrabalho()).then((res) => {
@@ -107,7 +105,7 @@ const VisualizarProjeto = () => {
       }
       setListaTipoTrabalho(tipoTrabalhoArray);
     });
-  }, [selectedUser]);
+  }, [selectedUser, dispatch]);
 
   function feriadosPortugal(date) {
     
@@ -330,7 +328,8 @@ const VisualizarProjeto = () => {
                   <div className="col-6 text-start">
                     {values.Piloto &&
                     (() => {
-                      const updatedSeparatedArray = Array.isArray(values.Piloto)? values.Piloto.length > 0 ? values.Piloto[0].split(/[,\/]/) : [] : values.Piloto.split(/[,\/]/);
+                      //const updatedSeparatedArray = Array.isArray(values.Piloto) ? (values.Piloto.length > 0 ? values.Piloto[0].split(/[,\/]/) : []) : values.Piloto.split(/[,\/]/);
+                      const updatedSeparatedArray = Array.isArray(values.Piloto) ? values.Piloto.length > 0  ? values.Piloto[0].split(/[,/]/)  : []  : values.Piloto.split(/[,/]/);
                       if (updatedSeparatedArray && utilizadores) {
                         for (let i = 0; i < updatedSeparatedArray.length; i++) {
                           for (let a = 0; a < utilizadores.length; a++) {

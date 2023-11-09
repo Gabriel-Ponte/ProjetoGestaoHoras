@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { getUser, resetPassword} from "../features/utilizadores/utilizadorSlice";
+import { resetPassword} from "../features/utilizadores/utilizadorSlice";
 import { useNavigate } from 'react-router-dom';
 import Wrapper from '../assets/wrappers/LoginPage';
 import { FormRow, Header, Footer } from '../components';
