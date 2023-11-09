@@ -5,10 +5,10 @@ const testUser = require("../middleware/testeUser");
 
 const router = express.Router();
 
-const { getAllTiposTrabalho, createTipoTrabalho, deleteTipoTrabalho, updateTipoTrabalho} = require("../controllers/tipoTrabalho");
+const { getAllTiposTrabalho, createTipoTrabalho, deleteTipoTrabalho, updateTipoTrabalho, createTipoTrabalhoOther} = require("../controllers/tipoTrabalho");
 
 router.route("/").post(createTipoTrabalho).get(getAllTiposTrabalho);
-
+router.route("/createTipoTrabalhoOther").post(createTipoTrabalhoOther),
 router
   .route("/:id")
   .delete(deleteTipoTrabalho)

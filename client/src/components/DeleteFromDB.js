@@ -42,7 +42,7 @@ const DeleteFromDB = ({ id, name, isLoading, type }) => {
         }, 2000);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 

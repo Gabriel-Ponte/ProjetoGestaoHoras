@@ -79,7 +79,7 @@ const AddUtilizador = () => {
           }, 4000);
         }
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
   };
 

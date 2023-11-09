@@ -78,7 +78,7 @@ const NavLinks = () => {
       {links.map((link) => {
 
         const { text, path, id, icon } = link;
-        if(user.tipo === 1 && (id === 2 || id === 3 || id === 4 || id === 8)){
+        if(user.tipo === 1 && (id === 2 || id === 3 || id === 4 || id === 8 || id === 9)){
           return null;
         }
 

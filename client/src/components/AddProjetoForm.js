@@ -19,7 +19,7 @@ const initialState = {
   Notas: '',
   OrcamentoAprovado: '',
   Nome: '',
-  Tema: '',
+  Tema: 'Empty',
   Acao: '',
   TipoTrabalho: '',
   Piloto: '',
@@ -88,8 +88,8 @@ const AddProjectForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!values.Nome || !values.Acao || !values.Cliente || !values.DataInicio || !values.DataObjetivo || !values.Tema) {
-      const requiredFields = ['Nome', 'Acao', 'Cliente', 'DataInicio', 'DataObjetivo', 'Tema', 'Piloto'];
+    if (!values.Nome || !values.Acao || !values.Cliente || !values.DataInicio || !values.DataObjetivo) {
+      const requiredFields = ['Nome', 'Acao', 'Cliente', 'DataInicio', 'DataObjetivo', 'Piloto'];
       const emptyField = requiredFields.find(field => !values[field]);
 
       if (emptyField) {
@@ -109,7 +109,7 @@ const AddProjectForm = () => {
         }, 2000);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
     //navigate('/');
   };
@@ -136,7 +136,8 @@ const AddProjectForm = () => {
             value={values.Nome}
             handleChange={handleChange}
           />
-          <FormRow
+
+          {/* <FormRow
             type="text"
             className="row mb-3 text-center" 
             classNameLabel='col-md-3 text-end' 
@@ -147,7 +148,8 @@ const AddProjectForm = () => {
             placeholder="Tema"
             value={values.Tema}
             handleChange={handleChange}
-          />
+          /> */}
+
           <FormRow
             type="text"
             className="row mb-3 text-center" 

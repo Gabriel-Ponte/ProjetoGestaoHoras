@@ -34,10 +34,23 @@ export const getTipoTrabalhoThunk = async ( thunkAPI ) => {
 
   export const createTipoTrabalhoThunk = async (tipoTrabalho, thunkAPI) => {
     try {
+
       const tTrabalho = { TipoTrabalho: tipoTrabalho };
       const resp = await customFetch.post('/tipoTrabalho', tTrabalho);
       thunkAPI.dispatch(clearValues());
       return resp.data.msg;
+    } catch (error) {
+      return checkForUnauthorizedResponse(error, thunkAPI);
+    }
+  };
+
+
+  export const createTipoTrabalhoOtherThunk = async (tipoTrabalho, thunkAPI) => {
+    try {
+      const tTrabalho = tipoTrabalho ;
+      const resp = await customFetch.post('/tipoTrabalho/createTipoTrabalhoOther', tTrabalho);
+      thunkAPI.dispatch(clearValues());
+      return resp.data;
     } catch (error) {
       return checkForUnauthorizedResponse(error, thunkAPI);
     }

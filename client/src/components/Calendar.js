@@ -4,7 +4,7 @@ import { MdKeyboardArrowLeft } from 'react-icons/md';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import { toast } from 'react-toastify';
 
-const CalendarControl = ({ handleChange, inserted, feriados,ferias, inicio, fim , objetivo, vProjeto }) => {
+const CalendarControl = ({ handleChange, inserted, feriados,ferias, inicio, fim , objetivo, vProjeto , todos , numberUsers }) => {
     const [calendar, setCalendar] = useState(new Date());
     const calWeekDays = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
     const calMonthName = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
@@ -191,6 +191,85 @@ const CalendarControl = ({ handleChange, inserted, feriados,ferias, inicio, fim 
         const changedMonth = calendar.getMonth() + 1;
         const changedYear = calendar.getFullYear();
         let dias = [];
+
+
+        if(todos && todos === true){
+            if(inserted){
+            const filteredDias = inserted.filter((dia) => (new Date(dia.Data).getMonth() + 1) === changedMonth && new Date(dia.Data).getFullYear() === changedYear);
+
+            let arrayDates = {};
+            
+            for (let i = 0; i < filteredDias.length; i++) {
+              const nHours = parseInt(filteredDias[i].NumeroHoras) || 0;
+            
+              if (!arrayDates[filteredDias[i].Data]) {
+                arrayDates[filteredDias[i].Data] = nHours;
+              } else {
+                arrayDates[filteredDias[i].Data] += nHours;
+              }
+            }
+            
+            for (let date in arrayDates) {
+              const insertedDay = new Date(date);
+            
+              if (
+                numberItems !== null &&
+                numberItems.length >= insertedDay.getDate()
+              ) {
+
+                if (insertedDay.getDay() === 5) {
+                const possibleHours = numberUsers * 6;
+                  if (arrayDates[date] < possibleHours) {
+                    numberItems[insertedDay.getDate() - 1].classList.add("calendar-inserted-low");
+                  } else if (arrayDates[date] > possibleHours) {
+                    numberItems[insertedDay.getDate() - 1].classList.add("calendar-inserted-high");
+                  } else {
+                    numberItems[insertedDay.getDate() - 1].classList.add("calendar-inserted");
+                  }
+                }else if(insertedDay.getDay() === 0 || insertedDay.getDay() === 6){
+                    if (arrayDates[date] > 0) {
+                        numberItems[insertedDay.getDate() - 1].classList.add("calendar-inserted-high");
+                    }
+                    }else{
+                        const possibleHours = numberUsers * 8.5;
+                        if (arrayDates[date] < possibleHours) {
+                            numberItems[insertedDay.getDate() - 1].classList.add("calendar-inserted-low");
+                        } else if(arrayDates[date] > possibleHours){
+                            numberItems[insertedDay.getDate() - 1].classList.add("calendar-inserted-high");
+                        } else{
+                            numberItems[insertedDay.getDate() - 1].classList.add("calendar-inserted");
+                        }
+                    }
+                }
+            }
+        }
+        if (feriados) {
+            for (let i = 0; i < feriados.length; i++) {
+                const insertedDay = new Date(feriados[i].date);
+                const currentMonth = insertedDay?.getMonth() + 1;
+                const currentYear = insertedDay?.getFullYear();
+
+                if (
+                    currentYear === changedYear &&
+                    currentMonth === changedMonth &&
+                    numberItems !== null &&
+                    numberItems.length >= calendar.getDate()
+                ) {
+                    dias.push(insertedDay);
+                    numberItems[insertedDay.getDate() - 1].classList.add("calendar-feriado");
+                }
+            }
+        }
+        const daysInMonth = new Date(changedYear, changedMonth, 0).getDate();
+        for (let day = 1; day <= daysInMonth; day++) {
+          const date = new Date(changedYear, changedMonth - 1, day);
+          const dayOfWeek = date.getDay();
+          if (dayOfWeek === 0 || dayOfWeek === 6) {
+            numberItems[day - 1].classList.add("calendar-fimSemana");
+          }
+        }
+        }else{
+
         if (inserted) {
             for (let i = 0; i < inserted.length; i++) {
                 const insertedDay = new Date(inserted[i]?.Data);
@@ -204,13 +283,24 @@ const CalendarControl = ({ handleChange, inserted, feriados,ferias, inicio, fim 
                     numberItems.length >= calendar.getDate()
                 ) {
                     dias.push(insertedDay);
-
-                    if (inserted[i].NumeroHoras < 8) {
-                        numberItems[insertedDay.getDate() - 1].classList.add("calendar-inserted-low");
-                    } else if(inserted[i].NumeroHoras > 8){
+                    if (insertedDay.getDay() === 5) {
+                        if (inserted[i].NumeroHoras < 6) {
+                            numberItems[insertedDay.getDate() - 1].classList.add("calendar-inserted-low");
+                        } else if(inserted[i].NumeroHoras > 6){
+                            numberItems[insertedDay.getDate() - 1].classList.add("calendar-inserted-high");
+                        } else{
+                            numberItems[insertedDay.getDate() - 1].classList.add("calendar-inserted");
+                        }
+                    }else if(insertedDay.getDay() === 0 || insertedDay.getDay() === 6){
                         numberItems[insertedDay.getDate() - 1].classList.add("calendar-inserted-high");
-                    } else{
-                        numberItems[insertedDay.getDate() - 1].classList.add("calendar-inserted");
+                    }else{
+                        if (inserted[i].NumeroHoras < 8.5) {
+                            numberItems[insertedDay.getDate() - 1].classList.add("calendar-inserted-low");
+                        } else if(inserted[i].NumeroHoras > 8.5){
+                            numberItems[insertedDay.getDate() - 1].classList.add("calendar-inserted-high");
+                        } else{
+                            numberItems[insertedDay.getDate() - 1].classList.add("calendar-inserted");
+                        }
                     }
                 }
             }
@@ -331,6 +421,7 @@ const CalendarControl = ({ handleChange, inserted, feriados,ferias, inicio, fim 
           if (dayOfWeek === 0 || dayOfWeek === 6) {
             numberItems[day - 1].classList.add("calendar-fimSemana");
           }
+        }
         }
     }
 

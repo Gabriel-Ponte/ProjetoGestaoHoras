@@ -98,7 +98,7 @@ const EditarUtilizador = () => {
           }, 2000);
         }
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
   };
 

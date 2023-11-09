@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState} from 'react';
 import Projeto from './ProjetoLista';
 import Wrapper from '../assets/wrappers/ProjetossContainer';
 import { useSelector, useDispatch } from 'react-redux';
@@ -30,6 +30,8 @@ const ListaProjetos = () => {
   const { user } = useSelector((store) => store.utilizador.user);
   const { utilizadores, listaDeUtilizadores } = useSelector((store) => store.utilizador);
 
+  const [verificaAlterado, setVerificaAlterado] = useState(0);
+
   const formattedListUtilizadores = Array.isArray(utilizadores) ? utilizadores.filter(user => user.email.endsWith('isqctag.pt')) : [];
  
   useEffect(() => {
@@ -44,6 +46,15 @@ const ListaProjetos = () => {
     return <Loading />;
   }
 
+  const handleAlterado = (alterado) => {
+      if(alterado === true){
+        let alt = verificaAlterado + 1;
+        setVerificaAlterado(alt);
+      }else{
+        let alt = verificaAlterado - 1;
+        setVerificaAlterado(alt);
+      }
+  };
 
   const handleSort = (tipo) => {
     if (isLoading) return;
@@ -182,9 +193,15 @@ const ListaProjetos = () => {
             {...projeto}
             finalizado={projetoFinalizado}
             utilizadores={formattedListUtilizadores}
+            handleAlterado={handleAlterado}
           />;
         })}
       </div>
+      {verificaAlterado > 0 && (
+         <div className='text-center mt-3'>
+        <p><b>Possui projetos por confirmar alteração </b></p>
+      </div> 
+      )}
       {numOfPages > 1 && <PageBtnContainer />}
     </Wrapper>
   );

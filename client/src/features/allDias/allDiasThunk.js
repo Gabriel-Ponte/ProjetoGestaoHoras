@@ -1,5 +1,17 @@
 import customFetch, { checkForUnauthorizedResponse } from '../../utils/axios';
 
+
+
+export const getAllDiasThunk = async (thunkAPI) => {
+  try {
+    const resp = await customFetch.get(`/dia/getAllDias`);
+    return resp.data;
+  } catch (error) {
+    return checkForUnauthorizedResponse(error, thunkAPI);
+  }
+};
+
+
 export const getAllDiasProjetoThunk = async (projetoId, userLogin, thunkAPI) => {
   try {
     const resp = await customFetch.get(`/dia/dias/${projetoId}`);
@@ -31,10 +43,9 @@ export const getAllDiasProjetoUtilizadorThunk = async (utilizadorId,projeto, thu
 export const exportDiasThunk = async ( url, userID ,thunkAPI) => {
   try {
     const resp = await customFetch.post(`/dia/exportDias/` , userID);
-    console.log(resp, +"RESP");
     return resp.data;
   } catch (error) {
-    console.log(error.response.data.msg)
+    console.error(error.response.data.msg)
     throw { error: error.response.data.msg };
   }
 };

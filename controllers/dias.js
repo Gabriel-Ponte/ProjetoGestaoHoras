@@ -5,6 +5,26 @@ const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, NotFoundError } = require("../errors");
 const { exportExcell } = require("../exportExcellHours");
 
+
+
+const getAllDias = async (req, res) => {
+  try {
+
+    const diasAll = await Dias.find();
+    if (!diasAll.length) {
+      throw new NotFoundError(`Não foram encontradas horas inseridas`);
+    }
+
+    diasAll.sort((a, b) => a.Data - b.Data);
+
+    res.status(StatusCodes.OK).json({ diasAll });
+  } catch (error) {
+    // Handle the error, e.g., send an error response.
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message });
+  }
+};
+
+
 const getAllDiasUtilizador = async (req, res) => {
   const {
     params: { utilizador },
@@ -25,8 +45,10 @@ const getAllDiasUtilizador = async (req, res) => {
 };
 
 
-const getAllDiasProjeto = async (req, res) => {
 
+
+
+const getAllDiasProjeto = async (req, res) => {
   const {
     params: { projeto },
   } = req;
@@ -263,6 +285,7 @@ const exportDias = async(req, res) =>{
 module.exports = {
   getAllDiasProjeto,
   getAllDiasUtilizador,
+  getAllDias,
   getDia,
   createDia,
   updateDia,

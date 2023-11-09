@@ -27,7 +27,8 @@ const Projeto = ({
   NumeroHorasTotal,
   Finalizado,
   finalizado,
-  utilizadores
+  utilizadores,
+  handleAlterado,
 }) => {
 
   const initialState = {
@@ -48,7 +49,8 @@ const Projeto = ({
     NumeroHorasTotal,
     Finalizado,
     finalizado,
-    utilizadores
+    utilizadores,
+    handleAlterado
   };
 
   const dispatch = useDispatch();
@@ -71,7 +73,8 @@ const Projeto = ({
     NumeroHorasTotal,
     Finalizado,
     finalizado,
-    utilizadores
+    utilizadores,
+    handleAlterado
   });
   const [verificaResultado, setVerificaResultado] = useState(1);
   const [verificaAlterado, setVerificaAlterado] = useState(false);
@@ -92,8 +95,10 @@ const Projeto = ({
     const nome = e.target.name;
     const value = e.target.value;
     if(initialState[nome] === value){
+      handleAlterado(false);
       setVerificaAlterado(false);
     }else{
+      handleAlterado(true);
       setVerificaAlterado(true);
     }
     setValues({ ...values, [nome]: value });
@@ -112,8 +117,10 @@ const Projeto = ({
     const outputDateString = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
 
     if(outputDateString === value){
+      handleAlterado(false);
       setVerificaAlterado(false);
     }else{
+      handleAlterado(true);
       setVerificaAlterado(true);
     }
     setValues({ ...values, [nome]: value });
@@ -157,10 +164,11 @@ const Projeto = ({
     try {
       const result = await dispatch(updateProjeto(values));
       if (!result.error) {
+        handleAlterado(false);
         setVerificaAlterado(false);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 

@@ -90,16 +90,15 @@ const postResetPassword = async (req, res) => {
     // Send the email
     //await transporter.sendMail(mailOptions);
     await sgMail.send(mailOptions);
-    //console.log(transporter);
     // Send a success response
     res.json({ message: 'Foi enviado um email para resetar a password.' });
   } catch (error) {
     // Send an error response
     if (error instanceof NotFoundError) {
       res.status(404).json({ error: error.message });
-      console.log(error)
+      console.error(error)
     } else {
-      console.log(error)
+      console.error(error)
       res.status(500).json({ error: 'Ocorreu um erro ao tentar resetar a senha, por favor tente novamente.' });
     }
   }

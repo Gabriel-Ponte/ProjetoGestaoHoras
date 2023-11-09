@@ -250,7 +250,6 @@ const userSlice = createSlice({
 
       //ListaUtilizador
       .addCase(listaUtilizadores.pending, (state) => {
-        //console.log("loading");
         state.isLoadingU = true;
       })
       .addCase(listaUtilizadores.fulfilled, (state, { payload }) => {

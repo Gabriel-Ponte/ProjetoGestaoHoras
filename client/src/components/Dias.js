@@ -69,11 +69,43 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPos
         }
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return "Ocorreu um erro ao apagar o Tipo de Trabalho.";
     }
   };
   
+  function convertToMinutes(timeString) {
+    if (timeString) {
+      try {
+        let [hours, minutes] = timeString.toString().split(".");
+
+        // Convert the hours to an integer
+        const hoursInt = parseInt(hours, 10);
+        // Convert the fraction of an hour to minutes
+        if (!minutes) {
+          minutes = 0;
+        }
+        let formattedMinutes = Math.round(minutes * 60) / 10;
+        if (formattedMinutes === 60) {
+          formattedMinutes = 0;
+          formattedHours += 1;
+        }
+        // Use String.padStart to format hours and minutes with leading zeros
+        const formattedHours = hoursInt.toString().padStart(2, "0");
+        formattedMinutes = formattedMinutes.toString().padStart(2, '0');
+
+        const formattedTime = `${formattedHours}:${formattedMinutes}`;
+
+        return formattedTime;
+      } catch (error) {
+        console.log(error)
+        console.log(timeString)
+        return timeString;
+      }
+    }
+
+    return timeString;
+  }
 
   return (
     <Wrapper>
@@ -126,7 +158,7 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPos
                         </div>
                         <div className="col-md-6 themed-grid-col">
                           {horas.split(',').map((horas, index) => (
-                            <p key={index}>{horas.trim()}</p>
+                            <p key={index}>{convertToMinutes(horas)}</p>
                           ))}
                         </div>
 

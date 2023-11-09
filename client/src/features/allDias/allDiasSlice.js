@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
-import { getAllDiasProjetoThunk, getAllDiasUtilizadorThunk ,getAllDiasProjetoUtilizadorThunk ,exportDiasThunk} from './allDiasThunk';
+import { getAllDiasProjetoThunk, getAllDiasUtilizadorThunk ,getAllDiasThunk,getAllDiasProjetoUtilizadorThunk ,exportDiasThunk} from './allDiasThunk';
 
 const initialState = {
   isLoading: true,
@@ -12,6 +12,14 @@ export const getAllDias = createAsyncThunk(
   '/dia/dias/', 
   async ({ projetoId, userLogin }, thunkAPI) => {
     return getAllDiasProjetoThunk(projetoId, userLogin, thunkAPI);
+  }
+);
+
+
+export const getAllDiasTodos = createAsyncThunk(
+  '/dia/getAllDias', 
+  async (thunkAPI) => {
+    return getAllDiasThunk(thunkAPI);
   }
 );
 
@@ -105,7 +113,6 @@ const allDiasSlice = createSlice({
       toast.success(payload);
     })
     .addCase(exportDia.rejected, (state, { payload }) => {
-      console.log(state)
       state.isLoading = false;
       if (payload && payload.error) {
         toast.error(payload.error);
@@ -113,6 +120,21 @@ const allDiasSlice = createSlice({
         toast.error("Erro ao exportar ficheiro. Verifique se está aberto!");
       }
     })
+
+
+
+    .addCase(getAllDiasTodos.pending, (state) => {
+      state.isLoading = true;
+    })
+    .addCase(getAllDiasTodos.fulfilled, (state , { payload }) => {
+      state.isLoading = false;
+      toast.success(payload);
+    })
+    .addCase(getAllDiasTodos.rejected, (state, { payload }) => {
+      state.isLoading = false;
+    })
+
+    
   },
 });
 

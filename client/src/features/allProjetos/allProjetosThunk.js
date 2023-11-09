@@ -2,7 +2,6 @@ import customFetch, { checkForUnauthorizedResponse } from '../../utils/axios';
 
 export const getAllProjetosThunk = async (_, thunkAPI) => {
   if(_){
-    console.log("true");
     thunkAPI.getState().allProjetos.projetoFinalizado = "F";
   }
 
@@ -23,7 +22,7 @@ export const getAllProjetosThunk = async (_, thunkAPI) => {
     const resp = await customFetch.get(url);
     return resp.data;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return checkForUnauthorizedResponse(error, thunkAPI);
   }
 };
@@ -40,7 +39,7 @@ export const getAllProjetosThunkAdd = async (_, thunkAPI) => {
     const resp = await customFetch.get(url);
     return resp.data;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return checkForUnauthorizedResponse(error, thunkAPI);
   }
 };

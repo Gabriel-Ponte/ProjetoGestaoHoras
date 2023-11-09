@@ -22,7 +22,7 @@ const Wrapper = styled.article`
       margin:0;
       margin-bottom:3%;
     }
-    
+
   }
 
   @media (min-width: 768px) {

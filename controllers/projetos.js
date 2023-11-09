@@ -28,7 +28,6 @@ const getAllProjetos = async (req, res) => {
   const { search, Finalizado, tipoTrabalho, sort ,DataObjetivo} = req.query;
   const queryObject = {
   };
-  console.log(Finalizado)
   if (search) {
     queryObject.position = { $regex: search, $options: "i" };
   }
@@ -38,7 +37,6 @@ const getAllProjetos = async (req, res) => {
   }
 
   if (Finalizado ==="false" || Finalizado ==="true") {
-    console.log("TESTE")
     queryObject.Finalizado = Finalizado;
   }
 
@@ -146,7 +144,7 @@ const updateProjeto = async (req, res) => {
     }
     res.status(StatusCodes.OK).json({ projeto });
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 

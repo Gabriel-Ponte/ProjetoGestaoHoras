@@ -304,14 +304,14 @@ const VisualizarProjeto = () => {
               </div>
               <div className="col-7 left text-center" >
 
-                <div className="row mb-3">
+                {/* <div className="row mb-3">
                   <div className="col-6">
                     <h5>Tema</h5>
                   </div>
                   <div className="col-6 text-start">
                     <p>{values.Tema}</p>
                   </div>
-                </div>
+                </div> */}
                 <div className="row mb-3">
                   <div className="col-6">
                     <h5>Cliente</h5>

@@ -3,7 +3,8 @@ import { toast } from 'react-toastify';
 import { createTipoTrabalhoThunk, 
   deleteTipoTrabalhoThunk, 
   getTipoTrabalhoThunk, 
-  editTipoTrabalhoThunk 
+  editTipoTrabalhoThunk, 
+  createTipoTrabalhoOtherThunk
 } from './tipoTrabalhoThunk';
 
 
@@ -16,6 +17,9 @@ export const createTipoTrabalho = createAsyncThunk(
   createTipoTrabalhoThunk
   );
 
+
+
+  
 
 export const deleteTipoTrabalho = createAsyncThunk(
   'tipoTrabalho/deleteTipoTrabalho', 
@@ -36,7 +40,13 @@ export const getTipoTrabalho = createAsyncThunk(
    getTipoTrabalhoThunk
    );
 
-
+   export const createTipoTrabalhoOther = createAsyncThunk(
+    'tipoTrabalho/createTipoTrabalhoOther',
+    async (values,  thunkAPI) => {
+      const result = createTipoTrabalhoOtherThunk(values,thunkAPI);
+      return result;
+    }
+    );
 
 const tipoTrabalhoSlice = createSlice({
   name: 'tipoTrabalho',
@@ -76,6 +86,9 @@ const tipoTrabalhoSlice = createSlice({
         state.isLoading = false;
         toast.error(payload);
       })
+
+
+
       .addCase(deleteTipoTrabalho.fulfilled, (state, { payload }) => {
         toast.success('Tipo de Trabalho Apagado');
       })
@@ -105,6 +118,19 @@ const tipoTrabalhoSlice = createSlice({
         state.isLoading = false;
         toast.error(payload);
       })
+
+      .addCase(createTipoTrabalhoOther.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createTipoTrabalhoOther.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        toast.success('Tipo de Trabalho Adicionado');
+      })
+      .addCase(createTipoTrabalhoOther.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(payload);
+      })
+      
 
   },
 });

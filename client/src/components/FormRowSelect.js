@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import Wrapper from '../assets/wrappers/FormRowSelect';
 
 const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, handleLista, className, classNameLabel, classNameInput, classNameResult, todos }) => {
-
   if (multiple === null) {
     multiple = true;
   }

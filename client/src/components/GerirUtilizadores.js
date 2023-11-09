@@ -53,7 +53,7 @@ const GerirUtilizadores = () => {
         }
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return "Ocorreu um erro ao apagar o utilizador.";
     }
   };
@@ -66,7 +66,7 @@ const GerirUtilizadores = () => {
         setCallUseEffect(!callUseEffect);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 

@@ -49,13 +49,13 @@ const GerirTipoTrabalho = () => {
         const result = await dispatch(deleteTipoTrabalho(id));
         if (!result.error) {
           setTimeout(() => {
-            navigate('/PaginaPrincipal');
-          }, 2000);
+            window.location.reload();
+          }, 1000);
           return "Tipo de Trabalho Apagado. Voltando para a pagina principal...";
         }
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return "Ocorreu um erro ao apagar o Tipo de Trabalho.";
     }
   };
@@ -73,7 +73,7 @@ const GerirTipoTrabalho = () => {
         setCallUseEffect(!callUseEffect);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -96,8 +96,12 @@ const GerirTipoTrabalho = () => {
           let valueTipo;
           if(value === "Projetos"){
             valueTipo = 1
-          }else{
+          }else if(value === "Geral"){
             valueTipo = 2
+          }else if(value === "Outro"){
+            valueTipo = 3
+          }else{
+            valueTipo = 4
           }
           if (initialState[i]._id === id && initialState[i].tipo === valueTipo) {
             setVerificaAlterado((prevState) => ({
@@ -180,7 +184,7 @@ const GerirTipoTrabalho = () => {
                     handleChange={(e) => handleChangeTipoTrabalho(e, t._id)}
                     placeholder="Escolha um tipo"
                     value={t.tipo}
-                    list={[["Projetos"], ["Geral"]]}
+                    list={[["Projetos"], ["Geral"], ["Outro"], ["Compensação"]]}
                 />
                 </div>
             </div>

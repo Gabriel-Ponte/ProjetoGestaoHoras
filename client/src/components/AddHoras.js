@@ -4,12 +4,16 @@ import Wrapper from '../assets/wrappers/addDias';
 import { FaCaretDown } from 'react-icons/fa';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAllProjetos1, handleChange } from '../features/allProjetos/allProjetosSlice';
-import { getTipoTrabalho } from '../features/tipoTrabalho/tipoTrabalhoSlice';
+import { getTipoTrabalho, createTipoTrabalho, createTipoTrabalhoOther } from '../features/tipoTrabalho/tipoTrabalhoSlice';
 import { toast } from 'react-toastify';
 import { createDia, getDia, editDia } from '../features/dias/diasSlice';
 import { FormRow } from '../components';
 import PageBtnContainer from './PageBtnContainer';
 import Loading from './Loading';
+import Select from 'react-select';
+import { IoAddOutline } from 'react-icons/io5'
+import { createTipoTrabalhoOtherThunk } from '../features/tipoTrabalho/tipoTrabalhoThunk';
+
 
 const initialState = {
   _id: '',
@@ -43,30 +47,166 @@ const ListaProjetos = () => {
   const { user } = useSelector((store) => store.utilizador);
   const [listaDias, setListaDias] = useState([]);
   const [filteredProjetos, setFilteredProjetos] = useState([]);
+
+  const [dataAtual, setDataAtual] = useState([]);
+
   const [verificaDiaCalled, setVerificaDiaCalled] = useState(false);
   const [verificaChange, setVerificaChange] = useState(false);
   const [verificaCopiarHoras, setVerificaCopiarHoras] = useState(false);
-  const [lastDate, setLastDate] = useState()
+  const [lastDate, setLastDate] = useState();
   const [listaTipoTrabalho, setListaTipoTrabalho] = useState([]);
 
-  let StringListaTrabalho = listaTipoTrabalho
-    .filter(item => item.tipo === 1)
-    .map(item => item.TipoTrabalho)
-    .join(",");
+  const [ListaTrabalhoAll, setListaTrabalhoAll] = useState([]);
+  const [ListaTrabalhoGeral, setListaTrabalhoGeral] = useState([]);
+  const [ListaTrabalhoGeralOther, setListaTrabalhoGeralOther] = useState([]);
+  const [horasExtra, setHorasExtra] = useState(null);
+  const [horasExtraAfter, setHorasExtraAfter] = useState(null);
+  const [selectedOption, setSelectedOption] = useState();
+  const [inputValue, setInputValue] = useState('');
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [compensacaoID, setcompensacaoID] = useState();
 
-  let StringListaTrabalhoGeral = listaTipoTrabalho
-    .filter(item => item.tipo === 2)
-    .map(item => item.TipoTrabalho)
-    .join(",");
+  const [StringListaTrabalho, setStringListaTrabalho] = useState();
+  const [StringListaTrabalhoGeral, setStringListaTrabalhoGeral] = useState();
+  const [StringListaTrabalhoGeralOther, setStringListaTrabalhoGeralOther] = useState();
+  const [options, setOptions] = useState();
 
+  useEffect(() => {
+    const ListaTrabalho = listaTipoTrabalho
+      .filter(item => item.tipo === 1)
+      .map(item => item.TipoTrabalho)
+      .join(",");
+
+    const ListaTrabalhoGeral = listaTipoTrabalho
+      .filter(item => (item.tipo === 2 || item.tipo === 4))
+      .map(item => item.TipoTrabalho)
+      .join(",");
+
+    const ListaTrabalhoGeralOther = listaTipoTrabalho
+      .filter(item => item.tipo === 3)
+      .map(item => item.TipoTrabalho)
+      .join(",");
+
+    setStringListaTrabalho(ListaTrabalho);
+
+    setStringListaTrabalhoGeral(ListaTrabalhoGeral);
+
+    setStringListaTrabalhoGeralOther(ListaTrabalhoGeralOther);
+
+    setOptions(ListaTrabalhoGeralOther.split(","));
+  }, [totalProjetos, listaDias]);
+
+
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value);
+    setDropdownOpen(true);
+  };
+
+  const handleSelectOption = (option) => {
+    setSelectedOption(option);
+    setInputValue(option);
+    setDropdownOpen(false);
+  };
+
+  const handleTipoTrabalho = async (e) => {
+    if (inputValue && inputValue.trim() !== "") {
+      const values = StringListaTrabalhoGeral.split(",");
+
+      if (!values.map(value => value.toLowerCase()).includes(inputValue.toLowerCase())) {
+        // Handle when inputValue is not already in StringListaTrabalhoGeral
+
+        // Create a mapping to preserve the original case
+        const inputValueMap = new Map();
+        let originalCaseInputValue = "";
+        if (!options.some(option => option.toLowerCase() === inputValue.toLowerCase())) {
+          await dispatch(createTipoTrabalhoOther({ TipoTrabalho: inputValue, tipo: 3 })).then((res) => {
+            const tipoTrabalhoArray = Array.isArray(res.payload.tipoTrabalho) ? res.payload.tipoTrabalho : [res.payload.tipoTrabalho];
+            const updatedListaTrabalhoGeral = [...ListaTrabalhoGeral, ...tipoTrabalhoArray];
+            setListaTrabalhoGeral(updatedListaTrabalhoGeral);
+          })
+          originalCaseInputValue = inputValue;
+        } else {
+          options.forEach(option => inputValueMap.set(option.toLowerCase(), option));
+          originalCaseInputValue = inputValueMap.get(inputValue.toLowerCase());
+          // Remove originalCaseInputValue from options
+          const updatedOptions = options.filter(option => option.toLowerCase() !== inputValue.toLowerCase());
+          setOptions(updatedOptions);
+
+          const normalizedInputValue = originalCaseInputValue.toLowerCase(); // or .toUpperCase()
+          const tipoTrabalho = ListaTrabalhoGeralOther.filter(item => item.TipoTrabalho.toLowerCase() === normalizedInputValue);
+          const updatedListaTrabalhoGeral = [...ListaTrabalhoGeral, ...tipoTrabalho];
+
+          setListaTrabalhoGeral(updatedListaTrabalhoGeral);
+
+          const updatedListaTrabalhoGeralOther = ListaTrabalhoGeralOther.filter(item => item.TipoTrabalho.toLowerCase() !== normalizedInputValue);
+          setListaTrabalhoGeralOther(updatedListaTrabalhoGeralOther);
+
+          // tipoTrabalhoArray.filter(item => item.tipo === 3))
+
+
+          let NovaStringListaTrabalhoGeralOther = StringListaTrabalhoGeralOther.split(",");
+
+          // Use the mapping to get the original case of inputValue
+          NovaStringListaTrabalhoGeralOther = NovaStringListaTrabalhoGeralOther.filter(item => item !== originalCaseInputValue);
+
+          setStringListaTrabalhoGeralOther(NovaStringListaTrabalhoGeralOther.join(","));
+
+        }
+
+
+
+        let NovaStringListaTrabalhoGeral = StringListaTrabalhoGeral.split(",");
+
+        // Use the mapping to get the original case of inputValue
+
+        NovaStringListaTrabalhoGeral.push(originalCaseInputValue);
+
+
+        setStringListaTrabalhoGeral(NovaStringListaTrabalhoGeral.join(","));
+        setInputValue("")
+      } else {
+        toast.error('Valor inserido não permitido!');
+      }
+    }
+  }
+
+  const renderOptions = () => {
+    if (isDropdownOpen && options && options.length > 0) {
+      return (
+        <div className="options-panel">
+          {options
+            .filter((option) => option.toLowerCase().includes(inputValue.toLowerCase()))
+            .map((option, index) => (
+              <div
+                key={index}
+                onClick={() => handleSelectOption(option)}
+                className="option"
+              >
+                {option}
+              </div>
+            ))}
+        </div>
+      );
+    }
+  };
 
   useEffect(() => {
     dispatch(handleChange({ name: 'projetoFinalizado', value: "false" }));
     dispatch(handleChange({ name: 'DataObjetivoC', value: "true" }));
-    dispatch(getAllProjetos1( "" ))
+    dispatch(getAllProjetos1(""))
+
     dispatch(getTipoTrabalho()).then((res) => {
+
       const tipoTrabalhoArray = Array.isArray(res.payload.tipoTrabalho) ? res.payload.tipoTrabalho : [];
       setListaTipoTrabalho(tipoTrabalhoArray);
+
+      const compensacao = tipoTrabalhoArray.filter(item => item.tipo === 4)
+
+      setcompensacaoID(compensacao[0]?._id)
+      setListaTrabalhoAll(tipoTrabalhoArray.filter(item => item.tipo === 1))
+      setListaTrabalhoGeral(tipoTrabalhoArray.filter(item => (item.tipo === 2 || item.tipo === 4)))
+      setListaTrabalhoGeralOther(tipoTrabalhoArray.filter(item => item.tipo === 3))
+
     });
   }, [totalProjetos]);
 
@@ -89,7 +229,7 @@ const ListaProjetos = () => {
       }
       return true;
     });
-    
+
 
     setFilteredProjetos(filteredP);
   }, [values.Data]);
@@ -101,11 +241,83 @@ const ListaProjetos = () => {
       const lista = res.payload.dia
       setListaDias(lista);
 
+      const projetoGeral = (filteredProjetos.filter(item => item.Nome === "Geral"));
+
+      let countHours = 0;
+      const dayStart = new Date(Date.UTC(2023, 10, 6, 0, 0, 0));
+
+      const startDay = dayStart.getDate();
+      const startMonth = dayStart.getMonth();
+      const startYear = dayStart.getFullYear();
+
+      const extraHours = lista.filter(item => {
+        const date = new Date(item.Data)
+        const dayOfWeek = date.getDay();
+        const isWeekend = dayOfWeek === 0 || dayOfWeek === 1;
+        const isFriday = dayOfWeek === 5;
+
+
+        const currentDay = date.getDate();
+        const currentMonth = date.getMonth();
+        const currentYear = date.getFullYear();
+
+        if (
+          currentYear > startYear ||
+          currentMonth > startMonth ||
+          (
+            currentYear === startYear &&
+            currentMonth === startMonth &&
+            currentDay > startDay)
+        ) {
+
+
+          for (let i = 0; i < item.tipoDeTrabalhoHoras.length; i++) {
+            const projeto = item.tipoDeTrabalhoHoras[i]
+
+            if (projeto.projeto === projetoGeral[0]?._id) {
+              const tt = projeto.tipoTrabalho.split(',') || [];
+              const ttH = projeto.horas.split(',') || [];
+
+              for (let j = 0; j < tt.length; j++) {
+                if (tt[j] === compensacaoID) {
+                  countHours -= ttH[j];
+                }
+              }
+            }
+          }
+
+          if (feriadosPortugal(date)) {
+            countHours += item.NumeroHoras;
+            return true;
+          }
+          if (isWeekend) {
+            countHours += item.NumeroHoras;
+            return true;
+          }
+          if (isFriday && item.NumeroHoras > 6) {
+            countHours += item.NumeroHoras - 6;
+            return true;
+          }
+          if (!isFriday && item.NumeroHoras > 8.5) {
+            countHours += item.NumeroHoras - 8.5;
+            return true;
+          }
+          return false;
+        }
+      });
+
+      setHorasExtra(countHours);
+      setHorasExtraAfter(countHours);
+
       const firstDateWithLessThan8Hours = lista.reduceRight((acc, item) => {
         const itemDate = new Date(item.Data);
+        const itemDayOfWeek = itemDate.getDay();
+        if ((itemDayOfWeek !== 0 && itemDayOfWeek !== 6) && item.NumeroHoras < 6) {
+          return itemDate.getTime() >= acc?.getTime ? item : acc;
+        }
 
-        if (item.NumeroHoras < 8) {
-          return itemDate >= acc ? item : acc;
+        if (itemDayOfWeek !== 5 && item.NumeroHoras < 8) {
+          return itemDate.getTime() >= acc?.getTime ? item : acc;
         }
         return acc;
       }, null);
@@ -119,20 +331,62 @@ const ListaProjetos = () => {
       let targetDate = null;
       const date = new Date().toISOString().slice(0, 10);
       let today = new Date(date);
+
+      const todayDay = today.getDate();
+      const todayMonth = today.getMonth();
+      const todayYear = today.getFullYear();
+
       for (let i = 0; i < sortedDates.length + 1; i++) {
         if (i === sortedDates.length) {
           targetDate = today;
         } else {
           targetDate = sortedDates[i];
         }
-        while (currentDate.getTime() <= targetDate.getTime()) {
+
+        targetDate = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate(), 0, 0, 0, 0);
+        currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 0, 0, 0, 0);
+
+        while (currentDate <= targetDate) {
+
           if (feriadosPortugal(currentDate)) {
             currentDate.setDate(currentDate.getDate() + 1);
+
+            const itemDay = targetDate.getDate();
+            const itemMonth = targetDate.getMonth();
+            const itemYear = targetDate.getFullYear();
+
+            const currentDay = currentDate.getDate();
+            const currentMonth = currentDate.getMonth();
+            const currentYear = currentDate.getFullYear();
+
+            if (
+              currentYear !== itemYear ||
+              currentMonth !== itemMonth ||
+              currentDay !== itemDay
+            ) {
+              break;
+            }
           }
 
+          const itemDay = targetDate.getDate();
+          const itemMonth = targetDate.getMonth();
+          const itemYear = targetDate.getFullYear();
 
-          if (currentDate.getTime() === targetDate.getTime()) {
-            if (currentDate.getTime() === today?.getTime()) {
+          const currentDay = currentDate.getDate();
+          const currentMonth = currentDate.getMonth();
+          const currentYear = currentDate.getFullYear();
+
+          if (
+            currentYear === itemYear &&
+            currentMonth === itemMonth &&
+            currentDay === itemDay
+          ) {
+
+            if (
+              currentYear === todayYear &&
+              currentMonth === todayMonth &&
+              currentDay === todayDay
+            ) {
               missingDate = new Date(currentDate.getTime());
               break;
             }
@@ -154,40 +408,56 @@ const ListaProjetos = () => {
         }
       }
 
-      if (firstDateWithLessThan8Hours === null || missingDate.getTime < new Date(firstDateWithLessThan8Hours.Data).getTime()) {
+      if (firstDateWithLessThan8Hours === null || missingDate.getTime() < new Date(firstDateWithLessThan8Hours).getTime()) {
         setValues({
           ...values,
           Data: missingDate,
         });
       } else {
         const tipoDeTrabalhoHoras = {}
-        for (let j = 0; j < firstDateWithLessThan8Hours.tipoDeTrabalhoHoras.length; j++) {
+        for (let j = 0; j < firstDateWithLessThan8Hours?.tipoDeTrabalhoHoras?.length; j++) {
           const val = firstDateWithLessThan8Hours.tipoDeTrabalhoHoras[j].projeto;
           tipoDeTrabalhoHoras[val] = firstDateWithLessThan8Hours.tipoDeTrabalhoHoras[j];
         }
         setValues({
           ...values,
-          Data: firstDateWithLessThan8Hours.Data,
+          Data: firstDateWithLessThan8Hours,
         });
       }
 
       const lastDateWithMoreThan8Hours = lista.reduceRight((acc, item) => {
         const itemDate = new Date(item.Data);
+        if (
+          (values?.Data && new Date(values.Data).getDay() !== 5 && (itemDate.getDay() !== 5 && item.NumeroHoras >= 8)) ||
+          (values?.Data && new Date(values.Data).getDay() === 5 && (itemDate.getDay() === 5 && item.NumeroHoras >= 6))
+        ) {
 
-        if (item.NumeroHoras >= 8) {
-          return itemDate.getTime >= acc.getTime ? item : acc;
+          if (!acc.Data) {
+            return item;
+          }
+          const data = acc.Data;
+          const date = new Date(data);
+
+          if (!isNaN(date)) {
+            if (itemDate.getTime() >= date.getTime()) {
+              return item;
+            }
+          } else {
+            if (itemDate.getTime() >= acc.Data) {
+              return item;
+            }
+          }
         }
         return acc;
       }, new Date(null));
 
-
-
       setLastDate(lastDateWithMoreThan8Hours);
       setDataCopy({
-        DataCopy: lastDateWithMoreThan8Hours?.Data,
-      })
+        DataCopy: lastDateWithMoreThan8Hours.Data,
+      });
     });
   }, [totalProjetos]);
+
 
   function feriadosPortugal(date) {
     const feriados = [];
@@ -260,11 +530,22 @@ const ListaProjetos = () => {
   const verificaDiaLast = useCallback((e) => {
     const { value } = e.target;
     const dataEscolhida = new Date(value);
+
+
+
+    const currentDay = dataEscolhida.getDate();
+    const currentMonth = dataEscolhida.getMonth();
+    const currentYear = dataEscolhida.getFullYear();
+
+
     const copiaEscolhida = listaDias.reduceRight((acc, item) => {
       const itemDate = new Date(item.Data);
-      if (itemDate.getTime() === dataEscolhida.getTime()) {
 
+      const itemDay = itemDate.getDate();
+      const itemMonth = itemDate.getMonth();
+      const itemYear = itemDate.getFullYear();
 
+      if (currentYear === itemYear && currentMonth === itemMonth && currentDay === itemDay) {
         return item;
       }
       return acc;
@@ -298,6 +579,7 @@ const ListaProjetos = () => {
       setDataCopy({
         DataCopy: copiaEscolhida?.Data,
       });
+
       setLastDate(copiaEscolhida);
     } else {
       setCopyExists(false);
@@ -320,10 +602,8 @@ const ListaProjetos = () => {
       const pilotoBIncludesUser = pilotoBArray.includes(user.user.id) || pilotoBArray.includes(user.user.nome) || pilotoBArray.includes(user.user.login) || pilotoAArray.includes("Todos");
 
       if (nomeA === "Geral") {
-        console.log("nomeA");
         return -1;
       } else if (nomeB === "Geral") {
-        console.log("nomeB");
         return 1;
       }
 
@@ -343,7 +623,20 @@ const ListaProjetos = () => {
     for (let i = 0; i < listaDias.length; i++) {
       const DataRecebida = new Date(listaDias[i].Data);
 
-      if (data.getTime() === DataRecebida.getTime()) {
+
+      const itemDay = data.getDate();
+      const itemMonth = data.getMonth();
+      const itemYear = data.getFullYear();
+
+      const currentDay = DataRecebida.getDate();
+      const currentMonth = DataRecebida.getMonth();
+      const currentYear = DataRecebida.getFullYear();
+
+      if (
+        currentYear === itemYear &&
+        currentMonth === itemMonth &&
+        currentDay === itemDay
+      ) {
         const tipoDeTrabalhoHoras = {};
         let sSProjetos = sProjetos;
         for (let j = 0; j < listaDias[i].tipoDeTrabalhoHoras.length; j++) {
@@ -404,10 +697,22 @@ const ListaProjetos = () => {
     }));
   };
 
+
+
+
   const handleDia = async (e) => {
     e.preventDefault();
-    if (horasT > 8) {
-      toast.error('Valor inserido excede as 8 Horas diarias!');
+
+    const date = new Date(values.Data)
+
+    if (date.getDay() === 5) {
+      if (horasT > 6) {
+        toast.error('Valor inserido excede as 6 Horas!');
+      }
+    } else {
+      if (horasT > 8.5) {
+        toast.error('Valor inserido excede as 8 horas e 30 minutos diários!');
+      }
     }
     if (horasT <= 0) {
       toast.error('Valor inserido invalido!');
@@ -428,15 +733,24 @@ const ListaProjetos = () => {
 
 
 
-
   const handleHorasChange = (projectId, tipoTrabalho, projectName, e) => {
+
     let newHorasT = horasT;
-    let horasNumber = Number(e.target.value);
+    let horas = e.target.value;
+    // horas example 11:30   i want 11,5
+    let timeParts = horas.split(':');
+
+    // Calculate the decimal representation
+    let horasNumberChange = parseInt(timeParts[0], 10) + parseFloat(timeParts[1]) / 60;
+    let horasNumber = Number(horasNumberChange.toFixed(1));
     let diff = 0;
     if (isNaN(horasNumber) || horasNumber <= 0 || horasNumber === null) {
       horasNumber = 0;
     }
 
+    if (tipoTrabalho === compensacaoID) {
+      setHorasExtraAfter(horasExtra - horasNumber)
+    }
 
     const newTipoDeTrabalhoHoras = { ...values.tipoDeTrabalhoHoras };
     const horasTipoTrabalhoArray = newTipoDeTrabalhoHoras[projectId]?.horas?.split(',') || [];
@@ -450,17 +764,15 @@ const ListaProjetos = () => {
       const newValue = horasNumber;
 
       if (oldValue !== newValue) {
-        diff = newValue - oldValue;
+        diff = (newValue - oldValue);
         horasTipoTrabalhoArray[index] = newValue;
 
-        newTipoDeTrabalhoHoras[projectId] = {
-          ...newTipoDeTrabalhoHoras[projectId],
-          horas: horasTipoTrabalhoArray.join(','),
-        };
-        newHorasT = horasT + diff;
+        newTipoDeTrabalhoHoras[projectId] = { ...newTipoDeTrabalhoHoras[projectId],    horas: horasTipoTrabalhoArray.join(','), };
+        newHorasT = (parseFloat(horasT) + parseFloat(diff)).toFixed(1);
       }
 
     } else {
+
       newShowProjeto = {
         ...newShowProjeto,
         [projectId + tipoTrabalho]: horasNumber
@@ -472,7 +784,7 @@ const ListaProjetos = () => {
         tipoTrabalho: tipoTrabalhoArray.join(','),
         horas: horasTipoTrabalhoArray.join(',')
       };
-      newHorasT = horasT + horasNumber;
+      newHorasT = parseFloat(horasT) +  parseFloat(horasNumber);
     }
     if (newHorasT > 24) {
       toast.error('Valor inserido excede as 24 Horas!');
@@ -488,6 +800,8 @@ const ListaProjetos = () => {
       tipoDeTrabalhoHoras: newTipoDeTrabalhoHoras
     });
 
+
+
     setHorasT(newHorasT);
     setShowProjeto(newShowProjeto);
   };
@@ -495,7 +809,8 @@ const ListaProjetos = () => {
 
   const copiar = (value) => {
     if (value === true) {
-      if(!lastDate?.tipoDeTrabalhoHoras){
+
+      if (!lastDate?.tipoDeTrabalhoHoras) {
         toast.error("Utilizador não possui horas inseridas para copiar");
         return;
       }
@@ -545,7 +860,7 @@ const ListaProjetos = () => {
     return <Loading />;
   }
 
-  
+
   const matchFoundProjeto = new Array(sortedProjetos.length).fill(false);
   const arrayTipoTrabalho = Object.entries(values.tipoDeTrabalhoHoras).map(([key, value]) => ({ _id: key, ...value }));
   let counter = 0;
@@ -558,11 +873,53 @@ const ListaProjetos = () => {
     horasP[project._id] = 0;
   });
 
+
+
+
+  function convertToMinutes(timeString) {
+    if (timeString) {
+      try {
+        let [hours, minutes] = timeString.toString().split(".");
+
+        // Convert the hours to an integer
+        const hoursInt = parseInt(hours, 10);
+        // Convert the fraction of an hour to minutes
+        if (!minutes) {
+          minutes = 0;
+        }
+        let formattedMinutes = Math.round(minutes * 60) / 10;
+        if (formattedMinutes === 60) {
+          formattedMinutes = 0;
+          formattedHours += 1;
+        }
+        // Use String.padStart to format hours and minutes with leading zeros
+        const formattedHours = hoursInt.toString().padStart(2, "0");
+        formattedMinutes = formattedMinutes.toString().padStart(2, '0');
+
+        const formattedTime = `${formattedHours}:${formattedMinutes}`;
+
+        return formattedTime;
+      } catch (error) {
+        console.log(error)
+        console.log(timeString)
+        return timeString;
+      }
+    }
+    return timeString;
+  }
+
   return (
     <Wrapper>
       <div className="container">
         <div>
-          <h3>{verificaDiaCalled ? 'Editar Dia' : 'Adicionar Dia'}</h3>
+          <div className='row'>
+            <div className='col-6'>
+              <h3>{verificaDiaCalled ? 'Editar Dia' : 'Adicionar Dia'}</h3>
+            </div>
+            <div className='col-6 text-end'>
+              <h4>{horasExtraAfter ? 'Horas extra  ' + convertToMinutes(horasExtraAfter) : ''}</h4>
+            </div>
+          </div>
           <div className='row'>
             <div className='col-6'>
               <FormRow
@@ -617,7 +974,7 @@ const ListaProjetos = () => {
                     <button
                       onClick={() => copiar(false)}
                       className='btn'
-                      style={{ margin: '5%'}}
+                      style={{ margin: '5%' }}
                     >
                       <AiOutlineClose />
                     </button>
@@ -667,8 +1024,6 @@ const ListaProjetos = () => {
                           <FaCaretDown />
                         </button>
 
-
-
                         <div
                           className={
                             `dropdown ${showProjeto[project._id] ? "show-dropdown" : "hidden-dropdown"}
@@ -677,43 +1032,81 @@ const ListaProjetos = () => {
                         >
                           <div className="row mb-3 text-center" key={"NewDia" + project._id}>
                             {!verificaChange && (
-                              (project.Nome !== "Geral" ? StringListaTrabalho : StringListaTrabalhoGeral).split(",").map((t, i) => (
+                              (project.Nome !== "Geral" ? StringListaTrabalho : StringListaTrabalhoGeral).split(",").map((t, i) => {
+                                const ttID = listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(",");
+                                let value = "";
+                                if(values.tipoDeTrabalhoHoras[project._id]){
+                                  const valuesHorasTypeArray = values.tipoDeTrabalhoHoras[project._id].horas ? values.tipoDeTrabalhoHoras[project._id].horas.split(",") : [];
+                                  const valuesTTTypeArray = values.tipoDeTrabalhoHoras[project._id].tipoTrabalho ? values.tipoDeTrabalhoHoras[project._id].tipoTrabalho.split(",") : [];
+                                  
+                                  for(let h=0; h< valuesHorasTypeArray.length; h++){
+                                    if(valuesTTTypeArray[h] === ttID){
+                                      console.log("EQQQUAL")
+                                      value = valuesHorasTypeArray[h];
+                                    }
+                                  }
+                                }
+                                return (
+                                  <div className="row mb-3 text-center" key={"NovoDia" + i}>
+                                    <div className="col-md-9 text-start themed-grid-col">
+                                      <p>{t}</p>
+                                    </div>
+                                    <div className="col-md-3 themed-grid-col">
+                                      <input
+                                        type="time"  //time
+                                        min="00:00"
+                                        max="24:00"
+                                        id="horas"
+                                        className="horas"
+                                        step="300"
+                                        placeholder="00:00"
+                                        value={convertToMinutes(value)}
+                                        onChange={(e) =>
+                                          handleHorasChange(
+                                            project._id,
+                                            ttID,
+                                            project.Nome,
+                                            e
+                                          )
+                                        }
 
-                                <div className="row mb-3 text-center" key={"NovoDia" + i}>
-                                  <div className="col-md-9 text-start themed-grid-col">
-                                    <p>{t} </p>
+                                      />
+                                    </div>
                                   </div>
-                                  <div className="col-md-3 themed-grid-col">
-                                    <input
-                                      type="number"
-                                      min="0"
-                                      max="24"
-                                      id="horas"
-                                      className="horas"
-                                      placeholder="0"
-                                      value={values.tipoDeTrabalhoHoras[project.Nome]?.[t]}
-                                      onChange={(e) =>
-                                        handleHorasChange(
-                                          project._id,
-                                          listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(","),
-                                          project.Nome,
-                                          e
-                                        )
-                                      }
-                                    />
-                                  </div>
-                                </div>
-                              )
-                              )
+                                )
+                              })
                             )
                             }
+
+                            {project.Nome === "Geral" && (
+                              <div className="row mb-3 text-center" key={"Other"}>
+                                <div className="col-md-12 text-center themed-grid-col">
+
+
+                                  <input
+                                    id="autocomplete"
+                                    type="text"
+                                    value={inputValue}
+                                    onChange={handleInputChange}
+                                    placeholder="Outro..."
+                                    autoComplete="off"
+                                  />
+                                  <button
+                                    type="submit"
+                                    disabled={isLoading}
+                                    onClick={(e) => { handleTipoTrabalho(e) }}
+                                  ><IoAddOutline /> </button>
+                                  {inputValue && renderOptions()}
+                                </div>
+                              </div>
+                            )}
+
 
 
 
                             <div key={"NewDia" + project._id}>
                               {verificaChange && values.tipoDeTrabalhoHoras.length !== 0 && Array.isArray(arrayTipoTrabalho) &&
                                 arrayTipoTrabalho.map((item, ID) => {
-
                                   counter++;
                                   const itemTypeArray = item.tipoTrabalho ? item.tipoTrabalho.split(",") : [];
                                   const matchFound = new Array(itemTypeArray.length + 1).fill(false);
@@ -721,9 +1114,7 @@ const ListaProjetos = () => {
                                   if (project._id === item.projeto) {
 
                                     const valuesHorasTypeArray = values.tipoDeTrabalhoHoras[project._id].horas ? values.tipoDeTrabalhoHoras[project._id].horas.split(",") : [];
-                                    // console.log(valuesHorasTypeArray)
-                                    // console.log(listaTipoTrabalho)
-                                    // console.log(itemTypeArray)
+
                                     matchFoundProjeto[idProjeto] = true;
                                     let counter1 = -1;
                                     return (
@@ -731,10 +1122,12 @@ const ListaProjetos = () => {
 
                                         {(project.Nome !== "Geral" ? StringListaTrabalho : StringListaTrabalhoGeral).split(",").map((t, i) =>
                                           itemTypeArray.map((iT, iId) => {
-                                            if ((project.Nome !== "Geral" ? listaTipoTrabalho.filter(item => item.tipo === 1)[i]._id : listaTipoTrabalho.filter(item => item.tipo === 2)[i]._id) === iT) {
+
+                                            if ((project.Nome !== "Geral" ? ListaTrabalhoAll[i]._id : ListaTrabalhoGeral[i]._id) === iT) {
 
                                               matchFound[i] = true;
                                               counter1++;
+
                                               return (
                                                 <div className="row mb-3 text-center" key={"EditarDiaTTFound" + iId}>
                                                   <div className="col-md-9 text-start themed-grid-col">
@@ -743,15 +1136,16 @@ const ListaProjetos = () => {
                                                   </div>
                                                   <div className="col-md-3 themed-grid-col">
                                                     <input
-                                                      type="number"
-                                                      min="0"
-                                                      max="24"
-                                                      id={`horas-${item._id}`}
+                                                      type="time"  //time
+                                                      min="00:00"
+                                                      max="24:00"
                                                       className="horas"
-                                                      placeholder="0"
+                                                      step="300"
+                                                      placeholder="00:00"
+                                                      id={`horas-${item._id}`}
                                                       value={
                                                         valuesHorasTypeArray[iId] != null && !isNaN(valuesHorasTypeArray[iId])
-                                                          ? valuesHorasTypeArray[iId]
+                                                          ? convertToMinutes(valuesHorasTypeArray[iId])
                                                           : []
                                                       }
                                                       onChange={(e) =>
@@ -777,12 +1171,14 @@ const ListaProjetos = () => {
                                                       <div className="col-md-3 themed-grid-col">
                                                         <input
                                                           key={i}
-                                                          type="number"
-                                                          min="0"
-                                                          max="24"
+                                                          type="time"
+                                                          min="00:00"
+                                                          max="24:00"
+                                                          step="300"
+                                                          placeholder="00:00"
                                                           id={`horas-${item._id}`}
                                                           className="horas"
-                                                          placeholder="0"
+
                                                           value={
                                                             isNaN(values.tipoDeTrabalhoHoras[project.Nome]?.[t])
                                                           }
@@ -805,6 +1201,48 @@ const ListaProjetos = () => {
                                           )
                                         )
                                         }
+
+                                        {project.Nome === "Geral" && StringListaTrabalhoGeralOther.length > 0 && StringListaTrabalhoGeralOther.split(",").map((t, i) =>
+                                          itemTypeArray.map((iT, iId) => {
+
+                                            if ((project.Nome === "Geral" && ListaTrabalhoGeralOther[i]._id) === iT) {
+                                              matchFound[i] = true;
+                                              counter1++;
+                                              return (
+                                                <div className="row mb-3 text-center" key={"EditarDiaTTFound" + iId}>
+                                                  <div className="col-md-9 text-start themed-grid-col">
+                                                    <p>{t}</p>
+                                                  </div>
+                                                  <div className="col-md-3 themed-grid-col">
+                                                    <input
+                                                      type="time"
+                                                      min="00:00"
+                                                      max="24:00"
+                                                      step="300"
+                                                      placeholder="00:00"
+                                                      id={`horas-${item._id}`}
+                                                      className="horas"
+                                                      value={
+                                                        valuesHorasTypeArray[iId] != null && !isNaN(valuesHorasTypeArray[iId])
+                                                          ? convertToMinutes(valuesHorasTypeArray[iId])
+                                                          : []
+                                                      }
+                                                      onChange={(e) =>
+                                                        handleHorasChange(
+                                                          project._id,
+                                                          listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(","),
+                                                          project.Nome,
+                                                          e
+                                                        )
+                                                      }
+                                                    />
+                                                  </div>
+                                                </div>
+                                              );
+                                            }
+                                          }
+                                          )
+                                        )}
                                       </div>
                                     );
                                   } else {
@@ -812,6 +1250,19 @@ const ListaProjetos = () => {
                                       return (
                                         <div key={"EditarDiaProjetoNotFound" + idProjeto}>
                                           {(project.Nome !== "Geral" ? StringListaTrabalho : StringListaTrabalhoGeral).split(",").map((t, i) => {
+                                            const ttID = (listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(","))
+                                            let value = "";
+
+                                            if(values.tipoDeTrabalhoHoras[project._id]){
+                                              const valuesHorasTypeArray = values.tipoDeTrabalhoHoras[project._id].horas ? values.tipoDeTrabalhoHoras[project._id].horas.split(",") : [];
+                                              const valuesTTTypeArray = values.tipoDeTrabalhoHoras[project._id].tipoTrabalho ? values.tipoDeTrabalhoHoras[project._id].tipoTrabalho.split(",") : [];
+                                              
+                                              for(let h=0; h< valuesHorasTypeArray.length; h++){
+                                                if(valuesTTTypeArray[h] === ttID){
+                                                  value = valuesHorasTypeArray[h];
+                                                }
+                                              }
+                                            }
                                             return (
                                               <div className="row mb-3 text-center" key={"EditarDiaProjetoNotFoundList" + i}>
                                                 <div className="col-md-9 text-start themed-grid-col" >
@@ -819,17 +1270,20 @@ const ListaProjetos = () => {
                                                 </div>
                                                 <div className="col-md-3 themed-grid-col">
                                                   <input
-                                                    type="number"
-                                                    min="0"
-                                                    max="24"
+                                                    type="time"  //time
+                                                    min="00:00"
+                                                    max="24:00"
                                                     id="horas"
                                                     className="horas"
-                                                    placeholder="0"
-                                                    value={values.tipoDeTrabalhoHoras[project.Nome]?.t}
+                                                    step="300"
+                                                    placeholder="00:00"
+
+
+                                                    value={convertToMinutes(value)}
                                                     onChange={(e) =>
                                                       handleHorasChange(
                                                         project._id,
-                                                        listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(","),
+                                                        ttID,
                                                         project.Nome,
                                                         e
                                                       )
@@ -858,9 +1312,10 @@ const ListaProjetos = () => {
                       <div className={`col-md-2  text-start ${showProjeto[project._id] ? "hidden-dropdown" : "show-dropdown"}`}>
                         {values.tipoDeTrabalhoHoras[project._id]?.horas && values.tipoDeTrabalhoHoras[project._id]?.horas.split(",").map((t, i) => {
                           horasP[project._id] += +t;
+
                           return null;
                         })}
-                        <h3>{horasP[project._id] !== 0 ? horasP[project._id] : ''}</h3>
+                        <h3>{horasP[project._id] !== 0 ? convertToMinutes(horasP[project._id]) : ''}</h3>
                       </div>
                     </div>
 
@@ -873,7 +1328,15 @@ const ListaProjetos = () => {
           {numOfPages > 1 && <PageBtnContainer />}
           <div className="card text-center">
             <div className="card-body">
-              <h5 className="card-title">Total de horas: {horasT}</h5>
+              <h5 className="card-title">
+                Total de horas: {convertToMinutes(horasT)}
+                {values?.Data && new Date(values.Data).getDay() === 5
+                  ? " | 6:00 H"
+                  : values?.Data && (new Date(values.Data).getDay() === 0 || new Date(values.Data).getDay() === 6)
+                    ? ""
+                    : " | 8:30 H"}
+              </h5>
+
             </div>
 
             <div className="card-body">

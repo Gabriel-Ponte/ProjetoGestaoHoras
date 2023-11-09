@@ -18,6 +18,14 @@ const getAllTiposTrabalho = async (req, res) => {
     }
   };
 
+  const createTipoTrabalhoOther = async (req, res) => {
+    try {
+      const tipoTrabalho = await TipoTrabalho.create(req.body);
+      res.status(StatusCodes.CREATED).json({ tipoTrabalho });
+    } catch (error) {
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error });
+    }
+  };
 
 
   const updateTipoTrabalho = async (req, res) => {
@@ -58,6 +66,7 @@ const getAllTiposTrabalho = async (req, res) => {
   module.exports = {
     getAllTiposTrabalho,
     createTipoTrabalho,
+    createTipoTrabalhoOther,
     deleteTipoTrabalho,
     updateTipoTrabalho,
   };

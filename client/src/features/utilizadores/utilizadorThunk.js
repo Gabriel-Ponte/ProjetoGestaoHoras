@@ -28,7 +28,6 @@ export const updateResetedPasswordThunk = async (  thunkAPI, values ) => {
     return resp.data;
 
   } catch (error) {
-    //console.log("ERROR Updating" , error)
     return checkForUnauthorizedResponse(error, thunkAPI);
   }
 };

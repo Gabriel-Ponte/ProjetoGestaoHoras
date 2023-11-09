@@ -35,7 +35,7 @@ export const getAllProjetos1 = createAsyncThunk(
       return getAllP;
     }
     catch (error) {
-      console.log(error)
+      console.error(error)
       return rejectWithValue(error.response.data);
     }
   }
