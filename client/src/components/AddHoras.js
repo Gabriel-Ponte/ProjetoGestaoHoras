@@ -4,16 +4,13 @@ import Wrapper from '../assets/wrappers/addDias';
 import { FaCaretDown } from 'react-icons/fa';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAllProjetos1, handleChange } from '../features/allProjetos/allProjetosSlice';
-import { getTipoTrabalho, createTipoTrabalho, createTipoTrabalhoOther } from '../features/tipoTrabalho/tipoTrabalhoSlice';
+import { getTipoTrabalho, createTipoTrabalhoOther } from '../features/tipoTrabalho/tipoTrabalhoSlice';
 import { toast } from 'react-toastify';
 import { createDia, getDia, editDia } from '../features/dias/diasSlice';
 import { FormRow } from '../components';
 import PageBtnContainer from './PageBtnContainer';
 import Loading from './Loading';
-import Select from 'react-select';
 import { IoAddOutline } from 'react-icons/io5'
-import { createTipoTrabalhoOtherThunk } from '../features/tipoTrabalho/tipoTrabalhoThunk';
-
 
 const initialState = {
   _id: '',
@@ -120,8 +117,13 @@ const ListaProjetos = () => {
         let originalCaseInputValue = "";
         if (!options.some(option => option.toLowerCase() === inputValue.toLowerCase())) {
           await dispatch(createTipoTrabalhoOther({ TipoTrabalho: inputValue, tipo: 3 })).then((res) => {
+            
             const tipoTrabalhoArray = Array.isArray(res.payload.tipoTrabalho) ? res.payload.tipoTrabalho : [res.payload.tipoTrabalho];
+            
             const updatedListaTrabalhoGeral = [...ListaTrabalhoGeral, ...tipoTrabalhoArray];
+            const updatedListaTipoTrabalho = [...listaTipoTrabalho, ...tipoTrabalhoArray];
+           
+            setListaTipoTrabalho(updatedListaTipoTrabalho,);
             setListaTrabalhoGeral(updatedListaTrabalhoGeral);
           })
           originalCaseInputValue = inputValue;
@@ -900,8 +902,7 @@ const ListaProjetos = () => {
 
         return formattedTime;
       } catch (error) {
-        console.log(error)
-        console.log(timeString)
+        console.error(error)
         return timeString;
       }
     }
@@ -1041,7 +1042,6 @@ const ListaProjetos = () => {
                                   
                                   for(let h=0; h< valuesHorasTypeArray.length; h++){
                                     if(valuesTTTypeArray[h] === ttID){
-                                      console.log("EQQQUAL")
                                       value = valuesHorasTypeArray[h];
                                     }
                                   }
@@ -1049,11 +1049,11 @@ const ListaProjetos = () => {
                                 return (
                                   <div className="row mb-3 text-center" key={"NovoDia" + i}>
                                     <div className="col-md-9 text-start themed-grid-col">
-                                      <p>{t}</p>
+                                      <p>{t}teste</p>
                                     </div>
                                     <div className="col-md-3 themed-grid-col">
                                       <input
-                                        type="time"  //time
+                                        type="time" 
                                         min="00:00"
                                         max="24:00"
                                         id="horas"

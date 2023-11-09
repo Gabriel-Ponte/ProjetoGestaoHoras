@@ -4,15 +4,13 @@ import Wrapper from '../assets/wrappers/addDias';
 import { FaCaretDown } from 'react-icons/fa';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAllProjetos1, handleChange } from '../features/allProjetos/allProjetosSlice';
-import { getTipoTrabalho, createTipoTrabalho, createTipoTrabalhoOther } from '../features/tipoTrabalho/tipoTrabalhoSlice';
+import { getTipoTrabalho, createTipoTrabalhoOther } from '../features/tipoTrabalho/tipoTrabalhoSlice';
 import { toast } from 'react-toastify';
 import { createDia, getDia, editDia } from '../features/dias/diasSlice';
 import { FormRow } from '../components';
 import PageBtnContainer from './PageBtnContainer';
 import Loading from './Loading';
-import Select from 'react-select';
 import {IoAddOutline} from 'react-icons/io5'
-import { createTipoTrabalhoOtherThunk } from '../features/tipoTrabalho/tipoTrabalhoThunk';
 
 
 const initialState = {
