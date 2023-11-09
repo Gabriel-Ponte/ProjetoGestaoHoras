@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
 const ExcelJS = require('exceljs');
-const { exec } = require('child_process');
 
 function updateExcell() {
 
