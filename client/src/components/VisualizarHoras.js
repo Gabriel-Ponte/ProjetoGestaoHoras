@@ -387,8 +387,7 @@ const ListaHoras = () => {
 
         return formattedTime;
       } catch (error) {
-        console.log(error)
-        console.log(timeString)
+        console.error(error)
         return timeString;
       }
     }
