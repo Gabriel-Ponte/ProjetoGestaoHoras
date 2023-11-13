@@ -82,13 +82,15 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPos
         // Convert the hours to an integer
         const hoursInt = parseInt(hours, 10);
         // Convert the fraction of an hour to minutes
+        minutes = parseInt(minutes) < 10 ? `${minutes}0` : minutes;
+
         if (!minutes) {
           minutes = 0;
         }
-        let formattedMinutes = Math.round(minutes * 60) / 10;
+        let formattedMinutes = Math.round(minutes * 60) / 100;
         if (formattedMinutes === 60) {
           formattedMinutes = 0;
-          formattedHours += 1;
+          // formattedHours += 1;
         }
         // Use String.padStart to format hours and minutes with leading zeros
         const formattedHours = hoursInt.toString().padStart(2, "0");
@@ -102,7 +104,6 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPos
         return timeString;
       }
     }
-
     return timeString;
   }
 

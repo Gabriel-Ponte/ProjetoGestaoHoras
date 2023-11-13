@@ -851,6 +851,38 @@ const ListaProjetos = () => {
     return <Loading />;
   }
 
+
+    // function convertToInt(timeString) {
+  //   if (timeString) {
+  //     try {
+  //       let [hours, minutes] = timeString.toString().split(":");
+  
+  //       // Convert the hours to an integer
+  //       const hoursInt = parseInt(hours, 10);
+  
+  //       // Convert the minutes to a number and calculate the rounded percentage of an hour
+  //       let minutesInt = parseFloat(minutes) || 0;
+  //       const percentageOfHour = Math.round((minutesInt / 60) * 100 / 25) * 25;
+  //       console.log(percentageOfHour)
+  //       // Calculate the rounded minutes based on the percentage of an hour
+  //       let roundedMinutes = Math.round((percentageOfHour / 100) * 60);
+  //       if (roundedMinutes === 60) {
+  //         roundedMinutes = 0;
+  //       }
+  //       // Use String.padStart to format hours and minutes with leading zeros
+  //       const formattedHours = hoursInt.toString().padStart(2, "0");
+  //       const formattedMinutes = roundedMinutes.toString().padStart(2, '0');
+
+  //       const formattedTime = `${formattedHours}:${formattedMinutes}`;
+  
+  //       return formattedTime;
+  //     } catch (error) {
+  //       console.error(error);
+  //       return timeString;
+  //     }
+  //   }
+  //   return timeString;
+  // }
   
   const matchFoundProjeto = new Array(sortedProjetos.length).fill(false);
   const arrayTipoTrabalho = Object.entries(values.tipoDeTrabalhoHoras).map(([key, value]) => ({ _id: key, ...value }));

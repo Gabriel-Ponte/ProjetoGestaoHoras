@@ -187,7 +187,7 @@ const ListaHoras = () => {
           listaDiasA.filter(item => {
             const date = new Date(item.Data)
             const dayOfWeek = date.getDay();
-            const isWeekend = dayOfWeek === 0 || dayOfWeek === 1;
+            const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
             const isFriday = dayOfWeek === 5;
 
             
@@ -353,15 +353,18 @@ const ListaHoras = () => {
         let [hours, minutes] = timeString.toString().split(".");
 
         // Convert the hours to an integer
-        let hoursInt = parseInt(hours, 10);
+        const hoursInt = parseInt(hours, 10);
         // Convert the fraction of an hour to minutes
+        minutes = parseInt(minutes) < 10 ? `${minutes}0` : minutes;
+
         if (!minutes) {
           minutes = 0;
         }
-        let formattedMinutes = Math.round(minutes * 60) / 10;
+        console.log(minutes)
+        let formattedMinutes = Math.round(minutes * 60) / 100;
         if (formattedMinutes === 60) {
           formattedMinutes = 0;
-          hoursInt += 1;
+          // formattedHours += 1;
         }
         // Use String.padStart to format hours and minutes with leading zeros
         const formattedHours = hoursInt.toString().padStart(2, "0");
@@ -375,10 +378,8 @@ const ListaHoras = () => {
         return timeString;
       }
     }
-
     return timeString;
   }
-
 
   //Change to refresh
   if (isLoading) {

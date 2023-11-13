@@ -1,6 +1,8 @@
 import BigSidebar from './BigSidebar';
 import AddProjectForm from './AddProjetoForm';
+import TimePickerClock from './TimePickerClock';
 import FormRow from './FormRow';
+
 import FormRowSelect from './FormRowSelect';
 import FormRowSelectTipo from './FormRowSelectTipo';
 import FormRowCheckbox from './FormRowCheckbox';
@@ -24,10 +26,13 @@ import GerirTipoTrabalho from './GerirTipoTrabalho';
 import GerirUtilizadores from './GerirUtilizadores';
 import ForgetPassword from './ForgetPassword';
 import ForgetPasswordChange from './ForgetPasswordChange';
+import OptionsPanel from './OptionsPanel';
 export {
   ListaProjetos,
   BigSidebar,
   AddProjectForm,
+  TimePickerClock,
+  OptionsPanel,
   FormRow,
   FormRowSelect,
   FormRowCheckbox,
