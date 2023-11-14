@@ -1,22 +1,14 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 
-import { AiOutlineClose } from 'react-icons/ai';
 import Wrapper from '../assets/wrappers/addDias';
-import { FaCaretDown } from 'react-icons/fa';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAllProjetos1, handleChange } from '../features/allProjetos/allProjetosSlice';
-import { getTipoTrabalho, createTipoTrabalhoOther } from '../features/tipoTrabalho/tipoTrabalhoSlice';
+import { getTipoTrabalho } from '../features/tipoTrabalho/tipoTrabalhoSlice';
 import { toast } from 'react-toastify';
 import { createDia, getDia, editDia } from '../features/dias/diasSlice';
-import { FormRow } from '../components';
+import { AddHorasCopiar, AddHorasDropdown, FormRow , useFeriadosPortugal } from '../components';
+
 import Loading from './Loading';
-
-import TimePickerClock from './TimePickerClock';
-import OptionsPanel from './OptionsPanel';
-
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-
 
 
 
@@ -32,16 +24,17 @@ const initialState = {
 
 const ListaProjetos = () => {
   const [values, setValues] = useState(initialState);
-  const {
-    projetos,
-    isLoading,
-  } = useSelector((store) => store.allProjetos);
+
+
+
+
+
+  const { projetos, isLoading, } = useSelector((store) => store.allProjetos);
 
   const dispatch = useDispatch();
   const { user } = useSelector((store) => store.utilizador);
 
 
-  const [showProjeto, setShowProjeto] = useState({});
   const [sortedProjetos, seTSortedProjetos] = useState([])
   const [horasT, setHorasT] = useState(0);
   const [DataCopy, setDataCopy] = useState("");
@@ -62,115 +55,16 @@ const ListaProjetos = () => {
   const [horasExtraAfter, setHorasExtraAfter] = useState(null);
 
   const [compensacaoID, setcompensacaoID] = useState();
+  
+  const { feriadosPortugal } = useFeriadosPortugal();
 
-  const [StringListaTrabalho, setStringListaTrabalho] = useState();
-  const [StringListaTrabalhoGeral, setStringListaTrabalhoGeral] = useState();
-  const [StringListaTrabalhoGeralOther, setStringListaTrabalhoGeralOther] = useState();
-  const [options, setOptions] = useState();
-
-
-
-
-  useEffect(() => {
-    const ListaTrabalho = listaTipoTrabalho
-      .filter(item => item.tipo === 1)
-      .map(item => item.TipoTrabalho)
-      .join(",");
-
-    const ListaTrabalhoGeral = listaTipoTrabalho
-      .filter(item => (item.tipo === 2 || item.tipo === 4))
-      .map(item => item.TipoTrabalho)
-      .join(",");
-
-    const ListaTrabalhoGeralOther = listaTipoTrabalho
-      .filter(item => item.tipo === 3)
-      .map(item => item.TipoTrabalho)
-      .join(",");
-
-    setStringListaTrabalho(ListaTrabalho);
-
-    setStringListaTrabalhoGeral(ListaTrabalhoGeral);
-
-    setStringListaTrabalhoGeralOther(ListaTrabalhoGeralOther);
-
-    setOptions(ListaTrabalhoGeralOther.split(","));
-  }, [listaTipoTrabalho]);
-
-
-
-
-
-
-  const handleTipoTrabalho = async (inputValue) => {
-    console.log(inputValue)
-    if (inputValue && inputValue.trim() !== "") {
-      console.log("dentro 1")
-      const values = StringListaTrabalhoGeral.split(",");
-
-      if (!values.map(value => value.toLowerCase()).includes(inputValue.toLowerCase())) {
-        // Handle when inputValue is not already in StringListaTrabalhoGeral
-
-        // Create a mapping to preserve the original case
-        const inputValueMap = new Map();
-        let originalCaseInputValue = "";
-        if (!options.some(option => option.toLowerCase() === inputValue.toLowerCase())) {
-          await dispatch(createTipoTrabalhoOther({ TipoTrabalho: inputValue, tipo: 3 })).then((res) => {
-
-            const tipoTrabalhoArray = Array.isArray(res.payload.tipoTrabalho) ? res.payload.tipoTrabalho : [res.payload.tipoTrabalho];
-
-            const updatedListaTrabalhoGeral = [...ListaTrabalhoGeral, ...tipoTrabalhoArray];
-            const updatedListaTipoTrabalho = [...listaTipoTrabalho, ...tipoTrabalhoArray];
-
-            setListaTipoTrabalho(updatedListaTipoTrabalho,);
-            setListaTrabalhoGeral(updatedListaTrabalhoGeral);
-          })
-          originalCaseInputValue = inputValue;
-        } else {
-          options.forEach(option => inputValueMap.set(option.toLowerCase(), option));
-          originalCaseInputValue = inputValueMap.get(inputValue.toLowerCase());
-          // Remove originalCaseInputValue from options
-          const updatedOptions = options.filter(option => option.toLowerCase() !== inputValue.toLowerCase());
-          setOptions(updatedOptions);
-
-          const normalizedInputValue = originalCaseInputValue.toLowerCase(); // or .toUpperCase()
-          const tipoTrabalho = ListaTrabalhoGeralOther.filter(item => item.TipoTrabalho.toLowerCase() === normalizedInputValue);
-          const updatedListaTrabalhoGeral = [...ListaTrabalhoGeral, ...tipoTrabalho];
-
-          setListaTrabalhoGeral(updatedListaTrabalhoGeral);
-
-          const updatedListaTrabalhoGeralOther = ListaTrabalhoGeralOther.filter(item => item.TipoTrabalho.toLowerCase() !== normalizedInputValue);
-          setListaTrabalhoGeralOther(updatedListaTrabalhoGeralOther);
-
-          // tipoTrabalhoArray.filter(item => item.tipo === 3))
-
-
-          let NovaStringListaTrabalhoGeralOther = StringListaTrabalhoGeralOther.split(",");
-
-          // Use the mapping to get the original case of inputValue
-          NovaStringListaTrabalhoGeralOther = NovaStringListaTrabalhoGeralOther.filter(item => item !== originalCaseInputValue);
-
-          setStringListaTrabalhoGeralOther(NovaStringListaTrabalhoGeralOther.join(","));
-        }
-
-        let NovaStringListaTrabalhoGeral = StringListaTrabalhoGeral.split(",");
-
-        // Use the mapping to get the original case of inputValue
-
-        NovaStringListaTrabalhoGeral.push(originalCaseInputValue);
-
-        setStringListaTrabalhoGeral(NovaStringListaTrabalhoGeral.join(","));
-
-      } else {
-        toast.error('Valor inserido não permitido!');
-      }
-    }
-  }
-
+  const [constLoaded, setConstLoaded] = useState(false);
 
   useEffect(() => {
     dispatch(handleChange({ name: 'projetoFinalizado', value: "false" }));
     dispatch(handleChange({ name: 'DataObjetivoC', value: "true" }));
     dispatch(getAllProjetos1(""))
+
 
     dispatch(getTipoTrabalho()).then((res) => {
 
@@ -185,10 +79,13 @@ const ListaProjetos = () => {
       setListaTrabalhoGeralOther(tipoTrabalhoArray.filter(item => item.tipo === 3))
 
     });
-  }, [dispatch]);
 
+    setConstLoaded(true);
+
+  }, []);
 
   useEffect(() => {
+    if(constLoaded){
     const dateP = values.Data ? new Date(values.Data) : new Date();
     const filteredP = projetos.filter((p) => {
       const dataI = new Date(p.DataInicio);
@@ -207,23 +104,19 @@ const ListaProjetos = () => {
       return true;
     });
 
-
     setFilteredProjetos(filteredP);
-    setValues({
-      ...values,
-      loaded: true,
-    });
-  }, [values.Data, projetos]);
+
+    }
+  }, [projetos]);
 
 
   useEffect(() => {
-
+    if(constLoaded){
     dispatch(getDia(values.Data, user.user.id)).then((res) => {
       const lista = res.payload.dia
       setListaDias(lista);
 
       const projetoGeral = (filteredProjetos.filter(item => item.Nome === "Geral"));
-
       let countHours = 0;
       const dayStart = new Date(Date.UTC(2023, 10, 6, 0, 0, 0));
 
@@ -254,7 +147,6 @@ const ListaProjetos = () => {
 
           for (let i = 0; i < item.tipoDeTrabalhoHoras.length; i++) {
             const projeto = item.tipoDeTrabalhoHoras[i]
-
             if (projeto.projeto === projetoGeral[0]?._id) {
               const tt = projeto.tipoTrabalho.split(',') || [];
               const ttH = projeto.horas.split(',') || [];
@@ -285,6 +177,8 @@ const ListaProjetos = () => {
           }
           return false;
         }
+
+        return;
       });
 
       setHorasExtra(countHours);
@@ -393,6 +287,7 @@ const ListaProjetos = () => {
         setValues({
           ...values,
           Data: missingDate,
+          loaded: true,
         });
       } else {
         const tipoDeTrabalhoHoras = {}
@@ -400,9 +295,11 @@ const ListaProjetos = () => {
           const val = firstDateWithLessThan8Hours.tipoDeTrabalhoHoras[j].projeto;
           tipoDeTrabalhoHoras[val] = firstDateWithLessThan8Hours.tipoDeTrabalhoHoras[j];
         }
+        
         setValues({
           ...values,
           Data: firstDateWithLessThan8Hours,
+          loaded: true,
         });
       }
 
@@ -437,92 +334,14 @@ const ListaProjetos = () => {
         DataCopy: lastDateWithMoreThan8Hours.Data,
       });
     });
-  }, [dispatch]);
-
-
-  function feriadosPortugal(date) {
-    const feriados = getHolidaysForYear(date.getFullYear());
-
-    for (const feriado of feriados) {
-      if (
-        date.getDate() === feriado.date.getDate() &&
-        date.getMonth() === feriado.date.getMonth() &&
-        date.getFullYear() === feriado.date.getFullYear()
-      ) {
-        return true;
-      }
-    }
-
-    return false;
   }
-
-  const holidayCache = {};
-
-  function getHolidaysForYear(year) {
-    if (holidayCache[year]) {
-      return holidayCache[year];
-    }
-
-    const holidays = [];
-
-    for (let i = year - 5; i < year + 5; i++) {
-      holidays.push(
-        { name: "Ano Novo", date: new Date(i, 0, 1) },
-        { name: "Dia da Liberdade", date: new Date(i, 3, 25) },
-        { name: "Dia do Trabalhador", date: new Date(i, 4, 1) },
-        { name: "Dia de Portugal", date: new Date(i, 5, 10) },
-        { name: "Assunção de Nossa Senhora", date: new Date(i, 7, 15) },
-        { name: "Implantação da República", date: new Date(i, 9, 5) },
-        { name: "Dia de Todos os Santos", date: new Date(i, 10, 1) },
-        { name: "Restauração da Independência", date: new Date(i, 11, 1) },
-        { name: "Dia da Imaculada Conceição", date: new Date(i, 11, 8) },
-        { name: "Natal", date: new Date(i, 11, 25) },
-        { name: "Sexta-feira Santa", date: calculateEaster(i, "SextaFeiraSanta") },
-        { name: "Páscoa", date: calculateEaster(i, "DomingoPascoa") },
-        { name: "Segunda-feira de Páscoa", date: calculateEaster(i, "SegundaPascoa") },
-        { name: "Corpo de Deus", date: calculateCorpusChristi(i) }
-      );
-    }
-
-    holidayCache[year] = holidays;
-    return holidays;
-  }
+  }, [filteredProjetos]);
 
 
-  function calculateEaster(year, type) {
-    const a = year % 19;
-    const b = Math.floor(year / 100);
-    const c = year % 100;
-    const d = Math.floor(b / 4);
-    const e = b % 4;
-    const f = Math.floor((b + 8) / 25);
-    const g = Math.floor((b - f + 1) / 3);
-    const h = (19 * a + b - d - g + 15) % 30;
-    const i = Math.floor(c / 4);
-    const k = c % 4;
-    const l = (32 + 2 * e + 2 * i - h - k) % 7;
-    const m = Math.floor((a + 11 * h + 22 * l) / 451);
-    const month = Math.floor((h + l - 7 * m + 114) / 31) - 1;
-    const day = ((h + l - 7 * m + 114) % 31) + 1;
-    if (type === "SextaFeiraSanta") {
-      return new Date(year, month, day - 2);
-    } else if (type === "DomingoPascoa") {
-      return new Date(year, month, day);
-    } else if (type === "SegundaPascoa") {
-      return new Date(year, month, day + 1);
-    }
-  }
-
-  function calculateCorpusChristi(ano) {
-    const domingoPascoa = calculateEaster(ano, "DomingoPascoa");
-    return new Date(ano, domingoPascoa.getMonth(), domingoPascoa.getDate() + 60);
-  }
 
   const verificaDiaLast = useCallback((e) => {
     const { value } = e.target;
     const dataEscolhida = new Date(value);
-
-
 
     const currentDay = dataEscolhida.getDate();
     const currentMonth = dataEscolhida.getMonth();
@@ -604,8 +423,6 @@ const ListaProjetos = () => {
       return 0;
     });
 
-
-
     const { name, value } = e.target;
     const data = new Date(value)
 
@@ -667,26 +484,15 @@ const ListaProjetos = () => {
     setHorasT(0);
     setVerificaChange(false);
     setVerificaDiaCalled(false);
-
     return;
-  }, [listaDias, filteredProjetos, filteredProjetos]);
-  // }, [listaDias, filteredProjetos]);
+  }, [listaDias, filteredProjetos, filteredProjetos, values.Data]);
 
 
 
   useEffect(() => {
     verificaDia({ target: { name: 'Data', value: values.Data } });
-
   }, [verificaDia]);
-  //}, [listaDias, filteredProjetos]);
 
-
-  const handleDropdownToggle = (projectId) => {
-    setShowProjeto((prev) => ({
-      ...prev,
-      [projectId]: !prev[projectId],
-    }));
-  };
 
   const handleDia = async (e) => {
     e.preventDefault();
@@ -720,12 +526,9 @@ const ListaProjetos = () => {
 
 
 
-
-
   const handleHorasChange = (projectId, tipoTrabalho, projectName, e) => {
 
     let newHorasT = horasT;
-    //let horas = e.target.value;
 
     let horas = e;
 
@@ -739,14 +542,11 @@ const ListaProjetos = () => {
       horasNumber = 0;
     }
 
-    if (tipoTrabalho === compensacaoID) {
-      setHorasExtraAfter(horasExtra - horasNumber)
-    }
+
 
     const newTipoDeTrabalhoHoras = { ...values.tipoDeTrabalhoHoras };
     const horasTipoTrabalhoArray = newTipoDeTrabalhoHoras[projectId]?.horas?.split(',') || [];
     const tipoTrabalhoArray = newTipoDeTrabalhoHoras[projectId]?.tipoTrabalho?.split(',') || [];
-    let newShowProjeto = { ...showProjeto };
 
     if (tipoTrabalhoArray.includes(tipoTrabalho)) {
 
@@ -764,10 +564,6 @@ const ListaProjetos = () => {
 
     } else {
 
-      newShowProjeto = {
-        ...newShowProjeto,
-        [projectId + tipoTrabalho]: horasNumber
-      };
       tipoTrabalhoArray.push(tipoTrabalho);
       horasTipoTrabalhoArray.push(horasNumber);
       newTipoDeTrabalhoHoras[projectId] = {
@@ -778,20 +574,66 @@ const ListaProjetos = () => {
       newHorasT = parseFloat(horasT) + parseFloat(horasNumber);
     }
 
-    if (values?.Data && new Date(values.Data).getDay() === 5 && newHorasT > 6) {
-      setHorasExtraAfter(horasExtra + (newHorasT - 6))
-    } else if (values?.Data && (new Date(values.Data).getDay() === 0 || new Date(values.Data).getDay() === 6)) {
-      setHorasExtraAfter(horasExtra + newHorasT)
-    } else if (newHorasT > 8.5) {
-      setHorasExtraAfter(horasExtra + (newHorasT - 8.5))
-    }
+
+  
 
     if (newHorasT > 24) {
       toast.error('Valor inserido excede as 24 Horas!');
       setValues({ ...values, [horas]: "0.0" });
-      //setHorasT(horasT - (showProjeto[projectId + tipoTrabalho] || 0));
       return;
     }
+
+    const dateAdd = new Date(values?.Data);
+
+    const dayOfWeek = dateAdd.getDay();
+    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+    const isFriday = dayOfWeek === 5;
+    if (tipoTrabalho === compensacaoID) {
+      if (values?.Data && dateAdd.getDay() === 5 && newHorasT > 6 || newHorasT > 8.5 || dateAdd.getDay() === 0 || dateAdd.getDay() === 6) {
+        toast.error('Valor inserido invalido devido ao tipo de trabalho!');
+        setValues({ ...values, [horas]: "0.0" });
+        return;
+      }
+      setHorasExtraAfter(parseFloat(horasExtra) - parseFloat(horasNumber))
+    }
+    
+    if(horasT > newHorasT) {
+      let horasExtraBefore = 0;
+      let horasExtraExtract = 0;
+      if (isFriday && horasT > 6) {
+        horasExtraBefore = horasT - 6;
+        horasExtraExtract = newHorasT - horasT;
+        if(horasT + horasExtraExtract >= 6){
+          setHorasExtraAfter(parseFloat(horasExtraAfter) + parseFloat(horasExtraExtract))
+        }else{
+          setHorasExtraAfter(parseFloat(horasExtraAfter) - parseFloat(horasExtraBefore))
+        }
+      } else if (isWeekend ||  feriadosPortugal(dateAdd)) {
+
+        const horasAddExtra =  horasT - newHorasT;
+        setHorasExtraAfter(parseFloat(horasExtraAfter) - parseFloat(horasAddExtra))
+      } else if (horasT > 8.5) {
+        horasExtraBefore = horasT - 8.5;
+        horasExtraExtract = newHorasT - horasT;
+        if(horasT + horasExtraExtract >= 8.5){
+          setHorasExtraAfter(parseFloat(horasExtraAfter) + parseFloat(horasExtraExtract))
+        }else{
+          setHorasExtraAfter(parseFloat(horasExtraAfter) - parseFloat(horasExtraBefore))
+        }
+      } else {
+        setHorasExtraAfter(horasExtra)
+      }
+     }else{
+    if (isFriday && newHorasT > 6) {
+      setHorasExtraAfter(parseFloat(horasExtra) + parseFloat(newHorasT - 6))
+    } else if (isWeekend ||  feriadosPortugal(dateAdd)) {
+      setHorasExtraAfter(parseFloat(horasExtra) + parseFloat(newHorasT))
+    } else if (newHorasT > 8.5) {
+      setHorasExtraAfter(parseFloat(horasExtra) + parseFloat(newHorasT - 8.5))
+    }
+  }
+
+  
     setValues({
       ...values,
       horas: horasNumber,
@@ -799,13 +641,11 @@ const ListaProjetos = () => {
       tipoDeTrabalhoHoras: newTipoDeTrabalhoHoras
     });
 
-
     setHorasT(newHorasT);
-    // setShowProjeto(newShowProjeto);
   };
 
 
-  const copiar = (value) => {
+  const copiar = async(value) => {
     if (value === true) {
 
       if (!lastDate?.tipoDeTrabalhoHoras) {
@@ -855,18 +695,6 @@ const ListaProjetos = () => {
 
   const matchFoundProjeto = new Array(sortedProjetos.length).fill(false);
   const arrayTipoTrabalho = Object.entries(values.tipoDeTrabalhoHoras).map(([key, value]) => ({ _id: key, ...value }));
-  // let counter = 0;
-
-  // Initialize horasP as an object
-  const horasP = [];
-
-  // Initialize horasP with project IDs as keys and initial values of 0
-  sortedProjetos.forEach(project => {
-    horasP[project._id] = 0;
-  });
-
-
-
 
   function convertToMinutes(timeString) {
     if (timeString) {
@@ -885,7 +713,6 @@ const ListaProjetos = () => {
         let formattedMinutes = Math.round(minutes * 60) / 100;
         if (formattedMinutes === 60) {
           formattedMinutes = 0;
-          // formattedHours += 1;
         }
         // Use String.padStart to format hours and minutes with leading zeros
         const formattedHours = hoursInt.toString().padStart(2, "0");
@@ -909,7 +736,6 @@ const ListaProjetos = () => {
   } else {
     return (
       <Wrapper>
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
           <div className="container">
             <div>
               <div className='row'>
@@ -935,312 +761,36 @@ const ListaProjetos = () => {
                   />
                 </div>
                 <div className='col-6 text-center'>
-
-                  {verificaCopiarHoras === false ? (
-                    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-                      <button
-                        type='button'
-                        className='btn btn-light'
-                        onClick={() => copiar(true)}
-                      >
-                        Copiar Horas
-                      </button>
-                    </div>
-                  ) : (
-                    <div className='row'>
-                      <div className='col-8 '>
-                        {DataCopy.DataCopy !== null && DataCopy.DataCopy !== undefined ? (
-                          <div>
-                            <FormRow
-                              type="date"
-                              className="dataAddHoras"
-                              classNameInputDate="form__field__date"
-                              classNameLabel="form-field-label"
-                              id="Dia Copia"
-                              name="Data a Copiar"
-                              placeholder="Dia Adicionar Horas"
-                              value={DataCopy.DataCopy ? new Date(DataCopy.DataCopy).toLocaleDateString('en-CA') : ''}
-                              handleChange={verificaDiaLast}
-                            />
-                          </div>
-                        ) : (
-                          <div>
-                            <p>Sem Horas inseridas para copiar</p>
-                          </div>
-                        )}
-                      </div>
-                      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%' }} className='col-4 text-center'>
-
-                        <button
-                          onClick={() => copiar(false)}
-                          className='btn'
-                          style={{ margin: '5%' }}
-                        >
-                          <AiOutlineClose />
-                        </button>
-
-
-                        <div className="col-12">
-                          <button
-                            onClick={(e) => { handleDia(e) }}
-                            className="btn btn-primary"
-                          >
-                            Copiar
-                          </button>
-                        </div>
-                      </div>
-
-
-                      {!copyExists && (
-                        <div>
-                          <p>Não possui horas inseridas no dia escolhido. Ultimo dia com horas possiveis selecionado!</p>
-                        </div>
-                      )}
-
-                    </div>
-                  )}
+                  <AddHorasCopiar
+                  copiar={copiar}
+                  verificaCopiarHoras={verificaCopiarHoras}
+                  copyExists={copyExists}
+                  DataCopy={DataCopy}
+                  verificaDiaLast={verificaDiaLast}
+                  handleDia={handleDia}
+                  />
 
                 </div>
               </div>
             </div>
             <div className="list-group mx-1 w-auto">
 
-              {sortedProjetos.map((project, idProjeto) => {
-
-                // initialize the counter
-                return (
-                  <div className="list-group-item" key={project._id}>
-                    <div className="row mb-3 text-center">
-                      <div className="col-md-4 text-end themed-grid-col">
-                        <h5>{project.Nome}</h5>
-                      </div>
-                      <div className="col-md-8  themed-grid-col">
-                        <div className='row'>
-                          <div className="col-md-10 btn-container">
-                            <button
-                              type="button"
-                              className="btn button-Dropdown"
-                              onClick={() => handleDropdownToggle(project._id)}
-                            >
-                              <FaCaretDown />
-                            </button>
-
-                            <div
-                              className={`dropdown ${showProjeto[project._id] ? "show-dropdown" : "hidden-dropdown"}
-                      ${showProjeto[project._id] ? "" : "d-none"}`}
-                            >
-                              <div className="row mb-3 text-center" key={"NewDia" + project._id}>
-                                {!verificaChange && (
-                                  (project.Nome !== "Geral" ? StringListaTrabalho : StringListaTrabalhoGeral).split(",").map((t, i) => {
-                                    const ttID = listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(",");
-                                    let value = "";
-                                    if (values.tipoDeTrabalhoHoras[project._id]) {
-                                      const valuesHorasTypeArray = values.tipoDeTrabalhoHoras[project._id].horas ? values.tipoDeTrabalhoHoras[project._id].horas.split(",") : [];
-                                      const valuesTTTypeArray = values.tipoDeTrabalhoHoras[project._id].tipoTrabalho ? values.tipoDeTrabalhoHoras[project._id].tipoTrabalho.split(",") : [];
-
-                                      for (let h = 0; h < valuesHorasTypeArray.length; h++) {
-                                        if (valuesTTTypeArray[h] === ttID) {
-                                          value = valuesHorasTypeArray[h];
-                                        }
-                                      }
-                                    }
-                                    return (
-                                      <div className="row mb-3 text-center" key={"NovoDia" + i}>
-                                        <div className="col-md-9 text-start themed-grid-col">
-                                          <p>{t}</p>
-                                        </div>
-                                        <div className="col-md-3 themed-grid-col">
-
-                                          <TimePickerClock
-                                            selectedTime={convertToMinutes(value)}
-                                            projectID={project._id}
-                                            ttID={ttID}
-                                            projectNome={project.Nome}
-                                            convertToInt={handleHorasChange}
-                                          />
-
-
-                                        </div>
-                                      </div>
-                                    )
-                                  })
-                                )
-                                }
-
-                                {project.Nome === "Geral" && (
-                                  <OptionsPanel options={options} handleTipoTrabalho={handleTipoTrabalho} />
-                                )}
-
-
-
-
-                                <div key={"NewDia" + project._id}>
-                                  {verificaChange && values.tipoDeTrabalhoHoras.length !== 0 && Array.isArray(arrayTipoTrabalho) &&
-                                    arrayTipoTrabalho.map((item, ID) => {
-                                      const itemTypeArray = item.tipoTrabalho ? item.tipoTrabalho.split(",") : [];
-                                      const matchFound = new Array(itemTypeArray.length + 1).fill(false);
-
-                                      if (project._id === item.projeto) {
-
-                                        const valuesHorasTypeArray = values.tipoDeTrabalhoHoras[project._id].horas ? values.tipoDeTrabalhoHoras[project._id].horas.split(",") : [];
-
-                                        matchFoundProjeto[idProjeto] = true;
-                                        return (
-                                          <div key={"EditarDia" + ID}>
-
-                                            {(project.Nome !== "Geral" ? StringListaTrabalho : StringListaTrabalhoGeral).split(",").map((t, i) =>
-                                              itemTypeArray.map((iT, iId) => {
-
-                                                if ((project.Nome !== "Geral" ? ListaTrabalhoAll[i]._id : ListaTrabalhoGeral[i]._id) === iT) {
-
-                                                  matchFound[i] = true;
-                                                  return (
-                                                    <div className="row mb-3 text-center" key={"EditarDiaTTFound" + iId}>
-                                                      <div className="col-md-9 text-start themed-grid-col">
-
-                                                        <p>{t}</p>
-                                                      </div>
-                                                      <div className="col-md-3 themed-grid-col">
-
-                                                        <TimePickerClock
-                                                          selectedTime={valuesHorasTypeArray[iId] != null && !isNaN(valuesHorasTypeArray[iId])
-                                                            ? convertToMinutes(valuesHorasTypeArray[iId])
-                                                            : []}
-                                                          projectID={project._id}
-                                                          ttID={listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(",")}
-                                                          projectNome={project.Nome}
-                                                          convertToInt={handleHorasChange}
-                                                        />
-                                                      </div>
-                                                    </div>
-                                                  );
-                                                } else {
-                                                  if (iId === itemTypeArray.length - 1) {
-                                                    if (!matchFound[i]) {
-                                                      return (
-                                                        <div className="row mb-3 text-center" key={"EditarDiaTTNotFound" + iId}>
-                                                          <div className="col-md-9 text-start themed-grid-col">
-                                                            <p>{t}</p>
-                                                          </div>
-                                                          <div className="col-md-3 themed-grid-col">
-
-                                                            <TimePickerClock
-                                                              selectedTime={isNaN(values.tipoDeTrabalhoHoras[project.Nome]?.[t])}
-                                                              projectID={project._id}
-                                                              ttID={listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(",")}
-                                                              projectNome={project.Nome}
-                                                              convertToInt={handleHorasChange}
-                                                            />
-                                                          </div>
-                                                        </div>
-                                                      );
-                                                    }
-                                                  }
-                                                }
-                                              }
-                                              )
-                                            )
-                                            }
-
-                                            {project.Nome === "Geral" && StringListaTrabalhoGeralOther.length > 0 && StringListaTrabalhoGeralOther.split(",").map((t, i) =>
-                                              itemTypeArray.map((iT, iId) => {
-
-                                                if ((project.Nome === "Geral" && ListaTrabalhoGeralOther[i]._id) === iT) {
-                                                  matchFound[i] = true;
-                                                  // counter1++;
-                                                  return (
-                                                    <div className="row mb-3 text-center" key={"EditarDiaTTFound" + iId}>
-                                                      <div className="col-md-9 text-start themed-grid-col">
-                                                        <p>{t}</p>
-                                                      </div>
-                                                      <div className="col-md-3 themed-grid-col">
-
-                                                        <TimePickerClock
-                                                          selectedTime={
-                                                            valuesHorasTypeArray[iId] != null && !isNaN(valuesHorasTypeArray[iId])
-                                                              ? convertToMinutes(valuesHorasTypeArray[iId])
-                                                              : []
-                                                          }
-                                                          projectID={project._id}
-                                                          ttID={listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(",")}
-                                                          projectNome={project.Nome}
-                                                          convertToInt={handleHorasChange}
-                                                        />
-                                                      </div>
-                                                    </div>
-                                                  );
-                                                }
-                                              }
-                                              )
-                                            )}
-                                          </div>
-                                        );
-                                      } else {
-                                        if (!matchFoundProjeto[idProjeto] && ID === arrayTipoTrabalho.length - 1) {
-                                          return (
-                                            <div key={"EditarDiaProjetoNotFound" + idProjeto}>
-                                              {(project.Nome !== "Geral" ? StringListaTrabalho : StringListaTrabalhoGeral).split(",").map((t, i) => {
-                                                const ttID = (listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(","))
-                                                let value = "";
-
-                                                if (values.tipoDeTrabalhoHoras[project._id]) {
-                                                  const valuesHorasTypeArray = values.tipoDeTrabalhoHoras[project._id].horas ? values.tipoDeTrabalhoHoras[project._id].horas.split(",") : [];
-                                                  const valuesTTTypeArray = values.tipoDeTrabalhoHoras[project._id].tipoTrabalho ? values.tipoDeTrabalhoHoras[project._id].tipoTrabalho.split(",") : [];
-
-                                                  for (let h = 0; h < valuesHorasTypeArray.length; h++) {
-                                                    if (valuesTTTypeArray[h] === ttID) {
-                                                      value = valuesHorasTypeArray[h];
-                                                    }
-                                                  }
-                                                }
-                                                return (
-                                                  <div className="row mb-3 text-center" key={"EditarDiaProjetoNotFoundList" + i}>
-                                                    <div className="col-md-9 text-start themed-grid-col" >
-                                                      <p>{t}</p>
-                                                    </div>
-                                                    <div className="col-md-3 themed-grid-col">
-
-                                                      <TimePickerClock
-                                                        selectedTime={convertToMinutes(value)}
-                                                        projectID={project._id}
-                                                        ttID={ttID}
-                                                        projectNome={project.Nome}
-                                                        convertToInt={handleHorasChange}
-                                                      />
-                                                    </div>
-                                                  </div>
-                                                )
-                                              }
-                                              )
-                                              }
-                                            </div>
-                                          );
-                                        }
-                                      }
-                                    }
-                                    )
-                                  }
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-
-
-                          <div className={`col-md-2  text-start ${showProjeto[project._id] ? "hidden-dropdown" : "show-dropdown"}`}>
-                            {values.tipoDeTrabalhoHoras[project._id]?.horas && values.tipoDeTrabalhoHoras[project._id]?.horas.split(",").map((t, i) => {
-                              horasP[project._id] += +t;
-                              return null;
-                            })}
-                            <h3>{horasP[project._id] !== 0 ? convertToMinutes(horasP[project._id]) : ''}</h3>
-                          </div>
-                        </div>
-
-                      </div>
-                    </div>
-                  </div>
-                )
-              })}
+                <AddHorasDropdown
+                  sortedProjetos= {sortedProjetos}
+                  verificaChange={verificaChange}
+                  listaTipoTrabalho={listaTipoTrabalho}
+                  values={values}
+                  handleHorasChange={handleHorasChange}
+                  convertToMinutes={convertToMinutes}
+                  arrayTipoTrabalho={arrayTipoTrabalho}
+                  matchFoundProjeto={matchFoundProjeto}
+                  ListaTrabalhoAll={ListaTrabalhoAll}
+                  ListaTrabalhoGeral={ListaTrabalhoGeral}
+                  ListaTrabalhoGeralOther ={ListaTrabalhoGeralOther}
+                  setListaTipoTrabalho ={setListaTipoTrabalho}
+                  setListaTrabalhoGeral ={setListaTrabalhoGeral}
+                  setListaTrabalhoGeralOther ={setListaTrabalhoGeralOther}
+                />
 
               <div className="card text-center">
                 <div className="card-body">
@@ -1248,11 +798,10 @@ const ListaProjetos = () => {
                     Total de horas: {convertToMinutes(horasT)}
                     {values?.Data && new Date(values.Data).getDay() === 5
                       ? " | 6:00 H"
-                      : values?.Data && (new Date(values.Data).getDay() === 0 || new Date(values.Data).getDay() === 6)
+                      : values?.Data && (new Date(values.Data).getDay() === 0 || new Date(values.Data).getDay() === 6 ||feriadosPortugal(new Date(values.Data)))
                         ? ""
                         : " | 8:30 H"}
                   </h5>
-
                 </div>
 
                 <div className="card-body">
@@ -1268,7 +817,6 @@ const ListaProjetos = () => {
               </div>
             </div>
           </div>
-        </LocalizationProvider>
       </Wrapper>
     );
   }

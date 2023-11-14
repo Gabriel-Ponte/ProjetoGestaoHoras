@@ -24,7 +24,7 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
 
   useEffect(() => {
     setSelectedOption(Array.isArray(separatedArray) ? separatedArray : (value ? value.split(',') : []));
-  }, [value, separatedArray]);
+  }, [value]);
   
   const handleMultiChange = async (event) => {
 

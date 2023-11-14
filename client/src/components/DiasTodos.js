@@ -1,7 +1,4 @@
-import { useState, useEffect } from 'react';
 import Wrapper from '../assets/wrappers/Dias';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 
 const DiasTodos = ({ _id,horasPossiveis, NumeroHoras, Utilizador, diaSelected }) => {
 
@@ -18,7 +15,6 @@ const DiasTodos = ({ _id,horasPossiveis, NumeroHoras, Utilizador, diaSelected })
         if (!minutes) {
           minutes = 0;
         }
-        console.log(minutes)
         let formattedMinutes = Math.round(minutes * 60) / 100;
         if (formattedMinutes === 60) {
           formattedMinutes = 0;

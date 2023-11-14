@@ -27,11 +27,19 @@ import GerirUtilizadores from './GerirUtilizadores';
 import ForgetPassword from './ForgetPassword';
 import ForgetPasswordChange from './ForgetPasswordChange';
 import OptionsPanel from './OptionsPanel';
+import AddHorasDropdown from './AddHorasDropdown';
+import AddHorasCopiar from './AddHorasCopiar';
+import useFeriadosPortugal from './FeriadosPortugal';
+
+
 export {
   ListaProjetos,
   BigSidebar,
   AddProjectForm,
   TimePickerClock,
+  AddHorasDropdown,
+  AddHorasCopiar,
+  useFeriadosPortugal,
   OptionsPanel,
   FormRow,
   FormRowSelect,

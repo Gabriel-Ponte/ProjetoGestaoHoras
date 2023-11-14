@@ -4,26 +4,25 @@ import { useDispatch } from 'react-redux';
 import { getProjetoList } from '../features/projetos/projetosSlice';
 import { AiFillDelete } from 'react-icons/ai';
 import { deleteDia } from '../features/dias/diasSlice';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPossiveis, listaTT }) => {
 
   const dispatch = useDispatch();
   const [projeto, setProjeto] = useState([]);
-  const [horasTotal, sethorasTotal] = useState([]);
-  const navigate = useNavigate();
-  let horasT = 0;
+  // const [horasTotal, sethorasTotal] = useState([]);
+  // const navigate = useNavigate();
+  // let horasT = 0;
 
 
   useEffect(() => {
     const projetoList = tipoDeTrabalhoHoras.map(({ tipoTrabalho, horas, projeto }) => {
-      horasT += Number(horas);
+      // horasT += Number(horas);
       const horasArray = horas.split(',') || [];
       const tipoTrabalhoArray = tipoTrabalho.split(',') || [];
   
       for (let a = horasArray.length - 1; a >= 0; a--) {
-        if (horasArray[a] == 0) {
+        if (horasArray[a] === 0) {
           tipoTrabalhoArray.splice(a, 1);
           horasArray.splice(a, 1);
         }
@@ -43,7 +42,7 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPos
       }));
     }) // Filter out any null values
   
-    sethorasTotal(horasT);
+    // sethorasTotal(horasT);
   
     Promise.all(projetoList).then((projetoArray) => {
       const filteredProjetoArray = projetoArray.filter((projeto) => projeto !== null);
@@ -147,13 +146,14 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPos
                           for (let i = 0; i < listaTT.length; i++) {
                             
                             if (trabalho === listaTT[i]._id) {
-                              return <p key={index}>{listaTT[i].TipoTrabalho.trim()}</p>;
                               counter++;
+                              return <p key={index}>{listaTT[i].TipoTrabalho.trim()}</p>;
                             }
                           }}
                           if (counter === 0) {
                             return <p key={index}>Tipo de Trabalho Apagado</p>;
                           }
+                          return null;
                         })}
                         </div>
                         <div className="col-md-6 themed-grid-col">

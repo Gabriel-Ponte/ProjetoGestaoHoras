@@ -26,8 +26,9 @@ const ListaHoras = () => {
   const [possibleHours, setPossibleHours] = useState(0);
   const [ferias, setFerias] = useState([]);
   const [horasExtra, setHorasExtra] = useState(null);
+  const [horasCompencacao, setHorasCompencacao] = useState(null);
+  
   const [userNome, setUserNome] = useState(user?.user?.nome); // add state for user name
-
 
   const [change, setChange] = useState(false);
   const dispatch = useDispatch();
@@ -176,7 +177,7 @@ const ListaHoras = () => {
           setListaDiasT(listaDiasA);
 
           let countHours = 0;
-
+          let countHoursCompencacao = 0;
 
           const dayStart = new Date(Date.UTC(2023, 10, 6, 0, 0, 0));
 
@@ -211,6 +212,7 @@ const ListaHoras = () => {
                 for (let j = 0; j < tt.length; j++) {
                   if (tt[j] === idCompensação) {
                     countHours -= ttH[j];
+                    countHoursCompencacao += ttH[j];
                   }
                 }
             }
@@ -235,6 +237,7 @@ const ListaHoras = () => {
           }
           return false;
         });
+          setHorasCompencacao(countHoursCompencacao);
           setHorasExtra(countHours)
 
           if (idFerias && dias) {
@@ -316,25 +319,11 @@ const ListaHoras = () => {
 
     setPercentagemHoras((horasRealizadasCount / possibleHoursCount) * 100);
 
-    // if (possibleHoursCount.toString().endsWith(".5")) {
-    //   // Remove the ".5" and convert it to 30 minutes
-    //   const hours = parseInt(possibleHoursCount); // Extract the whole hours
-    //   const minutes = 30; // Representing 30 minutes
-    //   possibleHoursCount = hours + ":" + minutes + "h"
-    // }
-
-
-    // if (horasRealizadasCount.toString().endsWith(".5")) {
-    //   // Remove the ".5" and convert it to 30 minutes
-    //   const hours = parseInt(horasRealizadasCount); // Extract the whole hours
-    //   const minutes = 30; // Representing 30 minutes
-    //   horasRealizadasCount = hours + ":" + minutes + "h"
-    // }
 
     setPossibleHours(possibleHoursCount);
     setHorasRealizadas(horasRealizadasCount);
 
-    //const percentagemHoras = Math.round((horasRealizadas / possibleHours) * 100);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listaDias, selectedDay, selectedUser]);
 
@@ -351,20 +340,16 @@ const ListaHoras = () => {
     if (timeString) {
       try {
         let [hours, minutes] = timeString.toString().split(".");
-
-        // Convert the hours to an integer
         const hoursInt = parseInt(hours, 10);
-        // Convert the fraction of an hour to minutes
         minutes = parseInt(minutes) < 10 ? `${minutes}0` : minutes;
 
         if (!minutes) {
           minutes = 0;
         }
-        console.log(minutes)
+
         let formattedMinutes = Math.round(minutes * 60) / 100;
         if (formattedMinutes === 60) {
           formattedMinutes = 0;
-          // formattedHours += 1;
         }
         // Use String.padStart to format hours and minutes with leading zeros
         const formattedHours = hoursInt.toString().padStart(2, "0");
