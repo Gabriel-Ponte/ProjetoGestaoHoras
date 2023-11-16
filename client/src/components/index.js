@@ -30,7 +30,7 @@ import OptionsPanel from './OptionsPanel';
 import AddHorasDropdown from './AddHorasDropdown';
 import AddHorasCopiar from './AddHorasCopiar';
 import useFeriadosPortugal from './FeriadosPortugal';
-
+import ProjetoListaFolder from './ProjetoListaFolder';
 
 export {
   ListaProjetos,
@@ -39,6 +39,7 @@ export {
   TimePickerClock,
   AddHorasDropdown,
   AddHorasCopiar,
+  ProjetoListaFolder,
   useFeriadosPortugal,
   OptionsPanel,
   FormRow,

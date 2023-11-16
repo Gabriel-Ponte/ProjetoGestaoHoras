@@ -199,11 +199,7 @@ function VisualizarProjeto() {
   };
 
   if (values === null || typeof values === 'undefined') {
-    return (
-      <Wrapper>
-        <h2>Sem projeto para Editar</h2>
-      </Wrapper>
-    );
+    return <Loading />;
   }
 
 
