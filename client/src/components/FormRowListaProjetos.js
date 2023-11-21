@@ -1,26 +1,25 @@
 import Wrapper from '../assets/wrappers/FormRowSelectListaProjetos';
 import React, { useEffect } from 'react';
 
-const FormRow = ({ type, name, value, handleChange, className, classNameInput }) => {
-  const id = `myTextarea${type}${name}${value}`;
+const FormRow = ({ type, name, value, handleChange, className, classNameInput, id }) => {
+  const idF = `${id}`;
 
   useEffect(() => {
-    const textarea = document.getElementById(id);
-
+    const textarea = document.getElementById(idF);
     if (textarea) {
       textarea.addEventListener('focusout', () => {
         textarea.style.width = '';
         textarea.style.height = '';
       });
     }
-  }, [id]);
+  }, [idF]);
 
   return (
     <Wrapper>
       <div className={className ? className : 'form__group field'}>
         {type === 'textarea' ? (
           <textarea
-            id={id}
+            id={idF}
             type={type}
             name={name}
             value={value}
@@ -29,7 +28,7 @@ const FormRow = ({ type, name, value, handleChange, className, classNameInput })
           />
         ) : (
           <input
-            id={id}
+            id={idF}
             type={type}
             name={name}
             value={value}

@@ -233,7 +233,7 @@ const Projeto = ({
                 ):(
                   <FormRowListaProjetos
                     type="textarea"
-                    id="ClienteProjeto"
+                    id={"ClienteProjeto " + _id}
                     name="Cliente"
                     value={values.Cliente}
                     handleChange={handleChangeProjeto}
@@ -246,7 +246,7 @@ const Projeto = ({
                 ):(
                 <FormRowListaProjetos
                     type="textarea"
-                    id="NomeProjeto"
+                    id={"NomeProjeto " + _id}
                     name="Nome"
                     value={values.Nome}
                     handleChange={handleChangeProjeto}
@@ -266,7 +266,7 @@ const Projeto = ({
                 ):(
                   <FormRowListaProjetos
                   type="textarea"
-                  id="AcaoProjeto"
+                  id={"AcaoProjeto " + _id}
                   name="Acao"
                   classNameInput="form__field"
                   value={values.Acao}
@@ -279,7 +279,7 @@ const Projeto = ({
                 {
                   <FormRowListaProjetos
                     type="textarea"
-                    id="NotasProjeto"
+                    id={"NotasProjeto " + _id}
                     name="Notas"
                     classNameInput="form__field"
                     value={values.Notas}
@@ -317,7 +317,7 @@ const Projeto = ({
                     <div className="col-md-8 themed-grid-col">
                     <FormRowListaProjetos
                     type="Date"
-                    id="DataObjetivoProjeto"
+                    id={"DataObjetivoProjeto " + _id}
                     name="DataObjetivo"
                     //label="Login"
                     classNameInput="form__field__date"

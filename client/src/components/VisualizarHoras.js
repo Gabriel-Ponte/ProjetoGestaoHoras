@@ -223,26 +223,27 @@ const ListaHoras = () => {
                   }
   
                   if (tt[j] === addHorasExtraID) {
+                    console.log(ttH[j])
                     countHours += parseFloat(ttH[j]);
                     extraHours = parseFloat(ttH[j]);
                   }
                 }
             }
-            if(feriadosPortugal(date)){
+            if(feriadosPortugal(date) && (parseFloat(item.NumeroHoras) - parseFloat(extraHours)) > 0){
               countHours += (parseFloat(item.NumeroHoras) - parseFloat(extraHours));
               return true;
             }
 
-            if (isWeekend) {
+            if (isWeekend && (parseFloat(item.NumeroHoras) - parseFloat(extraHours)) > 0) {
               countHours += (parseFloat(item.NumeroHoras) - parseFloat(extraHours));
+              
               return true;
             }
-            if (isFriday && item.NumeroHoras > 6) {
-              console.log("FRIDDAY")
+            if (isFriday && (parseFloat(item.NumeroHoras) - parseFloat(extraHours)) > 6) {
               countHours += (parseFloat(item.NumeroHoras - 6) - parseFloat(extraHours));
               return true;
             }
-            if (!isFriday && item.NumeroHoras > 8.5) {
+            if (!isFriday && (parseFloat(item.NumeroHoras) - parseFloat(extraHours)) > 8.5) {
               countHours += (parseFloat(item.NumeroHoras - 8.5) - parseFloat(extraHours));
               return true;
             }
@@ -338,8 +339,6 @@ const ListaHoras = () => {
                   }
                 }
             }
-
-
         }
       }
     }

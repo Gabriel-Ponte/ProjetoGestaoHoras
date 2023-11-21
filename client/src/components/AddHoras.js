@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 
 import Wrapper from '../assets/wrappers/addDias';
 import { useSelector, useDispatch } from 'react-redux';
@@ -167,19 +167,19 @@ const ListaProjetos = () => {
               }
             }
 
-            if (feriadosPortugal(date)) {
+            if (feriadosPortugal(date) && (parseFloat(item.NumeroHoras) - parseFloat(extraHours)) > 0) {
               countHours += (parseFloat(item.NumeroHoras) - parseFloat(extraHours));
               return true;
             }
-            if (isWeekend) {
+            if (isWeekend && (parseFloat(item.NumeroHoras) - parseFloat(extraHours)) > 0) {
               countHours += (parseFloat(item.NumeroHoras) - parseFloat(extraHours));
               return true;
             }
-            if (isFriday && item.NumeroHoras > 6) {
+            if (isFriday && (parseFloat(item.NumeroHoras) - parseFloat(extraHours)) > 6) {
               countHours += (parseFloat(item.NumeroHoras - 6) - parseFloat(extraHours));
               return true;
             }
-            if (!isFriday && item.NumeroHoras > 8.5) {
+            if (!isFriday && (parseFloat(item.NumeroHoras) - parseFloat(extraHours)) > 8.5) {
               countHours += (parseFloat(item.NumeroHoras - 8.5) - parseFloat(extraHours));
               return true;
             }
@@ -188,7 +188,6 @@ const ListaProjetos = () => {
 
           return;
         });
-
         setHorasExtra(countHours);
         setHorasExtraAfter(countHours);
 
@@ -432,11 +431,10 @@ const ListaProjetos = () => {
     });
 
     const { name, value } = e.target;
-    const data = new Date(value)
-
+    const data = new Date(value);
+    let horasExtra = 0;
     for (let i = 0; i < listaDias.length; i++) {
       const DataRecebida = new Date(listaDias[i].Data);
-
 
       const itemDay = data.getDate();
       const itemMonth = data.getMonth();
@@ -452,7 +450,7 @@ const ListaProjetos = () => {
         currentDay === itemDay
       ) {
         const tipoDeTrabalhoHoras = {};
-        let horasExtra = 0;
+
         let sSProjetos = sProjetos;
         for (let j = 0; j < listaDias[i].tipoDeTrabalhoHoras.length; j++) {
           const val = listaDias[i].tipoDeTrabalhoHoras[j].projeto;
@@ -473,7 +471,7 @@ const ListaProjetos = () => {
 
           for (let h = 0; h < tt.length; h++) {
             if (tt[h] === addHorasExtraID) {
-              horasExtra = ttH[h]
+              horasExtra = ttH[h];
               setHorasExtraTT(horasExtra);
             }
           }
@@ -494,6 +492,10 @@ const ListaProjetos = () => {
         setVerificaDiaCalled(true);
         return;
       }
+    }
+
+    if(horasExtra === 0){
+      setHorasExtraTT(0);
     }
 
     setValues({
@@ -611,7 +613,7 @@ const ListaProjetos = () => {
     const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
     const isFriday = dayOfWeek === 5;
     if (tipoTrabalho === compensacaoID) {
-      if (values?.Data && dateAdd.getDay() === 5 && newHorasT > 6 || newHorasT > 8.5 || dateAdd.getDay() === 0 || dateAdd.getDay() === 6) {
+      if (values?.Data && ((dateAdd.getDay() === 5 && newHorasT > 6) || newHorasT > 8.5 || dateAdd.getDay() === 0 || dateAdd.getDay() === 6)) {
         toast.error('Valor inserido invalido devido ao tipo de trabalho!');
         setValues({ ...values, [horas]: "0.0" });
         return;
@@ -646,7 +648,7 @@ const ListaProjetos = () => {
     if (parseFloat(horasT) > parseFloat(newHorasT)) {
 
       let horas = (parseFloat(newHorasT) - parseFloat(horasExtraNumber));
-      let horasExtraBefore = 0;
+      //let horasExtraBefore = 0;
       let horasExtraExtract = 0;
       if (tipoTrabalho === addHorasExtraID) {
         horasExtraValue = parseFloat(horasExtraAfter) + (parseFloat(horasNumber) - parseFloat(horasExtraBeforeValue));
@@ -654,7 +656,7 @@ const ListaProjetos = () => {
       }
       
       else if (isFriday && ((parseFloat(horasT) - parseFloat(horasExtraNumber))) > 6) {
-        horasExtraBefore = parseFloat(horasT) - 6;
+        //horasExtraBefore = parseFloat(horasT) - 6;
         horasExtraExtract = parseFloat(newHorasT) - parseFloat(horasT);
 
         if (horas >= 6) {
@@ -671,7 +673,6 @@ const ListaProjetos = () => {
 
         setHorasExtraAfter(horasExtraValue);
       } else if ((parseFloat(horasT) - parseFloat(horasExtraNumber)) > 8.5) {
-        horasExtraBefore = parseFloat(horasT) - 8.5;
         horasExtraExtract = parseFloat(newHorasT) - parseFloat(horasT);
 
         if (horas >= 8.5) {
@@ -774,6 +775,8 @@ const ListaProjetos = () => {
     setVerificaCopiarHoras(value);
   }
 
+
+  console.log( feriadosPortugal(new Date(values.Data)));
 
   const matchFoundProjeto = new Array(sortedProjetos.length).fill(false);
   const arrayTipoTrabalho = Object.entries(values.tipoDeTrabalhoHoras).map(([key, value]) => ({ _id: key, ...value }));
@@ -898,10 +901,10 @@ const ListaProjetos = () => {
               <div className="card-body">
                 <h5 className="card-title">
                   Total de horas: {convertToMinutes((parseFloat(horasT) - parseFloat(horasExtraTT)))}
-                  {values?.Data && new Date(values.Data).getDay() === 5
-                    ? " | 6:00 H"
-                    : values?.Data && (new Date(values.Data).getDay() === 0 || new Date(values.Data).getDay() === 6 || feriadosPortugal(new Date(values.Data)))
-                      ? ""
+                  { values?.Data && (new Date(values.Data).getDay() === 0 || new Date(values.Data).getDay() === 6 || feriadosPortugal(new Date(values.Data)))
+                  ? ""
+                  : values?.Data && new Date(values.Data).getDay() === 5
+                      ? " | 6:00 H"
                       : " | 8:30 H"}
                 </h5>
               </div>
