@@ -6,7 +6,7 @@ import { getAllProjetos1, handleChange } from '../features/allProjetos/allProjet
 import { getTipoTrabalho } from '../features/tipoTrabalho/tipoTrabalhoSlice';
 import { toast } from 'react-toastify';
 import { createDia, getDia, editDia } from '../features/dias/diasSlice';
-import { AddHorasCopiar, AddHorasDropdown, FormRow , useFeriadosPortugal } from '../components';
+import { AddHorasCopiar, AddHorasDropdown, FormRow, useFeriadosPortugal } from '../components';
 
 import Loading from './Loading';
 
@@ -55,7 +55,8 @@ const ListaProjetos = () => {
   const [horasExtraAfter, setHorasExtraAfter] = useState(null);
 
   const [compensacaoID, setcompensacaoID] = useState();
-  
+  const [addHorasExtraID, setAddHorasExtraID] = useState();
+  const [horasExtraTT, setHorasExtraTT] = useState(0);
   const { feriadosPortugal } = useFeriadosPortugal();
 
   const [constLoaded, setConstLoaded] = useState(false);
@@ -71,12 +72,13 @@ const ListaProjetos = () => {
       const tipoTrabalhoArray = Array.isArray(res.payload.tipoTrabalho) ? res.payload.tipoTrabalho : [];
       setListaTipoTrabalho(tipoTrabalhoArray);
 
-      const compensacao = tipoTrabalhoArray.filter(item => item.tipo === 4)
-
-      setcompensacaoID(compensacao[0]?._id)
-      setListaTrabalhoAll(tipoTrabalhoArray.filter(item => item.tipo === 1))
-      setListaTrabalhoGeral(tipoTrabalhoArray.filter(item => (item.tipo === 2 || item.tipo === 4)))
-      setListaTrabalhoGeralOther(tipoTrabalhoArray.filter(item => item.tipo === 3))
+      const compensacao = tipoTrabalhoArray.filter(item => item.tipo === 4);
+      const addHorasExtra = tipoTrabalhoArray.filter(item => item.tipo === 5);
+      setAddHorasExtraID(addHorasExtra[0]?._id);
+      setcompensacaoID(compensacao[0]?._id);
+      setListaTrabalhoAll(tipoTrabalhoArray.filter(item => item.tipo === 1));
+      setListaTrabalhoGeral(tipoTrabalhoArray.filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 5)));
+      setListaTrabalhoGeralOther(tipoTrabalhoArray.filter(item => item.tipo === 3));
 
     });
 
@@ -85,146 +87,169 @@ const ListaProjetos = () => {
   }, []);
 
   useEffect(() => {
-    if(constLoaded){
-    const dateP = values.Data ? new Date(values.Data) : new Date();
-    const filteredP = projetos.filter((p) => {
-      const dataI = new Date(p.DataInicio);
-      if (p.DataFim) {
-        const dataF = new Date(p.DataFim);
-        if (dataF < dateP) {
+    if (constLoaded) {
+      const dateP = values.Data ? new Date(values.Data) : new Date();
+      const filteredP = projetos.filter((p) => {
+        const dataI = new Date(p.DataInicio);
+        if (p.DataFim) {
+          const dataF = new Date(p.DataFim);
+          if (dataF < dateP) {
+            return false;
+          }
+        } else if (p.Finalizado) {
           return false;
         }
-      } else if (p.Finalizado) {
-        return false;
-      }
-      if (dataI > dateP) {
+        if (dataI > dateP) {
 
-        return false;
-      }
-      return true;
-    });
+          return false;
+        }
+        return true;
+      });
 
-    setFilteredProjetos(filteredP);
+      setFilteredProjetos(filteredP);
 
     }
   }, [projetos]);
 
 
   useEffect(() => {
-    if(constLoaded){
-    dispatch(getDia(values.Data, user.user.id)).then((res) => {
-      const lista = res.payload.dia
-      setListaDias(lista);
+    if (constLoaded) {
+      dispatch(getDia(values.Data, user.user.id)).then((res) => {
+        const lista = res.payload.dia
+        setListaDias(lista);
 
-      const projetoGeral = (filteredProjetos.filter(item => item.Nome === "Geral"));
-      let countHours = 0;
-      const dayStart = new Date(Date.UTC(2023, 10, 6, 0, 0, 0));
+        const projetoGeral = (filteredProjetos.filter(item => item.Nome === "Geral"));
+        let countHours = 0;
+        const dayStart = new Date(Date.UTC(2023, 11, 1, 0, 0, 0));
 
-      const startDay = dayStart.getDate();
-      const startMonth = dayStart.getMonth();
-      const startYear = dayStart.getFullYear();
+        const startDay = dayStart.getDate();
+        const startMonth = dayStart.getMonth();
+        const startYear = dayStart.getFullYear();
 
-      lista.filter(item => {
-        const date = new Date(item.Data)
-        const dayOfWeek = date.getDay();
-        const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-        const isFriday = dayOfWeek === 5;
-
-
-        const currentDay = date.getDate();
-        const currentMonth = date.getMonth();
-        const currentYear = date.getFullYear();
-
-        if (
-          currentYear > startYear ||
-          currentMonth > startMonth ||
-          (
-            currentYear === startYear &&
-            currentMonth === startMonth &&
-            currentDay > startDay)
-        ) {
+        lista.filter(item => {
+          const date = new Date(item.Data)
+          const dayOfWeek = date.getDay();
+          const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+          const isFriday = dayOfWeek === 5;
 
 
-          for (let i = 0; i < item.tipoDeTrabalhoHoras.length; i++) {
-            const projeto = item.tipoDeTrabalhoHoras[i]
-            if (projeto.projeto === projetoGeral[0]?._id) {
-              const tt = projeto.tipoTrabalho.split(',') || [];
-              const ttH = projeto.horas.split(',') || [];
+          const currentDay = date.getDate();
+          const currentMonth = date.getMonth();
+          const currentYear = date.getFullYear();
 
-              for (let j = 0; j < tt.length; j++) {
-                if (tt[j] === compensacaoID) {
-                  countHours -= ttH[j];
+          if (
+            currentYear > startYear ||
+            currentMonth > startMonth ||
+            (
+              currentYear === startYear &&
+              currentMonth === startMonth &&
+              currentDay >= startDay)
+          ) {
+
+            let extraHours = 0;
+
+            for (let i = 0; i < item.tipoDeTrabalhoHoras.length; i++) {
+              const projeto = item.tipoDeTrabalhoHoras[i]
+              
+              if (projeto.projeto === projetoGeral[0]?._id) {
+                const tt = projeto.tipoTrabalho.split(',') || [];
+                const ttH = projeto.horas.split(',') || [];
+
+                for (let j = 0; j < tt.length; j++) {
+                  if (tt[j] === compensacaoID) {
+                    countHours -= parseFloat(ttH[j]);
+                  }
+                  if (tt[j] === addHorasExtraID) {
+                    countHours += parseFloat(ttH[j]);
+                    extraHours = parseFloat(ttH[j]);
+                  }
                 }
               }
             }
+
+            if (feriadosPortugal(date)) {
+              countHours += (parseFloat(item.NumeroHoras) - parseFloat(extraHours));
+              return true;
+            }
+            if (isWeekend) {
+              countHours += (parseFloat(item.NumeroHoras) - parseFloat(extraHours));
+              return true;
+            }
+            if (isFriday && item.NumeroHoras > 6) {
+              countHours += (parseFloat(item.NumeroHoras - 6) - parseFloat(extraHours));
+              return true;
+            }
+            if (!isFriday && item.NumeroHoras > 8.5) {
+              countHours += (parseFloat(item.NumeroHoras - 8.5) - parseFloat(extraHours));
+              return true;
+            }
+            return false;
           }
 
-          if (feriadosPortugal(date)) {
-            countHours += item.NumeroHoras;
-            return true;
+          return;
+        });
+
+        setHorasExtra(countHours);
+        setHorasExtraAfter(countHours);
+
+        const firstDateWithLessThan8Hours = lista.reduceRight((acc, item) => {
+          const itemDate = new Date(item.Data);
+          const itemDayOfWeek = itemDate.getDay();
+          if ((itemDayOfWeek !== 0 && itemDayOfWeek !== 6) && item.NumeroHoras < 6) {
+            return itemDate.getTime() >= acc?.getTime ? item : acc;
           }
-          if (isWeekend) {
-            countHours += item.NumeroHoras;
-            return true;
+
+          if (itemDayOfWeek !== 5 && item.NumeroHoras < 8) {
+            return itemDate.getTime() >= acc?.getTime ? item : acc;
           }
-          if (isFriday && item.NumeroHoras > 6) {
-            countHours += item.NumeroHoras - 6;
-            return true;
+          return acc;
+        }, null);
+
+        const sortedDates = lista
+          .map(item => new Date(item.Data))
+          .sort((a, b) => a - b);
+
+        let missingDate = null;
+        let currentDate = new Date(Date.UTC(2023, 7, 1, 0, 0, 0));
+        let targetDate = null;
+        const date = new Date().toISOString().slice(0, 10);
+        let today = new Date(date);
+
+        const todayDay = today.getDate();
+        const todayMonth = today.getMonth();
+        const todayYear = today.getFullYear();
+
+        for (let i = 0; i < sortedDates.length + 1; i++) {
+          if (i === sortedDates.length) {
+            targetDate = today;
+          } else {
+            targetDate = sortedDates[i];
           }
-          if (!isFriday && item.NumeroHoras > 8.5) {
-            countHours += item.NumeroHoras - 8.5;
-            return true;
-          }
-          return false;
-        }
 
-        return;
-      });
+          targetDate = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate(), 0, 0, 0, 0);
+          currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 0, 0, 0, 0);
 
-      setHorasExtra(countHours);
-      setHorasExtraAfter(countHours);
+          while (currentDate <= targetDate) {
 
-      const firstDateWithLessThan8Hours = lista.reduceRight((acc, item) => {
-        const itemDate = new Date(item.Data);
-        const itemDayOfWeek = itemDate.getDay();
-        if ((itemDayOfWeek !== 0 && itemDayOfWeek !== 6) && item.NumeroHoras < 6) {
-          return itemDate.getTime() >= acc?.getTime ? item : acc;
-        }
+            if (feriadosPortugal(currentDate)) {
+              currentDate.setDate(currentDate.getDate() + 1);
 
-        if (itemDayOfWeek !== 5 && item.NumeroHoras < 8) {
-          return itemDate.getTime() >= acc?.getTime ? item : acc;
-        }
-        return acc;
-      }, null);
+              const itemDay = targetDate.getDate();
+              const itemMonth = targetDate.getMonth();
+              const itemYear = targetDate.getFullYear();
 
-      const sortedDates = lista
-        .map(item => new Date(item.Data))
-        .sort((a, b) => a - b);
+              const currentDay = currentDate.getDate();
+              const currentMonth = currentDate.getMonth();
+              const currentYear = currentDate.getFullYear();
 
-      let missingDate = null;
-      let currentDate = new Date(Date.UTC(2023, 7, 1, 0, 0, 0));
-      let targetDate = null;
-      const date = new Date().toISOString().slice(0, 10);
-      let today = new Date(date);
-
-      const todayDay = today.getDate();
-      const todayMonth = today.getMonth();
-      const todayYear = today.getFullYear();
-
-      for (let i = 0; i < sortedDates.length + 1; i++) {
-        if (i === sortedDates.length) {
-          targetDate = today;
-        } else {
-          targetDate = sortedDates[i];
-        }
-
-        targetDate = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate(), 0, 0, 0, 0);
-        currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 0, 0, 0, 0);
-
-        while (currentDate <= targetDate) {
-
-          if (feriadosPortugal(currentDate)) {
-            currentDate.setDate(currentDate.getDate() + 1);
+              if (
+                currentYear !== itemYear ||
+                currentMonth !== itemMonth ||
+                currentDay !== itemDay
+              ) {
+                break;
+              }
+            }
 
             const itemDay = targetDate.getDate();
             const itemMonth = targetDate.getMonth();
@@ -235,106 +260,89 @@ const ListaProjetos = () => {
             const currentYear = currentDate.getFullYear();
 
             if (
-              currentYear !== itemYear ||
-              currentMonth !== itemMonth ||
-              currentDay !== itemDay
+              currentYear === itemYear &&
+              currentMonth === itemMonth &&
+              currentDay === itemDay
             ) {
+
+              if (
+                currentYear === todayYear &&
+                currentMonth === todayMonth &&
+                currentDay === todayDay
+              ) {
+                missingDate = new Date(currentDate.getTime());
+                break;
+              }
+
+              currentDate.setDate(currentDate.getDate() + 1);
               break;
             }
-          }
 
-          const itemDay = targetDate.getDate();
-          const itemMonth = targetDate.getMonth();
-          const itemYear = targetDate.getFullYear();
-
-          const currentDay = currentDate.getDate();
-          const currentMonth = currentDate.getMonth();
-          const currentYear = currentDate.getFullYear();
-
-          if (
-            currentYear === itemYear &&
-            currentMonth === itemMonth &&
-            currentDay === itemDay
-          ) {
-
-            if (
-              currentYear === todayYear &&
-              currentMonth === todayMonth &&
-              currentDay === todayDay
-            ) {
+            if (currentDate.getDay() !== 0 && currentDate.getDay() !== 6) {
               missingDate = new Date(currentDate.getTime());
               break;
             }
 
             currentDate.setDate(currentDate.getDate() + 1);
+          }
+
+          if (missingDate) {
             break;
           }
+        }
 
-          if (currentDate.getDay() !== 0 && currentDate.getDay() !== 6) {
-            missingDate = new Date(currentDate.getTime());
-            break;
+        if (firstDateWithLessThan8Hours === null || missingDate.getTime() < new Date(firstDateWithLessThan8Hours).getTime()) {
+          setValues({
+            ...values,
+            Data: missingDate,
+            loaded: true,
+          });
+        } else {
+          const tipoDeTrabalhoHoras = {}
+          for (let j = 0; j < firstDateWithLessThan8Hours?.tipoDeTrabalhoHoras?.length; j++) {
+            const val = firstDateWithLessThan8Hours.tipoDeTrabalhoHoras[j].projeto;
+            tipoDeTrabalhoHoras[val] = firstDateWithLessThan8Hours.tipoDeTrabalhoHoras[j];
           }
 
-          currentDate.setDate(currentDate.getDate() + 1);
+          setValues({
+            ...values,
+            Data: firstDateWithLessThan8Hours,
+            loaded: true,
+          });
         }
 
-        if (missingDate) {
-          break;
-        }
-      }
+        const lastDateWithMoreThan8Hours = lista.reduceRight((acc, item) => {
+          const itemDate = new Date(item.Data);
+          if (
+            (values?.Data && new Date(values.Data).getDay() !== 5 && (itemDate.getDay() !== 5 && item.NumeroHoras >= 8)) ||
+            (values?.Data && new Date(values.Data).getDay() === 5 && (itemDate.getDay() === 5 && item.NumeroHoras >= 6))
+          ) {
 
-      if (firstDateWithLessThan8Hours === null || missingDate.getTime() < new Date(firstDateWithLessThan8Hours).getTime()) {
-        setValues({
-          ...values,
-          Data: missingDate,
-          loaded: true,
-        });
-      } else {
-        const tipoDeTrabalhoHoras = {}
-        for (let j = 0; j < firstDateWithLessThan8Hours?.tipoDeTrabalhoHoras?.length; j++) {
-          const val = firstDateWithLessThan8Hours.tipoDeTrabalhoHoras[j].projeto;
-          tipoDeTrabalhoHoras[val] = firstDateWithLessThan8Hours.tipoDeTrabalhoHoras[j];
-        }
-        
-        setValues({
-          ...values,
-          Data: firstDateWithLessThan8Hours,
-          loaded: true,
-        });
-      }
-
-      const lastDateWithMoreThan8Hours = lista.reduceRight((acc, item) => {
-        const itemDate = new Date(item.Data);
-        if (
-          (values?.Data && new Date(values.Data).getDay() !== 5 && (itemDate.getDay() !== 5 && item.NumeroHoras >= 8)) ||
-          (values?.Data && new Date(values.Data).getDay() === 5 && (itemDate.getDay() === 5 && item.NumeroHoras >= 6))
-        ) {
-
-          if (!acc.Data) {
-            return item;
-          }
-          const data = acc.Data;
-          const date = new Date(data);
-
-          if (!isNaN(date)) {
-            if (itemDate.getTime() >= date.getTime()) {
+            if (!acc.Data) {
               return item;
             }
-          } else {
-            if (itemDate.getTime() >= acc.Data) {
-              return item;
+            const data = acc.Data;
+            const date = new Date(data);
+
+            if (!isNaN(date)) {
+              if (itemDate.getTime() >= date.getTime()) {
+                return item;
+              }
+            } else {
+              if (itemDate.getTime() >= acc.Data) {
+                return item;
+              }
             }
           }
-        }
-        return acc;
-      }, new Date(null));
+          return acc;
+        }, new Date(null));
 
-      setLastDate(lastDateWithMoreThan8Hours);
-      setDataCopy({
-        DataCopy: lastDateWithMoreThan8Hours.Data,
+        setLastDate(lastDateWithMoreThan8Hours);
+        setDataCopy({
+          DataCopy: lastDateWithMoreThan8Hours.Data,
+        });
       });
-    });
-  }
+    }
   }, [filteredProjetos]);
 
 
@@ -444,6 +452,7 @@ const ListaProjetos = () => {
         currentDay === itemDay
       ) {
         const tipoDeTrabalhoHoras = {};
+        let horasExtra = 0;
         let sSProjetos = sProjetos;
         for (let j = 0; j < listaDias[i].tipoDeTrabalhoHoras.length; j++) {
           const val = listaDias[i].tipoDeTrabalhoHoras[j].projeto;
@@ -456,6 +465,18 @@ const ListaProjetos = () => {
             return 0;
           });
           tipoDeTrabalhoHoras[val] = listaDias[i].tipoDeTrabalhoHoras[j];
+
+
+          const projeto = listaDias[i].tipoDeTrabalhoHoras[j]
+          const tt = projeto.tipoTrabalho.split(',') || [];
+          const ttH = projeto.horas.split(',') || [];
+
+          for (let h = 0; h < tt.length; h++) {
+            if (tt[h] === addHorasExtraID) {
+              horasExtra = ttH[h]
+              setHorasExtraTT(horasExtra);
+            }
+          }
         }
 
         setValues({
@@ -466,7 +487,8 @@ const ListaProjetos = () => {
           NumeroHoras: listaDias[i].NumeroHoras,
           tipoDeTrabalhoHoras: tipoDeTrabalhoHoras,
         });
-        seTSortedProjetos(sSProjetos)
+        seTSortedProjetos(sSProjetos);
+
         setHorasT(listaDias[i].NumeroHoras);
         setVerificaChange(true);
         setVerificaDiaCalled(true);
@@ -529,10 +551,16 @@ const ListaProjetos = () => {
   const handleHorasChange = (projectId, tipoTrabalho, projectName, e) => {
 
     let newHorasT = horasT;
+    const newTipoDeTrabalhoHoras = { ...values.tipoDeTrabalhoHoras };
+    const horasTipoTrabalhoArray = newTipoDeTrabalhoHoras[projectId]?.horas?.split(',') || [];
+    const tipoTrabalhoArray = newTipoDeTrabalhoHoras[projectId]?.tipoTrabalho?.split(',') || [];
 
     let horas = e;
 
     let timeParts = horas.split(':');
+    let horasExtraTTCheck = false;
+    let horasExtraNumber = horasExtraTT;
+    let horasExtraBeforeValue = horasExtraTT;
 
     // Calculate the decimal representation
     let horasNumberChange = parseInt(timeParts[0], 10) + parseFloat(timeParts[1]) / 60;
@@ -542,11 +570,12 @@ const ListaProjetos = () => {
       horasNumber = 0;
     }
 
-
-
-    const newTipoDeTrabalhoHoras = { ...values.tipoDeTrabalhoHoras };
-    const horasTipoTrabalhoArray = newTipoDeTrabalhoHoras[projectId]?.horas?.split(',') || [];
-    const tipoTrabalhoArray = newTipoDeTrabalhoHoras[projectId]?.tipoTrabalho?.split(',') || [];
+    for (let h = 0; h < tipoTrabalhoArray.length; h++) {
+      if (tipoTrabalhoArray[h] === addHorasExtraID) {
+        horasExtraNumber = parseFloat(horasTipoTrabalhoArray[h]);
+        horasExtraBeforeValue = parseFloat(horasTipoTrabalhoArray[h]);
+      }
+    }
 
     if (tipoTrabalhoArray.includes(tipoTrabalho)) {
 
@@ -563,7 +592,6 @@ const ListaProjetos = () => {
       }
 
     } else {
-
       tipoTrabalhoArray.push(tipoTrabalho);
       horasTipoTrabalhoArray.push(horasNumber);
       newTipoDeTrabalhoHoras[projectId] = {
@@ -575,13 +603,7 @@ const ListaProjetos = () => {
     }
 
 
-  
 
-    if (newHorasT > 24) {
-      toast.error('Valor inserido excede as 24 Horas!');
-      setValues({ ...values, [horas]: "0.0" });
-      return;
-    }
 
     const dateAdd = new Date(values?.Data);
 
@@ -596,44 +618,103 @@ const ListaProjetos = () => {
       }
       setHorasExtraAfter(parseFloat(horasExtra) - parseFloat(horasNumber))
     }
-    
-    if(horasT > newHorasT) {
+
+
+    if (tipoTrabalho === addHorasExtraID) {
+      horasExtraTTCheck = true;
+      horasExtraNumber = horasNumber;
+      setHorasExtraTT(horasExtraNumber);
+    }
+ 
+
+    if (horasExtraTTCheck || horasExtraNumber > 0) {
+      if ((parseFloat(newHorasT) - parseFloat(horasExtraNumber)) > 24) {
+        toast.error('Valor inserido excede as 24 Horas!');
+        setValues({ ...values, [horas]: "0.0" });
+        return;
+      }
+    } else {
+      if (parseFloat(newHorasT) > 24) {
+        toast.error('Valor inserido excede as 24 Horas!');
+        setValues({ ...values, [horas]: "0.0" });
+        return;
+      }
+    }
+
+
+    let horasExtraValue = 0;
+    if (parseFloat(horasT) > parseFloat(newHorasT)) {
+
+      let horas = (parseFloat(newHorasT) - parseFloat(horasExtraNumber));
       let horasExtraBefore = 0;
       let horasExtraExtract = 0;
-      if (isFriday && horasT > 6) {
-        horasExtraBefore = horasT - 6;
-        horasExtraExtract = newHorasT - horasT;
-        if(horasT + horasExtraExtract >= 6){
-          setHorasExtraAfter(parseFloat(horasExtraAfter) + parseFloat(horasExtraExtract))
-        }else{
-          setHorasExtraAfter(parseFloat(horasExtraAfter) - parseFloat(horasExtraBefore))
-        }
-      } else if (isWeekend ||  feriadosPortugal(dateAdd)) {
-
-        const horasAddExtra =  horasT - newHorasT;
-        setHorasExtraAfter(parseFloat(horasExtraAfter) - parseFloat(horasAddExtra))
-      } else if (horasT > 8.5) {
-        horasExtraBefore = horasT - 8.5;
-        horasExtraExtract = newHorasT - horasT;
-        if(horasT + horasExtraExtract >= 8.5){
-          setHorasExtraAfter(parseFloat(horasExtraAfter) + parseFloat(horasExtraExtract))
-        }else{
-          setHorasExtraAfter(parseFloat(horasExtraAfter) - parseFloat(horasExtraBefore))
-        }
-      } else {
-        setHorasExtraAfter(horasExtra)
+      if (tipoTrabalho === addHorasExtraID) {
+        horasExtraValue = parseFloat(horasExtraAfter) + (parseFloat(horasNumber) - parseFloat(horasExtraBeforeValue));
+        setHorasExtraAfter(horasExtraValue);
       }
-     }else{
-    if (isFriday && newHorasT > 6) {
-      setHorasExtraAfter(parseFloat(horasExtra) + parseFloat(newHorasT - 6))
-    } else if (isWeekend ||  feriadosPortugal(dateAdd)) {
-      setHorasExtraAfter(parseFloat(horasExtra) + parseFloat(newHorasT))
-    } else if (newHorasT > 8.5) {
-      setHorasExtraAfter(parseFloat(horasExtra) + parseFloat(newHorasT - 8.5))
-    }
-  }
+      
+      else if (isFriday && ((parseFloat(horasT) - parseFloat(horasExtraNumber))) > 6) {
+        horasExtraBefore = parseFloat(horasT) - 6;
+        horasExtraExtract = parseFloat(newHorasT) - parseFloat(horasT);
 
-  
+        if (horas >= 6) {
+          horasExtraValue = parseFloat(horasExtraAfter) + parseFloat(horasExtraExtract);
+        } else {
+          let sub = 6 - parseFloat(horas);
+          horasExtraValue = parseFloat(horasExtraAfter) + (parseFloat(horasExtraExtract) + parseFloat(sub));
+        }
+        setHorasExtraAfter(horasExtraValue);
+
+      } else if (isWeekend || feriadosPortugal(dateAdd)) {
+        const horasAddExtra = parseFloat(horasT) - parseFloat(newHorasT);
+        horasExtraValue = parseFloat(horasExtraAfter) - parseFloat(horasAddExtra);
+
+        setHorasExtraAfter(horasExtraValue);
+      } else if ((parseFloat(horasT) - parseFloat(horasExtraNumber)) > 8.5) {
+        horasExtraBefore = parseFloat(horasT) - 8.5;
+        horasExtraExtract = parseFloat(newHorasT) - parseFloat(horasT);
+
+        if (horas >= 8.5) {
+          horasExtraValue = parseFloat(horasExtraAfter) + parseFloat(horasExtraExtract);
+        } else {
+          let sub = 8.5 - horas;
+          horasExtraValue = parseFloat(horasExtraAfter) + (parseFloat(horasExtraExtract) + parseFloat(sub));
+        }
+        setHorasExtraAfter(horasExtraValue);
+      }
+    } else {
+      let horas = (parseFloat(newHorasT)- parseFloat(horasExtraNumber));
+
+      if (tipoTrabalho === addHorasExtraID) {
+        if(horasExtraAfter > 0){
+          horasExtraValue = parseFloat(horasExtraAfter) + (parseFloat(horasNumber) - parseFloat(horasExtraBeforeValue));
+        }
+        else{
+        horasExtraValue = parseFloat(horasExtra) + (parseFloat(horasNumber) - parseFloat(horasExtraBeforeValue));
+        }
+        setHorasExtraAfter(horasExtraValue);
+        
+      } else if (isFriday && (parseFloat(newHorasT) - parseFloat(horasExtraNumber)) > 6) {
+        if(horasExtraNumber > 0){
+          horasExtraValue = parseFloat(horasExtraNumber) + parseFloat(horas - 6);
+        }else{
+          horasExtraValue = parseFloat(horasExtra) + parseFloat(newHorasT - 6);
+        }
+        setHorasExtraAfter(horasExtraValue);
+      } else if (isWeekend || feriadosPortugal(dateAdd)) {
+        horasExtraValue = parseFloat(horasExtra) + parseFloat(newHorasT);
+        setHorasExtraAfter(horasExtraValue);
+      } else if ((newHorasT - parseFloat(horasExtraNumber)) > 8.5) {
+        if(horasExtraNumber > 0){
+          horasExtraValue = parseFloat(horasExtraNumber) + parseFloat(horas -  8.5);
+        }else{
+          horasExtraValue = parseFloat(horasExtra) + parseFloat(newHorasT - 8.5);
+        }
+        setHorasExtraAfter(horasExtraValue);
+      }
+    }
+
+
     setValues({
       ...values,
       horas: horasNumber,
@@ -645,7 +726,7 @@ const ListaProjetos = () => {
   };
 
 
-  const copiar = async(value) => {
+  const copiar = async (value) => {
     if (value === true) {
 
       if (!lastDate?.tipoDeTrabalhoHoras) {
@@ -668,6 +749,7 @@ const ListaProjetos = () => {
         });
 
         tipoDeTrabalhoHoras[val] = lastDate.tipoDeTrabalhoHoras[j];
+
       }
       setValues({
         ...values,
@@ -736,87 +818,107 @@ const ListaProjetos = () => {
   } else {
     return (
       <Wrapper>
-          <div className="container">
-            <div>
-              <div className='row'>
-                <div className='col-6'>
-                  <h3>{verificaDiaCalled ? 'Editar Dia' : 'Adicionar Dia'}</h3>
-                </div>
-                <div className='col-6 text-end'>
-                  <h4>{horasExtraAfter ? 'Horas extra  ' + convertToMinutes(horasExtraAfter) : ''}</h4>
-                </div>
+        <div className="container">
+          <div>
+            <div className='row'>
+              <div className='col-6'>
+                <h3>{verificaDiaCalled ? 'Editar Dia' : 'Adicionar Dia'}</h3>
               </div>
-              <div className='row'>
-                <div className='col-6'>
-                  <FormRow
-                    type="date"
-                    className="dataAddHoras"
-                    classNameInputDate="form__field__date"
-                    classNameLabel="form-field-label"
-                    id="Dia"
-                    name="Data"
-                    placeholder="Dia Adicionar Horas"
-                    value={values.Data ? new Date(values.Data).toLocaleDateString('en-CA') : ''}
-                    handleChange={verificaDia}
-                  />
-                </div>
-                <div className='col-6 text-center'>
-                  <AddHorasCopiar
+              <div className='col-6 text-end'>
+                <h4>{horasExtraAfter ? 'Horas extra  ' + convertToMinutes(horasExtraAfter) : ''}</h4>
+              </div>
+            </div>
+            <div className='row'>
+              <div className='col-6'>
+                <FormRow
+                  type="date"
+                  className="dataAddHoras"
+                  classNameInputDate="form__field__date"
+                  classNameLabel="form-field-label"
+                  id="Dia"
+                  name="Data"
+                  placeholder="Dia Adicionar Horas"
+                  value={values.Data ? new Date(values.Data).toLocaleDateString('en-CA') : ''}
+                  handleChange={verificaDia}
+                />
+              </div>
+              <div className='col-6 text-center'>
+                <AddHorasCopiar
                   copiar={copiar}
                   verificaCopiarHoras={verificaCopiarHoras}
                   copyExists={copyExists}
                   DataCopy={DataCopy}
                   verificaDiaLast={verificaDiaLast}
                   handleDia={handleDia}
-                  />
-
-                </div>
-              </div>
-            </div>
-            <div className="list-group mx-1 w-auto">
-
-                <AddHorasDropdown
-                  sortedProjetos= {sortedProjetos}
-                  verificaChange={verificaChange}
-                  listaTipoTrabalho={listaTipoTrabalho}
-                  values={values}
-                  handleHorasChange={handleHorasChange}
-                  convertToMinutes={convertToMinutes}
-                  arrayTipoTrabalho={arrayTipoTrabalho}
-                  matchFoundProjeto={matchFoundProjeto}
-                  ListaTrabalhoAll={ListaTrabalhoAll}
-                  ListaTrabalhoGeral={ListaTrabalhoGeral}
-                  ListaTrabalhoGeralOther ={ListaTrabalhoGeralOther}
-                  setListaTipoTrabalho ={setListaTipoTrabalho}
-                  setListaTrabalhoGeral ={setListaTrabalhoGeral}
-                  setListaTrabalhoGeralOther ={setListaTrabalhoGeralOther}
                 />
 
-              <div className="card text-center">
-                <div className="card-body">
-                  <h5 className="card-title">
-                    Total de horas: {convertToMinutes(horasT)}
-                    {values?.Data && new Date(values.Data).getDay() === 5
-                      ? " | 6:00 H"
-                      : values?.Data && (new Date(values.Data).getDay() === 0 || new Date(values.Data).getDay() === 6 ||feriadosPortugal(new Date(values.Data)))
-                        ? ""
-                        : " | 8:30 H"}
-                  </h5>
-                </div>
+              </div>
+              {(() => {
+                const date = new Date(values.Data);
+                const dayStart = new Date(Date.UTC(2023, 11, 10, 0, 0, 0));
 
-                <div className="card-body">
-                  <button
-                    type="submit"
-                    disabled={isLoading}
-                    onClick={(e) => { handleDia(e) }}
-                    className="w-100 btn btn-lg btn-primary"
-                  >
-                    {isLoading ? 'loading...' : verificaDiaCalled ? 'Editar Dia' : 'Guardar Dia'}
-                  </button>
-                </div>
+                const dateDay = date.getDate();
+                const dateMonth = date.getMonth();
+                const dateYear = date.getFullYear();
+
+                const startDay = dayStart.getDate();
+                const startMonth = dayStart.getMonth();
+                const startYear = dayStart.getFullYear();
+                if ((dateMonth < startMonth && dateYear <= startYear) || (dateDay <= startDay && dateMonth === startMonth)) {
+                  return (
+                    <div className='text-center'>
+                      <p>Adicione horas extras acumuladas em <b>Geral</b> &rarr; <b>Adicionar Horas Extras</b> entre <b>01/12/2023 e 10/12/2023</b></p>
+                    </div>
+                  );
+                }
+                return <></>;
+              })()}
+            </div>
+          </div>
+          <div className="list-group mx-1 w-auto">
+
+            <AddHorasDropdown
+              sortedProjetos={sortedProjetos}
+              verificaChange={verificaChange}
+              listaTipoTrabalho={listaTipoTrabalho}
+              values={values}
+              handleHorasChange={handleHorasChange}
+              convertToMinutes={convertToMinutes}
+              arrayTipoTrabalho={arrayTipoTrabalho}
+              matchFoundProjeto={matchFoundProjeto}
+              ListaTrabalhoAll={ListaTrabalhoAll}
+              ListaTrabalhoGeral={ListaTrabalhoGeral}
+              ListaTrabalhoGeralOther={ListaTrabalhoGeralOther}
+              setListaTipoTrabalho={setListaTipoTrabalho}
+              setListaTrabalhoGeral={setListaTrabalhoGeral}
+              setListaTrabalhoGeralOther={setListaTrabalhoGeralOther}
+            />
+
+            <div className="card text-center">
+              <div className="card-body">
+                <h5 className="card-title">
+                  Total de horas: {convertToMinutes((parseFloat(horasT) - parseFloat(horasExtraTT)))}
+                  {values?.Data && new Date(values.Data).getDay() === 5
+                    ? " | 6:00 H"
+                    : values?.Data && (new Date(values.Data).getDay() === 0 || new Date(values.Data).getDay() === 6 || feriadosPortugal(new Date(values.Data)))
+                      ? ""
+                      : " | 8:30 H"}
+                </h5>
+              </div>
+
+              <div className="card-body">
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  onClick={(e) => { handleDia(e) }}
+                  className="w-100 btn btn-lg btn-primary"
+                >
+                  {isLoading ? 'loading...' : verificaDiaCalled ? 'Editar Dia' : 'Guardar Dia'}
+                </button>
               </div>
             </div>
           </div>
+        </div>
       </Wrapper>
     );
   }

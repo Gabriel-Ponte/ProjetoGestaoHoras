@@ -127,7 +127,7 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPos
 
             <div className="row text-center">
               <div className="col-md-3 themed-grid-col">
-                <h4>{NumeroHoras}</h4>
+                <h4>{convertToMinutes(NumeroHoras)}</h4>
               </div>
               <div className="col-md-9 themed-grid-col">
                 {projeto.map(({ tipoTrabalho, horas, projeto }) => (

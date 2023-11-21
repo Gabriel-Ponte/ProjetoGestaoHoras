@@ -863,7 +863,6 @@ const ListaProjetos = () => {
   //       // Convert the minutes to a number and calculate the rounded percentage of an hour
   //       let minutesInt = parseFloat(minutes) || 0;
   //       const percentageOfHour = Math.round((minutesInt / 60) * 100 / 25) * 25;
-  //       console.log(percentageOfHour)
   //       // Calculate the rounded minutes based on the percentage of an hour
   //       let roundedMinutes = Math.round((percentageOfHour / 100) * 60);
   //       if (roundedMinutes === 60) {

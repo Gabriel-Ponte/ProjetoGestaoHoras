@@ -4,7 +4,7 @@ import { MdKeyboardArrowLeft } from 'react-icons/md';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import { toast } from 'react-toastify';
 
-const CalendarControl = ({ handleChange, inserted, feriados,ferias, inicio, fim , objetivo, vProjeto , todos , numberUsers }) => {
+const CalendarControl = ({ handleChange, inserted, feriados,ferias, inicio, fim , objetivo, vProjeto , todos , numberUsers, horasExtraID }) => {
     const [calendar, setCalendar] = useState(new Date());
     const calWeekDays = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
     const calMonthName = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
@@ -200,16 +200,28 @@ const CalendarControl = ({ handleChange, inserted, feriados,ferias, inicio, fim 
             let arrayDates = {};
             
             for (let i = 0; i < filteredDias.length; i++) {
-              const nHours = parseInt(filteredDias[i].NumeroHoras) || 0;
-            
+              let nHours = parseFloat(filteredDias[i].NumeroHoras) || 0;
+              for(let j= 0; j< filteredDias[i].tipoDeTrabalhoHoras.length; j++){
+                const projeto = filteredDias[i].tipoDeTrabalhoHoras[j]
+                const tt = projeto.tipoTrabalho.split(',') || [];
+                const ttH = projeto.horas.split(',') || [];
+      
+                  for (let h = 0; h < tt.length; h++) {
+                    if (tt[h] === horasExtraID) {
+                        nHours -= parseFloat(ttH[h]);
+                    }
+                  }
+              }
               if (!arrayDates[filteredDias[i].Data]) {
                 arrayDates[filteredDias[i].Data] = nHours;
               } else {
                 arrayDates[filteredDias[i].Data] += nHours;
               }
             }
-            
+
+
             for (let date in arrayDates) {
+
               const insertedDay = new Date(date);
             
               if (
@@ -275,18 +287,31 @@ const CalendarControl = ({ handleChange, inserted, feriados,ferias, inicio, fim 
                 const insertedDay = new Date(inserted[i]?.Data);
                 const currentMonth = insertedDay?.getMonth() + 1;
                 const currentYear = insertedDay?.getFullYear();
-
+                let numberHours = inserted[i].NumeroHoras;
                 if (
                     currentYear === changedYear &&
                     currentMonth === changedMonth &&
                     numberItems !== null &&
                     numberItems.length >= calendar.getDate()
                 ) {
+                    
+                for (let h = 0; h < inserted[i].tipoDeTrabalhoHoras.length; h++) {
+                    const projeto = inserted[i].tipoDeTrabalhoHoras[h]
+                    const tt = projeto.tipoTrabalho.split(',') || [];
+                    const ttH = projeto.horas.split(',') || [];
+        
+                        for (let j = 0; j < tt.length; j++) {
+                        if (tt[j] === horasExtraID) {
+                            numberHours -= parseFloat(ttH[j]);
+                        }
+                        }
+                    }
+                    
                     dias.push(insertedDay);
                     if (insertedDay.getDay() === 5) {
-                        if (inserted[i].NumeroHoras < 6) {
+                        if (numberHours < 6) {
                             numberItems[insertedDay.getDate() - 1].classList.add("calendar-inserted-low");
-                        } else if(inserted[i].NumeroHoras > 6){
+                        } else if(numberHours > 6){
                             numberItems[insertedDay.getDate() - 1].classList.add("calendar-inserted-high");
                         } else{
                             numberItems[insertedDay.getDate() - 1].classList.add("calendar-inserted");
@@ -294,9 +319,9 @@ const CalendarControl = ({ handleChange, inserted, feriados,ferias, inicio, fim 
                     }else if(insertedDay.getDay() === 0 || insertedDay.getDay() === 6){
                         numberItems[insertedDay.getDate() - 1].classList.add("calendar-inserted-high");
                     }else{
-                        if (inserted[i].NumeroHoras < 8.5) {
+                        if (numberHours < 8.5) {
                             numberItems[insertedDay.getDate() - 1].classList.add("calendar-inserted-low");
-                        } else if(inserted[i].NumeroHoras > 8.5){
+                        } else if(numberHours > 8.5){
                             numberItems[insertedDay.getDate() - 1].classList.add("calendar-inserted-high");
                         } else{
                             numberItems[insertedDay.getDate() - 1].classList.add("calendar-inserted");

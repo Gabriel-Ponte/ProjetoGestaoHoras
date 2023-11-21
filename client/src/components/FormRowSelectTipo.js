@@ -16,8 +16,17 @@ const FormRowSelectTipo = ({ labelText, name, value, handleChange, list, classNa
     value = "Outro";
   }else if(value === 4 && name === "tipoT"){
     value = "Compensação";
+  }else if(value === 5 && name === "tipoT"){
+    value = "Extra";
   }
   
+
+  const containerStyle = {
+    width: value === "Compensação" || value === "Extra" ? '100%' : '75%',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  };
+
   return (
     <Wrapper>
     <div className={className ? className : 'form-row text-center'} style={{ width: '100%' }}>
@@ -27,14 +36,14 @@ const FormRowSelectTipo = ({ labelText, name, value, handleChange, list, classNa
       </label>
       }
       
-      <div className="text-center" style={{ width: '75%', marginLeft: 'auto' , marginRight:'auto'}}>
+      <div className="text-center" style={containerStyle}>
       <select
         name={name}
         id={name}
         value={value}
         onChange={handleChange}
         className='form-select'
-
+        disabled={value === "Compensação" || value === "Extra"}
       >
         {list.map((itemValue, index) => {
           

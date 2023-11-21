@@ -100,9 +100,12 @@ const GerirTipoTrabalho = () => {
             valueTipo = 2
           }else if(value === "Outro"){
             valueTipo = 3
+          }else if(value === "Extra"){
+            valueTipo = 5
           }else{
             valueTipo = 4
           }
+
           if (initialState[i]._id === id && initialState[i].tipo === valueTipo) {
             setVerificaAlterado((prevState) => ({
               ...prevState,
@@ -155,6 +158,7 @@ const GerirTipoTrabalho = () => {
       setNewOption('');
     }
   };
+
   return (
     <Wrapper>
       <div className={'row mb-12 text-center tittle'}>
@@ -184,7 +188,7 @@ const GerirTipoTrabalho = () => {
                     handleChange={(e) => handleChangeTipoTrabalho(e, t._id)}
                     placeholder="Escolha um tipo"
                     value={t.tipo}
-                    list={[["Projetos"], ["Geral"], ["Outro"], ["Compensação"]]}
+                    list={[["Projetos"], ["Geral"], ["Outro"], ["Compensação"], ["Extra"]]}
                 />
                 </div>
             </div>
@@ -200,14 +204,18 @@ const GerirTipoTrabalho = () => {
                   </button>
 
                 ) : (
-
-                  <button type='submit'
-                    onClick={() => deleteTT(t._id , t.TipoTrabalho)}
-                    className="btn">
-                    <AiFillDelete />
-                  </button>
+                  (t.tipo !== 5 && t.tipo !== 4) && (
+                    <button
+                      type='submit'
+                      onClick={() => deleteTT(t._id, t.TipoTrabalho)}
+                      className="btn"
+                    >
+                      <AiFillDelete />
+                    </button>
+                  )
                 )
                 }
+                
               </div>
             </div>
           </div>
