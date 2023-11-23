@@ -8,6 +8,7 @@ import { listaUtilizadores } from '../features/utilizadores/utilizadorSlice';
 import { FormRowSelect } from '../components';
 import Calendar from './Calendar'
 
+
 const VisualizarProjeto = () => {
 
 
@@ -33,8 +34,8 @@ const VisualizarProjeto = () => {
   }
 
   const { user, utilizadores } = useSelector((store) => store.utilizador);
-  const { projeto } = useSelector((store) => store.projeto);
-  const { dias, isLoading } = useSelector((store) => store.allDias);
+  const { projeto, isLoading } = useSelector((store) => store.projeto);
+  const { dias } = useSelector((store) => store.allDias);
   const [verificaDias, setVerificaDias] = useState(0);
   const [values, setValues] = useState(null);
   const [selectedUser, setSelectedUser] = useState(user?.user?.nome);
@@ -56,13 +57,13 @@ const VisualizarProjeto = () => {
       setValues(createInitialState(projeto.projeto));
       setUpdatedListaDias(listaDias);
       const projetoId = projeto?.projeto?._id;
-      
+
       if (selectedUser !== "Todos") {
         dispatch(getAllDiasProjetoUtilizador({ projetoId, selectedUser }))
           .then((res) => {
             if (res.payload.diasAllProjeto) {
               setListaDias(res.payload.diasAllProjeto);
-              
+
               setVerificaDias(1);
             } else {
               setListaDias([]);
@@ -89,26 +90,123 @@ const VisualizarProjeto = () => {
           });
       }
     }
-  }, [selectedUser , projeto, dispatch]);
+  }, [selectedUser, projeto, dispatch]);
 
   useEffect(() => {
     dispatch(getTipoTrabalho()).then((res) => {
       const tipoTrabalhoArray = Array.isArray(res.payload.tipoTrabalho) ? res.payload.tipoTrabalho : [];
       let verifica = false;
-      for(let i = 0; i<tipoTrabalhoArray.length; i++){
-        if(tipoTrabalhoArray[i].TipoTrabalho.toLowerCase() === "outro"){
+      for (let i = 0; i < tipoTrabalhoArray.length; i++) {
+        if (tipoTrabalhoArray[i].TipoTrabalho.toLowerCase() === "outro") {
           verifica = true;
         }
       }
-      if (verifica === false){
+      if (verifica === false) {
         tipoTrabalhoArray.push({ TipoTrabalho: "Outro" })
       }
       setListaTipoTrabalho(tipoTrabalhoArray);
     });
+
+    dispatch(listaUtilizadores());
+
   }, [selectedUser, dispatch]);
 
+
+
+
+  const handleChangeCalendario = useCallback((dia, mes, ano) => {
+    const [selectedDia, selectedMes, selectedAno] = [dia, mes, ano];
+    setSelectedDay({ dia: selectedDia, mes: selectedMes, ano: selectedAno });
+  }, []);
+
+
+  const handleChangeUtilizador = useCallback((e) => {
+    const { value } = e.target;
+    setSelectedUser(value);
+  }, [selectedUser]);
+
+
+
+  useEffect(() => {
+    if (values && listaTipoTrabalho) {
+      const arrayTT = values.TipoTrabalho ? values.TipoTrabalho.split(',') : [];
+      const arrayTTH = new Array(arrayTT.length).fill(0);
+      if (listaDias && listaDias.length > 0) {
+        let totalHours = 0;
+
+
+        for (let i = 0; i < listaDias.length; i++) {
+          const dia = listaDias[i];
+          const data = new Date(dia.Data);
+          let dataSelected = new Date();
+          let condicao = null;
+          let diaSelected;
+          if (selectedDay && selectedDay.dia !== 0) {
+            diaSelected = selectedDay ? selectedDay.dia : 0;
+            const month = selectedDay.mes;
+            const year = selectedDay.ano;
+            dataSelected = new Date(year, month, diaSelected);
+            dataSelected.setHours(data.getHours());
+            condicao = dia.tipoDeTrabalhoHoras && dataSelected.getTime() === data.getTime();
+          } else {
+            condicao = dia.tipoDeTrabalhoHoras;
+          }
+
+          if (condicao) {
+            for (let j = 0; j < dia.tipoDeTrabalhoHoras.length; j++) {
+              const tipoDeTrabalhoHora = dia.tipoDeTrabalhoHoras[j];
+              if (tipoDeTrabalhoHora.projeto === values._id) {
+                const array = tipoDeTrabalhoHora.horas ? tipoDeTrabalhoHora.horas.split(',') : [];
+                let values = tipoDeTrabalhoHora.tipoTrabalho ? tipoDeTrabalhoHora.tipoTrabalho.split(',') : [];
+                const filteredValues = values
+                  .filter(value => listaTipoTrabalho.some(item => item._id === value))
+                  .map(value => {
+                    const matchedItem = listaTipoTrabalho.find(item => item._id === value);
+                    return matchedItem ? matchedItem.TipoTrabalho : null;
+                  });
+
+                if (array !== null) {
+                  for (let h = 0; h < array.length; h++) {
+                    const horas = Number(array[h]);
+                    if (!filteredValues[h]) {
+                      filteredValues[h] = "Outro";
+                    }
+                    totalHours += horas;
+                    arrayTTH[filteredValues[h]] = (arrayTTH[filteredValues[h]] || 0) + horas;
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        if (totalHours !== 0) {
+          setValues({
+            ...values,
+            NumeroHorasTotal: totalHours,
+            NumeroHorasTipoTrabalho: arrayTTH,
+          });
+        } else {
+          setValues({
+            ...values,
+            NumeroHorasTotal: selectedUser === "Todos" ? `Não existem horas inseridas no projeto neste dia ${selectedDay?.dia}/${selectedDay?.mes}/${selectedDay?.ano}` : `${selectedUser} não possui horas inseridas no projeto neste dia ${selectedDay?.dia}/${selectedDay?.mes}/${selectedDay?.ano}`,
+            NumeroHorasTipoTrabalho: ""
+          });
+        }
+      } else {
+        setValues({
+          ...values,
+          NumeroHorasTotal: selectedUser === "Todos" ? "Não existem horas inseridas no projeto" : `${selectedUser} não possui horas inseridas no projeto`,
+          NumeroHorasTipoTrabalho: "",
+        });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedDay, listaDias]);
+
+
   function feriadosPortugal(date) {
-    
+
     const feriados = [];
 
     for (let i = date.getFullYear() - 5; i < date.getFullYear() + 5; i++) {
@@ -171,121 +269,19 @@ const VisualizarProjeto = () => {
     return new Date(ano, domingoPascoa.getMonth(), domingoPascoa.getDate() + 60);
   }
 
-
-  const handleChangeCalendario = useCallback((dia, mes, ano) => {
-    const [selectedDia, selectedMes, selectedAno] = [dia, mes, ano];
-    setSelectedDay({ dia: selectedDia, mes: selectedMes, ano: selectedAno });
-  }, []);
-
-
-  const handleChangeUtilizador = useCallback((e) => {
-    const { value } = e.target;
-    setSelectedUser(value);
-  }, []);
-
-
-  useEffect(() => {
-    dispatch(listaUtilizadores());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedUser]);
-
-
-
-
-  useEffect(() => {
-    if (values && listaTipoTrabalho) {
-      const arrayTT = values.TipoTrabalho ? values.TipoTrabalho.split(',') : [];
-      const arrayTTH = new Array(arrayTT.length).fill(0);
-      if (listaDias && listaDias.length > 0) {
-        let totalHours = 0;
-
-
-        for (let i = 0; i < listaDias.length; i++) {
-          const dia = listaDias[i];
-          const data = new Date(dia.Data);
-          let dataSelected = new Date();
-          let condicao = null;
-          let diaSelected;
-          if(selectedDay && selectedDay.dia !== 0){
-            diaSelected = selectedDay ? selectedDay.dia : 0;
-            const month = selectedDay.mes;
-            const year = selectedDay.ano;
-            dataSelected = new Date(year, month, diaSelected);
-            dataSelected.setHours(data.getHours());
-            condicao = dia.tipoDeTrabalhoHoras && dataSelected.getTime() === data.getTime();
-          } else {
-            condicao = dia.tipoDeTrabalhoHoras;
-          }
-          
-          if (condicao) {
-            for (let j = 0; j < dia.tipoDeTrabalhoHoras.length; j++) {
-              const tipoDeTrabalhoHora = dia.tipoDeTrabalhoHoras[j];
-              if (tipoDeTrabalhoHora.projeto === values._id) {
-                const array = tipoDeTrabalhoHora.horas ? tipoDeTrabalhoHora.horas.split(',') : [];
-                let values = tipoDeTrabalhoHora.tipoTrabalho ? tipoDeTrabalhoHora.tipoTrabalho.split(',') : [];
-                const filteredValues = values
-                  .filter(value => listaTipoTrabalho.some(item => item._id === value))
-                  .map(value => {
-                    const matchedItem = listaTipoTrabalho.find(item => item._id === value);
-                    return matchedItem ? matchedItem.TipoTrabalho : null;
-                  });
-                  
-                if (array !== null) {
-                  for (let h = 0; h < array.length; h++) {
-                    const horas = Number(array[h]);
-                    if(!filteredValues[h]){
-                      filteredValues[h] = "Outro";
-                    }
-                    totalHours += horas;
-                    arrayTTH[filteredValues[h]] = (arrayTTH[filteredValues[h]] || 0) + horas;
-                  }
-                }
-              }
-            }
-          }
-
-        }
-
-        if (totalHours !== 0) {
-          setValues({
-            ...values,
-            NumeroHorasTotal: totalHours,
-            NumeroHorasTipoTrabalho: arrayTTH,
-          });
-        }else{
-          setValues({
-            ...values,
-            NumeroHorasTotal: selectedUser === "Todos" ? `Não existem horas inseridas no projeto neste dia ${selectedDay?.dia}/${selectedDay?.mes}/${selectedDay?.ano}` : `${selectedUser} não possui horas inseridas no projeto neste dia ${selectedDay?.dia}/${selectedDay?.mes}/${selectedDay?.ano}`,
-            NumeroHorasTipoTrabalho: ""
-          });
-        }
-      } else {
-        setValues({
-          ...values,
-          NumeroHorasTotal: selectedUser === "Todos" ? "Não existem horas inseridas no projeto" : `${selectedUser} não possui horas inseridas no projeto`,
-          NumeroHorasTipoTrabalho: "",
-        });
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedDay, selectedUser]);
-
-
-  
- 
   if (isLoading) {
     return <Loading />;
   }
-  if (!projeto){
+  if (!projeto) {
     return <Loading />;
   }
-  if(!dias){
+  if (!dias) {
     return <Loading />;
   }
-  if(!values){
+  if (!values) {
     return <Loading />;
   }
-  if(listaDias === updatedListaDias){
+  if (listaDias === updatedListaDias) {
     return <Loading />
   }
 
@@ -327,18 +323,18 @@ const VisualizarProjeto = () => {
                   </div>
                   <div className="col-6 text-start">
                     {values.Piloto &&
-                    (() => {
-                      //const updatedSeparatedArray = Array.isArray(values.Piloto) ? (values.Piloto.length > 0 ? values.Piloto[0].split(/[,\/]/) : []) : values.Piloto.split(/[,\/]/);
-                      const updatedSeparatedArray = Array.isArray(values.Piloto) ? values.Piloto.length > 0  ? values.Piloto[0].split(/[,/]/)  : []  : values.Piloto.split(/[,/]/);
-                      if (updatedSeparatedArray && utilizadores) {
-                        for (let i = 0; i < updatedSeparatedArray.length; i++) {
-                          for (let a = 0; a < utilizadores.length; a++) {
-                            if (updatedSeparatedArray[i] === utilizadores[a]._id) {
-                              updatedSeparatedArray[i] = utilizadores[a].nome;
+                      (() => {
+                        //const updatedSeparatedArray = Array.isArray(values.Piloto) ? (values.Piloto.length > 0 ? values.Piloto[0].split(/[,\/]/) : []) : values.Piloto.split(/[,\/]/);
+                        const updatedSeparatedArray = Array.isArray(values.Piloto) ? values.Piloto.length > 0 ? values.Piloto[0].split(/[,/]/) : [] : values.Piloto.split(/[,/]/);
+                        if (updatedSeparatedArray && utilizadores) {
+                          for (let i = 0; i < updatedSeparatedArray.length; i++) {
+                            for (let a = 0; a < utilizadores.length; a++) {
+                              if (updatedSeparatedArray[i] === utilizadores[a]._id) {
+                                updatedSeparatedArray[i] = utilizadores[a].nome;
+                              }
                             }
                           }
                         }
-                      }
                         return (
                           <>
                             {values.Piloto ? (
@@ -351,7 +347,7 @@ const VisualizarProjeto = () => {
                           </>
                         );
                       })()}
-                    
+
                   </div>
                 </div>
 
@@ -410,8 +406,8 @@ const VisualizarProjeto = () => {
               </div>
 
               <div className="col-5 text-center right">
-                
-              {(user?.user?.tipo === 2) ? (
+
+                {(user?.user?.tipo === 2) ? (
                   <div className='text-center mb-5'>
                     <h3 className='mb-5'>Escolha Utilizador</h3>
                     <FormRowSelect
@@ -451,28 +447,80 @@ const VisualizarProjeto = () => {
                   </div>
                 )
                 }
-                
-     
-                <div className="col-12 mb-5 text-center">
-                {verificaDias === 1 ? (
-                  <Calendar
-                    handleChange={handleChangeCalendario}
-                    feriados={getFeriados}
-                    vProjeto={listaDias}
-                    inicio={values?.DataInicio}
-                    objetivo={values?.DataObjetivo}
-                    fim={values?.DataFim}
-                  />
-                ) : verificaDias === 2 ? (
-                  <Calendar
-                    handleChange={handleChangeCalendario}
-                    feriados={getFeriados}
-                    inicio={values?.DataInicio}
-                    objetivo={values?.DataObjetivo}
-                    fim={values?.DataFim}
-                  />
-                ) : null}
 
+                <div className='col-12 description'>
+                  <div className='row mb'>
+                    <div className='col-9 text-end'>
+                      <p>Fim de Semana</p>
+                    </div>
+                    <div className='col-3'>
+                      <p className='fimSemana'></p>
+                    </div>
+                  </div>
+
+                  <div className='row'>
+                    <div className='col-9 text-end'>
+                      <p>Feriados</p>
+                    </div>
+                    <div className='col-3'>
+                      <p className='feriados'></p>
+                    </div>
+                  </div>
+                  <div className='row'>
+                    <div className='col-9 text-end'>
+                      <p>Inserido</p>
+                    </div>
+                    <div className='col-3'>
+                      <p className='inserido'></p>
+                    </div>
+                  </div>
+                  <div className='row'>
+                    <div className='col-9 text-end'>
+                      <p>Data Inicio</p>
+                    </div>
+                    <div className='col-3'>
+                      <p className='dataInicio'></p>
+                    </div>
+                  </div>
+
+
+                  <div className='row'>
+                    <div className='col-9 text-end'>
+                      <p>Data Fim</p>
+                    </div>
+                    <div className='col-3'>
+                      <p className='dataFim'></p>
+                    </div>
+                  </div>
+
+                  <div className='row'>
+                    <div className='col-9 text-end'>
+                      <p>Data Objetivo</p>
+                    </div>
+                    <div className='col-3'>
+                      <p className='dataObjetivo'></p>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-12 mb-5 text-center">
+                  {verificaDias === 1 ? (
+                    <Calendar
+                      handleChange={handleChangeCalendario}
+                      feriados={getFeriados}
+                      vProjeto={listaDias}
+                      inicio={values?.DataInicio}
+                      objetivo={values?.DataObjetivo}
+                      fim={values?.DataFim}
+                    />
+                  ) : verificaDias === 2 ? (
+                    <Calendar
+                      handleChange={handleChangeCalendario}
+                      feriados={getFeriados}
+                      inicio={values?.DataInicio}
+                      objetivo={values?.DataObjetivo}
+                      fim={values?.DataFim}
+                    />
+                  ) : null}
                 </div>
                 <div className="row mb-3 ">
                   <div className="col-3">
@@ -504,7 +552,7 @@ const VisualizarProjeto = () => {
                 </div>
                 <div className="row g-5">
                   {selectedDay && selectedDay?.dia !== 0 &&
-                  <h5>{selectedDay?.dia}/{selectedDay?.mes}/{selectedDay?.ano}</h5>}
+                    <h5>{selectedDay?.dia}/{selectedDay?.mes}/{selectedDay?.ano}</h5>}
                   <div className="col-6">
                     <h5>Numero total Horas</h5>
                   </div>
@@ -512,44 +560,38 @@ const VisualizarProjeto = () => {
                     <p>{values.NumeroHorasTotal}</p>
                   </div>
                 </div>
-
-
                 {typeof values.NumeroHorasTotal === 'number' && (
                   <div className="row mb-3">
                     <div className="col-3">
                       <h5>Tipos de Trabalho</h5>
                     </div>
                     <div>
-                  {listaTipoTrabalho && listaTipoTrabalho.length > 0 ? (
-                    listaTipoTrabalho.map((t, i) => {
+                      {listaTipoTrabalho && listaTipoTrabalho.length > 0 ? (
+                        listaTipoTrabalho.map((t, i) => {
 
-                      return (
-                        values.NumeroHorasTipoTrabalho[t.TipoTrabalho] && values.NumeroHorasTipoTrabalho[t.TipoTrabalho] > 0 ? (
-                          <div className="row mb-3" key={i}>
-                            <div className="col-6">
-                              <p>{t.TipoTrabalho}</p>
-                            </div>
-                            <div className="col-6">
-                              <p>{values.NumeroHorasTipoTrabalho[t.TipoTrabalho]}</p>
-                            </div>
-                          </div>
-                        ) :
-                          null
-                      );
-                    })
-                  ) : (
-                    <div>
-                      <p>Sem Tipos de Trabalho definidos</p>
+                          return (
+                            values.NumeroHorasTipoTrabalho[t.TipoTrabalho] && values.NumeroHorasTipoTrabalho[t.TipoTrabalho] > 0 ? (
+                              <div className="row mb-3" key={i}>
+                                <div className="col-6">
+                                  <p>{t.TipoTrabalho}</p>
+                                </div>
+                                <div className="col-6">
+                                  <p>{values.NumeroHorasTipoTrabalho[t.TipoTrabalho]}</p>
+                                </div>
+                              </div>
+                            ) :
+                              null
+                          );
+                        })
+                      ) : (
+                        <div>
+                          <p>Sem Tipos de Trabalho definidos</p>
+                        </div>
+                      )}
                     </div>
-                  )}
-                  </div>
-
                   </div>
                 )}
               </div>
-
-
-
             </div>
           </main>
         </div>

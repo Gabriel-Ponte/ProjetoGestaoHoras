@@ -224,7 +224,7 @@ const Wrapper = styled.section`
 }
 
 .calendar .calendar-inner .calendar-body .calendar-fim {
-    background: #588157;
+    background: #001524;
     border-radius: 4px;
 }
 

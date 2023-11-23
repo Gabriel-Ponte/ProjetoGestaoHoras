@@ -60,8 +60,69 @@ const Wrapper = styled.section`
     width: 50%;
     margin: auto;
   }
-    }
+  }
 
+  .description{
+    font-size:0.6rem;
+  }
+  .description .row {
+    margin-bottom: -0.5em;
+  }
+  .fimSemana {
+    width: 10px;
+    height: 10px;
+    background-color: #BCB8B1;
+    display: inline-block;
+    vertical-align: middle;
+    margin-top:auto;
+    margin-bottom:auto;
+  }
+  .inserido{
+    width:10px;
+    height:10px;
+    background-color: #898121;
+    display: inline-block;
+    vertical-align: middle;
+    margin-top:auto;
+    margin-bottom:auto;
+  }
+  .dataFim{
+    width:10px;
+    height:10px;
+    background-color: #001524;
+    display: inline-block;
+    vertical-align: middle;
+    margin-top:auto;
+    margin-bottom:auto;
+  }
+  .dataObjetivo{
+    width:10px;
+    height:10px;
+    background-color: #81171B;
+    display: inline-block;
+    vertical-align: middle;
+    margin-top:auto;
+    margin-bottom:auto;
+  }
+  .dataInicio{
+    width:10px;
+    height:10px;
+    background-color: #588157;
+    display: inline-block;
+    vertical-align: middle;
+    margin-top:auto;
+    margin-bottom:auto;
+  }
+
+  .feriados{
+    width:10px;
+    height:10px;
+    background-color: #c26c18;
+    display: inline-block;
+    vertical-align: middle;
+    margin-top:auto;
+    margin-bottom:auto;
+  }
 `;
 
 export default Wrapper;
