@@ -1,57 +1,89 @@
 const os = require('os');
-const { app, BrowserWindow, dialog } = require('nw');
+//const { app, BrowserWindow, dialog } = require('nw');
+const fs = require('fs');
+const path = require('path');
 
-let win;
 
-function createWindow() {
-  win = new BrowserWindow({
-    width: 800,
-    height: 600,
-    webPreferences: {
-      nodeIntegration: true,
-    },
-  });
 
-  win.loadFile('index.html');
+function findFolderByName(folderName, startPath = path.parse(process.cwd()).root) {
+    const files = fs.readdirSync(startPath);
 
-  win.on('closed', () => {
-    win = null;
-  });
+    for (const file of files) {
+        const filePath = path.join(startPath, file);
+        const stat = fs.statSync(filePath);
 
-  // You can call the openFileExplorer function when the window is ready
-  openFileExplorer();
-}
-
-function openFileExplorer() {
-  dialog.showOpenDialog(win, {
-    properties: ['openDirectory'],
-  }).then(result => {
-    if (!result.canceled && result.filePaths.length > 0) {
-      const selectedDirectory = result.filePaths[0];
-      console.log('Selected Directory:', selectedDirectory);
-
-      // Do something with the selected directory
+        if (stat.isDirectory()) {
+            if (file === folderName) {
+                return filePath;
+            } else if (!file.startsWith('$')) {
+                const subfolderResult = findFolderByName(folderName, filePath);
+                if (subfolderResult) {
+                    return subfolderResult;
+                }
+            }
+        }
     }
-  }).catch(err => {
-    console.error(err);
-  });
+
+    return null;
 }
 
-app.whenReady().then(createWindow);
+const folderNameToFind = 'isqctag';
+const folderPath = findFolderByName(folderNameToFind);
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
-});
+if (folderPath) {
+    console.log(`Folder '${folderNameToFind}' found at: ${folderPath}`);
+} else {
+    console.log(`Folder '${folderNameToFind}' not found.`);
+}
 
-app.on('activate', () => {
-  if (win === null) {
-    createWindow();
-  }
-});
+//let win;
+// function createWindow() {
+//   win = new BrowserWindow({
+//     width: 800,
+//     height: 600,
+//     webPreferences: {
+//       nodeIntegration: true,
+//     },
+//   });
 
+//   win.loadFile('index.html');
 
+//   win.on('closed', () => {
+//     win = null;
+//   });
+
+//   // You can call the openFileExplorer function when the window is ready
+//   openFileExplorer();
+// }
+
+// function openFileExplorer() {
+//   dialog.showOpenDialog(win, {
+//     properties: ['openDirectory'],
+//   }).then(result => {
+//     if (!result.canceled && result.filePaths.length > 0) {
+//       const selectedDirectory = result.filePaths[0];
+//       console.log('Selected Directory:', selectedDirectory);
+
+//       // Do something with the selected directory
+//     }
+//   }).catch(err => {
+//     console.error(err);
+//   });
+// }
+
+// app.whenReady().then(createWindow);
+
+// app.on('window-all-closed', () => {
+//   if (process.platform !== 'darwin') {
+//     app.quit();
+//   }
+// });
+
+// app.on('activate', () => {
+//   if (win === null) {
+//     createWindow();
+//   }
+// });
 
 
 
