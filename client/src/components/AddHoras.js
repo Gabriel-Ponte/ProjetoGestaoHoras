@@ -78,13 +78,15 @@ const ListaProjetos = () => {
       setcompensacaoID(compensacao[0]?._id);
       setListaTrabalhoAll(tipoTrabalhoArray.filter(item => item.tipo === 1));
       setListaTrabalhoGeral(tipoTrabalhoArray.filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 5)));
+  
       setListaTrabalhoGeralOther(tipoTrabalhoArray.filter(item => item.tipo === 3));
-
     });
+
 
     setConstLoaded(true);
 
   }, []);
+
 
   useEffect(() => {
     if (constLoaded) {
@@ -242,12 +244,13 @@ const ListaProjetos = () => {
               const currentYear = currentDate.getFullYear();
 
               if (
-                currentYear !== itemYear ||
-                currentMonth !== itemMonth ||
-                currentDay !== itemDay
+                currentYear > itemYear ||
+                currentMonth > itemMonth ||
+                currentDay > itemDay
               ) {
                 break;
               }
+
             }
 
             const itemDay = targetDate.getDate();
@@ -269,6 +272,7 @@ const ListaProjetos = () => {
                 currentMonth === todayMonth &&
                 currentDay === todayDay
               ) {
+
                 missingDate = new Date(currentDate.getTime());
                 break;
               }
@@ -278,6 +282,7 @@ const ListaProjetos = () => {
             }
 
             if (currentDate.getDay() !== 0 && currentDate.getDay() !== 6) {
+
               missingDate = new Date(currentDate.getTime());
               break;
             }
@@ -776,7 +781,6 @@ const ListaProjetos = () => {
   }
 
 
-  console.log( feriadosPortugal(new Date(values.Data)));
 
   const matchFoundProjeto = new Array(sortedProjetos.length).fill(false);
   const arrayTipoTrabalho = Object.entries(values.tipoDeTrabalhoHoras).map(([key, value]) => ({ _id: key, ...value }));

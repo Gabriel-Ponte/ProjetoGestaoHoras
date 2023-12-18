@@ -43,22 +43,23 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
 
       const endDay = dayEnd.getDate();
 
-      let ListaTrabalhoGeral = []
-
+      let ListaTrabalhoGeralString = []
       if((dateDay >=  startDay && dateMonth === startMonth && dateYear === startYear) ){
         if((dateDay <=  endDay && dateMonth === startMonth && dateYear === startYear)){
-        ListaTrabalhoGeral = listaTipoTrabalho
+          ListaTrabalhoGeralString = listaTipoTrabalho
         .filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 5))
         .map(item => item.TipoTrabalho)
         .join(",");
         } else {
-          ListaTrabalhoGeral = listaTipoTrabalho
+          setListaTrabalhoGeral(ListaTrabalhoGeral.filter(item => (item.tipo === 2 || item.tipo === 4)));
+          ListaTrabalhoGeralString = listaTipoTrabalho
           .filter(item => (item.tipo === 2 || item.tipo === 4))
           .map(item => item.TipoTrabalho)
           .join(",");
         }
       }else{
-        ListaTrabalhoGeral = listaTipoTrabalho
+        setListaTrabalhoGeral(ListaTrabalhoGeral.filter(item => (item.tipo === 2)));
+        ListaTrabalhoGeralString = listaTipoTrabalho
         .filter(item => (item.tipo === 2))
         .map(item => item.TipoTrabalho)
         .join(",");
@@ -76,7 +77,7 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
   
       setStringListaTrabalho(ListaTrabalho);
   
-      setStringListaTrabalhoGeral(ListaTrabalhoGeral);
+      setStringListaTrabalhoGeral(ListaTrabalhoGeralString);
   
       setStringListaTrabalhoGeralOther(ListaTrabalhoGeralOther);
   
@@ -84,7 +85,7 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
   
     }, [listaTipoTrabalho, values.Data]);
 
-    
+
   const dispatch = useDispatch();
 
   const [showProjeto, setShowProjeto] = useState({});
@@ -197,11 +198,14 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
                         <div className="row mb-3 text-center" key={"NewDia" + project._id}>
                           {!verificaChange && (
                             (project.Nome !== "Geral" ? StringListaTrabalho : StringListaTrabalhoGeral)?.split(",").map((t, i) => {
+  
                               const ttID = listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(",");
                               let value = "";
+
                               if (values.tipoDeTrabalhoHoras[project._id]) {
                                 const valuesHorasTypeArray = values.tipoDeTrabalhoHoras[project._id].horas ? values.tipoDeTrabalhoHoras[project._id].horas?.split(",") : [];
                                 const valuesTTTypeArray = values.tipoDeTrabalhoHoras[project._id].tipoTrabalho ? values.tipoDeTrabalhoHoras[project._id].tipoTrabalho?.split(",") : [];
+
 
                                 for (let h = 0; h < valuesHorasTypeArray?.length; h++) {
                                   if (valuesTTTypeArray[h] === ttID) {
@@ -239,11 +243,11 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
 
                                   matchFoundProjeto[idProjeto] = true;
                                   return (
+                                    
                                     <div key={"EditarDia" + ID}>
 
                                       {(project.Nome !== "Geral" ? StringListaTrabalho : StringListaTrabalhoGeral)?.split(",").map((t, i) =>
-                                        itemTypeArray.map((iT, iId) => {
-
+                                        itemTypeArray.map((iT, iId) => {  
                                           if ((project.Nome !== "Geral" ? ListaTrabalhoAll[i]._id : ListaTrabalhoGeral[i]._id) === iT) {
 
                                             matchFound[i] = true;
@@ -261,13 +265,14 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
                                               />
                                             );
                                           } else {
+
                                             if (iId === itemTypeArray?.length - 1) {
                                               if (!matchFound[i]) {
                                                 return (
                                                   <TimePickerClock
                                                     key={i}
                                                     name={t}
-                                                    selectedTime={isNaN(values.tipoDeTrabalhoHoras[project.Nome]?.[t])}
+                                                    selectedTime={isNaN(values.tipoDeTrabalhoHoras[project._id]?.[t])}
                                                     projectID={project._id}
                                                     ttID={listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(",")}
                                                     projectNome={project.Nome}
@@ -286,6 +291,7 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
                                         itemTypeArray.map((iT, iId) => {
 
                                           if ((project.Nome === "Geral" && ListaTrabalhoGeralOther[i]._id) === iT) {
+  
                                             matchFound[i] = true;
                                             return (
                                               <TimePickerClock
