@@ -223,7 +223,6 @@ const ListaHoras = () => {
                   }
   
                   if (tt[j] === addHorasExtraID) {
-                    console.log(ttH[j])
                     countHours += parseFloat(ttH[j]);
                     extraHours = parseFloat(ttH[j]);
                   }
