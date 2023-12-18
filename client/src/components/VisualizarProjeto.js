@@ -221,6 +221,7 @@ const VisualizarProjeto = () => {
         { name: "Restauração da Independência", date: new Date(i, 11, 1) },
         { name: "Dia da Imaculada Conceição", date: new Date(i, 11, 8) },
         { name: "Natal", date: new Date(i, 11, 25) },
+        { name: "NatalGiven", date: new Date(i, 11, 26) },
         { name: "Sexta-feira Santa", date: calculateEaster(i, "SextaFeiraSanta") },
         { name: "Páscoa", date: calculateEaster(i, "DomingoPascoa") },
         { name: "Segunda-feira de Páscoa", date: calculateEaster(i, "SegundaPascoa") },
