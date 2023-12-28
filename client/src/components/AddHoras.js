@@ -233,7 +233,9 @@ const ListaProjetos = () => {
           while (currentDate <= targetDate) {
 
             if (feriadosPortugal(currentDate)) {
-              currentDate.setDate(currentDate.getDate() + 1);
+              while(feriadosPortugal(currentDate)) {
+                currentDate.setDate(currentDate.getDate() + 1);
+              }
 
               const itemDay = targetDate.getDate();
               const itemMonth = targetDate.getMonth();
@@ -250,7 +252,6 @@ const ListaProjetos = () => {
               ) {
                 break;
               }
-
             }
 
             const itemDay = targetDate.getDate();
