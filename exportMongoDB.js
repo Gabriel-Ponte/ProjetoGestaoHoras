@@ -7,7 +7,7 @@ function updateExcell() {
   // MongoDB connection settings
   const dbName = 'myproject'; // Replace with your database name
   const collectionName = 'projetos'; // Replace with your collection name
-
+  const collectionUtilizadores = 'utilizadores';
   // Excel file path and name
   const excelFilePath = process.env.EXCEL_EXPORT;
 
@@ -22,7 +22,10 @@ function updateExcell() {
 
       // Fetch data from MongoDB
       const collection = mongoose.connection.db.collection(collectionName);
+      const collectionU = mongoose.connection.db.collection(collectionUtilizadores);
+
       const data = await collection.find({}).toArray();
+      const dataU = await collectionU.find({}).toArray();
 
       // Load Excel template
       const workbook = new ExcelJS.Workbook();
@@ -51,6 +54,8 @@ function updateExcell() {
         'TipoTrabalho'
       ];
 
+
+
       // Write header row
       worksheet.addRow(headers);
       const headerRow = worksheet.getRow(1);
@@ -61,9 +66,45 @@ function updateExcell() {
       const startRow = 4;
       data.forEach((item, index) => {
         const row = worksheet.getRow(startRow + index);
+
+      const PilotosList = Array.isArray(item.Piloto)
+        ? item.Piloto.length > 0
+          ? item.Piloto[0].split(/[,/]/)
+          : []
+        : item.Piloto.split(/[,/]/);
+      
+
+      const listUpdated = [...PilotosList];
+      if(PilotosList && PilotosList.length >0){
+      for (let a = 0; a < PilotosList.length; a++) {
+        for (let i = 0; i < dataU.length; i++) {
+      
+          if (PilotosList[a] == dataU[i]._id) {
+
+            PilotosList[a] = dataU[i].nome;
+            break;
+          } else if (PilotosList[a] === dataU[i].login && dataU[i].login.length < 4) {
+            PilotosList[a] = dataU[i].nome;
+            listUpdated[a] = dataU[i]._id;
+            break;
+          }
+        }
+      }
+    }
+
+
         headers.forEach((header, columnIndex) => {
           let value = item[header] || '';
           // Modify the values based on the header
+          if (header === 'Piloto') {
+            value = PilotosList.map((part, index) => (
+              index === 0 ? part : `, ${part}`
+            )).join('');
+            if (value.startsWith(',')) {
+              value = value.substring(2);
+            }
+
+          }
           if (header === 'Finalizado') {
             if (value === true) {
               value = 'ok';

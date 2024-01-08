@@ -110,7 +110,12 @@ const allDiasSlice = createSlice({
     })
     .addCase(exportDia.fulfilled, (state , { payload }) => {
       state.isLoading = false;
-      toast.success(payload);
+      if (payload && payload.error) {
+        toast.error(payload.error);
+      }else{
+        toast.success(payload);
+      }
+
     })
     .addCase(exportDia.rejected, (state, { payload }) => {
       state.isLoading = false;
