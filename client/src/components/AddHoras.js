@@ -22,6 +22,8 @@ const initialState = {
   loaded: false,
 };
 
+
+
 const ListaProjetos = () => {
   const [values, setValues] = useState(initialState);
 
@@ -214,6 +216,7 @@ const ListaProjetos = () => {
         let currentDate = new Date(Date.UTC(2023, 7, 1, 0, 0, 0));
         let targetDate = null;
         const date = new Date().toISOString().slice(0, 10);
+        
         let today = new Date(date);
 
         const todayDay = today.getDate();
@@ -611,13 +614,12 @@ const ListaProjetos = () => {
     }
 
 
-
-
     const dateAdd = new Date(values?.Data);
 
     const dayOfWeek = dateAdd.getDay();
     const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
     const isFriday = dayOfWeek === 5;
+
     if (tipoTrabalho === compensacaoID) {
       if (values?.Data && ((dateAdd.getDay() === 5 && newHorasT > 6) || newHorasT > 8.5 || dateAdd.getDay() === 0 || dateAdd.getDay() === 6)) {
         toast.error('Valor inserido invalido devido ao tipo de trabalho!');

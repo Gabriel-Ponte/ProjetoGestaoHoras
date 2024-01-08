@@ -316,14 +316,19 @@ const exportExcell = async (req, res) => {
         }
 
 
+
         if (useFeriadosPortugal(date) && (parseFloat(itemDay?.NumeroHoras) - parseFloat(extraHours)) > 0) {
           countExtra[itemDay?.Utilizador] += parseFloat(parseFloat(itemDay?.NumeroHoras) - parseFloat(extraHours));
+
         } else if (isWeekend && (parseFloat(itemDay?.NumeroHoras) - parseFloat(extraHours)) > 0) {
           countExtra[itemDay?.Utilizador] += parseFloat(parseFloat(itemDay?.NumeroHoras) - parseFloat(extraHours));
+
         } else if (isFriday && (parseFloat(itemDay?.NumeroHoras) - parseFloat(extraHours)) > 6) {
           countExtra[itemDay?.Utilizador] += parseFloat(parseFloat(itemDay?.NumeroHoras - 6) - parseFloat(extraHours));
+
         } else if (!isFriday && (parseFloat(itemDay?.NumeroHoras) - parseFloat(extraHours)) > 8.5) {
           countExtra[itemDay?.Utilizador] += parseFloat(parseFloat(itemDay?.NumeroHoras - 8.5) - parseFloat(extraHours));
+          
         }
       }
     });
