@@ -223,17 +223,14 @@ const verificaDia = useCallback((e) => {
       }
 
     if (isLoading) {
-        console.log("IS LOADING")
         return <Loading />;
       }
 
       if(!values){
-        console.log("values")
         return <Loading />;
       }
 
     if (projeto && projeto.projeto === null || typeof projeto.projeto === 'undefined'|| !projeto) {
-        console.log("Projeto")
         return <Loading />;
     }
     if(!listaDias){

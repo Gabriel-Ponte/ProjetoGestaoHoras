@@ -203,7 +203,6 @@ const exportExcell = async (tipo) => {
         }
       })
     }
-    console.log(tipo);
 
     dataD.forEach((item, index) => {
       dataU.filter((user) => {

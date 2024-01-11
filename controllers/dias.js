@@ -33,7 +33,7 @@ const getAllDiasUtilizadorTipo = async (req, res) => {
 
 
     let users = []
-    console.log(utilizador)
+
     if (Number(utilizador) === 1) {
       users = await User.find({ tipo: { $in: [1, 5] } });
     } else if (Number(utilizador) === 2) {
