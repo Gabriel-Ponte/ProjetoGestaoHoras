@@ -31,6 +31,7 @@ function App() {
             </ProtectedRoute>
           }
         >
+          <Route path='' element={<PaginaPrincipal />} />
           <Route path='paginaPrincipal' element={<PaginaPrincipal />} />
           <Route path='paginaAdicionarUtilizador' element={<PaginaAdicionarUtilizador />} />
           <Route path='paginaAdicionarProjeto' element={<PaginaAdicionarProjeto />} />
