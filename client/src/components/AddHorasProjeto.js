@@ -5,7 +5,7 @@ import { getAllProjetos, handleChange } from '../features/allProjetos/allProjeto
 import { toast } from 'react-toastify';
 import { getTipoTrabalho } from '../features/tipoTrabalho/tipoTrabalhoSlice';
 import { createDia, getDia, editDia } from '../features/dias/diasSlice';
-import { FormRow } from '../components';
+import { FormRow, AddHorasProjetoDropdown } from '../components';
 import Loading from './Loading';
 
 const initialState = {
@@ -17,18 +17,20 @@ const initialState = {
 };
 
 const ListaProjetos = () => {
+ 
     const [values, setValues] = useState(initialState);
     const { projeto, isLoading } = useSelector((store) => store.projeto);
+    const { user } = useSelector((store) => store.utilizador);
 
     const [listaTipoTrabalho, setListaTipoTrabalho] = useState([]);
-    let StringListaTrabalho = listaTipoTrabalho.map(item => item.TipoTrabalho).join(",");
+
     const { projetos, totalProjetos } = useSelector((store) => store.allProjetos);
 
     const dispatch = useDispatch();
 
     const [showProjeto, setShowProjeto] = useState({});
     const [horasT, setHorasT] = useState(0);
-    const { user } = useSelector((store) => store.utilizador);
+
     const [listaDias, setListaDias] = useState([]);
     const [verificaDiaCalled, setVerificaDiaCalled] = useState(false);
 
@@ -48,40 +50,38 @@ const ListaProjetos = () => {
     }, []);
 
 
-    const verificaDia = useCallback((e) => {
-        const { name, value } = e.target;
-        for (let i = 0; i < listaDias.length; i++) {
-            const DataRecebida = new Date(listaDias[i].Data).toISOString().slice(0, 10);
-            if (value === DataRecebida) {
-                const tipoDeTrabalhoHoras = {};
-                for (let j = 0; j < listaDias[i].tipoDeTrabalhoHoras.length; j++) {
-                    const val = listaDias[i].tipoDeTrabalhoHoras[j]?.projeto;
-                    tipoDeTrabalhoHoras[val] = listaDias[i].tipoDeTrabalhoHoras[j];
-                }
-                setValues({
-                    ...values,
-                    [name]: value,
-                    _id: listaDias[i]._id,
-                    Utilizador: user.user.id,
-                    NumeroHoras: listaDias[i].NumeroHoras,
-                    tipoDeTrabalhoHoras: tipoDeTrabalhoHoras,
-                });
-                setHorasT(listaDias[i].NumeroHoras);
-                setVerificaDiaCalled(true);
-                return;
-            }
-        }
+const verificaDia = useCallback((e) => {
+    const { name, value } = e.target;
+    const dia = listaDias.find((dia) => new Date(dia.Data).toISOString().slice(0, 10) === value);
 
-        setValues({
-            ...values,
-            [name]: value,
-            NumeroHoras: "",
-            tipoDeTrabalhoHoras: [],
-        });
-        setHorasT(0);
-        setVerificaDiaCalled(false);
-        return;
-    }, [listaDias]);
+    if (dia) {
+      const tipoDeTrabalhoHoras = dia.tipoDeTrabalhoHoras.reduce((acc, curr) => {
+        acc[curr.projeto] = curr;
+        return acc;
+      }, {});
+
+      setValues({
+        ...values,
+        [name]: value,
+        _id: dia._id,
+        Utilizador: user.user.id,
+        NumeroHoras: dia.NumeroHoras,
+        tipoDeTrabalhoHoras,
+      });
+
+      setHorasT(dia.NumeroHoras);
+      setVerificaDiaCalled(true);
+    } else {
+      setValues({
+        ...values,
+        [name]: value,
+        NumeroHoras: "",
+        tipoDeTrabalhoHoras: [],
+      });
+      setHorasT(0);
+      setVerificaDiaCalled(false);
+    }
+  }, [listaDias, setValues, setHorasT, setVerificaDiaCalled]);
 
 
     useEffect(() => {
@@ -116,8 +116,17 @@ const ListaProjetos = () => {
 
     const handleHorasChange = (projectId, tipoTrabalho, projectName, e) => {
         let newHorasT = horasT;
-        let horasNumber = Number(e.target.value);
+
+        let horas = e;
+
+        let timeParts = horas.split(':');
+
+
+                // Calculate the decimal representation
+        let horasNumberChange = parseInt(timeParts[0], 10) + parseFloat(timeParts[1]) / 60;
+        let horasNumber = Number(horasNumberChange.toFixed(2));
         let diff = 0;
+
         if (isNaN(horasNumber) || horasNumber <= 0 || horasNumber === null) {
             horasNumber = 0;
             //return;
@@ -141,7 +150,7 @@ const ListaProjetos = () => {
                     ...newTipoDeTrabalhoHoras[projectId],
                     horas: horasTipoTrabalhoArray.join(','),
                 };
-                newHorasT = horasT + diff;
+                newHorasT = (parseFloat(horasT) + parseFloat(diff)).toFixed(2);
             }
 
         } else {
@@ -156,19 +165,19 @@ const ListaProjetos = () => {
                 tipoTrabalho: tipoTrabalhoArray.join(','),
                 horas: horasTipoTrabalhoArray.join(',')
             };
-            newHorasT = horasT + horasNumber;
+            newHorasT = parseFloat(horasT) + parseFloat(horasNumber);
         }
 
         if (newHorasT > 24) {
             toast.error('Valor inserido excede as 24 Horas!');
-            setValues({ ...values, [e.target.id]: 0 });
+            setValues({ ...values, [projectId]: 0 });
             //setHorasT(horasT - (showProjeto[projectId + tipoTrabalho] || 0));
             return;
         }
 
         setValues({
             ...values,
-            [e.target.id]: horasNumber,
+            [projectId]: horasNumber,
             NumeroHoras: newHorasT,
             tipoDeTrabalhoHoras: newTipoDeTrabalhoHoras
         });
@@ -179,26 +188,64 @@ const ListaProjetos = () => {
 
   
 
+    function convertToMinutes(timeString) {
 
+        if (timeString) {
+          try {
+            let [hours, minutes] = timeString.toString().split(".");
+    
+            // Convert the hours to an integer
+            const hoursInt = parseInt(hours, 10);
+            // Convert the fraction of an hour to minutes
+            minutes = parseInt(minutes) < 10 ? `${minutes}0` : minutes;
+    
+            if (!minutes) {
+              minutes = 0;
+            }
+    
+            let formattedMinutes = Math.round(minutes * 60) / 100;
+            if (formattedMinutes === 60) {
+              formattedMinutes = 0;
+            }
+            // Use String.padStart to format hours and minutes with leading zeros
+            const formattedHours = hoursInt.toString().padStart(2, "0");
+            formattedMinutes = formattedMinutes.toString().padStart(2, '0');
+    
+            const formattedTime = `${formattedHours}:${formattedMinutes}`;
+    
+            return formattedTime;
+          } catch (error) {
+            console.error(error)
+            return timeString;
+          }
+        }
+        return timeString;
+      }
 
     if (isLoading) {
+        console.log("IS LOADING")
         return <Loading />;
       }
-      if (!projeto){
-        return <Loading />;
-      }
+
       if(!values){
+        console.log("values")
         return <Loading />;
       }
-    if (projeto && projeto.projeto === null || typeof projeto.projeto === 'undefined') {
+
+    if (projeto && projeto.projeto === null || typeof projeto.projeto === 'undefined'|| !projeto) {
+        console.log("Projeto")
         return <Loading />;
     }
-    if(!projetos){
+    if(!listaDias){
         return <Loading />;
     }
+
     const matchFoundProjeto = new Array(projetos.length).fill(false);
     const arrayTipoTrabalho = Object.entries(values.tipoDeTrabalhoHoras).map(([key, value]) => ({ _id: key, ...value }));
-    let counter = 0;
+    
+
+
+
     return (
         <Wrapper>
             <div className="container">
@@ -206,6 +253,8 @@ const ListaProjetos = () => {
                                 <div className="row md-3 ">
                     <div className="col-md-12">
                         <h1>{verificaDiaCalled ? 'Editar Dia' : 'Adicionar Dia'}</h1>
+
+
                         <FormRow
                             type="date"
                             className="form-control"
@@ -218,184 +267,29 @@ const ListaProjetos = () => {
                             handleChange={verificaDia}
                         />
                     </div>
+
+                    <div className="col-md-12 text-center mt-3 mb-3"><h1>{projeto.projeto.Nome}</h1></div>
                 </div>
                 
-                    <div className="list-group-item">
-                        <div className="row mb-3 text-start">
-                            <div className="col-md-12 themed-grid-col">
-                                <h3>{projeto?.projeto?.Nome}</h3>
-                                <br></br>
-                            </div>
-                            <div className="col-md-12 themed-grid-col text-center">
-                                <div className="btn-container">
-                                    <div className="row mb-3 text-center" key={"NewDia" + projeto?.projeto?._id}>
-                                        {!verificaDiaCalled && (
-                                            StringListaTrabalho.split(",").map((t, i) => (
-                                                <div className="row mb-3 text-center" key={"NovoDia" + i}>
-                                                    <div className="col-md-3 themed-grid-col">
-                                                        <p>{t}</p>
-                                                    </div>
-                                                    <div className="col-md-3 themed-grid-col">
-                                                        <input
-                                                            type="number"
-                                                            min="0"
-                                                            max="24"
-                                                            id="horas"
-                                                            className="horas"
-                                                            placeholder="0"
-                                                            value={values.tipoDeTrabalhoHoras[projeto?.projeto?.Nome]?.[t]}
-                                                            onChange={(e) =>
-                                                                handleHorasChange(
-                                                                    projeto?.projeto?._id,
-                                                                    listaTipoTrabalho[i]._id,
-                                                                    projeto?.projeto?.Nome,
-                                                                    e
-                                                                )
-                                                            }
-                                                        />
-                                                    </div>
-                                                </div>
-                                            )
-                                            )
-                                        )
-                                        }
 
-                                    </div>
-                                </div>
-                            </div>
-                            <div key={"Edit" + projeto?.projeto?._id}>
-                                {verificaDiaCalled && values.tipoDeTrabalhoHoras.length !== 0 && Array.isArray(arrayTipoTrabalho) &&
-                                    arrayTipoTrabalho.map((item, ID) => {
-                                        counter++;
-                                        const itemTypeArray = item.tipoTrabalho ? item.tipoTrabalho.split(",") : [];
-                                        const matchFound = new Array(itemTypeArray.length + 1).fill(false);
-                                        
-                                        if (projeto?.projeto?._id === item.projeto) {
 
-                                            const valuesHorasTypeArray = values.tipoDeTrabalhoHoras[projeto?.projeto?._id].horas ? values.tipoDeTrabalhoHoras[projeto?.projeto?._id].horas.split(",") : [];
-                                            matchFoundProjeto[projeto._id] = true;
-                                            let counter1 = -1;
-                                            return (
-                                                <div key={"EditarDia" + ID}>
-                                                    {StringListaTrabalho.split(",").map((t, i) =>
-                                                        itemTypeArray.map((iT, iId) => {
-                                                            if (listaTipoTrabalho[i]._id === iT) {
-                                                                matchFound[i] = true;
-                                                                counter1++;
-                                                                return (
-                                                                    <div className="row mb-3 text-center" key={"EditarDiaTTFound" + iId}>
-                                                                        <div className="col-md-4 text-center themed-grid-col">
-                                                                            <p>{t}</p>
-                                                                        </div>
-                                                                        <div className="col-md-8 text-center themed-grid-col">
-                                                                            <input
-                                                                                type="number"
-                                                                                min="0"
-                                                                                max="24"
-                                                                                id={`horas-${item._id}`}
-                                                                                className="horas"
-                                                                                placeholder="0"
-                                                                                value={
-                                                                                    valuesHorasTypeArray[iId] != null && !isNaN(valuesHorasTypeArray[iId])
-                                                                                        ? valuesHorasTypeArray[iId]
-                                                                                        : []
-                                                                                }
-                                                                                onChange={(e) =>
-                                                                                    handleHorasChange(
-                                                                                        projeto?.projeto?._id,
-                                                                                        listaTipoTrabalho[i]._id,
-                                                                                        projeto?.projeto?.Nome,
-                                                                                        e
-                                                                                    )
-                                                                                }
-                                                                            />
-                                                                        </div>
-                                                                    </div>
-                                                                );
-                                                            } else {
-                                                                if (iId === itemTypeArray.length - 1) {
-                                                                    if (!matchFound[i]) {
-                                                                        return (
-                                                                            <div className="row mb-3 text-center" key={"EditarDiaTTNotFound" + iId}>
-                                                                                <div className="col-md-4 text-center themed-grid-col">
-                                                                                    <p>{t}</p>
-                                                                                </div>
-                                                                                <div className="col-md-8 text-center themed-grid-col">
-                                                                                    <input
-                                                                                        key={i}
-                                                                                        type="number"
-                                                                                        min="0"
-                                                                                        max="24"
-                                                                                        id={`horas-${item._id}`}
-                                                                                        className="horas"
-                                                                                        placeholder="0"
-                                                                                        value={isNaN(values.tipoDeTrabalhoHoras[projeto?.projeto?.Nome]?.[t])}
-                                                                                        onChange={(e) =>
-                                                                                            handleHorasChange(
-                                                                                                projeto?.projeto?._id,
-                                                                                                listaTipoTrabalho[i]._id,
-                                                                                                projeto?.projeto?.Nome,
-                                                                                                e
-                                                                                            )
-                                                                                        }
-                                                                                    />
-                                                                                </div>
-                                                                            </div>
-                                                                        );
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                        )
-                                                    )
-                                                    }
-                                                </div>
-                                            );
-                                        }
-                                        else {
-                                            if (!matchFoundProjeto[projeto?.projeto?._id] && ID === arrayTipoTrabalho.length - 1) {
-                                                return (
-                                                    <div key={"EditarDiaProjetoNotFound" + projeto?.projeto?._id}>
-                                                        {StringListaTrabalho.split(",").map((t, i) => {
-                                                            return (
-                                                                <div className="row mb-3 text-center" key={"EditarDiaProjetoNotFoundList" + i}>
-                                                                    <div className="col-md-4 text-center themed-grid-col" >
-                                                                        <p>{t}</p>
-                                                                    </div>
-                                                                    <div className="col-md-8 text-center themed-grid-col">
-                                                                        <input
-                                                                            type="number"
-                                                                            min="0"
-                                                                            max="24"
-                                                                            id="horas"
-                                                                            className="horas"
-                                                                            placeholder="0"
-                                                                            value={values.tipoDeTrabalhoHoras[projeto?.projeto?.Nome]?.t}
-                                                                            onChange={(e) =>
-                                                                                handleHorasChange(
-                                                                                    projeto?.projeto?._id,
-                                                                                    listaTipoTrabalho[i]._id,
-                                                                                    projeto?.projeto?.Nome,
-                                                                                    e
-                                                                                )
-                                                                            }
-                                                                        />
-                                                                    </div>
-                                                                </div>
-                                                            )
-                                                        }
-                                                        )
-                                                        }
-                                                    </div>
-                                                )
-                                            }
-                                        }
-                                    }
-                                    )
-                                }
-                            </div>
-                        </div>
-                        </div>
+
+                <div className="list-group mx-1 w-auto">
+
+
+                <AddHorasProjetoDropdown
+                    sortedProjetos={projeto}
+                    verificaChange= {verificaDiaCalled}
+                    listaTipoTrabalho={listaTipoTrabalho}
+                    values={values}
+                    handleHorasChange={handleHorasChange}
+                    convertToMinutes={convertToMinutes}
+                    arrayTipoTrabalho={arrayTipoTrabalho}
+                    matchFoundProjeto={matchFoundProjeto}
+                    ListaTrabalhoAll={listaTipoTrabalho}
+                    setListaTipoTrabalho={setListaTipoTrabalho}
+                    />
+      
                         <div className="card text-center">
                             <div className="card-body">
                                 <h5 className="card-title">Total de horas diárias: {horasT} horas</h5>
@@ -412,6 +306,7 @@ const ListaProjetos = () => {
                                 </button>
                             </div>
                         </div>
+                    </div>
                     </div>
 
             </div>

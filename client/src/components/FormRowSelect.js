@@ -95,14 +95,64 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
       ...listaUtilizador,
     ];
   }else{
-    if(todos){
+    if(todos && todos === 2){
       selectOptions = [
         <option key="default" value="Todos">
           Todos
         </option>,
+        <option key="Administradores" value="Administradores">
+        Administradores
+        </option>,
+        <option key="Engenharia de Processos" value="Engenharia de Processos">
+        Engenharia Processos
+        </option>,
+        <option key="Laboratorio" value="Laboratorio">
+          Laboratorio
+        </option>,
+        <option key="Outro" value="Outro">
+          Outro
+        </option>,
+          <option key="separator" disabled>
+          ---------------
+        </option>,
         ...listaUtilizador,
       ];
-    }else{
+    }
+    else if(todos && todos === 5){
+      selectOptions = [
+        <option key="Engenharia de Processos" value="Engenharia de Processos">
+        Engenharia Processos
+        </option>,
+
+          <option key="separator" disabled>
+          ---------------
+        </option>,
+        ...listaUtilizador,
+      ];
+    }    else if(todos && todos === 6){
+      selectOptions = [
+
+        <option key="Laboratorio" value="Laboratorio">
+          Laboratorio
+        </option>,
+          <option key="separator" disabled>
+          ---------------
+        </option>,
+        ...listaUtilizador,
+      ];
+    }
+    else if(todos && todos === 7){
+      selectOptions = [
+        <option key="Outro" value="Outro">
+          Outro
+        </option>,
+          <option key="separator" disabled>
+          ---------------
+        </option>,
+        ...listaUtilizador,
+      ];
+    }
+    else{
     selectOptions = listaUtilizador.concat(
     );
   }

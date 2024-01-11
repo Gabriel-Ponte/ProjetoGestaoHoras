@@ -74,9 +74,16 @@ const Navbar = () => {
           <FaAlignLeft />
         </button>
         </div>
+        {user?.user?.tipo === 1|| user?.user?.tipo === 2 || user?.user?.tipo === 5 ?
         <div className='col-4 middleButton' >
           <button className='btn btn-light' style={{fontSize : "250%", maxHeight: "80px"}} type='button' onClick={returnMain}>Gestão Projetos</button>
         </div>
+        :
+        <div className='col-4 middleButton' >
+        <h1 style={{fontSize : "250%", maxHeight: "80px" ,textTransform: 'none'}}>Gestão de Horas</h1>
+      </div>
+      }
+      
         <div className='col-4'>
         <div className='btn-container'>
           <div className='divButtonUtilizador'>

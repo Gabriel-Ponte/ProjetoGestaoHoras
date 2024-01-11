@@ -47,21 +47,35 @@ const CalendarControl = ({ handleChange, inserted, feriados, ferias, inicio, fim
     }
 
     function navigateToPreviousMonth() {
-
         setCalendar((prevCalendar) => {
-            handleChange(0, prevCalendar.getMonth() - 1, prevCalendar.getFullYear());
-            const newCalendar = new Date(prevCalendar.getFullYear(), prevCalendar.getMonth() - 1, 1);
+            let newCalendar;
+            if (prevCalendar.getMonth() === 0) {
+                // Handle December (month number 11)
+                handleChange(0, 11, prevCalendar.getFullYear() - 1);
+                newCalendar = new Date(prevCalendar.getFullYear() - 1, 11, 1);
+            } else {
+                handleChange(0, prevCalendar.getMonth() - 1, prevCalendar.getFullYear());
+                newCalendar = new Date(prevCalendar.getFullYear(), prevCalendar.getMonth() - 1, 1);
+            }
+
             plotDates(newCalendar);
             return newCalendar;
         });
-
     }
 
     function navigateToNextMonth() {
-        let newCalendar;
         setCalendar((prevCalendar) => {
-            handleChange(0, prevCalendar.getMonth() + 1, prevCalendar.getFullYear());
-            newCalendar = new Date(prevCalendar.getFullYear(), prevCalendar.getMonth() + 1, 1);
+            let newCalendar;
+            
+            if (prevCalendar.getMonth() === 11) {
+                // Handle December (month number 11)
+                handleChange(0, 0, prevCalendar.getFullYear() + 1);
+                newCalendar = new Date(prevCalendar.getFullYear() + 1, 0, 1);
+            } else {
+                handleChange(0, prevCalendar.getMonth() + 1, prevCalendar.getFullYear());
+                newCalendar = new Date(prevCalendar.getFullYear(), prevCalendar.getMonth() + 1, 1);
+            }
+    
             plotDates(newCalendar);
             return newCalendar;
         });

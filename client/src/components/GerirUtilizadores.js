@@ -20,9 +20,12 @@ const GerirUtilizadores = () => {
 
 
   useEffect(() => {
-    if (user && user?.tipo === 1) {
+    if (user && (user?.tipo === 1 )) {
       toast.error("Sem permissões para aceder a esta página!");
       navigate('/PaginaPrincipal');
+    }else if (user && user?.tipo === 3 || user?.tipo === 4){
+      toast.error("Sem permissões para aceder a esta página!");
+      navigate('/PaginaAdicionarHoras');
     }
   }, [user, navigate]);
 
@@ -73,11 +76,24 @@ const GerirUtilizadores = () => {
   const handleChangeUtilizador = (e, id) => {
     let { name, value } = e.target;
     const updatedListaUtilizador = listaDeUtilizadores.map((item, i) => {
-      if (value === "Administrador") {
+
+      if(value === "Administrador"){
         value = 2;
-      } else if (value === "Funcionario") {
+      }else if(value === "Engenharia de Processos"){
         value = 1;
+      }else if(value === "Laboratorio"){
+        value = 3;
+      }else if(value === "Outro"){
+        value = 4;
+      }else if(value === "Administrador Engenharia"){
+        value = 5;
+      }else if(value === "Administrador Laboratorio"){
+        value = 6;
       }
+
+
+
+
       if (item._id === id) {
         if (initialState && initialState[i]._id === id && initialState[i][name] === value) {
           setVerificaAlterado((prevState) => ({
@@ -132,7 +148,7 @@ const GerirUtilizadores = () => {
                     handleChange={(e) => handleChangeUtilizador(e, t._id)}
                     placeholder="Escolha um tipo"
                     value={t.tipo}
-                    list={[["Funcionario"], ["Administrador"]]}
+                    list={[["Engenharia de Processos"], ["Laboratorio"] ,["Outro"] , ["Administrador"] , ["Administrador Engenharia"] , ["Administrador Laboratorio"]]}
                   />
 
                 </div>

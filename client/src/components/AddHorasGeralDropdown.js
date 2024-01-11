@@ -16,13 +16,12 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 
 
-const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipoTrabalho, 
+const AddHorasGeralDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipoTrabalho, 
   values, handleHorasChange, convertToMinutes,
   arrayTipoTrabalho, matchFoundProjeto, ListaTrabalhoAll,
   ListaTrabalhoGeral, ListaTrabalhoGeralOther, setListaTrabalhoGeralOther,
   setListaTipoTrabalho, setListaTrabalhoGeral }) => {
 
-    const [StringListaTrabalho, setStringListaTrabalho] = useState();
     const [StringListaTrabalhoGeral, setStringListaTrabalhoGeral] = useState();
     const [StringListaTrabalhoGeralOther, setStringListaTrabalhoGeralOther] = useState();
     const [listaTrabalhoGeralAdd, setListaTrabalhoGeralAdd] = useState();
@@ -73,8 +72,6 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
         .filter(item => item.tipo === 3)
         .map(item => item.TipoTrabalho)
         .join(",");
-  
-      setStringListaTrabalho(ListaTrabalho);
   
       setStringListaTrabalhoGeral(ListaTrabalhoGeralString);
   
@@ -161,15 +158,6 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
     }
   }
 
-  const handleDropdownToggle = (projectId) => {
-    setShowProjeto((prevShowProjeto) => {
-      return {
-        ...prevShowProjeto,
-        [projectId]: !prevShowProjeto[projectId],
-      };
-    });
-  };
-
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -177,27 +165,13 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
           return (
             <div className="list-group-item" key={project._id}>
               <div className="row mb-3 text-center">
-                <div className="col-md-4 text-end themed-grid-col">
-                  <h5>{project.Nome}</h5>
-                </div>
-                <div className="col-md-8  themed-grid-col">
+                <div className="col-md-12  themed-grid-col">
                   <div className='row'>
-                    <div className="col-md-10 btn-container">
-                      <button
-                        type="button"
-                        className="btn button-Dropdown"
-                        onClick={() => handleDropdownToggle(project._id)}
-                      >
-                        <FaCaretDown />
-
-                      </button>
-                      <div className={`dropdown ${showProjeto[project._id] ? "show-dropdown" : "hidden-dropdown"}
-                      ${showProjeto[project._id] ? "" : "d-none"}`} >
-
+                  <div className="col-md-2  themed-grid-col"></div>
+                    <div className="col-md-8 mt-5 btn-container">
                         <div className="row mb-3 text-center" key={"NewDia" + project._id}>
                           {!verificaChange && (
-                            (project.Nome !== "Geral" ? StringListaTrabalho : StringListaTrabalhoGeral)?.split(",").map((t, i) => {
-  
+                            (StringListaTrabalhoGeral)?.split(",").map((t, i) => {
                               const ttID = listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(",");
                               let value = "";
 
@@ -245,7 +219,7 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
                                     
                                     <div key={"EditarDia" + ID}>
 
-                                      {(project.Nome !== "Geral" ? StringListaTrabalho : StringListaTrabalhoGeral)?.split(",").map((t, i) =>
+                                      {StringListaTrabalhoGeral?.split(",").map((t, i) =>
                                         itemTypeArray.map((iT, iId) => {  
                                           if ((project.Nome !== "Geral" ? ListaTrabalhoAll[i]._id : listaTrabalhoGeralAdd[i]._id) === iT) {
 
@@ -317,7 +291,7 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
                                   if (!matchFoundProjeto[idProjeto] && ID === arrayTipoTrabalho?.length - 1) {
                                     return (
                                       <div key={"EditarDiaProjetoNotFound" + idProjeto}>
-                                        {(project.Nome !== "Geral" ? StringListaTrabalho : StringListaTrabalhoGeral)?.split(",").map((t, i) => {
+                                        {StringListaTrabalhoGeral?.split(",").map((t, i) => {
                                           const ttID = (listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(","))
                                           let value = "";
 
@@ -354,7 +328,7 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
                             }
                           </div>
                         </div>
-                      </div>
+
                     </div>
 
 
@@ -376,4 +350,4 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
     </>
   );
 });
-export default AddHorasDropdown;
+export default AddHorasGeralDropdown;

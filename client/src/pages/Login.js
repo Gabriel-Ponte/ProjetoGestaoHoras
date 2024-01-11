@@ -32,10 +32,17 @@ function Login() {
     }
     const result = await dispatch(loginUser({ email, password }));
     if (result.payload.user) {
+        if(result.payload.user.tipo === 3 || result.payload.user.tipo === 4 || result.payload.user.tipo === 6 || result.payload.user.tipo === 7){
+          setTimeout(() => {
+            window.location.reload(navigate('/PaginaAdicionarHoras'));
+            }, 2000);
+            return;
+        }else{
         setTimeout(() => {
         window.location.reload(navigate('/PaginaPrincipal'));
         }, 2000);
         return;
+      }
     } else {
       return;
     }

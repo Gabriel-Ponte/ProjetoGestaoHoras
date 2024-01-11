@@ -3,9 +3,17 @@ import Wrapper from '../assets/wrappers/FormRowSelectTipo';
 const FormRowSelectTipo = ({ labelText, name, value, handleChange, list, className}) => {
 
   if(value === 1 && name === "tipo"){
-    value = "Funcionario";
+    value = "Engenharia de Processos";
   }else if(value === 2 && name === "tipo"){
     value = "Administrador";
+  }else if(value === 3 && name === "tipo"){
+    value = "Laboratorio";
+  }else if(value === 4 && name === "tipo"){
+    value = "Outro";
+  }else if(value === 5 && name === "tipo"){
+    value = "Administrador Engenharia";
+  }else if(value === 6 && name === "tipo"){
+    value = "Administrador Laboratorio";
   }
 
   if(value === 1 && name === "tipoT"){

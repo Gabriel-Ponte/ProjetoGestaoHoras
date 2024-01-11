@@ -134,13 +134,13 @@ const collectionTipoTrabalhoHoras = 'tipotrabalhohoras';
 const collectionTipoTrabalho = 'tipotrabalhos';
 const collectionUtilizadores = 'utilizadores';
 // Excel file path and name
-const excelFilePath = process.env.EXTRACTION_FOLDER;
+let excelFilePath = process.env.EXTRACTION_FOLDER;
 
 // Excel template file path
 const templateFilePath = './TemplateHoras.xlsx';
 const templateFilePathHorasExtra = './TemplateHorasExtra.xlsx';
-const exportExcell = async (req, res) => {
 
+const exportExcell = async (tipo) => {
   try {
     // Connect to MongoDB
     const url = process.env.MONGO_URI;
@@ -163,12 +163,47 @@ const exportExcell = async (req, res) => {
 
 
     let nomeUsers = []
-    dataU.forEach((item, index) => {
-      if (item.nome !== "Admin") {
-        nomeUsers.push(item.nome);
-      }
-    })
 
+    dataU.sort((a, b) => a.tipo - b.tipo);
+
+    if(Number(tipo) === 2){
+      dataU.forEach((item, index) => {
+        excelFilePath = process.env.EXTRACTION_FOLDER;
+
+        if (item.nome !== "Admin" ) {
+          nomeUsers.push(item.nome);
+        }
+      })
+    } else if(Number(tipo) === 5){
+      excelFilePath = process.env.EXTRACTION_FOLDER5;
+      dataU.forEach((item, index) => {
+        if (item.nome !== "Admin" && (Number(item?.tipo) === 1 || Number(item?.tipo) === 2 || Number(item?.tipo) === 5)) {
+          nomeUsers.push(item.nome);
+        }
+      })
+    } else if(Number(tipo) === 6){
+      excelFilePath = process.env.EXTRACTION_FOLDER6;
+      dataU.forEach((item, index) => {
+        if (item.nome !== "Admin" && (Number(item?.tipo) === 3 || Number(item?.tipo) === 6)) {
+          nomeUsers.push(item.nome);
+        }
+      })
+    } else if(Number(tipo) === 7){
+      excelFilePath = process.env.EXTRACTION_FOLDER7;
+      dataU.forEach((item, index) => {
+        if (item.nome !== "Admin" && (Number(item?.tipo) === 4 || Number(item?.tipo) === 7)) {
+          nomeUsers.push(item.nome);
+        }
+      })
+    } else if(Number(tipo) === 8){
+      excelFilePath = process.env.EXTRACTION_FOLDER8;
+      dataU.forEach((item, index) => {
+        if (item.nome !== "Admin" && (Number(item?.tipo) === 2 || Number(item?.tipo) === 5 || Number(item?.tipo) === 6 || Number(item?.tipo) === 7)) {
+          nomeUsers.push(item.nome);
+        }
+      })
+    }
+    console.log(tipo);
 
     dataD.forEach((item, index) => {
       dataU.filter((user) => {
@@ -184,7 +219,6 @@ const exportExcell = async (req, res) => {
           }
         }
       })
-
 
 
       for (let i = 0; i < item?.tipoDeTrabalhoHoras?.length; i++) {
@@ -265,6 +299,13 @@ const exportExcell = async (req, res) => {
 
     const projetoGeral = (data.filter(item => item.Nome === "Geral"));
 
+    if (projetoGeral.length > 0) {
+      projetoGeral[0].Cliente = "Interno";
+    }
+
+
+    const reorderedData = [...projetoGeral, ...data.filter(item => item.Nome !== "Geral")];
+
     const compensacao = dataTT.filter(item => item.tipo === 4);
     const addHorasExtra = dataTT.filter(item => item.tipo === 5);
 
@@ -290,7 +331,7 @@ const exportExcell = async (req, res) => {
               currentYear === startYear &&
               currentMonth === startMonth &&
               currentDay >= startDay)
-          ) && itemDay?.Utilizador !== "Admin") {
+          ) && nomeUsers.includes(itemDay?.Utilizador)) {
           let extraHours = 0;
 
           const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
@@ -319,19 +360,17 @@ const exportExcell = async (req, res) => {
 
         if (useFeriadosPortugal(date) && (parseFloat(itemDay?.NumeroHoras) - parseFloat(extraHours)) > 0) {
           countExtra[itemDay?.Utilizador] += parseFloat(parseFloat(itemDay?.NumeroHoras) - parseFloat(extraHours));
-
         } else if (isWeekend && (parseFloat(itemDay?.NumeroHoras) - parseFloat(extraHours)) > 0) {
           countExtra[itemDay?.Utilizador] += parseFloat(parseFloat(itemDay?.NumeroHoras) - parseFloat(extraHours));
-
         } else if (isFriday && (parseFloat(itemDay?.NumeroHoras) - parseFloat(extraHours)) > 6) {
           countExtra[itemDay?.Utilizador] += parseFloat(parseFloat(itemDay?.NumeroHoras - 6) - parseFloat(extraHours));
-
         } else if (!isFriday && (parseFloat(itemDay?.NumeroHoras) - parseFloat(extraHours)) > 8.5) {
           countExtra[itemDay?.Utilizador] += parseFloat(parseFloat(itemDay?.NumeroHoras - 8.5) - parseFloat(extraHours));
-          
         }
       }
     });
+
+
     
     let worksheet;
     const worksheetTemplateHorasExtra = workbookTemplateHorasExtra.getWorksheet();
@@ -405,7 +444,6 @@ const exportExcell = async (req, res) => {
       const cellUser = row.getCell(2);
       const cellHorasExtra = row.getCell(3);
     
-    
       cellUser.value = user;
       cellHorasExtra.value = countExtra[user];
     }
@@ -413,7 +451,7 @@ const exportExcell = async (req, res) => {
 
     for (let year = 2023; year <= dataWorksheet.getFullYear(); year++) {
       let monthCheck = dataWorksheet.getMonth();
-
+      
       let month = 0
 
       if (year === dateStart.getFullYear()) {
@@ -497,18 +535,19 @@ const exportExcell = async (req, res) => {
 
 
         const arrayTT = [];
-        data.forEach((item, index) => {
-          if (!item.Finalizado || (item.DataFim && item.DataFim.getMonth() >= month) && (item.DataInicio && item.DataInicio.getMonth() <= month)) {
+        reorderedData?.forEach((item, index) => {
+          if (tipo === 2 || tipo === 5 || tipo === 8 || item.Nome === "Geral") {
+          if (!item?.Finalizado || (item.DataFim && item?.DataFim?.getMonth() >= month) && (item?.DataInicio && item?.DataInicio?.getMonth() <= month)) {
             arrayTT[index] = [];
 
-            let row = worksheet.getRow(startRow + rowCount);
+            let row = worksheet?.getRow(startRow + rowCount);
 
-            headers.forEach((header, columnIndex) => {
+            headers?.forEach((header, columnIndex) => {
               let value = item[header] || '';
 
               // Modify the values based on the header
               if (['DataInicio', 'DataFim'].includes(header)) {
-                value = new Date(value).toLocaleDateString();
+                value = new Date(value)?.toLocaleDateString();
                 if (value === "Invalid Date") {
                   value = ''
                 }
@@ -519,8 +558,8 @@ const exportExcell = async (req, res) => {
               // Consider adding comments for context and explanations
               let count = rowCount;
               if (['tipo'].includes(header)) {
-                dataD.forEach((itemDay, indexDay) => {
-                  if (itemDay?.Data?.getMonth() === month && itemDay?.Data?.getFullYear() === year && itemDay?.Utilizador !== "Admin") {
+                dataD?.forEach((itemDay, indexDay) => {
+                  if (itemDay?.Data?.getMonth() === month && itemDay?.Data?.getFullYear() === year && nomeUsers.includes(itemDay?.Utilizador)) {
 
                     for (let i = 0; i < itemDay?.tipoDeTrabalhoHoras?.length; i++) {
                       if (itemDay?.tipoDeTrabalhoHoras[i]?.projeto === item?.Nome) {
@@ -550,7 +589,6 @@ const exportExcell = async (req, res) => {
                               }
                             }
 
-
                             row = worksheet.getRow(startRow + count);
                             setCellValue(row, '_id_P', item._id_P);
                             setCellValue(row, 'Cliente', item.Cliente);
@@ -569,6 +607,7 @@ const exportExcell = async (req, res) => {
             });
             rowCount++;
           }
+        }
         });
 
 

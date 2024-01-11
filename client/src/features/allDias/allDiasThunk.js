@@ -31,6 +31,16 @@ export const getAllDiasUtilizadorThunk = async (utilizadorId, thunkAPI) => {
   }
 };
 
+
+export const getAllDiasUtilizadorTipoThunk = async (utilizadorTipo, thunkAPI) => {
+  try {
+    const resp = await customFetch.get(`/dia/diasUtilizadorTipo/${utilizadorTipo}`);
+    return resp.data;
+  } catch (error) {
+    return checkForUnauthorizedResponse(error, thunkAPI);
+  }
+};
+
 export const getAllDiasProjetoUtilizadorThunk = async (utilizadorId,projeto, thunkAPI) => {
   try {
     const resp = await customFetch.get(`/dia/diasUtilizador/${utilizadorId}/${projeto}`);
@@ -40,9 +50,9 @@ export const getAllDiasProjetoUtilizadorThunk = async (utilizadorId,projeto, thu
   }
 };
 
-export const exportDiasThunk = async ( url, userID ,thunkAPI) => {
+export const exportDiasThunk = async ( url, userID ,userTipo ,thunkAPI) => {
   try {
-    const resp = await customFetch.post(`/dia/exportDias/` , userID);
+    const resp = await customFetch.post(`/dia/exportDias/` , { userID, userTipo });
     return resp.data;
   } catch (error) {
     console.error(error.response.data.msg)

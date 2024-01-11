@@ -125,7 +125,7 @@ const Wrapper = styled.section`
 
   input {
     text-align:center;
-    min-width : 50%;
+    min-width : 70%;
     width: auto;
   }
 

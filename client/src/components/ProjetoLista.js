@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Wrapper from '../assets/wrappers/Projeto';
 import { useDispatch } from 'react-redux';
 import { getProjeto, handleChange } from '../features/projetos/projetosSlice';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useHistory  } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import FormRowListaProjetos from './FormRowListaProjetos';
 import { updateProjeto } from '../features/projetos/projetosSlice';
@@ -140,6 +140,8 @@ const Projeto = ({
     await dispatch(getProjeto(idP));
     window.location.reload(navigate('/PaginaAdicionarHorasProjeto'));
   };
+
+
   let dias;
   const alertaDias = new Date(values.DataObjetivo).getTime() - new Date().getTime();
   dias = Math.floor(alertaDias / (1000 * 60 * 60 * 24) + 1);

@@ -6,7 +6,7 @@ import { getAllProjetos1, handleChange } from '../features/allProjetos/allProjet
 import { getTipoTrabalho } from '../features/tipoTrabalho/tipoTrabalhoSlice';
 import { toast } from 'react-toastify';
 import { createDia, getDia, editDia } from '../features/dias/diasSlice';
-import { AddHorasCopiar, AddHorasDropdown, FormRow, useFeriadosPortugal } from '../components';
+import { AddHorasCopiar, AddHorasGeralDropdown, FormRow, useFeriadosPortugal } from '../components';
 
 import Loading from './Loading';
 
@@ -27,12 +27,8 @@ const initialState = {
 const ListaProjetos = () => {
   const [values, setValues] = useState(initialState);
 
-
-
-
-
   const { projetos, isLoading, } = useSelector((store) => store.allProjetos);
-
+  
   const dispatch = useDispatch();
   const { user } = useSelector((store) => store.utilizador);
 
@@ -68,6 +64,7 @@ const ListaProjetos = () => {
     dispatch(handleChange({ name: 'DataObjetivoC', value: "true" }));
     dispatch(getAllProjetos1(""))
 
+    console.log("GERAL");
 
     dispatch(getTipoTrabalho()).then((res) => {
 
@@ -78,12 +75,10 @@ const ListaProjetos = () => {
       const addHorasExtra = tipoTrabalhoArray.filter(item => item.tipo === 5);
       setAddHorasExtraID(addHorasExtra[0]?._id);
       setcompensacaoID(compensacao[0]?._id);
-      setListaTrabalhoAll(tipoTrabalhoArray.filter(item => item.tipo === 1));
+      //setListaTrabalhoAll(tipoTrabalhoArray.filter(item => item.tipo === 1));
       setListaTrabalhoGeral(tipoTrabalhoArray.filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 5)));
-  
-      setListaTrabalhoGeralOther(tipoTrabalhoArray.filter(item => item.tipo === 3));
+      //setListaTrabalhoGeralOther(tipoTrabalhoArray.filter(item => item.tipo === 3));
     });
-
 
     setConstLoaded(true);
 
@@ -104,14 +99,11 @@ const ListaProjetos = () => {
           return false;
         }
         if (dataI > dateP) {
-
           return false;
         }
         return true;
       });
-
       setFilteredProjetos(filteredP);
-
     }
   }, [projetos]);
 
@@ -123,6 +115,8 @@ const ListaProjetos = () => {
         setListaDias(lista);
 
         const projetoGeral = (filteredProjetos.filter(item => item.Nome === "Geral"));
+        seTSortedProjetos(projetoGeral)
+
         let countHours = 0;
         const dayStart = new Date(Date.UTC(2023, 11, 1, 0, 0, 0));
 
@@ -153,7 +147,7 @@ const ListaProjetos = () => {
             let extraHours = 0;
 
             for (let i = 0; i < item.tipoDeTrabalhoHoras.length; i++) {
-              const projeto = item.tipoDeTrabalhoHoras[i]
+              const projeto = item.tipoDeTrabalhoHoras[i];
               
               if (projeto.projeto === projetoGeral[0]?._id) {
                 const tt = projeto.tipoTrabalho.split(',') || [];
@@ -399,7 +393,7 @@ const ListaProjetos = () => {
         tipoDeTrabalhoHoras: tipoDeTrabalhoHoras,
       });
 
-      seTSortedProjetos(sSProjetos);
+      //seTSortedProjetos(sSProjetos);
       setCopyExists(true);
       setDataCopy({
         DataCopy: copiaEscolhida?.Data,
@@ -494,7 +488,7 @@ const ListaProjetos = () => {
           NumeroHoras: listaDias[i].NumeroHoras,
           tipoDeTrabalhoHoras: tipoDeTrabalhoHoras,
         });
-        seTSortedProjetos(sSProjetos);
+        //seTSortedProjetos(sSProjetos);
 
         setHorasT(listaDias[i].NumeroHoras);
         setVerificaChange(true);
@@ -513,7 +507,7 @@ const ListaProjetos = () => {
       NumeroHoras: "",
       tipoDeTrabalhoHoras: [],
     });
-    seTSortedProjetos(sProjetos)
+    //seTSortedProjetos(sProjetos)
     setHorasT(0);
     setVerificaChange(false);
     setVerificaDiaCalled(false);
@@ -736,7 +730,6 @@ const ListaProjetos = () => {
 
 
   const copiar = async (value) => {
-
     if (value === true) {
 
       if (!lastDate?.tipoDeTrabalhoHoras) {
@@ -767,7 +760,7 @@ const ListaProjetos = () => {
         NumeroHoras: lastDate.NumeroHoras,
         tipoDeTrabalhoHoras: tipoDeTrabalhoHoras,
       });
-      seTSortedProjetos(sSProjetos);
+      //seTSortedProjetos(sSProjetos);
       setHorasT(lastDate.NumeroHoras);
       setVerificaChange(true);
     } else {
@@ -888,7 +881,7 @@ const ListaProjetos = () => {
           </div>
           <div className="list-group mx-1 w-auto">
 
-            <AddHorasDropdown
+            <AddHorasGeralDropdown
               sortedProjetos={sortedProjetos}
               verificaChange={verificaChange}
               listaTipoTrabalho={listaTipoTrabalho}

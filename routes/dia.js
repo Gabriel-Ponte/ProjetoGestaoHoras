@@ -13,10 +13,13 @@ const {
   deleteDia,
   exportDias,
   getAllDias,
+  getAllDiasUtilizadorTipo,
 } = require("../controllers/dias");
 
 router.route("/").post(createDia);
 router.route("/diasUtilizador/:utilizador").get(getAllDiasUtilizador);
+router.route("/diasUtilizadorTipo/:utilizador").get(getAllDiasUtilizadorTipo);
+
 router.route("/getAllDias").get(getAllDias);
 router.route("/dias/:projeto").get(getAllDiasProjeto);
 router.route("/diasUtilizador/:utilizador/:projeto").get(getDiasProjetoUtilizador);

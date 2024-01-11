@@ -1,4 +1,5 @@
 import { useEffect, useState} from 'react';
+import { useNavigate } from 'react-router-dom';
 import Projeto from './ProjetoLista';
 import Wrapper from '../assets/wrappers/ProjetossContainer';
 import { useSelector, useDispatch } from 'react-redux';
@@ -9,7 +10,7 @@ import ListaProjetosHeader from './ListaProjetosHeader.js';
 import { handleChange } from '../features/allProjetos/allProjetosSlice';
 import { listaUtilizadores } from '../features/utilizadores/utilizadorSlice';
 import FormRowCheckbox from './FormRowCheckbox';
-
+import { toast } from 'react-toastify';
 
 const ListaProjetos = () => {
 
@@ -26,14 +27,25 @@ const ListaProjetos = () => {
     projetoFinalizado,
     DataObjetivoC,
   } = useSelector((store) => store.allProjetos);
+
+
+    
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  //const { user } = useSelector((store) => store.utilizador.user);
+  const { user } = useSelector((store) => store.utilizador.user);
   const { utilizadores } = useSelector((store) => store.utilizador);
 
   const [verificaAlterado, setVerificaAlterado] = useState(0);
 
   const formattedListUtilizadores = Array.isArray(utilizadores) ? utilizadores.filter(user => user.email.endsWith('isqctag.pt')) : [];
  
+  useEffect(() => {
+    if (user && (user?.tipo === 3 || user?.tipo === 4 || user?.tipo === 6 ||  user?.tipo === 7)) {
+      toast.error("Sem permissões para aceder a esta página!");
+      navigate('/PaginaAdicionarHoras');
+    }
+  }, [user, navigate]);
+
   useEffect(() => {
     dispatch(getAllProjetos());
   }, [page, search, searchStatus, searchType, sort, projetoFinalizado, DataObjetivoC, dispatch]);

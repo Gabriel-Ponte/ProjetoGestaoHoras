@@ -12,12 +12,12 @@ const Wrapper = styled.aside`
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 9999;
+    z-index: 9998;
     opacity: 0;
     transition: var(--transition);
   }
   .show-sidebar {
-    z-index: 9999;
+    z-index: 9998;
     opacity: 1;
   }
   .content {

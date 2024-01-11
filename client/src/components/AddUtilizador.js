@@ -22,6 +22,7 @@ const  initialState = {
     estado: true,
   };
 
+
 const AddUtilizador = () => {
     const [values, setValues] = useState(initialState);
     const { isLoading } = useSelector((store) => store.utilizador)
@@ -30,28 +31,62 @@ const AddUtilizador = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
+
     
-    useEffect(() => {
-      if (user && user.tipo === 1) {
-        toast.error("Sem permissões para aceder a esta página!")
-        navigate('/PaginaPrincipal');
-      }
-    }, [user, navigate]);
+  useEffect(() => {
+    if (user && (user?.tipo === 1 )) {
+      toast.error("Sem permissões para aceder a esta página!");
+      navigate('/PaginaPrincipal');
+    }else if (user && user?.tipo === 3 || user?.tipo === 4){
+      toast.error("Sem permissões para aceder a esta página!");
+      navigate('/PaginaAdicionarHoras');
+    }
+  }, [user, navigate]);
     
     if (isLoading) {
       return <Loading />;
     }
 
+    let listTipoUser =  []
+    if(user.tipo === 2){
+      listTipoUser =  [["Engenharia de Processos"], ["Laboratorio"] ,["Outro"] , ["Administrador"], ["Administrador Engenharia"] , ["Administrador Laboratorio"]];
+    }else if (user.tipo === 5){
+      listTipoUser =  [["Engenharia de Processos"], ["Outro"] , ["Administrador Engenharia"]];
+    }else if (user.tipo === 6){
+      listTipoUser =  [["Laboratorio"] ,["Outro"], ["Administrador Laboratorio"]];
+    }else if (user.tipo === 7){
+      listTipoUser =  [["Outro"], ["Administrador Outro"]];
+    }
+
     const handleChangeTipo = (e)=> {
       const { name, value } = e.target;
-      if(value === "Administrador"){
-        e.target.value = 2;
-        setValues({ ...values, [name]: 2 });
-      }else if(value === "Funcionario"){
+
+      if(value === "Engenharia de Processos"){
         e.target.value = 1;
         setValues({ ...values, [name]: 1 });
+
+      }else if(value === "Laboratorio"){
+        e.target.value = 3;
+        setValues({ ...values, [name]: 3 });
+
+      }else if(value === "Outro"){
+        e.target.value = 4;
+        setValues({ ...values, [name]: 4 });
+      }else if(value === "Administrador Engenharia"){
+        e.target.value = 5;
+        setValues({ ...values, [name]: 5 });
+      }
+      else if(value === "Administrador Laboratorio"){
+        e.target.value = 6;
+        setValues({ ...values, [name]: 6 });
+      }else if(value === "Administrador"){
+        e.target.value = 2;
+        setValues({ ...values, [name]: 2 });
       }
     }
+
+
+  
 
     const handleChangeFoto = (name ,file) => {
 
@@ -89,10 +124,11 @@ const AddUtilizador = () => {
   };
 
 
+
   return (
     <Wrapper>
     <main style={{ marginBottom: "100px" }}>
-      <div className="form-signin w-100 m-auto">
+      <div className="form-signin m-auto">
         <h1 className="h3 mb-3 fw-normal text-center">Criar Utilizador</h1>
         <p className='text-center'>Preencha o formulario para criar uma conta.</p>
         <form onSubmit = {handleSubmit} className='form'>
@@ -117,7 +153,7 @@ const AddUtilizador = () => {
                 name ="tipo"
                 labelText="Tipo de Utilizador"
                 value= {values.tipo}
-                list = {[["Funcionario"], ["Administrador"] ]}
+                list = {listTipoUser}
                 handleChange ={handleChangeTipo}            
             />
 

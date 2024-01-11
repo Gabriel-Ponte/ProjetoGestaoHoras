@@ -285,6 +285,39 @@ const updateUser = async (req, res) => {
   }
 };
 
+const updateUserType = async (req, res) => {
+  const { tipo, _id } = req.body;
+
+  try{
+
+  const user = await User.findOne({ _id: _id });
+
+  user.tipo = tipo;
+
+  await user.save();
+
+  const token = user.createJWT();
+  res.status(StatusCodes.OK).json({
+    user: {
+      id: user._id,
+      login: user.login,
+      password: user.password,
+      codigo: user.codigo,
+      email: user.email,
+      foto: user.foto,
+      nome: user.nome,
+      tipo: user.tipo,
+      estado: user.estado,
+      token,
+    },
+  });
+  
+  }catch (error) {
+    console.error(error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Falha no registo.' });
+  }
+};
+
 
 const deleteUser = async (req, res) => {
   const {
@@ -306,6 +339,7 @@ module.exports = {
   getUserEmail,
   getAllUser,
   updateUser,
+  updateUserType,
   deleteUser,
   postResetPassword,
   updateResetedPassword,

@@ -24,6 +24,49 @@ const getAllDias = async (req, res) => {
   }
 };
 
+const getAllDiasUtilizadorTipo = async (req, res) => {
+  try {
+
+    const {
+      params: { utilizador },
+    } = req;
+
+
+    let users = []
+    console.log(utilizador)
+    if (Number(utilizador) === 1) {
+      users = await User.find({ tipo: { $in: [1, 5] } });
+    } else if (Number(utilizador) === 2) {
+      users = await User.find({ tipo: { $in: [2, 5, 6] } });
+    } else if (Number(utilizador) === 3) {
+      users = await User.find({ tipo: { $in: [3, 6] } });
+    } else if (Number(utilizador) === 4) {
+      users = await User.find({ tipo: { $in: [4, 7] } });
+    }
+
+  
+
+    if (!users.length) {
+      throw new NotFoundError(`Nenhum utilizador encontrado com o tipo ${utilizador}.`);
+    }
+
+    const userIds = users.map(user => user._id);
+
+
+
+    const diasAllUtilizador = await Dias.find({ Utilizador: { $in: userIds } });
+    
+    if (!diasAllUtilizador.length) {
+      throw new NotFoundError(`Não foram encontradas horas inseridas para utilizadores do tipo ${utilizador}.`);
+    }
+
+    diasAllUtilizador.sort((a, b) => a.Data - b.Data);
+    res.status(StatusCodes.OK).json({ diasAllUtilizador });
+  } catch (error) {
+    console.error(error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Erro interno do servidor.' });
+  }
+};
 
 const getAllDiasUtilizador = async (req, res) => {
   const {
@@ -260,31 +303,60 @@ const updateDia = async (req, res) => {
 };
   
 const exportDias = async(req, res) =>{
-  const { userId: userId } = req.user;
+  const { userID: userID , userTipo: userTipo} = req.body;
 
   const user = await User.findOne({
-    _id: userId,
+    _id: userID,
   });
 
-  if(!user){
-    throw new NotFoundError(`Não foi encontrado o utilizador com id ${userId}`);
-  }
-  if(user.tipo == 2){
-    const exp = await exportExcell();
-    if(exp){
-    res.status(StatusCodes.OK).json(`Ficheiro exportado para: ${process.env.EXTRACTION_FOLDER}`);
+
+  if(!user || user.tipo === 3 || user.tipo === 4){
+    if(!user){
+    throw new NotFoundError(`Não foi encontrado o utilizador com id ${userID}`);
     }else{
-      throw new BadRequestError(`Ocorreu um erro ao exportar o ficheiro. Verifique se este se encontra aberto!`);
+      throw new NotFoundError(`O utilizador ${user.nome} não possui permissões para exportar`);
     }
   }
-  else{
-    throw new NotFoundError(`O utilizador ${user.nome} não possui permissões para exportar`);
+
+    let tipo;
+    if(userTipo){
+      tipo = userTipo;
+    }else{
+      tipo =user.tipo;
+    }
+
+    const exp = await exportExcell(tipo);
+
+
+    if(exp){
+      let filePath;
+      if(Number(tipo) === 2){
+        filePath = process.env.EXTRACTION_FOLDER;
+
+    } else if(Number(tipo) === 5){
+      filePath = process.env.EXTRACTION_FOLDER5;
+
+    } else if(Number(tipo) === 6){
+      filePath = process.env.EXTRACTION_FOLDER6;
+
+    } else if(Number(tipo) === 7){
+      filePath = process.env.EXTRACTION_FOLDER7;
+ 
+    }else if(Number(tipo) === 8){
+      filePath = process.env.EXTRACTION_FOLDER8;
+    }
+    //const filename = 'SeguimentoHoras.xlsx'
+    //res.download(process.env.EXTRACTION_FOLDER, filename);
+    res.status(StatusCodes.OK).json(`Ficheiro exportado para: ${filePath}`);
+    }else{
+      throw new BadRequestError(`Ocorreu um erro ao exportar o ficheiro. Verifique se este se encontra aberto!`);
   }
 }
 
 module.exports = {
   getAllDiasProjeto,
   getAllDiasUtilizador,
+  getAllDiasUtilizadorTipo,
   getAllDias,
   getDia,
   createDia,

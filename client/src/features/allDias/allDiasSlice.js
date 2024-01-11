@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
-import { getAllDiasProjetoThunk, getAllDiasUtilizadorThunk ,getAllDiasThunk,getAllDiasProjetoUtilizadorThunk ,exportDiasThunk} from './allDiasThunk';
+import { getAllDiasProjetoThunk, getAllDiasUtilizadorThunk ,getAllDiasThunk,getAllDiasProjetoUtilizadorThunk ,exportDiasThunk, getAllDiasUtilizadorTipoThunk} from './allDiasThunk';
 
 const initialState = {
   isLoading: true,
@@ -28,7 +28,14 @@ export const getAllDiasUtilizador = createAsyncThunk(
   async ({ userNome }, thunkAPI) => {
     return getAllDiasUtilizadorThunk(userNome, thunkAPI);
   }
-   );
+);
+
+   export const getAllDiasUtilizadorTipo = createAsyncThunk(
+    '/dia/diasUtilizadorTipo/',
+    async ({ userTipo }, thunkAPI) => {
+      return getAllDiasUtilizadorTipoThunk(userTipo, thunkAPI);
+      }
+    );
 
   export const getAllDiasProjetoUtilizador = createAsyncThunk(
     '/dia/diasUtilizadorProjeto/',
@@ -39,8 +46,8 @@ export const getAllDiasUtilizador = createAsyncThunk(
 
   export const exportDia = createAsyncThunk(
     'dia/exportDias/',
-    async (id ,thunkAPI) => {
-      return exportDiasThunk(thunkAPI, id);
+    async ({ userID, userTipo }, thunkAPI) => {
+      return exportDiasThunk(thunkAPI, userID, userTipo);
     }
     );
   
@@ -91,6 +98,21 @@ const allDiasSlice = createSlice({
       //toast.error(payload);
     })
 
+
+    .addCase(getAllDiasUtilizadorTipo.pending, (state) => {
+      state.isLoading = true;
+    })
+
+    .addCase(getAllDiasUtilizadorTipo.fulfilled, (state, { payload }) => {
+      state.dias = payload.diasAllUtilizador;
+      state.isLoading = false;
+
+    })
+    .addCase(getAllDiasUtilizadorTipo.rejected, (state, { payload }) => {
+      state.isLoading = false;
+      //toast.error(payload);
+    })
+    
     .addCase(getAllDiasProjetoUtilizador.pending, (state) => {
       state.isLoading = true;
     })
@@ -138,7 +160,6 @@ const allDiasSlice = createSlice({
     .addCase(getAllDiasTodos.rejected, (state, { payload }) => {
       state.isLoading = false;
     })
-
     
   },
 });

@@ -18,13 +18,16 @@ const GerirTipoTrabalho = () => {
 
   const navigate = useNavigate();
 
+
   useEffect(() => {
-    if (user && user.tipo === 1) {
-      toast.error("Sem permissões para aceder a esta página!")
+    if (user && (user?.tipo === 1 )) {
+      toast.error("Sem permissões para aceder a esta página!");
       navigate('/PaginaPrincipal');
+    }else if (user && user?.tipo === 3 || user?.tipo === 4){
+      toast.error("Sem permissões para aceder a esta página!");
+      navigate('/PaginaAdicionarHoras');
     }
   }, [user, navigate]);
-
   //let StringListaTrabalho = listaTipoTrabalho.map(item => item.TipoTrabalho).join(",");
 
 

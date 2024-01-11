@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { toggleSidebar } from '../features/utilizadores/utilizadorSlice';
 import { exportProjeto } from '../features/projetos/projetosSlice';
 import Wrapper from '../assets/wrappers/NavLinks';
+import NavLinksModalBox from './NavLinksModalBox'
 import { exportDia } from '../features/allDias/allDiasSlice';
 
 const NavLinks = () => {
@@ -20,6 +21,8 @@ const NavLinks = () => {
   } = useSelector((store) => store.allProjetos);
   const [showProjeto, setShowProjeto] = useState(false);
   const [showProjetoV, setShowProjetoV] = useState(false);
+  const [localState, setLocalState] = useState(false);
+
   const dispatch = useDispatch();
   const { user } = useSelector((store) => store.utilizador.user);
   const navigate = useNavigate();
@@ -29,7 +32,6 @@ const NavLinks = () => {
       setShowProjetoV(false);
     }
   };
-
 
   const handleShowProjetosV = () => {
     setShowProjetoV(!showProjetoV);
@@ -61,15 +63,33 @@ const NavLinks = () => {
     }
   };
   const toggleSidebarClose = ()=>{
+      
      dispatch(toggleSidebar(false));
   }
+
+  const changeLocalState = ()=>{
+     setLocalState(true)
+  }
+  const handleCloseModal = ()=>{
+   setLocalState(false);
+   dispatch(toggleSidebar(false));
+}
+  
 
   const handleChangeExportProjetos = () => {
     dispatch(exportProjeto({ userID: user.id }));
   };
 
-  const handleChangeExportHoras = () => {
-    dispatch(exportDia({ userID: user.id }));
+  const handleChangeExportHoras = (tipo) => {
+    setLocalState(false);
+    dispatch(toggleSidebar(false));
+
+    if(Number(tipo)){
+      dispatch(exportDia({ userID: user.id, userTipo: tipo }));
+    }else{
+      dispatch(exportDia({ userID: user.id, userTipo: user?.tipo }));
+    }
+
   };
 
   return (
@@ -82,17 +102,21 @@ const NavLinks = () => {
           return null;
         }
 
-        if(user.tipo === 2 && id === 8){
+        if((user.tipo === 6 || user.tipo === 7) && (id === 5 || id === 6 || id === 7 || id === 8 )){
+          return null;
+        }
+
+        if(user.tipo !== 2 && id === 3){
+          return null;
+        }
+        if(id === 8){
           return (
             <React.Fragment key={id}>
           <button style={{ marginTop: '5%' }}
-
               onClick={handleChangeExportProjetos}
             >
 
           <NavLink
-            
-            to={path}
             className={({ isActive }) => {
               return isActive ? "nav-link active" : "nav-link";
             }}
@@ -110,7 +134,42 @@ const NavLinks = () => {
           )
       }
 
-      if(user.tipo === 2 && id === 9){
+      if(id === 9){
+        if(user.tipo === 2){
+          return (
+    
+        <React.Fragment key={id}>
+
+
+          {localState && <NavLinksModalBox 
+          handleExport={handleChangeExportHoras}
+          handleClose={handleCloseModal}
+          state={localState} />}
+
+          <button style={{ marginTop: '5%' }}
+            
+            >
+
+
+          <NavLink
+
+  
+            className={({ isActive }) => {
+              return isActive ? "nav-link active" : "nav-link";
+            }}
+            onClick={changeLocalState}
+            key={id}
+          >
+            <span className="icon">{icon}</span>
+            {text}
+          </NavLink>
+            </button>
+  
+  
+          </React.Fragment>
+          
+          )
+        }else{
         return (
           <React.Fragment key={id}>
         <button style={{ marginTop: '5%' }}
@@ -120,7 +179,7 @@ const NavLinks = () => {
 
         <NavLink
           
-          to={path}
+
           className={({ isActive }) => {
             return isActive ? "nav-link active" : "nav-link";
           }}
@@ -137,6 +196,7 @@ const NavLinks = () => {
         
         )
     }
+  }
 
         if (id === 6 || id === 7) {
           return (

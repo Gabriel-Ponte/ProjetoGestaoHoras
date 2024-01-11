@@ -59,7 +59,7 @@ export const updateUser = createAsyncThunk(
 export const updateUserType = createAsyncThunk(
   'utilizador/updateUserType',
   async (user, thunkAPI) => {
-    return updateUserTypeThunk('/utilizador/updateUser', user, thunkAPI);
+    return updateUserTypeThunk('/utilizador/updateUserType', user, thunkAPI);
   }
 );
 

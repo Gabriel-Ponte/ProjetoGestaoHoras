@@ -9,6 +9,7 @@ const Wrapper = styled.nav`
   position: sticky;
   top: 0;
   z-index: 9998;
+
   .logo {
     display: flex;
     align-items: center;
@@ -23,7 +24,6 @@ const Wrapper = styled.nav`
     align-items: center;
     max-heigth:70px;
   }
-  
 
   .nav-center {
     display: flex;
@@ -62,21 +62,22 @@ const Wrapper = styled.nav`
     position: absolute;
     left: 0;
     rigth: 0;
-    width: 50%;
+    width: 100%;
     align-items: top;
     padding: 0.5rem;
     text-align: center;
     visibility: hidden;
     z-index: 9998;
   }
+
   .show-dropdown {
     display: flex;
     justify-content: center;
     align-items: center;
     position: absolute;
-    top: 70%;
-    left: 35%;
-    width:30%;
+    top: 90%;
+    left: 0%;
+    width:auto;
     visibility: visible;
     background-color: #E5E5E5;
     z-index: 9998;
@@ -90,22 +91,12 @@ const Wrapper = styled.nav`
     text-transform: capitalize;
     cursor: pointer;
   }
-  .logo-text {
-    display: none;
-    margin: 0;
-  }
+
   @media (min-width: 992px) {
     position: sticky;
     top: 0;
-
     .nav-center {
       width: 90%;
-    }
-    .logo {
-      display: none;
-    }
-    .logo-text {
-      display: block;
     }
   }
 
@@ -133,13 +124,5 @@ const Wrapper = styled.nav`
     opacity: 1.0;
   }
 
-  .divButtonUtilizador {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-items: center;
-    align-content: end;
-    justify-content: space-around;
-  }
 `
 export default Wrapper

@@ -81,6 +81,7 @@ export const updateUserThunk = async (url, user, thunkAPI) => {
 
 export const updateUserTypeThunk = async (url, user, thunkAPI) => {
   try {
+    console.log(url)
     const resp = await customFetch.patch(url, user);
     return resp.data;
 

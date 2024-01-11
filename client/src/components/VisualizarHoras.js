@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Loading from './Loading';
 import Dia from './Dias';
 import DiaTodos from './DiasTodos';
-import { getAllDiasUtilizador, getAllDiasTodos } from '../features/allDias/allDiasSlice';
+import { getAllDiasUtilizador, getAllDiasTodos, getAllDiasUtilizadorTipo } from '../features/allDias/allDiasSlice';
 import { listaUtilizadores } from '../features/utilizadores/utilizadorSlice';
 import { FormRowSelect } from '../components';
 import Calendar from './Calendar'
@@ -13,14 +13,15 @@ import { getTipoTrabalho } from '../features/tipoTrabalho/tipoTrabalhoSlice';
 
 const ListaHoras = () => {
   const { user, utilizadores } = useSelector((store) => store.utilizador);
-  const { dias, isLoading } = useSelector((store) => store.allDias);
+  const { dias } = useSelector((store) => store.allDias);
+  const [loading, setLoading] = useState(false);
   const [selectedUser, setSelectedUser] = useState(user?.user?.nome);
   const [selectedDay, setSelectedDay] = useState();
   const [getFeriados, setFeriados] = useState([]);
   const [listaDias, setListaDias] = useState([]);
   const [listaDiasT, setListaDiasT] = useState([]);
   const [addHorasExtraIDS, setAddHorasExtraID] = useState([]);
-  
+
   const [listaTipoTrabalho, setListaTipoTrabalho] = useState(null);
   const [horasRealizadas, setHorasRealizadas] = useState(0);
   const [percentagemHoras, setPercentagemHoras] = useState(0);
@@ -30,8 +31,8 @@ const ListaHoras = () => {
 
   const [horasExtra, setHorasExtra] = useState(null);
   const [horasCompencacao, setHorasCompencacao] = useState(null);
-  
-  const [userNome, setUserNome] = useState(user?.user?.nome); 
+
+  const [userNome, setUserNome] = useState(user?.user?.nome);
 
   const [change, setChange] = useState(false);
   const dispatch = useDispatch();
@@ -87,7 +88,6 @@ const ListaHoras = () => {
         { name: "Corpo de Deus", date: calculateCorpusChristi(i) }
       );
     }
-
     setFeriados(feriados);
     for (const feriado of feriados) {
       if (
@@ -152,15 +152,16 @@ const ListaHoras = () => {
       if (selectedUser === "Todos") {
         dispatch(getAllDiasTodos()).then((res) => {
           const listaDiasA = (typeof res.payload.diasAll !== "undefined") ? res.payload.diasAll : [];
+
           setListaDiasT(listaDiasA);
           // Remove the matching ferias from listaDias
           if (listaDiasA) {
             const updatedListaDias = listaDiasA.filter((dia) => {
               for (let i = 0; i < dia.tipoDeTrabalhoHoras.length; i++) {
                 const aListaDias = dia.tipoDeTrabalhoHoras[i]?.tipoTrabalho?.split(',').filter((tipo, index) => {
-                    const horasArray = dia.tipoDeTrabalhoHoras[i]?.horas?.split(',');
-                    return horasArray && horasArray[index] > 0;
-                  });
+                  const horasArray = dia.tipoDeTrabalhoHoras[i]?.horas?.split(',');
+                  return horasArray && horasArray[index] > 0;
+                });
                 return aListaDias;
               }
               return null;
@@ -172,8 +173,43 @@ const ListaHoras = () => {
           setListaTipoTrabalho(tipoTrabalhoArray);
         });
 
-      } else {
-        
+      } else if(selectedUser === "Engenharia de Processos" || selectedUser === "Laboratorio" || selectedUser === "Outro" || selectedUser === "Administradores"){
+        let tipo = 0;
+
+        if(selectedUser === "Engenharia de Processos"){
+          tipo = 1;
+        }else if  (selectedUser === "Administradores"){
+          tipo = 2;
+        }
+        else if  (selectedUser === "Laboratorio"){
+          tipo = 3;
+        } else if( selectedUser === "Outro"){
+          tipo = 4;
+        }
+  
+        dispatch(getAllDiasUtilizadorTipo({ userTipo: tipo })).then((res) => {
+          const listaDiasA = (typeof res.payload.diasAllUtilizador !== "undefined") ? res.payload.diasAllUtilizador : [];
+
+          setListaDiasT(listaDiasA);
+          // Remove the matching ferias from listaDias
+          if (listaDiasA) {
+            const updatedListaDias = listaDiasA.filter((dia) => {
+              for (let i = 0; i < dia.tipoDeTrabalhoHoras.length; i++) {
+                const aListaDias = dia.tipoDeTrabalhoHoras[i]?.tipoTrabalho?.split(',').filter((tipo, index) => {
+                  const horasArray = dia.tipoDeTrabalhoHoras[i]?.horas?.split(',');
+                  return horasArray && horasArray[index] > 0;
+                });
+                return aListaDias;
+              }
+              return null;
+            })
+            if (!arrayEquals(listaDias, updatedListaDias)) {
+              setListaDias(updatedListaDias);
+            }
+          }
+          setListaTipoTrabalho(tipoTrabalhoArray);
+        });
+      }else {
         dispatch(getAllDiasUtilizador({ userNome: selectedUser })).then((res) => {
           const listaDiasA = (typeof res.payload.diasAllUtilizador !== "undefined") ? res.payload.diasAllUtilizador : [];
           const idFerias = tipoTrabalhoArray.find((tipo) => tipo.TipoTrabalho === "Ferias")?._id;
@@ -198,59 +234,58 @@ const ListaHoras = () => {
             const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
             const isFriday = dayOfWeek === 5;
 
-            
+
             const currentDay = date.getDate();
             const currentMonth = date.getMonth();
             const currentYear = date.getFullYear();
-
             if (
               currentYear > startYear ||
-              currentMonth > startMonth ||
+              (currentYear === startYear && currentMonth > startMonth) ||
               (
-              currentYear === startYear &&
-              currentMonth === startMonth &&
-              currentDay >= startDay)
+                currentYear === startYear &&
+                currentMonth === startMonth &&
+                currentDay >= startDay)
             ) {
-            let extraHours = 0;
-            for (let i = 0; i < item.tipoDeTrabalhoHoras.length; i++) {
-              const projeto = item.tipoDeTrabalhoHoras[i]
+              let extraHours = 0;
+              for (let i = 0; i < item.tipoDeTrabalhoHoras.length; i++) {
+                const projeto = item.tipoDeTrabalhoHoras[i]
 
-              const tt = projeto.tipoTrabalho.split(',') || [];
-              const ttH = projeto.horas.split(',') || [];
+                const tt = projeto.tipoTrabalho.split(',') || [];
+                const ttH = projeto.horas.split(',') || [];
                 for (let j = 0; j < tt.length; j++) {
                   if (tt[j] === idCompensação) {
                     countHours -= ttH[j];
                     countHoursCompencacao += parseFloat(ttH[j]);
                   }
-  
+
                   if (tt[j] === addHorasExtraID) {
                     countHours += parseFloat(ttH[j]);
                     extraHours = parseFloat(ttH[j]);
                   }
                 }
-            }
-            if(feriadosPortugal(date) && (parseFloat(item.NumeroHoras) - parseFloat(extraHours)) > 0){
-              countHours += (parseFloat(item.NumeroHoras) - parseFloat(extraHours));
-              return true;
-            }
+              }
+              if (feriadosPortugal(date) && (parseFloat(item.NumeroHoras) - parseFloat(extraHours)) > 0) {
+                countHours += (parseFloat(item.NumeroHoras) - parseFloat(extraHours));
+                return true;
+              }
 
-            if (isWeekend && (parseFloat(item.NumeroHoras) - parseFloat(extraHours)) > 0) {
-              countHours += (parseFloat(item.NumeroHoras) - parseFloat(extraHours));
-              
-              return true;
-            }
-            if (isFriday && (parseFloat(item.NumeroHoras) - parseFloat(extraHours)) > 6) {
-              countHours += (parseFloat(item.NumeroHoras - 6) - parseFloat(extraHours));
-              return true;
-            }
-            if (!isFriday && (parseFloat(item.NumeroHoras) - parseFloat(extraHours)) > 8.5) {
-              countHours += (parseFloat(item.NumeroHoras - 8.5) - parseFloat(extraHours));
-              return true;
+              if (isWeekend && (parseFloat(item.NumeroHoras) - parseFloat(extraHours)) > 0) {
+                countHours += (parseFloat(item.NumeroHoras) - parseFloat(extraHours));
+
+                return true;
+              }
+              if (isFriday && (parseFloat(item.NumeroHoras) - parseFloat(extraHours)) > 6) {
+                countHours += (parseFloat(item.NumeroHoras - 6) - parseFloat(extraHours));
+                return true;
+              }
+              if (!isFriday && (parseFloat(item.NumeroHoras) - parseFloat(extraHours)) > 8.5) {
+                countHours += (parseFloat(item.NumeroHoras - 8.5) - parseFloat(extraHours));
+                return true;
+              }
+              return false;
             }
             return false;
-          }
-          return false;
-        });
+          });
 
           setHorasCompencacao(countHoursCompencacao);
           setHorasExtra(convertToMinutes(countHours))
@@ -279,9 +314,9 @@ const ListaHoras = () => {
                 for (let i = 0; i < dia.tipoDeTrabalhoHoras.length; i++) {
                   const aListaDias = dia.tipoDeTrabalhoHoras[i]?.tipoTrabalho?.split(',').filter((tipo, index) => {
 
-                      const horasArray = dia.tipoDeTrabalhoHoras[i]?.horas?.split(',');
-                      return horasArray && horasArray[index] > 0;
-                    });
+                    const horasArray = dia.tipoDeTrabalhoHoras[i]?.horas?.split(',');
+                    return horasArray && horasArray[index] > 0;
+                  });
 
                   return !aListaDias.includes(idFerias);
                 }
@@ -311,15 +346,26 @@ const ListaHoras = () => {
   }
 
   useEffect(() => {
-
     const month = selectedDay ? selectedDay.mes : today.getMonth();
     const year = selectedDay ? selectedDay.ano : today.getFullYear();
     let possibleHoursCount = getPossibleHoursCount(month, year);
     let horasRealizadasCount = 0;
 
-    if (selectedUser === "Todos") {
+    let filteredUsers = formattedListUtilizadores.filter((user) => user && user.nome !== "Admin");
+
+    if (selectedUser === "Engenharia de Processos"){
+      filteredUsers = filteredUsers.filter((user) => user && (user.tipo === 1 || user.tipo === 5));
+    } else if (selectedUser === "Administradores"){
+      filteredUsers = filteredUsers.filter((user) => user && (user.tipo === 2 || user.tipo === 5 || user.tipo === 6));
+    } else if (selectedUser === "Laboratorio" ){
+      filteredUsers = filteredUsers.filter((user) => user && (user.tipo === 3 || user.tipo === 6));
+    } else if(selectedUser === "Outro"){
+      filteredUsers = filteredUsers.filter((user) => user && (user.tipo === 4 || user.tipo === 7));
+    }
+
+    if (selectedUser === "Todos" || selectedUser === "Engenharia de Processos" || selectedUser === "Administradores" || selectedUser === "Laboratorio" || selectedUser === "Outro") {
       setPossibleHoursTodos(possibleHoursCount)
-      possibleHoursCount = possibleHoursCount * (formattedListUtilizadores.length - 1)
+      possibleHoursCount = possibleHoursCount * (filteredUsers.length)
     }
 
 
@@ -328,17 +374,17 @@ const ListaHoras = () => {
         const data = new Date(listaDiasT[i].Data);
         if (year === data.getFullYear() && month === data.getMonth()) {
           horasRealizadasCount += listaDiasT[i].NumeroHoras;
-            for (let h = 0; h < listaDiasT[i].tipoDeTrabalhoHoras.length; h++) {
-              const projeto = listaDiasT[i].tipoDeTrabalhoHoras[h]
-              const tt = projeto.tipoTrabalho.split(',') || [];
-              const ttH = projeto.horas.split(',') || [];
-  
-                for (let j = 0; j < tt.length; j++) {
-                  if (tt[j] === addHorasExtraIDS) {
-                    horasRealizadasCount -= ttH[j]
-                  }
-                }
+          for (let h = 0; h < listaDiasT[i].tipoDeTrabalhoHoras.length; h++) {
+            const projeto = listaDiasT[i].tipoDeTrabalhoHoras[h]
+            const tt = projeto.tipoTrabalho.split(',') || [];
+            const ttH = projeto.horas.split(',') || [];
+
+            for (let j = 0; j < tt.length; j++) {
+              if (tt[j] === addHorasExtraIDS) {
+                horasRealizadasCount -= ttH[j]
+              }
             }
+          }
         }
       }
     }
@@ -351,16 +397,33 @@ const ListaHoras = () => {
 
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [listaDias, selectedDay, selectedUser]);
+  }, [listaDias, selectedDay, percentagemHoras, horasRealizadas, selectedUser]);
+
+  useEffect(() => {
+
+    setLoading(true);
 
 
+    setTimeout(() => {
+      setLoading(false);
+    }, 1);
+  }, [listaDias]);
 
   const diaSelected = selectedDay ? selectedDay.dia : 0;
   const month = selectedDay ? selectedDay.mes : today.getMonth();
   const year = selectedDay ? selectedDay.ano : today.getFullYear();
 
-  const filteredUsers = formattedListUtilizadores.filter((user) => user && user.nome !== "Admin");
+  let filteredUsers = formattedListUtilizadores.filter((user) => user && user.nome !== "Admin");
 
+  if (selectedUser === "Engenharia de Processos"){
+    filteredUsers = filteredUsers.filter((user) => user && (user.tipo === 1 || user.tipo === 5));
+  } else if (selectedUser === "Administradores"){
+    filteredUsers = filteredUsers.filter((user) => user && (user.tipo === 2 || user.tipo === 5 || user.tipo === 6));
+  } else if (selectedUser === "Laboratorio" ){
+    filteredUsers = filteredUsers.filter((user) => user && (user.tipo === 3 || user.tipo === 6));
+  } else if(selectedUser === "Outro"){
+    filteredUsers = filteredUsers.filter((user) => user && (user.tipo === 4 || user.tipo === 7));
+  }
 
   function convertToMinutes(timeString) {
     if (timeString) {
@@ -392,47 +455,53 @@ const ListaHoras = () => {
     return timeString;
   }
 
-  //Change to refresh
-  if (isLoading) {
-    return <Loading />;
-  }
-  if (!dias) {
-    return <Loading />;
-  }
-
-  if (!listaTipoTrabalho) {
-    return <Loading />;
-  }
+  // //Change to refresh
+   if (loading   || !dias || !listaTipoTrabalho) {
+     return <Loading />;
+   }
 
   let checkFound = false
+
 
   return (
     <Wrapper>
       <div className='mainVisualiza'>
-        {(user?.user?.tipo === 2) && (
-          <div className='text-center mb-5'>
+      {((user?.user?.tipo === 2 || user?.user?.tipo === 5 || user?.user?.tipo === 6 || user?.user?.tipo === 7) && (
+  <div className='text-center mb-5'>
+    <h3 className='mb-5'>Escolha Utilizador</h3>
 
-            <h3 className='mb-5'>Escolha Utilizador</h3>
-            <FormRowSelect
-              type="text"
-              className="row mb-3 text-center"
-              classNameLabel='col-md-3 text-end'
-              classNameInput='col-md-9'
-              classNameResult='col-md-6 text-start'
-              id="piloto"
-              name="Piloto"
-              labelText="Utilizador:"
-              value={selectedUser}
-              list={formattedListUtilizadores}
-              handleChange={handleChangeUtilizador}
-              multiple={false}
-              todos={true}
-            />
+    {(() => {
+      let filteredUsers = formattedListUtilizadores;
+      
+      if (user?.user?.tipo === 5) {
+        filteredUsers = formattedListUtilizadores.filter((user) => user && (user.tipo === 1 || user.tipo === 5));
 
-          </div>
+      } else if (user?.user?.tipo === 6) {
+        filteredUsers = formattedListUtilizadores.filter((user) => user && (user.tipo === 3 || user.tipo === 6));
+      } else if (user?.user?.tipo === 7) {
+        filteredUsers = formattedListUtilizadores.filter((user) => user && (user.tipo === 4 || user.tipo === 7));
+      }
 
-        )
-        }
+      return (
+        <FormRowSelect
+          type="text"
+          className="row mb-3 text-center"
+          classNameLabel='col-md-3 text-end'
+          classNameInput='col-md-9'
+          classNameResult='col-md-6 text-start'
+          id="piloto"
+          name="Piloto"
+          labelText="Utilizador:"
+          value={selectedUser}
+          list={filteredUsers}
+          handleChange={handleChangeUtilizador}
+          multiple={false}
+          todos={user?.user?.tipo}
+        />
+      );
+    })()}
+  </div>
+))}
         <div className='row mb-3'>
           <div className='col-6'>
             <h1 className='userName'>{userNome}</h1>
@@ -442,19 +511,19 @@ const ListaHoras = () => {
                 <p>Horas Possiveis: {convertToMinutes(possibleHours)}</p>
               </div>
               <div className='col-md-6 text-center'>
-                {percentagemHoras >= 0 && percentagemHoras !== Infinity &&<p>{percentagemHoras.toFixed(1)}%</p>}
+                {percentagemHoras >= 0 && percentagemHoras !== Infinity && <p>{percentagemHoras.toFixed(1)}%</p>}
               </div>
               <div className='col-md-6 text-center'>
                 <p>Horas Realizadas: {convertToMinutes(horasRealizadas)}</p>
               </div>
               <div className='col-md-6 text-center'>
-              {selectedUser !== "Todos" && (parseFloat(horasExtra) > 0) && (
-                <p>Horas extra por dar: {horasExtra}</p>
-              )}
+                {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" &&  selectedUser !== "Outro" ) && (parseFloat(horasExtra) > 0) && (
+                  <p>Horas extra por dar: {horasExtra}</p>
+                )}
               </div>
             </div>
           </div>
-          
+
 
           <div className='col-6 description'>
             <div className='row mb'>
@@ -514,15 +583,21 @@ const ListaHoras = () => {
           </div>
         </div>
         {(listaDias && listaDias.length < 1) ? (
+          <>
+          {(selectedUser === "Todos" || selectedUser === "Engenharia de Processos" || selectedUser === "Administradores" ||selectedUser === "Laboratorio" || selectedUser === "Outro" ) ? (
+          <div className='projetos'>
+          <h2>Grupo não possui horas inseridas</h2>
+        </div>
+          ):(
           <div className='projetos'>
             <h2>Utilizador não possui horas inseridas</h2>
           </div>
+          )}
+          </>
         ) : (
           <>
 
-
-            {(selectedUser === "Todos") ? (
-
+            {(selectedUser === "Todos" || selectedUser === "Engenharia de Processos" || selectedUser === "Administradores" || selectedUser === "Laboratorio" || selectedUser === "Outro") ? (
               <>
                 <div className='col-12'>
                   <Calendar
@@ -579,16 +654,16 @@ const ListaHoras = () => {
                         if (isSameMonth && isSameDate) {
                           count += parseFloat(dia.NumeroHoras);
 
-                          for(let j= 0; j< dia.tipoDeTrabalhoHoras.length; j++){
+                          for (let j = 0; j < dia.tipoDeTrabalhoHoras.length; j++) {
                             const projeto = dia.tipoDeTrabalhoHoras[j]
                             const tt = projeto.tipoTrabalho.split(',') || [];
                             const ttH = projeto.horas.split(',') || [];
-                  
-                              for (let h = 0; h < tt.length; h++) {
-                                if (tt[h] === addHorasExtraIDS) {
-                                  count -= parseFloat(ttH[h]);
-                                }
+
+                            for (let h = 0; h < tt.length; h++) {
+                              if (tt[h] === addHorasExtraIDS) {
+                                count -= parseFloat(ttH[h]);
                               }
+                            }
                           }
                         }
 
@@ -684,6 +759,9 @@ const ListaHoras = () => {
       </div>
     </Wrapper >
   );
+
+  
 };
+
 
 export default ListaHoras;

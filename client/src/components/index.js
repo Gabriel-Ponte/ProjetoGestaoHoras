@@ -12,11 +12,13 @@ import AddUtilizador from './AddUtilizador';
 import Footer from './Footer';
 import Header from './header';
 import Navbar from './Navbar';
+import NavbarGeral from './NavbarGeral';
 import SmallSidebar from './SmallSidebar';
 import ListaProjetos from './ListaProjetos';
 import Loading from './Loading';
 import EditarUtilizador from './EditarUtilizador';
 import AddHoras from './AddHoras';
+import AddHorasGeral from './AddHorasGeral';
 import AddHorasProjeto from './AddHorasProjeto'
 import VisualizarProjeto from './VisualizarProjeto';
 import EditarProjeto from './EditarProjeto';
@@ -28,17 +30,23 @@ import ForgetPassword from './ForgetPassword';
 import ForgetPasswordChange from './ForgetPasswordChange';
 import OptionsPanel from './OptionsPanel';
 import AddHorasDropdown from './AddHorasDropdown';
+import AddHorasGeralDropdown from './AddHorasGeralDropdown';
+import AddHorasProjetoDropdown from './AddHorasProjetoDropdown';
 import AddHorasCopiar from './AddHorasCopiar';
 import useFeriadosPortugal from './FeriadosPortugal';
 import ProjetoListaFolder from './ProjetoListaFolder';
-
+import NavLinksModalBox from './NavLinksModalBox';
 export {
   ListaProjetos,
   BigSidebar,
   AddProjectForm,
   TimePickerClock,
   AddHorasDropdown,
+  AddHorasGeralDropdown,
+  AddHorasProjetoDropdown,
   AddHorasCopiar,
+  NavLinksModalBox,
+  AddHorasGeral,
   ProjetoListaFolder,
   useFeriadosPortugal,
   OptionsPanel,
@@ -51,6 +59,7 @@ export {
   Footer,
   Header,
   Navbar,
+  NavbarGeral,
   SmallSidebar,
   Loading,
   EditarUtilizador,
