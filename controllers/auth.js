@@ -193,8 +193,14 @@ const register = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error(error);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Falha no registo.' });
+    if (error.code === 11000 || error.code === 11001) {
+      // Duplicate key error (MongoDB error code)
+      const duplicateKey = Object.keys(error.keyPattern)[0];
+      res.status(StatusCodes.CONFLICT).json({ error: `Valor duplicado. O valor '${duplicateKey}' já se encontra em uso.` });
+    }else {
+      // Other errors
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Falha no Registo.' });
+    }
   }
 };
 

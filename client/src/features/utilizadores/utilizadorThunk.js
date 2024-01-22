@@ -18,7 +18,11 @@ export const registerUserThunk = async (url, user, thunkAPI) => {
     const resp = await customFetch.post(url, user);
     return resp.data;
   } catch (error) {
-    return thunkAPI.rejectWithValue(error.response.data.msg);
+    if(error.response.data.error){
+      return thunkAPI.rejectWithValue(error.response.data.error);
+    }else{
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
   }
 };
 
