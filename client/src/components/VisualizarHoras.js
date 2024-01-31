@@ -332,7 +332,8 @@ const ListaHoras = () => {
         });
       }
     });
-  }, [selectedUser, listaDias, ferias, dispatch]);
+ 
+  }, [selectedUser, listaDias[0],horasExtra,listaTipoTrabalho?.length, ferias[0], dispatch]);
 
   function arrayEquals(a, b) {
     if (a === b) return true;
@@ -403,11 +404,11 @@ const ListaHoras = () => {
 
     setLoading(true);
 
-
     setTimeout(() => {
       setLoading(false);
     }, 1);
-  }, [listaDias]);
+    
+  }, [listaDias.length , ferias[0]]);
 
   const diaSelected = selectedDay ? selectedDay.dia : 0;
   const month = selectedDay ? selectedDay.mes : today.getMonth();

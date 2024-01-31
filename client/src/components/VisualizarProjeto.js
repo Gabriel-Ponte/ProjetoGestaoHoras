@@ -38,7 +38,7 @@ const VisualizarProjeto = () => {
   const { dias } = useSelector((store) => store.allDias);
   const [verificaDias, setVerificaDias] = useState(0);
   const [values, setValues] = useState(null);
-  const [selectedUser, setSelectedUser] = useState(user?.user?.nome);
+  const [selectedUser, setSelectedUser] = useState(user.user.tipo === 1 ? user?.user?.nome : "Todos");
   const [selectedDay, setSelectedDay] = useState();
   const [getFeriados, setFeriados] = useState([]);
   const [listaDias, setListaDias] = useState([]);
@@ -63,11 +63,11 @@ const VisualizarProjeto = () => {
           .then((res) => {
             if (res.payload.diasAllProjeto) {
               setListaDias(res.payload.diasAllProjeto);
-
+              setSelectedUser(selectedUser)
               setVerificaDias(1);
             } else {
               setListaDias([]);
-
+              setSelectedUser(selectedUser)
               setVerificaDias(2);
             }
           })
@@ -79,9 +79,11 @@ const VisualizarProjeto = () => {
         dispatch(getAllDias({ projetoId, userLogin }))
           .then((res) => {
             if (res.payload.diasAllProjeto) {
+              setVerificaDias(1);
               setListaDias(res.payload.diasAllProjeto);
             } else {
               setListaDias([]);
+              setVerificaDias(2);
             }
           })
           .catch((error) => {
@@ -90,7 +92,8 @@ const VisualizarProjeto = () => {
           });
       }
     }
-  }, [selectedUser, projeto, dispatch]);
+
+  }, [selectedUser,listaDias.length, projeto, dispatch]);
 
   useEffect(() => {
     dispatch(getTipoTrabalho()).then((res) => {
@@ -109,7 +112,7 @@ const VisualizarProjeto = () => {
 
     dispatch(listaUtilizadores());
 
-  }, [selectedUser, dispatch]);
+  }, [selectedUser,listaDias, dispatch]);
 
 
 
@@ -117,13 +120,13 @@ const VisualizarProjeto = () => {
   const handleChangeCalendario = useCallback((dia, mes, ano) => {
     const [selectedDia, selectedMes, selectedAno] = [dia, mes, ano];
     setSelectedDay({ dia: selectedDia, mes: selectedMes, ano: selectedAno });
-  }, []);
+  }, [selectedUser, listaDias]);
 
 
   const handleChangeUtilizador = useCallback((e) => {
     const { value } = e.target;
     setSelectedUser(value);
-  }, [selectedUser]);
+  }, [selectedUser, listaDias, dispatch]);
 
 
 
@@ -134,7 +137,7 @@ const VisualizarProjeto = () => {
       if (listaDias && listaDias.length > 0) {
         let totalHours = 0;
 
-
+        console.log(selectedDay)
         for (let i = 0; i < listaDias.length; i++) {
           const dia = listaDias[i];
           const data = new Date(dia.Data);
@@ -148,8 +151,16 @@ const VisualizarProjeto = () => {
             dataSelected = new Date(year, month, diaSelected);
             dataSelected.setHours(data.getHours());
             condicao = dia.tipoDeTrabalhoHoras && dataSelected.getTime() === data.getTime();
-          } else {
+      
+          } else if(selectedDay && selectedDay.dia === 0){
+            const month = selectedDay.mes;
+            const year = selectedDay.ano;
+            dataSelected = new Date(year, month);
+            dataSelected.setHours(data.getHours());
+            condicao = dia.tipoDeTrabalhoHoras && (dataSelected.getMonth() === data.getMonth() && dataSelected.getFullYear() === data.getFullYear());
+          }else {
             condicao = dia.tipoDeTrabalhoHoras;
+
           }
 
           if (condicao) {
@@ -166,11 +177,13 @@ const VisualizarProjeto = () => {
                   });
 
                 if (array !== null) {
+              
                   for (let h = 0; h < array.length; h++) {
                     const horas = Number(array[h]);
                     if (!filteredValues[h]) {
                       filteredValues[h] = "Outro";
                     }
+                 
                     totalHours += horas;
                     arrayTTH[filteredValues[h]] = (arrayTTH[filteredValues[h]] || 0) + horas;
                   }
@@ -187,11 +200,28 @@ const VisualizarProjeto = () => {
             NumeroHorasTipoTrabalho: arrayTTH,
           });
         } else {
+          console.log(selectedDay)
+          if(selectedDay){
+            if(selectedDay?.dia !== 0){
           setValues({
             ...values,
-            NumeroHorasTotal: selectedUser === "Todos" ? `Não existem horas inseridas no projeto neste dia ${selectedDay?.dia}/${selectedDay?.mes}/${selectedDay?.ano}` : `${selectedUser} não possui horas inseridas no projeto neste dia ${selectedDay?.dia}/${selectedDay?.mes}/${selectedDay?.ano}`,
+            NumeroHorasTotal: selectedUser === "Todos" ? `Não existem horas inseridas no projeto neste dia ${selectedDay?.dia}/${selectedDay?.mes + 1}/${selectedDay?.ano}` : `${selectedUser} não possui horas inseridas no projeto neste dia ${selectedDay?.dia}/${selectedDay?.mes + 1}/${selectedDay?.ano}`,
             NumeroHorasTipoTrabalho: ""
           });
+        }else {
+          setValues({
+            ...values,
+            NumeroHorasTotal: selectedUser === "Todos" ? `Não existem horas inseridas no projeto neste mes ${selectedDay?.mes + 1}/${selectedDay?.ano}` : `${selectedUser} não possui horas inseridas no projeto neste mes ${selectedDay?.mes + 1}/${selectedDay?.ano}`,
+            NumeroHorasTipoTrabalho: ""
+          });
+        }
+        }else{
+          setValues({
+            ...values,
+            NumeroHorasTotal: selectedUser === "Todos" ? `Não existem horas inseridas no projeto` : `${selectedUser} não possui horas inseridas no projeto!`,
+            NumeroHorasTipoTrabalho: ""
+          });
+        }
         }
       } else {
         setValues({
@@ -202,7 +232,7 @@ const VisualizarProjeto = () => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedDay, listaDias]);
+  }, [selectedDay, selectedUser, listaDias, dispatch, setValues]);
 
 
   function feriadosPortugal(date) {
@@ -424,7 +454,7 @@ const VisualizarProjeto = () => {
                       list={formattedListUtilizadores}
                       handleChange={handleChangeUtilizador}
                       multiple={false}
-                      todos={true}
+                      todos={8}
                     />
                   </div>
                 ) : (
@@ -443,7 +473,7 @@ const VisualizarProjeto = () => {
                       list={[user?.user]}
                       handleChange={handleChangeUtilizador}
                       multiple={false}
-                      todos={true}
+                      todos={8}
                     />
                   </div>
                 )
@@ -508,7 +538,7 @@ const VisualizarProjeto = () => {
                     <Calendar
                       handleChange={handleChangeCalendario}
                       feriados={getFeriados}
-                      vProjeto={listaDias}
+                      vProjeto={updatedListaDias}
                       inicio={values?.DataInicio}
                       objetivo={values?.DataObjetivo}
                       fim={values?.DataFim}
@@ -553,10 +583,10 @@ const VisualizarProjeto = () => {
                 </div>
                 <div className="row g-5">
                   {selectedDay && selectedDay?.dia !== 0 &&
-                    <h5>{selectedDay?.dia}/{selectedDay?.mes}/{selectedDay?.ano}</h5>}
+                    <h5>{selectedDay?.dia}/{selectedDay?.mes + 1}/{selectedDay?.ano}</h5>}
                   <div className="col-6">
-                    <h5>Numero total Horas</h5>
-                  </div>
+                  <h5>{selectedDay ? selectedDay?.dia === 0 ? `Numero total Horas ${selectedDay?.mes +1}/${selectedDay?.ano}` : `Numero total Horas ${selectedDay?.dia}/${selectedDay?.mes + 1}/${selectedDay?.ano}`  : `Numero Total Horas`}</h5>
+                 </div>
                   <div className="col-6">
                     <p>{values.NumeroHorasTotal}</p>
                   </div>

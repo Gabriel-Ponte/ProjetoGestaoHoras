@@ -22,7 +22,7 @@ const NavLinksModalBox = ({ handleExport,handleClose, state}) => {
         setOpen(false);
         let tipo = 0;
 
-        if (selectedUser === "Engenharia de Processos" || selectedUser === "Laboratorio" || selectedUser === "Outro" || selectedUser === "Administradores" || selectedUser === "Todos") {
+        if (selectedUser === "Engenharia de Processos" || selectedUser === "Laboratorio" || selectedUser === "Outro" || selectedUser === "Administradores" || selectedUser === "Todos" || selectedUser === "Projetos") {
     
             if (selectedUser === "Engenharia de Processos") {
                 tipo = 5;
@@ -34,6 +34,8 @@ const NavLinksModalBox = ({ handleExport,handleClose, state}) => {
                 tipo = 7;
             } else if (selectedUser === "Todos") {
                 tipo = 2;
+            } else if (selectedUser === "Projetos") {
+                tipo = 9;
             }
         }
         handleExport(tipo)
@@ -47,6 +49,7 @@ const NavLinksModalBox = ({ handleExport,handleClose, state}) => {
 
     const handleChangeUtilizador = ((e) => {
         const { value } = e.target;
+
         setChange(!change);
 
         setSelectedUser(value);
@@ -98,7 +101,7 @@ const styleBox = {
                             name="Piloto"
                             labelText="Grupo:"
                             value={selectedUser}
-                            list={[]}
+                            list={[{ nome: "Projetos", value: "Projetos" }]}
                             handleChange={handleChangeUtilizador}
                             multiple={false}
                             todos={user?.user?.tipo}

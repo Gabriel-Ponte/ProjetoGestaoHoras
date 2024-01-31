@@ -3,7 +3,7 @@ import { FormRow } from '../components';
 import { AiOutlineClose } from 'react-icons/ai';
 import LoadingSmaller from './LoadingSmaller';
 
-const AddHorasCopiar = memo(({ verificaCopiarHoras, copiar, DataCopy, verificaDiaLast, handleDia, copyExists }) => {
+const AddHorasCopiar = memo(({ verificaCopiarHoras, copiar, DataCopy, verificaDiaLast, handleDia, copyExists, buttonClicked }) => {
   const [loading, setLoading] = useState(false);
   const [copiarValue ,setCopiarValue] = useState(false);
 
@@ -50,7 +50,7 @@ const AddHorasCopiar = memo(({ verificaCopiarHoras, copiar, DataCopy, verificaDi
         <>
           {!verificaCopiarHoras ? (
             <div className='d-flex flex-column justify-content-center align-items-center h-100'>
-              <button type='button' className='btn btn-light' onClick={() => copiarHoras(true)}>
+              <button type='button' disabled={buttonClicked} className='btn btn-light' onClick={() => copiarHoras(true)}>
                 Copiar Horas
               </button>
             </div>
@@ -77,7 +77,7 @@ const AddHorasCopiar = memo(({ verificaCopiarHoras, copiar, DataCopy, verificaDi
                   <AiOutlineClose />
                 </button>
                 <div className="col-12">
-                  <button onClick={handleDia} className="btn btn-primary">
+                  <button onClick={handleDia}  disabled={buttonClicked} className="btn btn-primary">
                     Copiar
                   </button>
                 </div>

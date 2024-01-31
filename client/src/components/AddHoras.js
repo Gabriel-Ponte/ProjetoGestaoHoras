@@ -28,7 +28,7 @@ const ListaProjetos = () => {
   const [values, setValues] = useState(initialState);
 
 
-
+  const [buttonClicked, setButtonClicked] = useState(false);
 
 
   const { projetos, isLoading, } = useSelector((store) => store.allProjetos);
@@ -528,8 +528,9 @@ const ListaProjetos = () => {
 
 
   const handleDia = async (e) => {
+    setButtonClicked(true);
     e.preventDefault();
-
+    
     const date = new Date(values.Data)
 
     if (date.getDay() === 5) {
@@ -860,6 +861,7 @@ const ListaProjetos = () => {
                   copyExists={copyExists}
                   DataCopy={DataCopy}
                   verificaDiaLast={verificaDiaLast}
+                  buttonClicked={buttonClicked}
                   handleDia={handleDia}
                 />
 
@@ -920,7 +922,7 @@ const ListaProjetos = () => {
               <div className="card-body">
                 <button
                   type="submit"
-                  disabled={isLoading}
+                  disabled={isLoading || buttonClicked}
                   onClick={(e) => { handleDia(e) }}
                   className="w-100 btn btn-lg btn-primary"
                 >

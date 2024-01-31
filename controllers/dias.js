@@ -5,7 +5,7 @@ const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, NotFoundError } = require("../errors");
 const { exportExcell } = require("../exportExcellHours");
 
-
+const { exportExcellHoursProjetos } = require("../exportExcellHoursProjetos");
 
 const getAllDias = async (req, res) => {
   try {
@@ -303,6 +303,7 @@ const updateDia = async (req, res) => {
 };
   
 const exportDias = async(req, res) =>{
+  try{
   const { userID: userID , userTipo: userTipo} = req.body;
 
   const user = await User.findOne({
@@ -324,18 +325,19 @@ const exportDias = async(req, res) =>{
     }else{
       tipo =user.tipo;
     }
-
-    const exp = await exportExcell(tipo);
-
+    let exp = false
+    if(tipo < 9){
+        exp = await exportExcell(tipo);
+      }else{
+        exp = await exportExcellHoursProjetos()
+      }
 
     if(exp){
       let filePath;
       if(Number(tipo) === 2){
         filePath = process.env.EXTRACTION_FOLDER;
-
     } else if(Number(tipo) === 5){
       filePath = process.env.EXTRACTION_FOLDER5;
-
     } else if(Number(tipo) === 6){
       filePath = process.env.EXTRACTION_FOLDER6;
 
@@ -345,11 +347,18 @@ const exportDias = async(req, res) =>{
     }else if(Number(tipo) === 8){
       filePath = process.env.EXTRACTION_FOLDER8;
     }
+    else if(Number(tipo) === 9){
+      filePath = process.env.EXTRACTION_FOLDER_PROJETOS;
+    }
     //const filename = 'SeguimentoHoras.xlsx'
     //res.download(process.env.EXTRACTION_FOLDER, filename);
     res.status(StatusCodes.OK).json(`Ficheiro exportado para: ${filePath}`);
     }else{
       throw new BadRequestError(`Ocorreu um erro ao exportar o ficheiro. Verifique se este se encontra aberto!`);
+  }
+  }catch(error){
+    //console.log(error)
+    throw new BadRequestError(`Ocorreu um erro ao exportar o ficheiro. Verifique se este se encontra aberto!`);
   }
 }
 

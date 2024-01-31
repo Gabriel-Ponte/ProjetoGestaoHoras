@@ -68,7 +68,7 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
   const handleNewOptionChange = (event) => {
     setNewOption(event.target.value);
   };
-
+  
   if (!updatedList.length && list.length) {
     setUpdatedList(list);
   }
@@ -86,6 +86,7 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
         }
       </option>
     ));
+
 
     if(multiple){
     selectOptions = [
@@ -145,6 +146,17 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
       selectOptions = [
         <option key="Outro" value="Outro">
           Outro
+        </option>,
+          <option key="separator" disabled>
+          ---------------
+        </option>,
+        ...listaUtilizador,
+      ];
+    } 
+     else if(todos && todos === 8){
+      selectOptions = [
+        <option key="default" value="Todos">
+          Todos
         </option>,
           <option key="separator" disabled>
           ---------------
