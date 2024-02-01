@@ -160,6 +160,7 @@ const exportExcellHoursProjetos = async () => {
     const dataTT = await collectionTT.find({}).toArray();
     const dataTTH = await collectionTTH.find({}).toArray();
 
+      // SORT NAO REALIZADOS PARA O FIM ???
 
     data.sort((a, b) => { 
       // First, sort by DataInicio
@@ -172,19 +173,20 @@ const exportExcellHoursProjetos = async () => {
       return 0;
     });
 
-      data.sort((a, b) => { 
-
-      // If DataInicio is equal, sort by Finalizado
-      if (a.Finalizado && !b.Finalizado) {
-        return 1;
-      } else if (!a.Finalizado && b.Finalizado) {
-        return -1;
-      }
-        return 0;
-      });
-
-      
+    data.sort((a, b) => {
+      // Sort by Finalizado
+      const finalizadoComparison = a.Finalizado - b.Finalizado;
   
+      if (finalizadoComparison !== 0) {
+          return finalizadoComparison;
+      }
+  
+      // If Finalizado is equal, sort by Resultado
+      return 0
+  });
+
+
+    
     dataD.forEach((item, index) => {
       dataU.filter((user) => {
         if (user._id == item.Utilizador) {

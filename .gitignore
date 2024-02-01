@@ -4,3 +4,4 @@ data.json
 ~$Seguimento_ações_2023.xlsx
 Seguimento.xlsx
 mongoDump.js
+client/src/utils/axios.js
