@@ -329,7 +329,7 @@ const deleteUser = async (req, res) => {
   const {
     params: { id: utilizadorId },
   } = req;
-  const utilizador = await User.findByIdAndRemove({
+  const utilizador = await User.findOneAndDelete({
     _id: utilizadorId,
   });
   if (!utilizador) {

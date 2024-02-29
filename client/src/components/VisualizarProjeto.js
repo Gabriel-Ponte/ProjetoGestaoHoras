@@ -128,8 +128,6 @@ const VisualizarProjeto = () => {
     setSelectedUser(value);
   }, [selectedUser, listaDias, dispatch]);
 
-
-
   useEffect(() => {
     if (values && listaTipoTrabalho) {
       const arrayTT = values.TipoTrabalho ? values.TipoTrabalho.split(',') : [];
@@ -137,7 +135,7 @@ const VisualizarProjeto = () => {
       if (listaDias && listaDias.length > 0) {
         let totalHours = 0;
 
-        console.log(selectedDay)
+
         for (let i = 0; i < listaDias.length; i++) {
           const dia = listaDias[i];
           const data = new Date(dia.Data);
@@ -246,16 +244,20 @@ const VisualizarProjeto = () => {
         { name: "Dia do Trabalhador", date: new Date(i, 4, 1) },
         { name: "Dia de Portugal", date: new Date(i, 5, 10) },
         { name: "Assunção de Nossa Senhora", date: new Date(i, 7, 15) },
+        { name: "Ferias Coletivas", date: new Date(2024, 7, 16) },
         { name: "Implantação da República", date: new Date(i, 9, 5) },
         { name: "Dia de Todos os Santos", date: new Date(i, 10, 1) },
         { name: "Restauração da Independência", date: new Date(i, 11, 1) },
         { name: "Dia da Imaculada Conceição", date: new Date(i, 11, 8) },
+        { name: "Feriado Municipal", date: new Date(i, 2, 12) },
+        { name: "Ferias Coletivas", date: new Date(i, 11, 24) },
         { name: "Natal", date: new Date(i, 11, 25) },
-        { name: "NatalGiven", date: new Date(i, 11, 26) },
+        { name: "Ferias Coletivas", date: new Date(i, 11, 26) },
+        { name: "Carnaval", date: calculateEaster(i, "Carnaval") },
         { name: "Sexta-feira Santa", date: calculateEaster(i, "SextaFeiraSanta") },
         { name: "Páscoa", date: calculateEaster(i, "DomingoPascoa") },
         { name: "Segunda-feira de Páscoa", date: calculateEaster(i, "SegundaPascoa") },
-        { name: "Corpo de Deus", date: calculateCorpusChristi(i) }
+        { name: "Corpo de Deus", date: calculateCorpusChristi(i) },
       );
     }
 
@@ -292,6 +294,8 @@ const VisualizarProjeto = () => {
       return new Date(year, month, day);
     } else if (type === "SegundaPascoa") {
       return new Date(year, month, day + 1);
+    } else if (type === "Carnaval") {
+      return new Date(year, month, day - 47);
     }
   }
 

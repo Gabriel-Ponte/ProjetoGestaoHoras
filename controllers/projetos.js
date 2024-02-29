@@ -155,7 +155,7 @@ const deleteProjeto = async (req, res) => {
     params: { id: projetoId },
   } = req;
 
-  const projeto = await Projeto.findByIdAndRemove({
+  const projeto = await Projeto.findOneAndDelete({
     _id: projetoId,
   });
   if (!projeto) {

@@ -54,7 +54,7 @@ const getAllTiposTrabalho = async (req, res) => {
       params: { id: TipoTrabalhoId },
     } = req;
   
-    const tipoTrabalho = await TipoTrabalho.findByIdAndRemove({
+    const tipoTrabalho = await TipoTrabalho.findOneAndDelete({
       _id: TipoTrabalhoId,
     });
     if (!tipoTrabalho) {

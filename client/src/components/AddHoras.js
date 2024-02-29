@@ -558,8 +558,6 @@ const ListaProjetos = () => {
     }, 1000);
   };
 
-
-
   const handleHorasChange = (projectId, tipoTrabalho, projectName, e) => {
 
     let newHorasT = horasT;

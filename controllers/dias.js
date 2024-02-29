@@ -278,6 +278,8 @@ const updateDia = async (req, res) => {
 
   const deleteDia = async (req, res) => {
     const { id } = req.params;
+
+
     try {
     const dia = await Dias.findById(id);
   
@@ -288,17 +290,18 @@ const updateDia = async (req, res) => {
     const tipoDeTrabalhoHorasIds = dia.tipoDeTrabalhoHoras.map(item => item._id);
 
     const promises = tipoDeTrabalhoHorasIds.map(async tipoDeTrabalhoHoraId => {
-      await TipoTrabalhoHoras.findByIdAndRemove(tipoDeTrabalhoHoraId);
+      await TipoTrabalhoHoras.findOneAndDelete({ _id: tipoDeTrabalhoHoraId });
     });
-  
+    
     await Promise.all(promises);
-
-    await Dias.findByIdAndRemove(id);
-  
+    
+    await Dias.findOneAndDelete({ _id: id });
+    
     res.status(StatusCodes.OK).send();
   }catch (error) {
-    res.status(StatusCodes.KO).send();
     console.error(error);
+    res.status(StatusCodes.KO).send();
+
   }
 };
   

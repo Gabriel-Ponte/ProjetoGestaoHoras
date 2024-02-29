@@ -15,6 +15,7 @@ export const getAllDiasThunk = async (thunkAPI) => {
 export const getAllDiasProjetoThunk = async (projetoId, userLogin, thunkAPI) => {
   try {
     const resp = await customFetch.get(`/dia/dias/${projetoId}`);
+ 
     return resp.data;
   } catch (error) {
     return checkForUnauthorizedResponse(error, thunkAPI);
@@ -23,7 +24,6 @@ export const getAllDiasProjetoThunk = async (projetoId, userLogin, thunkAPI) => 
 
 export const getAllDiasUtilizadorThunk = async (utilizadorId, thunkAPI) => {
   try {
-
     const resp = await customFetch.get(`/dia/diasUtilizador/${utilizadorId}`);
     return resp.data;
   } catch (error) {

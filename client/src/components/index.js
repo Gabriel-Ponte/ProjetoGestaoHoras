@@ -36,6 +36,8 @@ import AddHorasCopiar from './AddHorasCopiar';
 import useFeriadosPortugal from './FeriadosPortugal';
 import ProjetoListaFolder from './ProjetoListaFolder';
 import NavLinksModalBox from './NavLinksModalBox';
+
+import VisualizarHorasProjeto from './VisualizarHorasProjeto'
 export {
   ListaProjetos,
   BigSidebar,
@@ -74,4 +76,5 @@ export {
   GerirUtilizadores,
   ForgetPassword,
   ForgetPasswordChange,
+  VisualizarHorasProjeto,
 };

@@ -169,6 +169,25 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
     );
   }
   }
+  } else if(name === 'listaProjetos'){
+    // Add checkbox inputs for each option
+    const lista = updatedList.map((itemValue, index) => (
+      <option key={index} value={itemValue._id}>
+        {
+         itemValue._id_P + ' - ' + itemValue.Nome
+        }
+      </option>
+    ));
+    selectOptions = [
+      <option key="Todos" value="Todos">
+        Todos
+      </option>,
+        <option key="separator" disabled>
+        ---------------
+      </option>,
+      ...lista,
+    ];
+
   } else {
     // Add checkbox inputs for each option
     const lista = updatedList.map((itemValue, index) => (
@@ -238,7 +257,7 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
             </select>
           )}
 
-          {value && (
+          {value && name !== 'listaProjetos' && (
             <div className={className ? className : 'row mb-3 text-center'}>
               <div className={classNameLabel ? classNameLabel : 'form-label'}>
                 <p>
@@ -253,7 +272,7 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
               </div>
           )}
 
-          {name !== 'Piloto' && (
+          {name !== 'Piloto' && name !== 'listaProjetos' && (
             <div className={className ? className : 'row mb-3 text-center'}>
               <div className={classNameLabel ? classNameLabel : 'form-row'}>
                 <label htmlFor={`${name}-new-option`} className="form-label">
