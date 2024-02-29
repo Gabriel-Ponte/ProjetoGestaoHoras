@@ -43,7 +43,6 @@ const Wrapper = styled.section`
     justify-content: center;
     overflow-y: auto;
     overflow-x: hidden;
-    scrollbar-color: rebeccapurple green;
     scrollbar-width: thin;
     height:60vh;
     margin: auto;
@@ -54,7 +53,6 @@ const Wrapper = styled.section`
   .right {
     overflow-y: auto;
     overflow-x: hidden;
-    scrollbar-color: rebeccapurple green;
     scrollbar-width: thin;
     height:55vh;
     width: 50%;
