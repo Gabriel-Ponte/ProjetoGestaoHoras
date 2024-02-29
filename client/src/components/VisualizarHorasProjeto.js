@@ -171,17 +171,17 @@ const VisualizarHorasProjeto = () => {
                 const tipoDeTrabalhoHora = dia.tipoDeTrabalhoHoras[j];
                 if (tipoDeTrabalhoHora.projeto === projeto._id) {
                   const array = tipoDeTrabalhoHora.horas ? tipoDeTrabalhoHora.horas.split(',') : [];
-                  console.log(array)
+                  //console.log(array)
                   let values = tipoDeTrabalhoHora.tipoTrabalho ? tipoDeTrabalhoHora.tipoTrabalho.split(',') : [];
                   let horas = 0;
                   const filteredValues = values
                     .filter(value => listaTipoTrabalho.some(item => item._id === value))
                     .map(value => {
                       const matchedItem = listaTipoTrabalho.find(item => item._id === value);
-                      console.log(value)
+                      //console.log(value)
                       return matchedItem ? matchedItem.TipoTrabalho : null;
                     });
-                    console.log(filteredValues)
+                    //console.log(filteredValues)
                   if (array !== null) {
                 
                     for (let h = 0; h < array.length; h++) {

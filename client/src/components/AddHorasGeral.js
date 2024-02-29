@@ -64,7 +64,6 @@ const ListaProjetos = () => {
     dispatch(handleChange({ name: 'DataObjetivoC', value: "true" }));
     dispatch(getAllProjetos1(""))
 
-    console.log("GERAL");
 
     dispatch(getTipoTrabalho()).then((res) => {
 
