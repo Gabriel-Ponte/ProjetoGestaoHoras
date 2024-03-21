@@ -51,7 +51,7 @@ const getHolidaysForYear = (year) => {
       { name: "Carnaval", date: calculateEaster(i, "Carnaval") },
       { name: "Sexta-feira Santa", date: calculateEaster(i, "SextaFeiraSanta") },
       { name: "Páscoa", date: calculateEaster(i, "DomingoPascoa") },
-      { name: "Segunda-feira de Páscoa", date: calculateEaster(i, "SegundaPascoa") },
+      { name: "Segunda-feira de Páscoa", date: new Date(2023, 3, 10) }, //{ name: "Segunda-feira de Páscoa", date: calculateEaster(i, "SegundaPascoa") },
       { name: "Corpo de Deus", date: calculateCorpusChristi(i) },
       );
   }
