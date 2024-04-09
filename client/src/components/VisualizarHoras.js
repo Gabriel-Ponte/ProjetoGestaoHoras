@@ -39,7 +39,7 @@ const ListaHoras = () => {
 
   const formattedListUtilizadores = Array.isArray(utilizadores) ? utilizadores : [];
   const today = new Date();
-
+  
 
 
 
@@ -468,12 +468,23 @@ const ListaHoras = () => {
     return timeString;
   }
 
+  function parseDurationToHours(duration) {
+    try{
+      const [hours, minutes] = duration.split(':').map(parseFloat);
+      return hours + (minutes / 60);
+    }catch{
+      return duration;
+    }
+  }
+
   // //Change to refresh
    if (loading   || !dias || !listaTipoTrabalho) {
      return <Loading />;
    }
 
-  let checkFound = false
+  let checkFound = false;
+  let count = 0;
+
 
   return (
     <Wrapper>
@@ -529,7 +540,7 @@ const ListaHoras = () => {
                 <p>Horas Realizadas: {convertToMinutes(horasRealizadas)}</p>
               </div>
               <div className='col-md-6 text-center'>
-                {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" &&  selectedUser !== "Outro" ) && (parseFloat(horasExtra) > 0) && (
+                {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" &&  selectedUser !== "Outro" ) && (parseDurationToHours(horasExtra) > 0) && (
                   <p>Horas extra por dar: {horasExtra}</p>
                 )}
               </div>
@@ -734,7 +745,9 @@ const ListaHoras = () => {
                     const isSameDate = diaSelected === 0 || Number(diaSelected) === data.getDate();
 
                     if (isSameMonth && isSameDate) {
-                      return <Dia key={dia.Data} {...dia} horasPossiveis={possibleHours} listaTT={listaTipoTrabalho} />;
+                      console.log(count)
+                      count++;
+                      return <Dia key={dia.Data + selectedUser + count} {...dia} horasPossiveis={possibleHours} listaTT={listaTipoTrabalho} />;
                     }
 
                     return null;

@@ -222,6 +222,8 @@ const login = async (req, res) => {
     }
   }
 
+  var timestamp = user?._id?.getTimestamp();
+  
   // compare password
   const token = user.createJWT();
   res.status(StatusCodes.OK).json({
@@ -235,6 +237,7 @@ const login = async (req, res) => {
       nome: user.nome,
       tipo: user.tipo,
       estado: user.estado,
+      timestamp: timestamp,
       token,
     },
   });

@@ -118,13 +118,36 @@ const ListaProjetos = () => {
 
   useEffect(() => {
     if (constLoaded) {
+
+        const timestampString = user?.user?.timestamp;
+        let dateRegisterUTC = new Date()
+        if (timestampString) {
+          const timestamp = Date.parse(timestampString); 
+          if (!isNaN(timestamp)) {
+              const dateRegister = new Date(timestamp);
+              dateRegisterUTC = new Date(dateRegister.toUTCString());
+          } else {
+              console.error("Invalid timestamp string format.");
+          }
+      } else {
+          console.error("Timestamp string is missing or invalid.");
+      }
+
       dispatch(getDia(values.Data, user.user.id)).then((res) => {
         const lista = res.payload.dia
         setListaDias(lista);
 
         const projetoGeral = (filteredProjetos.filter(item => item.Nome === "Geral"));
         let countHours = 0;
-        const dayStart = new Date(Date.UTC(2023, 11, 1, 0, 0, 0));
+
+
+        let dayStart = new Date(Date.UTC(2023, 11, 1, 0, 0, 0));
+
+        if(dateRegisterUTC > dayStart){
+          dayStart = dateRegisterUTC;
+        }
+
+
 
         const startDay = dayStart.getDate();
         const startMonth = dayStart.getMonth();
@@ -214,6 +237,11 @@ const ListaProjetos = () => {
 
         let missingDate = null;
         let currentDate = new Date(Date.UTC(2023, 7, 1, 0, 0, 0));
+
+        if(dateRegisterUTC > currentDate){
+          currentDate = dateRegisterUTC;
+        }
+
         let targetDate = null;
         const date = new Date().toISOString().slice(0, 10);
         
@@ -234,12 +262,10 @@ const ListaProjetos = () => {
           currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 0, 0, 0, 0);
 
           while (currentDate <= targetDate) {
-
             if (feriadosPortugal(currentDate)) {
               while(feriadosPortugal(currentDate)) {
                 currentDate.setDate(currentDate.getDate() + 1);
               }
-
               const itemDay = targetDate.getDate();
               const itemMonth = targetDate.getMonth();
               const itemYear = targetDate.getFullYear();
@@ -251,7 +277,7 @@ const ListaProjetos = () => {
               if (
                 currentYear > itemYear ||
                 currentMonth > itemMonth ||
-                currentDay > itemDay
+                (currentMonth == itemMonth  && currentDay > itemDay)
               ) {
                 break;
               }
@@ -270,34 +296,29 @@ const ListaProjetos = () => {
               currentMonth === itemMonth &&
               currentDay === itemDay
             ) {
-
               if (
                 currentYear === todayYear &&
                 currentMonth === todayMonth &&
                 currentDay === todayDay
               ) {
-
                 missingDate = new Date(currentDate.getTime());
                 break;
               }
-
               currentDate.setDate(currentDate.getDate() + 1);
               break;
             }
 
             if (currentDate.getDay() !== 0 && currentDate.getDay() !== 6) {
-
               missingDate = new Date(currentDate.getTime());
               break;
             }
-
             currentDate.setDate(currentDate.getDate() + 1);
           }
-
           if (missingDate) {
             break;
           }
-        }
+        } 
+
 
         if (firstDateWithLessThan8Hours === null || missingDate.getTime() < new Date(firstDateWithLessThan8Hours).getTime()) {
           setValues({

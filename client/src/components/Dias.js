@@ -7,15 +7,15 @@ import { deleteDia } from '../features/dias/diasSlice';
 import { toast } from 'react-toastify';
 
 const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPossiveis, listaTT }) => {
-
+  console.log(Utilizador)
   const dispatch = useDispatch();
   const [projeto, setProjeto] = useState([]);
   // const [horasTotal, sethorasTotal] = useState([]);
   // const navigate = useNavigate();
   // let horasT = 0;
 
-
   useEffect(() => {
+    try{
     const projetoList = tipoDeTrabalhoHoras.map(({ tipoTrabalho, horas, projeto }) => {
       // horasT += Number(horas);
       const horasArray = horas.split(',') || [];
@@ -34,12 +34,13 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPos
   
       tipoTrabalho = tipoTrabalhoArray.join(",");
       horas = horasArray.join(",");
-  
+
       return dispatch(getProjetoList(projeto)).then((res) => ({
         tipoTrabalho,
         horas,
-        projeto: res.payload.projeto,
+        projeto: res?.payload?.projeto,
       }));
+
     }) // Filter out any null values
   
     // sethorasTotal(horasT);
@@ -48,6 +49,9 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPos
       const filteredProjetoArray = projetoArray.filter((projeto) => projeto !== null);
       setProjeto(filteredProjetoArray);
     });
+  }catch{
+    console.error("Error Dias")
+  }
   }, [tipoDeTrabalhoHoras, dispatch]);
 
   
@@ -105,10 +109,9 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPos
     }
     return timeString;
   }
-
   return (
     <Wrapper>
-      <div key={_id}>
+      <div key={_id + Utilizador}>
         <div className='dias'>
           <div className="list-group-item" >
             <div className="row text-center">
@@ -131,10 +134,10 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPos
               </div>
               <div className="col-md-9 themed-grid-col">
                 {projeto.map(({ tipoTrabalho, horas, projeto }) => (
-                  <div className="row text-center" key={projeto._id}>
+                  <div className="row text-center" key={projeto?._id}>
                     <hr className='hrP'></hr>
                     <div className="col-md-6 themed-grid-col projeto">
-                      <h4>{projeto.Nome}</h4>
+                      <h4>{projeto?.Nome}</h4>
                     </div>
                     <div className="col-md-6 themed-grid-col">
                       <div className="row text-center">
@@ -145,7 +148,7 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPos
                           if(listaTT){
                           for (let i = 0; i < listaTT.length; i++) {
                             
-                            if (trabalho === listaTT[i]._id) {
+                            if (trabalho === listaTT[i]?._id) {
                               counter++;
                               return <p key={index}>{listaTT[i].TipoTrabalho.trim()}</p>;
                             }
