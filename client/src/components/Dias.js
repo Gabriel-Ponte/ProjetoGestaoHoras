@@ -7,7 +7,6 @@ import { deleteDia } from '../features/dias/diasSlice';
 import { toast } from 'react-toastify';
 
 const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPossiveis, listaTT }) => {
-  console.log(Utilizador)
   const dispatch = useDispatch();
   const [projeto, setProjeto] = useState([]);
   // const [horasTotal, sethorasTotal] = useState([]);

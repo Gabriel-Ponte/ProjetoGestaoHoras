@@ -151,6 +151,7 @@ const ListaHoras = () => {
     const { value } = e.target;
     setChange(!change);
     setSelectedUser(value);
+    setSelectedDay({ dia: 0, mes: today.getMonth(), ano: today.getFullYear() });
   });
 
   useEffect(() => {
@@ -401,6 +402,7 @@ const ListaHoras = () => {
         }
       }
     }
+
 
     setPercentagemHoras((horasRealizadasCount / possibleHoursCount) * 100);
 
@@ -745,7 +747,6 @@ const ListaHoras = () => {
                     const isSameDate = diaSelected === 0 || Number(diaSelected) === data.getDate();
 
                     if (isSameMonth && isSameDate) {
-                      console.log(count)
                       count++;
                       return <Dia key={dia.Data + selectedUser + count} {...dia} horasPossiveis={possibleHours} listaTT={listaTipoTrabalho} />;
                     }
