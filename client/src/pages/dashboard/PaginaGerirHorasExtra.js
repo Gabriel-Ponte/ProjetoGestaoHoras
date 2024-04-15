@@ -1,19 +1,22 @@
+import { toast } from 'react-toastify';
+import { GerirHorasExtra } from '../../components';
 import { useNavigate } from 'react-router-dom';
-import { EditarProjeto } from '../../components';
 import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
-import { toast } from 'react-toastify';
 
 
-const PaginaEditarProjeto = () => {
+const PaginaGerirHorasExtra = () => {
   const { user } = useSelector((store) => store.utilizador);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (user) {
-      if (user.user.tipo === 1 || user.user.tipo === 2 || user.user.tipo === 5 || user.user.tipo === 7) {
-
-      } else {
+      if (user.user.tipo === 2 || user.user.tipo === 5 || user.user.tipo === 6 || user.user.tipo === 7) {
+        // Render the component
+      } else if( user.user.tipo === 1){
+        toast.error("Sem permissões para aceder a esta página!");
+        navigate('/PaginaPrincipal');
+      }else {
         toast.error("Sem permissões para aceder a esta página!");
         navigate('/PaginaAdicionarHoras');
       }
@@ -24,11 +27,10 @@ const PaginaEditarProjeto = () => {
     }
   }, [user, navigate]);
 
-
   return (
     <>
-      {user && (user.user.tipo === 1 || user.user.tipo === 2 || user.user.tipo === 5 || user.user.tipo === 7) && <EditarProjeto />}
+      {user && (user.user.tipo === 2 || user.user.tipo === 5 || user.user.tipo === 6 || user.user.tipo === 7) && <GerirHorasExtra />}
     </>
   );
 };
-export default PaginaEditarProjeto;
+export default PaginaGerirHorasExtra;

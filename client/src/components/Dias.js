@@ -6,12 +6,13 @@ import { AiFillDelete } from 'react-icons/ai';
 import { deleteDia } from '../features/dias/diasSlice';
 import { toast } from 'react-toastify';
 
-const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPossiveis, listaTT }) => {
+const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPossiveis, listaTT, accepted }) => {
   const dispatch = useDispatch();
   const [projeto, setProjeto] = useState([]);
   // const [horasTotal, sethorasTotal] = useState([]);
   // const navigate = useNavigate();
   // let horasT = 0;
+
 
   useEffect(() => {
     try{
@@ -108,6 +109,7 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPos
     }
     return timeString;
   }
+
   return (
     <Wrapper>
       <div key={_id + Utilizador}>
@@ -117,7 +119,9 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPos
               <div className="col-md-3 themed-grid-col">
                 <h3>{Data ? new Date(Data).toLocaleDateString('en-CA') : ''}</h3>
               </div>
+              {accepted !== 2 && accepted !== 3 &&
               <div>
+
                 <button type='submit'
                   onClick={() => deleteDiaConfirm(_id , Data)}
                   className="btn">
@@ -125,6 +129,7 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPos
                 </button>
 
               </div>
+              }
             </div>
 
             <div className="row text-center">

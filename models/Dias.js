@@ -38,13 +38,17 @@ const DiasSchema = new mongoose.Schema(
         tipoDeTrabalhoHoras: {
             type: [TipoTrabalhoHorasSchema],
             required: true,
-          },
+        },
         Utilizador: {
             //type: mongoose.Types.ObjectId,
             //ref: "Utilizador",
             type: String,
             required: [true, "Por favor insira um utilizador"],
             default:"",
+        },
+        accepted: {
+          type: Number,
+          default: 0,
         },
     },
     { timestamps: true }

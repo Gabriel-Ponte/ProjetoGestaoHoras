@@ -11,7 +11,7 @@ const PaginaVisualizarHorasProjeto = () => {
   const navigate = useNavigate();
   useEffect(() => {
     if (user) {
-      if (user.user.tipo === 2 || user.user.tipo === 1 || user.user.tipo === 5) {
+      if (user.user.tipo === 2 || user.user.tipo === 1 || user.user.tipo === 5 || user.user.tipo === 7) {
 
       } else {
         toast.error("Sem permissões para aceder a esta página!");
@@ -27,7 +27,7 @@ const PaginaVisualizarHorasProjeto = () => {
 
   return (
     <>
-     {user && (user.user.tipo === 2 || user.user.tipo === 1 || user.user.tipo === 5) && <VisualizarHorasProjeto />}
+     {user && (user.user.tipo === 2 || user.user.tipo === 1 || user.user.tipo === 5 || user.user.tipo === 7) && <VisualizarHorasProjeto />}
     </>
   );
 };

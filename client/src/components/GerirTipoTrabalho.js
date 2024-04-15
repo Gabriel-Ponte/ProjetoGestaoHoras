@@ -35,7 +35,7 @@ const GerirTipoTrabalho = () => {
     dispatch(getTipoTrabalho()).then((res) => {
       const tipoTrabalhoArray = Array.isArray(res.payload.tipoTrabalho) ? res.payload.tipoTrabalho : [];
       setListaTipoTrabalho(tipoTrabalhoArray);
-      setInitialState(tipoTrabalhoArray)
+      setInitialState(tipoTrabalhoArray);
     });
   }, [callUseEffect, dispatch]);
 
@@ -207,7 +207,7 @@ const GerirTipoTrabalho = () => {
                   </button>
 
                 ) : (
-                  (t.tipo !== 5 && t.tipo !== 4) && (
+                  (t.tipo !== 5 && t.tipo !== 4 && t.tipo !== 6) && (
                     <button
                       type='submit'
                       onClick={() => deleteTT(t._id, t.TipoTrabalho)}

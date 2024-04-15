@@ -49,13 +49,13 @@ const AddUtilizador = () => {
 
     let listTipoUser =  []
     if(user.tipo === 2){
-      listTipoUser =  [["Engenharia de Processos"], ["Laboratorio"] ,["Outro"] , ["Administrador"], ["Administrador Engenharia"] , ["Administrador Laboratorio"]];
+      listTipoUser =  [["Engenharia de Processos"], ["Laboratorio"] ,["RH"] , ["Administrador"], ["Administrador Engenharia"] , ["Administrador Laboratorio"], ["Administrador RH"]];
     }else if (user.tipo === 5){
-      listTipoUser =  [["Engenharia de Processos"], ["Outro"] , ["Administrador Engenharia"]];
+      listTipoUser =  [["Engenharia de Processos"], ["RH"] , ["Administrador Engenharia"]];
     }else if (user.tipo === 6){
-      listTipoUser =  [["Laboratorio"] ,["Outro"], ["Administrador Laboratorio"]];
+      listTipoUser =  [["Laboratorio"] ,["RH"], ["Administrador Laboratorio"]];
     }else if (user.tipo === 7){
-      listTipoUser =  [["Outro"], ["Administrador Outro"]];
+      listTipoUser =  [["RH"], ["Administrador RH"]];
     }
 
     const handleChangeTipo = (e)=> {
@@ -69,7 +69,7 @@ const AddUtilizador = () => {
         e.target.value = 3;
         setValues({ ...values, [name]: 3 });
 
-      }else if(value === "Outro"){
+      }else if(value === "RH"){
         e.target.value = 4;
         setValues({ ...values, [name]: 4 });
       }else if(value === "Administrador Engenharia"){
@@ -79,6 +79,9 @@ const AddUtilizador = () => {
       else if(value === "Administrador Laboratorio"){
         e.target.value = 6;
         setValues({ ...values, [name]: 6 });
+      }  else if(value === "Administrador RH"){
+        e.target.value = 7;
+        setValues({ ...values, [name]: 7 });
       }else if(value === "Administrador"){
         e.target.value = 2;
         setValues({ ...values, [name]: 2 });

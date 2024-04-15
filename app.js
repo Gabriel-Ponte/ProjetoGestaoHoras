@@ -24,6 +24,7 @@ const utilizadorRouter = require("./routes/utilizador");
 const projetosRouter = require("./routes/projetos");
 const diaRouter = require("./routes/dia");
 const tipoTrabalhoRouter = require("./routes/tipoTrabalho");
+const pagamentoRouter = require("./routes/pagamento");
 
 // error handler
 const notFoundMiddleware = require("./middleware/not-found");
@@ -49,6 +50,7 @@ app.use("/utilizador",authenticateUser, utilizadorRouter);
 app.use("/projetos",authenticateUser, projetosRouter);
 app.use("/dia", authenticateUser, diaRouter);
 app.use("/tipoTrabalho", authenticateUser, tipoTrabalhoRouter);
+app.use("/pagamento", authenticateUser, pagamentoRouter);
 
 app.use(function(req, res, next) { 
   res.header("Access-Control-Allow-Origin", "*"); 

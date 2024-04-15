@@ -20,6 +20,7 @@ const initialState = {
   Utilizador: '',
   tipoDeTrabalhoHoras: [],
   loaded: false,
+  accepted: 0,
 };
 
 
@@ -55,6 +56,7 @@ const ListaProjetos = () => {
   const [ListaTrabalhoGeralOther, setListaTrabalhoGeralOther] = useState([]);
   const [horasExtra, setHorasExtra] = useState(null);
   const [horasExtraAfter, setHorasExtraAfter] = useState(null);
+  const [activeCompensacao, setActiveCompensacao] = useState(false);
 
   const [compensacaoID, setcompensacaoID] = useState();
   const [addHorasExtraID, setAddHorasExtraID] = useState();
@@ -514,6 +516,7 @@ const ListaProjetos = () => {
           Utilizador: user.user.login,
           NumeroHoras: listaDias[i].NumeroHoras,
           tipoDeTrabalhoHoras: tipoDeTrabalhoHoras,
+          accepted: listaDias[i].accepted,
         });
         seTSortedProjetos(sSProjetos);
 
@@ -541,7 +544,7 @@ const ListaProjetos = () => {
     return;
   }, [listaDias, filteredProjetos, filteredProjetos, values.Data]);
 
-
+  console.log(values)
 
   useEffect(() => {
     verificaDia({ target: { name: 'Data', value: values.Data } });
@@ -556,17 +559,24 @@ const ListaProjetos = () => {
 
     if (date.getDay() === 5) {
       if (horasT > 6) {
+        values.accepted = 1;
         toast.error('Valor inserido excede as 6 Horas!');
       }
     } else {
       if (horasT > 8.5) {
+        values.accepted = 1;
         toast.error('Valor inserido excede as 8 horas e 30 minutos diários!');
       }
     }
     if (horasT <= 0) {
       toast.error('Valor inserido invalido!');
       return;
+    } 
+
+    if(activeCompensacao === true){
+      values.accepted = 1;
     }
+    
 
     values.Utilizador = user.user.id;
     if (verificaDiaCalled) {
@@ -641,11 +651,13 @@ const ListaProjetos = () => {
     const isFriday = dayOfWeek === 5;
 
     if (tipoTrabalho === compensacaoID) {
+      setActiveCompensacao(true);
       if (values?.Data && ((dateAdd.getDay() === 5 && newHorasT > 6) || newHorasT > 8.5 || dateAdd.getDay() === 0 || dateAdd.getDay() === 6)) {
         toast.error('Valor inserido invalido devido ao tipo de trabalho!');
         setValues({ ...values, [horas]: "0.0" });
         return;
       }
+      
       setHorasExtraAfter(parseFloat(horasExtra) - parseFloat(horasNumber))
     }
 
@@ -842,11 +854,13 @@ const ListaProjetos = () => {
     return timeString;
   }
 
+
   if (!values.loaded) {
     return <Loading />;
   } else if (isLoading) {
     return <Loading />;
   } else {
+
     return (
       <Wrapper>
         <div className="container">
@@ -937,11 +951,11 @@ const ListaProjetos = () => {
                       : " | 8:30 H"}
                 </h5>
               </div>
-
+              
               <div className="card-body">
                 <button
                   type="submit"
-                  disabled={isLoading || buttonClicked}
+                  disabled={values.accepted === 2 || isLoading || buttonClicked }
                   onClick={(e) => { handleDia(e) }}
                   className="w-100 btn btn-lg btn-primary"
                 >

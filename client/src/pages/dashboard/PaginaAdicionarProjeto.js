@@ -14,7 +14,7 @@ const PaginaAdicionarProjeto = () => {
 
   useEffect(() => {
     if (user) {
-      if (user.user.tipo === 2 || user.user.tipo === 1 || user.user.tipo === 5) {
+      if (user.user.tipo === 2 || user.user.tipo === 1 || user.user.tipo === 5 || user.user.tipo === 7) {
 
       } else {
         toast.error("Sem permissões para aceder a esta página!");
@@ -28,7 +28,7 @@ const PaginaAdicionarProjeto = () => {
   }, [user, navigate]);
   return (
     <>
-      {user && (user.user.tipo === 1 || user.user.tipo === 2 || user.user.tipo === 5) && <AddProjectForm />}
+      {user && (user.user.tipo === 1 || user.user.tipo === 2 || user.user.tipo === 5 || user.user.tipo === 7) && <AddProjectForm />}
     </>
   );
 };

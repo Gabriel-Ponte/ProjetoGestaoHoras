@@ -76,6 +76,16 @@ const Wrapper = styled.section`
     margin-top:auto;
     margin-bottom:auto;
   }
+  .filtro{
+    width:10px;
+    height:10px;
+    background-color: #DDE5B6;
+    display: inline-block;
+    vertical-align: middle;
+    margin-top:auto;
+    margin-bottom:auto;
+  }
+
   .ferias{
     width:10px;
     height:10px;

@@ -1,9 +1,11 @@
 import Wrapper from '../assets/wrappers/Navbar';
 import { FaAlignLeft, FaUserCircle, FaCaretDown } from 'react-icons/fa';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleSidebar, clearStore } from '../features/utilizadores/utilizadorSlice';
+import { getAllDiasHorasExtra } from '../features/allDias/allDiasSlice';
+
 // import { GiHourglass } from 'react-icons/gi';
 // import { GoDiffAdded } from 'react-icons/go';
 import { handleChange } from '../features/allProjetos/allProjetosSlice';
@@ -12,9 +14,26 @@ import { handleChange } from '../features/allProjetos/allProjetosSlice';
 const Navbar = () => {
   const [showLogout, setShowLogout] = useState(false);
   const [disableAddHoras, setDisableAddHoras] = useState(false);
+  const [verificaHorasExtra, setVerificaHorasExtra] = useState(false);
   const { user } = useSelector((store) => store.utilizador);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+
+  useEffect(() => {
+    try {
+      dispatch(getAllDiasHorasExtra()).then((res) => {
+        const horasExtraArray = Array.isArray(res?.payload?.diasHorasExtra) ? res.payload.diasHorasExtra : [];
+        if(horasExtraArray && horasExtraArray.length > 0){
+          setVerificaHorasExtra(true)
+        } else{
+          setVerificaHorasExtra(false)
+        }
+      });
+    } catch (error) {
+      console.error(error);
+    }
+}, [user?.user, navigate]);
 
   const toggle = () => {
     setShowLogout(false);
@@ -49,6 +68,14 @@ const Navbar = () => {
     //window.location.reload(navigate('/PaginaPrincipal'));
   };
 
+  const navGestaoHorasExtra = () => {
+    setShowLogout(false);
+    setDisableAddHoras(false);
+    dispatch(handleChange({ name: 'tipoTrabalho', value: "" }));
+    dispatch(toggleSidebar(false));
+    navigate('/paginaGerirHorasExtra');
+    //window.location.reload(navigate('/PaginaPrincipal'));
+  };
 
   const visualizarHoras=()=>{
     setShowLogout(false);
@@ -64,12 +91,13 @@ const Navbar = () => {
     dispatch(toggleSidebar(false));
     navigate('/PaginaAdicionarHoras');
   };
-  
+
+
   return (
     <Wrapper>
       <div className='subheader'>
 
-        <div className='col-4 middleButton'>
+        <div className='col-3 middleButton'>
         <button type='button' className='toggle-btn' onClick={toggle}>
           <FaAlignLeft />
         </button>
@@ -78,13 +106,21 @@ const Navbar = () => {
         <div className='col-4 middleButton' >
           <button className='btn btn-light' style={{fontSize : "250%", maxHeight: "80px"}} type='button' onClick={returnMain}>Gestão Projetos</button>
         </div>
-        :
+        : user?.user?.tipo === 7 ? 
+      <div className='col-6 middleButton' >
+        <div className='col-5 middleButton' >
+        <button className='btn btn-light' style={{fontSize : "200%", maxHeight: "80px"}} type='button' onClick={returnMain}>Gestão Projetos</button>
+        </div>
+        <div className='col-7 middleButton' >
+        <button className='btn btn-light' style={{fontSize : "200%", maxHeight: "80px" , backgroundColor: verificaHorasExtra ? "#A6C48A" : "" , }} type='button' onClick={navGestaoHorasExtra}>Gestão de Horas Extra</button>
+      </div>
+      </div>:
         <div className='col-4 middleButton' >
         <h1 style={{fontSize : "250%", maxHeight: "80px" ,textTransform: 'none'}}>Gestão de Horas</h1>
       </div>
       }
       
-        <div className='col-4'>
+        <div className='col-3'>
         <div className='btn-container'>
           <div className='divButtonUtilizador'>
           <button

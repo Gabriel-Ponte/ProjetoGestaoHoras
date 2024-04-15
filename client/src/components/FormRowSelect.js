@@ -6,6 +6,7 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
     multiple = true;
   }
 
+
   let separatedArray;
   if (Array.isArray(value)) {
     separatedArray = value.length > 0 ? value[0].split(/[,/]/) : [];
@@ -80,7 +81,7 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
 
   if (name === 'Piloto') {
     const listaUtilizador = list.map((itemValue, index) => (
-      <option key={index} value={itemValue.nome}>
+      <option key={index} data-key={itemValue._id} value={itemValue.nome}>
         {
           itemValue.nome
         }
@@ -96,7 +97,7 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
       ...listaUtilizador,
     ];
   }else{
-    if(todos && todos === 2){
+    if(todos && (todos === 2 || todos === 7)){
       selectOptions = [
         <option key="default" value="Todos">
           Todos

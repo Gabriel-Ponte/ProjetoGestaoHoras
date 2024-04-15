@@ -29,7 +29,6 @@ const ListaProjetos = () => {
   } = useSelector((store) => store.allProjetos);
 
 
-    
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user } = useSelector((store) => store.utilizador.user);
@@ -40,7 +39,7 @@ const ListaProjetos = () => {
   const formattedListUtilizadores = Array.isArray(utilizadores) ? utilizadores.filter(user => user.email.endsWith('isqctag.pt')) : [];
  
   useEffect(() => {
-    if (user && (user?.tipo === 3 || user?.tipo === 4 || user?.tipo === 6 ||  user?.tipo === 7)) {
+    if (user && (user?.tipo === 3 || user?.tipo === 4 || user?.tipo === 6)) {
       toast.error("Sem permissões para aceder a esta página!");
       navigate('/PaginaAdicionarHoras');
     }
@@ -68,6 +67,7 @@ const ListaProjetos = () => {
       }
   };
 
+  console.log(verificaAlterado)
   const handleSort = (tipo) => {
     if (isLoading) return;
     dispatch(handleChange({ name: 'sort', value: tipo }));

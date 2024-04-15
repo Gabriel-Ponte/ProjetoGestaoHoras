@@ -8,6 +8,7 @@ import FormRowSelectTipo from './FormRowSelectTipo';
 import FormRowCheckbox from './FormRowCheckbox';
 import FormRowCheckboxMultiple from './FormRowCheckboxMultiple';
 import FormRowCheckboxListaClientes from './FormRowCheckboxListaClientes';
+import FormRowListaHorasExtra from './FormRowListaHorasExtra'
 import AddUtilizador from './AddUtilizador';
 import Footer from './Footer';
 import Header from './header';
@@ -36,17 +37,22 @@ import AddHorasCopiar from './AddHorasCopiar';
 import useFeriadosPortugal from './FeriadosPortugal';
 import ProjetoListaFolder from './ProjetoListaFolder';
 import NavLinksModalBox from './NavLinksModalBox';
-
+import GerirHorasExtra from './GerirHorasExtra'
 import VisualizarHorasProjeto from './VisualizarHorasProjeto'
+import AddPagamentos from './AddPagamentos';
+
 export {
   ListaProjetos,
   BigSidebar,
   AddProjectForm,
-  TimePickerClock,
+  TimePickerClock,  
   AddHorasDropdown,
   AddHorasGeralDropdown,
   AddHorasProjetoDropdown,
   AddHorasCopiar,
+  AddPagamentos,
+  FormRowListaHorasExtra,
+  GerirHorasExtra,
   NavLinksModalBox,
   AddHorasGeral,
   ProjetoListaFolder,
@@ -77,4 +83,5 @@ export {
   ForgetPassword,
   ForgetPasswordChange,
   VisualizarHorasProjeto,
+  
 };

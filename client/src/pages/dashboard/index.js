@@ -14,6 +14,7 @@ import PaginaGerirUtilizadores from './PaginaGerirUtilizador';
 import PaginaResetPassword from './PaginaResetPassword'
 import PaginaResetPasswordChange from './PaginaResetPasswordChange'
 import PaginaVisualizarHorasProjeto from './PaginaVisualizarHorasProjeto'
+import PaginaGerirHorasExtra from './PaginaGerirHorasExtra'
 
 export {
     PaginaLogin,
@@ -32,4 +33,5 @@ export {
     PaginaResetPassword,
     PaginaResetPasswordChange,
     PaginaVisualizarHorasProjeto,
+    PaginaGerirHorasExtra,
 };

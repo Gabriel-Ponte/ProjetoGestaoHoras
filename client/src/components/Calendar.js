@@ -5,7 +5,7 @@ import { MdKeyboardArrowRight } from 'react-icons/md';
 import { toast } from 'react-toastify';
 import useFeriadosPortugal from "./FeriadosPortugal";
 
-const CalendarControl = ({ handleChange, inserted, feriados, ferias, inicio, fim, objetivo, vProjeto, todos, numberUsers, horasExtraID }) => {
+const CalendarControl = ({ handleChange, inserted, feriados, ferias, inicio, fim, objetivo,aceitacao, vProjeto, todos, numberUsers, horasExtraID }) => {
     const [calendar, setCalendar] = useState(new Date());
     const calWeekDays = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
     const calMonthName = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
@@ -351,6 +351,7 @@ const CalendarControl = ({ handleChange, inserted, feriados, ferias, inicio, fim
                 }
             }
 
+
             if (feriados) {
                 for (let i = 0; i < feriados.length; i++) {
                     const insertedDay = new Date(feriados[i].date);
@@ -386,6 +387,25 @@ const CalendarControl = ({ handleChange, inserted, feriados, ferias, inicio, fim
                 }
             }
 
+
+
+            if(aceitacao){
+                for (let i = 0; i < aceitacao.length; i++) {
+                    const insertedDay = new Date(aceitacao[i].Data);
+                    const currentMonth = insertedDay?.getMonth() + 1;
+                    const currentYear = insertedDay?.getFullYear();
+
+                    if (
+                        currentYear === changedYear &&
+                        currentMonth === changedMonth &&
+                        numberItems !== null &&
+                        numberItems.length >= calendar.getDate()
+                    ) {
+                        dias.push(insertedDay);
+                        numberItems[insertedDay.getDate() - 1].classList.add("calendar-aceitacao");
+                    }
+                }
+            }
 
             if (inicio) {
                 try {
@@ -458,6 +478,8 @@ const CalendarControl = ({ handleChange, inserted, feriados, ferias, inicio, fim
                     }
                 }
             }
+
+            
 
             const daysInMonth = new Date(changedYear, changedMonth, 0).getDate();
             for (let day = 1; day <= daysInMonth; day++) {

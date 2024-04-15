@@ -13,7 +13,7 @@ const PaginaAdicionarUtilizador = () => {
 
   useEffect(() => {
     if (user) {
-      if (user.user.tipo === 2 || user.user.tipo === 1 || user.user.tipo === 5) {
+      if (user.user.tipo === 2 || user.user.tipo === 1 || user.user.tipo === 5 || user.user.tipo === 7) {
 
       } else {
         toast.error("Sem permissões para aceder a esta página!");
@@ -29,7 +29,7 @@ const PaginaAdicionarUtilizador = () => {
 
   return (
     <>
-     {user && (user.user.tipo === 2 || user.user.tipo === 1 || user.user.tipo === 5) && <VisualizarProjeto />}
+     {user && (user.user.tipo === 2 || user.user.tipo === 1 || user.user.tipo === 5 || user.user.tipo === 7) && <VisualizarProjeto />}
     </>
   );
 };

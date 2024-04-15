@@ -211,6 +211,7 @@ const Wrapper = styled.section`
     border-radius: 4px;
 }
 
+
 .calendar .calendar-inner .calendar-body .calendar-ferias {
     cursor: default;
     background: #B7B5E4;
@@ -247,6 +248,14 @@ const Wrapper = styled.section`
     background: #1A4301;
     border-radius: 4px;
 }
+
+
+.calendar .calendar-inner .calendar-body .calendar-aceitacao {
+    background: #DDE5B6;
+    border-radius: 4px;
+}
+
+
 .calendar .calendar-inner .calendar-controls .calendar-next a,
 .calendar .calendar-inner .calendar-controls .calendar-prev a {
     color: var(--calendar-font-color);

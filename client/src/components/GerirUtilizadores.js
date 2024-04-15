@@ -83,12 +83,14 @@ const GerirUtilizadores = () => {
         value = 1;
       }else if(value === "Laboratorio"){
         value = 3;
-      }else if(value === "Outro"){
+      }else if(value === "Recursos Humanos"){
         value = 4;
       }else if(value === "Administrador Engenharia"){
         value = 5;
       }else if(value === "Administrador Laboratorio"){
         value = 6;
+      }else if(value === "Administrador Recursos Humanos"){
+        value = 7;
       }
 
 
@@ -148,7 +150,7 @@ const GerirUtilizadores = () => {
                     handleChange={(e) => handleChangeUtilizador(e, t._id)}
                     placeholder="Escolha um tipo"
                     value={t.tipo}
-                    list={[["Engenharia de Processos"], ["Laboratorio"] ,["Outro"] , ["Administrador"] , ["Administrador Engenharia"] , ["Administrador Laboratorio"]]}
+                    list={[["Engenharia de Processos"], ["Laboratorio"] ,["Recursos Humanos"] , ["Administrador"] , ["Administrador Engenharia"] , ["Administrador Laboratorio"], ["Administrador Recursos Humanos"]]}
                   />
 
                 </div>

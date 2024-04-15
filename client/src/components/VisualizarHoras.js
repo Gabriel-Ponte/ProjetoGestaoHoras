@@ -5,8 +5,10 @@ import Loading from './Loading';
 import Dia from './Dias';
 import DiaTodos from './DiasTodos';
 import { getAllDiasUtilizador, getAllDiasTodos, getAllDiasUtilizadorTipo } from '../features/allDias/allDiasSlice';
+import { getPagamentosUtilizadorMes, getAllPagamentosUtilizador, getAllPagamentosUtilizadorResponsavel } from '../features/pagamentos/pagamentosSlice';
+
 import { listaUtilizadores } from '../features/utilizadores/utilizadorSlice';
-import { FormRowSelect } from '../components';
+import { AddPagamentos, FormRowSelect } from '../components';
 import Calendar from './Calendar'
 import { getTipoTrabalho } from '../features/tipoTrabalho/tipoTrabalhoSlice';
 
@@ -16,11 +18,13 @@ const ListaHoras = () => {
   const { dias } = useSelector((store) => store.allDias);
   const [loading, setLoading] = useState(false);
   const [selectedUser, setSelectedUser] = useState(user?.user?.nome);
+  const [selectedUserID, setSelectedUserID] = useState(user?.user?.id)
   const [selectedDay, setSelectedDay] = useState();
   const [getFeriados, setFeriados] = useState([]);
   const [listaDias, setListaDias] = useState([]);
   const [listaDiasT, setListaDiasT] = useState([]);
   const [addHorasExtraIDS, setAddHorasExtraID] = useState([]);
+  const [listaPagamentos, setListaPagamentos] = useState([]);
 
   const [listaTipoTrabalho, setListaTipoTrabalho] = useState(null);
   const [horasRealizadas, setHorasRealizadas] = useState(0);
@@ -28,10 +32,21 @@ const ListaHoras = () => {
   const [possibleHoursTodos, setPossibleHoursTodos] = useState(0);
   const [possibleHours, setPossibleHours] = useState(0);
   const [ferias, setFerias] = useState([]);
+  const [aceitacao, setAceitacao] = useState([]);
 
   const [horasExtra, setHorasExtra] = useState(null);
-  const [horasCompencacao, setHorasCompencacao] = useState(null);
+  const [horasExtraMensal, setHorasExtraMensal] = useState(null);
+  const [horasExtraAteMes, setHorasExtraAteMes] = useState(null);
+  const [horasExtraAceitar, setHorasExtraAceitar] = useState(null);
 
+
+  const [totalHorasPagas, setTotalHorasPagas] = useState(null);
+  const [horasExtraPagasAteMes, setHorasExtraPagasAteMes] = useState(null);
+  const [horasPagasMes, setHorasPagasMes] = useState(null);
+  const [changePagamento, setChangePagamento]= useState(false)
+
+  const [horasCompencacao, setHorasCompencacao] = useState(null);
+  const [idCompensacao, setIDCompencacao] = useState(null)
   const [userNome, setUserNome] = useState(user?.user?.nome);
 
   const [change, setChange] = useState(false);
@@ -39,7 +54,7 @@ const ListaHoras = () => {
 
   const formattedListUtilizadores = Array.isArray(utilizadores) ? utilizadores : [];
   const today = new Date();
-  
+
 
 
 
@@ -102,7 +117,7 @@ const ListaHoras = () => {
       if (
         date.getDate() === feriado.date.getDate() &&
         date.getMonth() === feriado.date.getMonth() &&
-        date.getFullYear() === feriado.date.getFullYear() 
+        date.getFullYear() === feriado.date.getFullYear()
       ) {
         return true;
       }
@@ -147,14 +162,32 @@ const ListaHoras = () => {
   });
 
 
+  const handleChangePagamento = (() => {
+      setChangePagamento(!changePagamento);
+  });
+
   const handleChangeUtilizador = ((e) => {
+
+    const selectedID = e.target.options[e.target.selectedIndex].getAttribute('data-key');
+    const selectedValue = e.target.value;
+
     const { value } = e.target;
+
     setChange(!change);
+    setSelectedUserID(selectedID);
     setSelectedUser(value);
     setSelectedDay({ dia: 0, mes: today.getMonth(), ano: today.getFullYear() });
   });
 
   useEffect(() => {
+    const day = selectedDay ? selectedDay : today;
+    let pagamentosUtilizadorArray = [];
+    dispatch(getAllPagamentosUtilizador({ selectedUserID })).then((res) => {
+      pagamentosUtilizadorArray = Array.isArray(res?.payload?.pagamentosAllUtilizador) ? res.payload.pagamentosAllUtilizador : [];
+      setListaPagamentos(pagamentosUtilizadorArray)
+    })
+
+
     dispatch(listaUtilizadores());
     let tipoTrabalhoArray = [];
 
@@ -186,20 +219,20 @@ const ListaHoras = () => {
           setListaTipoTrabalho(tipoTrabalhoArray);
         });
 
-      } else if(selectedUser === "Engenharia de Processos" || selectedUser === "Laboratorio" || selectedUser === "Outro" || selectedUser === "Administradores"){
+      } else if (selectedUser === "Engenharia de Processos" || selectedUser === "Laboratorio" || selectedUser === "Outro" || selectedUser === "Administradores") {
         let tipo = 0;
 
-        if(selectedUser === "Engenharia de Processos"){
+        if (selectedUser === "Engenharia de Processos") {
           tipo = 1;
-        }else if  (selectedUser === "Administradores"){
+        } else if (selectedUser === "Administradores") {
           tipo = 2;
         }
-        else if  (selectedUser === "Laboratorio"){
+        else if (selectedUser === "Laboratorio") {
           tipo = 3;
-        } else if( selectedUser === "Outro"){
+        } else if (selectedUser === "Outro") {
           tipo = 4;
         }
-  
+
         dispatch(getAllDiasUtilizadorTipo({ userTipo: tipo })).then((res) => {
           const listaDiasA = (typeof res.payload.diasAllUtilizador !== "undefined") ? res.payload.diasAllUtilizador : [];
 
@@ -222,26 +255,26 @@ const ListaHoras = () => {
           }
           setListaTipoTrabalho(tipoTrabalhoArray);
         });
-      }else {
+      } else {
         dispatch(getAllDiasUtilizador({ userNome: selectedUser })).then((res) => {
           const listaDiasA = (typeof res.payload.diasAllUtilizador !== "undefined") ? res.payload.diasAllUtilizador : [];
           const idFerias = tipoTrabalhoArray.find((tipo) => tipo.TipoTrabalho === "Ferias")?._id;
-          const idCompensação = tipoTrabalhoArray.find((tipo) => tipo.tipo === 4)?._id;
+          const idCompensacao = tipoTrabalhoArray.find((tipo) => tipo.tipo === 4)?._id;
           const addHorasExtraID = tipoTrabalhoArray.find((tipo) => tipo.tipo === 5)?._id;
 
           setAddHorasExtraID(addHorasExtraID);
+          setIDCompencacao(idCompensacao)
           setListaDiasT(listaDiasA);
 
           let countHours = 0;
           let countHoursCompencacao = 0;
-
           const dayStart = new Date(Date.UTC(2023, 11, 1, 0, 0, 0));
 
           const startDay = dayStart.getDate();
           const startMonth = dayStart.getMonth();
           const startYear = dayStart.getFullYear();
 
-          listaDiasA.filter(item => {
+          listaDiasA.filter(item => item.accepted !== 1).map(item => {
             const date = new Date(item.Data)
             const dayOfWeek = date.getDay();
             const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
@@ -266,7 +299,7 @@ const ListaHoras = () => {
                 const tt = projeto.tipoTrabalho.split(',') || [];
                 const ttH = projeto.horas.split(',') || [];
                 for (let j = 0; j < tt.length; j++) {
-                  if (tt[j] === idCompensação) {
+                  if (tt[j] === idCompensacao) {
                     countHours -= ttH[j];
                     countHoursCompencacao += parseFloat(ttH[j]);
                   }
@@ -300,8 +333,16 @@ const ListaHoras = () => {
             return false;
           });
 
+          let pagamentosCount = 0;
+          for (let k = 0; k < pagamentosUtilizadorArray.length; k++) {
+            const count = pagamentosUtilizadorArray[k].Horas;
+            pagamentosCount += parseFloat(count);
+          }
+
+          const valueHE = parseFloat(countHours) - parseFloat(pagamentosCount);
           setHorasCompencacao(countHoursCompencacao);
-          setHorasExtra(convertToMinutes(countHours))
+          setHorasExtra(convertToMinutes(valueHE))
+          setTotalHorasPagas(pagamentosCount);
 
           if (idFerias && dias) {
             // Filter the dias array to get the matching ferias and update the state
@@ -342,11 +383,55 @@ const ListaHoras = () => {
             }
             setListaTipoTrabalho(tipoTrabalhoArray);
           }
+
+
+
+          ////////////////////////////
+
+          if (dias) {
+            // Filter the dias array to get the matching aceitacao and update the state
+            const updatedAceitacao = dias.filter((dia) => {
+              if (dia.accepted === 1) {
+                return dia;
+              }
+              return null;
+            });
+
+
+            if (!arrayEquals(aceitacao, updatedAceitacao)) {
+              setAceitacao(updatedAceitacao);
+            }
+
+            // Remove the matching aceitacao from listaDias
+            if (listaDiasA) {
+              const updatedListaDias = listaDiasA.filter((dia) => {
+                if (dia.accepted !== 1) {
+                  return dia;
+                }
+
+                for (let i = 0; i < dia.tipoDeTrabalhoHoras.length; i++) {
+                  const aListaDias = dia.tipoDeTrabalhoHoras[i]?.tipoTrabalho?.split(',').filter((tipo, index) => {
+
+                    const horasArray = dia.tipoDeTrabalhoHoras[i]?.horas?.split(',');
+                    return horasArray && horasArray[index] > 0;
+                  });
+
+                  return !aListaDias.includes(idFerias);
+                }
+                return null;
+              })
+
+              if (!arrayEquals(listaDias, updatedListaDias)) {
+                //setListaDias(updatedListaDias);
+              }
+            }
+
+          }
         });
       }
     });
- 
-  }, [selectedUser, listaDias[0],horasExtra,listaTipoTrabalho?.length, ferias[0], dispatch]);
+
+  }, [selectedUser, listaDias[0], horasExtra, listaTipoTrabalho?.length, ferias[0], aceitacao[0],changePagamento, dispatch]);
 
   function arrayEquals(a, b) {
     if (a === b) return true;
@@ -367,13 +452,13 @@ const ListaHoras = () => {
 
     let filteredUsers = formattedListUtilizadores.filter((user) => user && user.nome !== "Admin");
 
-    if (selectedUser === "Engenharia de Processos"){
+    if (selectedUser === "Engenharia de Processos") {
       filteredUsers = filteredUsers.filter((user) => user && (user.tipo === 1 || user.tipo === 5));
-    } else if (selectedUser === "Administradores"){
-      filteredUsers = filteredUsers.filter((user) => user && (user.tipo === 2 || user.tipo === 5 || user.tipo === 6));
-    } else if (selectedUser === "Laboratorio" ){
+    } else if (selectedUser === "Administradores") {
+      filteredUsers = filteredUsers.filter((user) => user && (user.tipo === 2 || user.tipo === 5 || user.tipo === 6 || user.tipo === 7));
+    } else if (selectedUser === "Laboratorio") {
       filteredUsers = filteredUsers.filter((user) => user && (user.tipo === 3 || user.tipo === 6));
-    } else if(selectedUser === "Outro"){
+    } else if (selectedUser === "Outro") {
       filteredUsers = filteredUsers.filter((user) => user && (user.tipo === 4 || user.tipo === 7));
     }
 
@@ -401,18 +486,200 @@ const ListaHoras = () => {
           }
         }
       }
+
+      let countHoursMonth = 0;
+      let countHoursUntilMonth = 0;
+      let countHoursAccept = 0;
+      const dayStart = new Date(Date.UTC(2023, 11, 1, 0, 0, 0));
+
+      const startDay = dayStart.getDate();
+      const startMonth = dayStart.getMonth();
+      const startYear = dayStart.getFullYear();
+
+      listaDiasT.filter(item => ((new Date(item.Data)).getMonth() <= month - 1 && (new Date(item.Data)).getFullYear() === year) || ((new Date(item.Data)).getFullYear() < year)).forEach(item => {
+        const date = new Date(item.Data)
+        const dayOfWeek = date.getDay();
+        const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+        const isFriday = dayOfWeek === 5;
+
+
+        const currentDay = date.getDate();
+        const currentMonth = date.getMonth();
+        const currentYear = date.getFullYear();
+        if (
+          currentYear > startYear ||
+          (currentYear === startYear && currentMonth > startMonth) ||
+          (
+            currentYear === startYear &&
+            currentMonth === startMonth &&
+            currentDay >= startDay)
+        ) {
+          let extraHours = 0;
+          for (let i = 0; i < item.tipoDeTrabalhoHoras.length; i++) {
+            const projeto = item.tipoDeTrabalhoHoras[i]
+
+            const tt = projeto.tipoTrabalho.split(',') || [];
+            const ttH = projeto.horas.split(',') || [];
+            for (let j = 0; j < tt.length; j++) {
+              if (tt[j] === idCompensacao) {
+                countHoursUntilMonth -= ttH[j];
+              }
+
+              if (tt[j] === addHorasExtraIDS) {
+                countHoursUntilMonth += parseFloat(ttH[j]);
+                extraHours = parseFloat(ttH[j]);
+              }
+            }
+          }
+          if (feriadosPortugal(date) && (parseFloat(item.NumeroHoras) - parseFloat(extraHours)) > 0) {
+            countHoursUntilMonth += (parseFloat(item.NumeroHoras) - parseFloat(extraHours));
+            return true;
+          }
+
+          if (isWeekend && (parseFloat(item.NumeroHoras) - parseFloat(extraHours)) > 0) {
+            countHoursUntilMonth += (parseFloat(item.NumeroHoras) - parseFloat(extraHours));
+
+            return true;
+          }
+          if (isFriday && (parseFloat(item.NumeroHoras) - parseFloat(extraHours)) > 6) {
+            countHoursUntilMonth += (parseFloat(item.NumeroHoras - 6) - parseFloat(extraHours));
+            return true;
+          }
+          if (!isFriday && (parseFloat(item.NumeroHoras) - parseFloat(extraHours)) > 8.5) {
+            countHoursUntilMonth += (parseFloat(item.NumeroHoras - 8.5) - parseFloat(extraHours));
+            return true;
+          }
+          return false;
+        }
+        return false;
+      });
+
+      let pagamentosAteMesCount = 0;
+
+      listaPagamentos.filter(item => (item.Mes <= month - 1 && item.Ano === year) || (item.Ano < year)).forEach(item => {
+        const count = parseFloat(item.Horas);
+        pagamentosAteMesCount += count;
+      });
+
+
+      listaDiasT.filter(item => ((new Date(item.Data)).getMonth() === month && (new Date(item.Data)).getFullYear() === year)).forEach(item => {
+        const date = new Date(item.Data)
+        const dayOfWeek = date.getDay();
+        const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+        const isFriday = dayOfWeek === 5;
+
+
+        const currentDay = date.getDate();
+        const currentMonth = date.getMonth();
+        const currentYear = date.getFullYear();
+        if (
+          currentYear > startYear ||
+          (currentYear === startYear && currentMonth > startMonth) ||
+          (
+            currentYear === startYear &&
+            currentMonth === startMonth &&
+            currentDay >= startDay)
+        ) {
+          let extraHours = 0;
+          for (let i = 0; i < item.tipoDeTrabalhoHoras.length; i++) {
+            const projeto = item.tipoDeTrabalhoHoras[i]
+
+            const tt = projeto.tipoTrabalho.split(',') || [];
+            const ttH = projeto.horas.split(',') || [];
+            for (let j = 0; j < tt.length; j++) {
+              if (tt[j] === idCompensacao) {
+                if (item.accepted === 1) {
+                  countHoursAccept -= ttH[j];
+                } else {
+                  countHoursMonth -= ttH[j];
+                }
+              }
+
+              if (tt[j] === addHorasExtraIDS) {
+                if (item.accepted === 1) {
+                  countHoursAccept -= (parseFloat(item.NumeroHoras) - parseFloat(extraHours));
+                } else {
+                  countHoursMonth += parseFloat(ttH[j]);
+                  extraHours = parseFloat(ttH[j]);
+                }
+
+              }
+            }
+          }
+          if (feriadosPortugal(date) && (parseFloat(item.NumeroHoras) - parseFloat(extraHours)) > 0) {
+            if (item.accepted === 1) {
+              countHoursAccept += (parseFloat(item.NumeroHoras) - parseFloat(extraHours));
+            } else {
+              countHoursMonth += (parseFloat(item.NumeroHoras) - parseFloat(extraHours));
+            }
+
+            return true;
+          }
+
+          if (isWeekend && (parseFloat(item.NumeroHoras) - parseFloat(extraHours)) > 0) {
+            if (item.accepted === 1) {
+              countHoursAccept += (parseFloat(item.NumeroHoras) - parseFloat(extraHours));
+            } else {
+              countHoursMonth += (parseFloat(item.NumeroHoras) - parseFloat(extraHours));
+            }
+            return true;
+          }
+          if (isFriday && (parseFloat(item.NumeroHoras) - parseFloat(extraHours)) > 6) {
+            if (item.accepted === 1) {
+              countHoursAccept += (parseFloat(item.NumeroHoras - 6) - parseFloat(extraHours));
+            } else {
+              countHoursMonth += (parseFloat(item.NumeroHoras - 6) - parseFloat(extraHours));
+            }
+            return true;
+          }
+          if (!isFriday && (parseFloat(item.NumeroHoras) - parseFloat(extraHours)) > 8.5) {
+            if (item.accepted === 1) {
+              countHoursAccept += (parseFloat(item.NumeroHoras - 8.5) - parseFloat(extraHours));
+            } else {
+              countHoursMonth += (parseFloat(item.NumeroHoras - 8.5) - parseFloat(extraHours));
+            }
+            return true;
+          }
+          return false;
+        }
+        return false;
+      });
+
+
+      let pagamentosMesCount = 0;
+      listaPagamentos.filter(item => item.Mes === month && item.Ano === year)
+        .forEach(item => {
+          const count = parseFloat(item.Horas);
+          pagamentosMesCount += count;
+        });
+
+
+      
+      const extraAteMes = parseFloat(countHoursUntilMonth) - parseFloat(pagamentosAteMesCount);
+      const extraMes = parseFloat(countHoursMonth) - parseFloat(pagamentosMesCount);
+
+
+      setHorasPagasMes(pagamentosMesCount);
+      setHorasExtraPagasAteMes(pagamentosAteMesCount);
+
+
+      setHorasExtraAteMes(extraAteMes);
+      setHorasExtraMensal(extraMes);
+
+
+      setHorasExtraAceitar(countHoursAccept);
+
     }
 
 
+
     setPercentagemHoras((horasRealizadasCount / possibleHoursCount) * 100);
-
-
     setPossibleHours(possibleHoursCount);
     setHorasRealizadas(horasRealizadasCount);
 
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [listaDias, selectedDay, percentagemHoras, horasRealizadas, selectedUser]);
+  }, [listaPagamentos, listaDias, selectedDay, percentagemHoras, horasRealizadas, selectedUser]);
 
   useEffect(() => {
 
@@ -421,8 +688,8 @@ const ListaHoras = () => {
     setTimeout(() => {
       setLoading(false);
     }, 1);
-    
-  }, [listaDias.length , ferias[0]]);
+
+  }, [listaDias.length, ferias[0]]);
 
   const diaSelected = selectedDay ? selectedDay.dia : 0;
   const month = selectedDay ? selectedDay.mes : today.getMonth();
@@ -430,17 +697,18 @@ const ListaHoras = () => {
 
   let filteredUsers = formattedListUtilizadores.filter((user) => user && user.nome !== "Admin");
 
-  if (selectedUser === "Engenharia de Processos"){
+  if (selectedUser === "Engenharia de Processos") {
     filteredUsers = filteredUsers.filter((user) => user && (user.tipo === 1 || user.tipo === 5));
-  } else if (selectedUser === "Administradores"){
-    filteredUsers = filteredUsers.filter((user) => user && (user.tipo === 2 || user.tipo === 5 || user.tipo === 6));
-  } else if (selectedUser === "Laboratorio" ){
+  } else if (selectedUser === "Administradores") {
+    filteredUsers = filteredUsers.filter((user) => user && (user.tipo === 2 || user.tipo === 5 || user.tipo === 6 || user.tipo === 7));
+  } else if (selectedUser === "Laboratorio") {
     filteredUsers = filteredUsers.filter((user) => user && (user.tipo === 3 || user.tipo === 6));
-  } else if(selectedUser === "Outro"){
+  } else if (selectedUser === "Outro") {
     filteredUsers = filteredUsers.filter((user) => user && (user.tipo === 4 || user.tipo === 7));
   }
 
   function convertToMinutes(timeString) {
+
     if (timeString) {
       try {
         let [hours, minutes] = timeString.toString().split(".");
@@ -459,7 +727,8 @@ const ListaHoras = () => {
         const formattedHours = hoursInt.toString().padStart(2, "0");
         formattedMinutes = formattedMinutes.toString().padStart(2, '0');
 
-        const formattedTime = `${formattedHours}:${formattedMinutes}`;
+        const positive = (timeString < 0) ? "" : ""
+        const formattedTime = `${positive}${formattedHours}:${formattedMinutes}`;
 
         return formattedTime;
       } catch (error) {
@@ -471,86 +740,147 @@ const ListaHoras = () => {
   }
 
   function parseDurationToHours(duration) {
-    try{
+    try {
       const [hours, minutes] = duration.split(':').map(parseFloat);
       return hours + (minutes / 60);
-    }catch{
+    } catch {
       return duration;
     }
   }
 
   // //Change to refresh
-   if (loading   || !dias || !listaTipoTrabalho) {
-     return <Loading />;
-   }
+  if (loading || !dias || !listaTipoTrabalho) {
+    return <Loading />;
+  }
 
   let checkFound = false;
   let count = 0;
 
 
+
   return (
     <Wrapper>
       <div className='mainVisualiza'>
-      {((user?.user?.tipo === 2 || user?.user?.tipo === 5 || user?.user?.tipo === 6 || user?.user?.tipo === 7) && (
-  <div className='text-center mb-5'>
-    <h3 className='mb-5'>Escolha Utilizador</h3>
+        {((user?.user?.tipo === 2 || user?.user?.tipo === 5 || user?.user?.tipo === 6 || user?.user?.tipo === 7) && (
+          <div className='text-center mb-5'>
+            <h3 className='mb-5'>Escolha Utilizador</h3>
 
-    {(() => {
-      let filteredUsers = formattedListUtilizadores;
-      
-      if (user?.user?.tipo === 5) {
-        filteredUsers = formattedListUtilizadores.filter((user) => user && (user.tipo === 1 || user.tipo === 5));
+            {(() => {
+              let filteredUsers = formattedListUtilizadores;
 
-      } else if (user?.user?.tipo === 6) {
-        filteredUsers = formattedListUtilizadores.filter((user) => user && (user.tipo === 3 || user.tipo === 6));
-      } else if (user?.user?.tipo === 7) {
-        filteredUsers = formattedListUtilizadores.filter((user) => user && (user.tipo === 4 || user.tipo === 7));
-      }
+              if (user?.user?.tipo === 5) {
+                filteredUsers = formattedListUtilizadores.filter((user) => user && (user.tipo === 1 || user.tipo === 5));
 
-      return (
-        <FormRowSelect
-          type="text"
-          className="row mb-3 text-center"
-          classNameLabel='col-md-3 text-end'
-          classNameInput='col-md-9'
-          classNameResult='col-md-6 text-start'
-          id="piloto"
-          name="Piloto"
-          labelText="Utilizador:"
-          value={selectedUser}
-          list={filteredUsers}
-          handleChange={handleChangeUtilizador}
-          multiple={false}
-          todos={user?.user?.tipo}
-        />
-      );
-    })()}
-  </div>
-))}
+              } else if (user?.user?.tipo === 6) {
+                filteredUsers = formattedListUtilizadores.filter((user) => user && (user.tipo === 3 || user.tipo === 6));
+              } //else if (user?.user?.tipo === 7) {
+              //filteredUsers = formattedListUtilizadores.filter((user) => user && (user.tipo === 4 ));
+              //}
+
+              return (
+                <FormRowSelect
+                  type="text"
+                  className="row mb-3 text-center"
+                  classNameLabel='col-md-3 text-end'
+                  classNameInput='col-md-9'
+                  classNameResult='col-md-6 text-start'
+                  id="piloto"
+                  name="Piloto"
+                  labelText="Utilizador:"
+                  value={selectedUser}
+                  list={filteredUsers}
+                  handleChange={handleChangeUtilizador}
+                  multiple={false}
+                  todos={user?.user?.tipo}
+                />
+              );
+            })()}
+          </div>
+        ))}
         <div className='row mb-3'>
-          <div className='col-6'>
+          <div className='col-10'>
             <h1 className='userName'>{userNome}</h1>
-
             <div className='row'>
-              <div className='col-md-6 text-center'>
-                <p>Horas Possiveis: {convertToMinutes(possibleHours)}</p>
-              </div>
-              <div className='col-md-6 text-center'>
-                {percentagemHoras >= 0 && percentagemHoras !== Infinity && <p>{percentagemHoras.toFixed(1)}%</p>}
-              </div>
-              <div className='col-md-6 text-center'>
-                <p>Horas Realizadas: {convertToMinutes(horasRealizadas)}</p>
-              </div>
-              <div className='col-md-6 text-center'>
-                {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" &&  selectedUser !== "Outro" ) && (parseDurationToHours(horasExtra) > 0) && (
-                  <p>Horas extra por dar: {horasExtra}</p>
-                )}
+              <div className='col-md-4 text-center'>
+                <div className='row'>
+                  <p>Horas Possiveis: {convertToMinutes(possibleHours)}</p>
+                </div>
+
+                <div className='row'>
+                  <p>Horas Realizadas: {convertToMinutes(horasRealizadas)}</p>
+                </div>
+
+                <div className='row'>
+                  {percentagemHoras >= 0 && percentagemHoras !== Infinity && <p>{percentagemHoras.toFixed(1)}%</p>}
+                </div>
+                </div>
+
+               {//////////////////////////////
+               }
+                <div className='col-md-4 text-center'>
+
+                <div className='row'>
+                  {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro") && (
+                    <p>Horas extra até este mês: {convertToMinutes(horasExtraAteMes)}</p>
+                  )}
+                </div>
+
+                <div className='row'>
+                  {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro") && (parseDurationToHours(horasExtraMensal) !== 0) && (
+                    <p>Horas extra este mês: {convertToMinutes(horasExtraMensal)}</p>
+                  )}
+                </div>
+
+                <div className='row'>
+                  {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro") && (
+                    <p>Total horas extra por dar: {horasExtra}</p>
+                  )}
+                </div>
+
+                <div className='row'>
+                  {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro") && (
+                    <p>Horas extra por aceitar: {convertToMinutes(horasExtraAceitar)}</p>
+                  )}
+                </div>
+
+
+
+
+                </div>
+
+
+               {//////////////////////////////
+               }
+
+                <div className='col-md-4 text-center'>
+
+                <div className='row'>
+                  {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro") && (
+                    <p>Total horas pagas: {convertToMinutes(totalHorasPagas)}</p>
+                  )}
+                </div>
+
+                <div className='row'>
+                  {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro") && (
+                    <p>Horas extra pagas até este mês: {convertToMinutes(horasExtraPagasAteMes)}</p>
+                  )}
+                </div>
+                
+                <div className='row'>
+                  {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro") && (
+                    <p>Horas Extra pagas este mês: {convertToMinutes(horasPagasMes)}</p>
+                  )}
+                </div>
+
+
               </div>
             </div>
+
+
           </div>
 
 
-          <div className='col-6 description'>
+          <div className='col-2 description'>
             <div className='row mb'>
               <div className='col-9 text-end'>
                 <p>Fim de Semana</p>
@@ -595,6 +925,7 @@ const ListaHoras = () => {
               </div>
             </div>
 
+
             <div className='row'>
               <div className='col-9 text-end'>
                 <p>Horário Incompleto</p>
@@ -604,20 +935,40 @@ const ListaHoras = () => {
                 <p className='menos'></p>
               </div>
             </div>
-
+            {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro") && (
+              <div className='row'>
+                <div className='col-9 text-end'>
+                  <p>Horas em Aceitação</p>
+                </div>
+                <div className='col-3'>
+                  <p className='filtro'></p>
+                </div>
+              </div>
+            )}
           </div>
+          {(user?.user?.tipo === 7) && parseDurationToHours(horasExtra) > 0  &&
+            <AddPagamentos
+              horasExtraEsteMes={horasExtraMensal}
+              horasPorDar={horasExtra}
+              selectedUser={selectedUserID}
+              responsableUser={user?.user?.id}
+              month={selectedDay ? selectedDay.mes : today.getMonth()}
+              year={selectedDay ? selectedDay.ano : today.getFullYear()}
+              handleChange={handleChangePagamento}
+            />
+          }
         </div>
         {(listaDias && listaDias.length < 1) ? (
           <>
-          {(selectedUser === "Todos" || selectedUser === "Engenharia de Processos" || selectedUser === "Administradores" ||selectedUser === "Laboratorio" || selectedUser === "Outro" ) ? (
-          <div className='projetos'>
-          <h2>Grupo não possui horas inseridas</h2>
-        </div>
-          ):(
-          <div className='projetos'>
-            <h2>Utilizador não possui horas inseridas</h2>
-          </div>
-          )}
+            {(selectedUser === "Todos" || selectedUser === "Engenharia de Processos" || selectedUser === "Administradores" || selectedUser === "Laboratorio" || selectedUser === "Outro") ? (
+              <div className='projetos'>
+                <h2>Grupo não possui horas inseridas</h2>
+              </div>
+            ) : (
+              <div className='projetos'>
+                <h2>Utilizador não possui horas inseridas</h2>
+              </div>
+            )}
           </>
         ) : (
           <>
@@ -630,9 +981,11 @@ const ListaHoras = () => {
                     inserted={listaDias}
                     feriados={getFeriados}
                     ferias={ferias}
+                    aceitacao={aceitacao}
                     todos={true}
                     numberUsers={filteredUsers.length}
                     horasExtraID={addHorasExtraIDS}
+
                   />
                 </div>
                 <hr></hr>
@@ -729,6 +1082,7 @@ const ListaHoras = () => {
                     inserted={listaDias}
                     feriados={getFeriados}
                     ferias={ferias}
+                    aceitacao={aceitacao}
                     horasExtraID={addHorasExtraIDS}
                   />
                 </div>
@@ -786,7 +1140,7 @@ const ListaHoras = () => {
     </Wrapper >
   );
 
-  
+
 };
 
 

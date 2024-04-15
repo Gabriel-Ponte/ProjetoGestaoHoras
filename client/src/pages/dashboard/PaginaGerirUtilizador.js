@@ -10,7 +10,7 @@ const PaginaGerirUtilizadores = () => {
 
   useEffect(() => {
     if (user) {
-      if (user.user.tipo === 2) {
+      if (user.user.tipo === 2 || user.user.tipo === 7) {
         // Render the component
       } else if (user.user.tipo === 1 || user.user.tipo === 5) {
         toast.error("Sem permissões para aceder a esta página!");

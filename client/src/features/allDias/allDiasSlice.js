@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
-import { getAllDiasProjetoThunk, getAllDiasUtilizadorThunk ,getAllDiasThunk,getAllDiasProjetoUtilizadorThunk ,exportDiasThunk, getAllDiasUtilizadorTipoThunk} from './allDiasThunk';
+import { getAllDiasProjetoThunk, getAllDiasUtilizadorThunk ,getAllDiasThunk,getAllDiasProjetoUtilizadorThunk ,exportDiasThunk, getAllDiasUtilizadorTipoThunk, getAllDiasHorasExtraThunk, acceptDiasHorasExtraThunk, declineDiasHorasExtraThunk, getAllDiasHorasExtraDeclinedThunk, getAllDiasHorasExtraAcceptedThunk} from './allDiasThunk';
 
 const initialState = {
+  sort:'',
   isLoading: true,
   dias: [],
   stats: {},
@@ -20,6 +21,27 @@ export const getAllDiasTodos = createAsyncThunk(
   '/dia/getAllDias', 
   async (thunkAPI) => {
     return getAllDiasThunk(thunkAPI);
+  }
+);
+
+export const getAllDiasHorasExtra = createAsyncThunk(
+  '/dia/getAllDiasHorasExtra', 
+  async (_, thunkAPI) => {
+    return getAllDiasHorasExtraThunk(thunkAPI);
+  }
+);
+
+export const getAllDiasHorasExtraAccepted = createAsyncThunk(
+  '/dia/getAllDiasHorasExtraAccepted', 
+  async (_, thunkAPI) => {
+    return getAllDiasHorasExtraAcceptedThunk(thunkAPI);
+  }
+);
+
+export const getAllDiasHorasExtraDeclined = createAsyncThunk(
+  '/dia/getAllDiasHorasExtraDeclined', 
+  async (_, thunkAPI) => {
+    return getAllDiasHorasExtraDeclinedThunk(thunkAPI);
   }
 );
 
@@ -44,6 +66,11 @@ export const getAllDiasUtilizador = createAsyncThunk(
     }
   );
 
+  export const acceptDiasHorasExtra = createAsyncThunk('dias/acceptDiasHorasExtra', acceptDiasHorasExtraThunk);
+
+  export const declineDiasHorasExtra = createAsyncThunk('dias/declineDiasHorasExtra', declineDiasHorasExtraThunk);
+
+
   export const exportDia = createAsyncThunk(
     'dia/exportDias/',
     async ({ userID, userTipo }, thunkAPI) => {
@@ -61,7 +88,7 @@ const allDiasSlice = createSlice({
     hideLoading: (state) => {
       state.isLoading = false;
     },
-    handleChange: (state, { payload: { name, value } }) => {
+    handleChangeDias: (state, { payload: { name, value } }) => {
       state.page = 1;
       state[name] = value;
     },
@@ -161,6 +188,73 @@ const allDiasSlice = createSlice({
       state.isLoading = false;
     })
     
+
+    .addCase(getAllDiasHorasExtra.pending, (state) => {
+      state.isLoading = true;
+    })
+    .addCase(getAllDiasHorasExtra.fulfilled, (state , { payload }) => {
+      state.isLoading = false;
+      toast.success(payload);
+    })
+    .addCase(getAllDiasHorasExtra.rejected, (state, { payload }) => {
+      state.isLoading = false;
+    })
+
+
+
+    
+    .addCase(getAllDiasHorasExtraAccepted.pending, (state) => {
+      state.isLoading = true;
+    })
+    .addCase(getAllDiasHorasExtraAccepted.fulfilled, (state , { payload }) => {
+      state.isLoading = false;
+      toast.success(payload);
+    })
+    .addCase(getAllDiasHorasExtraAccepted.rejected, (state, { payload }) => {
+      state.isLoading = false;
+    })
+
+    
+    .addCase(getAllDiasHorasExtraDeclined.pending, (state) => {
+      state.isLoading = true;
+    })
+    .addCase(getAllDiasHorasExtraDeclined.fulfilled, (state , { payload }) => {
+      state.isLoading = false;
+      toast.success(payload);
+    })
+    .addCase(getAllDiasHorasExtraDeclined.rejected, (state, { payload }) => {
+      state.isLoading = false;
+    })
+
+    .addCase(acceptDiasHorasExtra.pending, (state) => {
+      state.isLoading = true;
+    })
+    .addCase(acceptDiasHorasExtra.fulfilled, (state , { payload }) => {
+      toast.success("Horas Extra aceites!");
+      state.isLoading = false;
+    })
+    
+    .addCase(acceptDiasHorasExtra.rejected, (state, { payload }) => {
+      toast.error("Ocorreu um Erro ao aceitar as Horas Extra!");
+      state.isLoading = false;
+    })
+
+    .addCase(declineDiasHorasExtra.pending, (state) => {
+      state.isLoading = true;
+    })
+    .addCase(declineDiasHorasExtra.fulfilled, (state , { payload }) => {
+      toast.success("Horas Extra recusadas!");
+      state.isLoading = false;
+    })
+    .addCase(declineDiasHorasExtra.rejected, (state, { payload }) => {
+      toast.error("Ocorreu um Erro ao aceitar as Horas Extra!");
+      state.isLoading = false;
+
+    })
+
+
+
+
   },
 });
 
