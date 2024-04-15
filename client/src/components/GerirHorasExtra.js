@@ -90,6 +90,7 @@ const GerirHorasExtra = () => {
   };
   const listDeclinedHorasExtra = async () => {
     try {
+
       dispatch(getAllDiasHorasExtraDeclined()).then((res) => {
         const horasExtraArray = Array.isArray(res?.payload?.diasHorasExtra) ? res.payload.diasHorasExtra : [];
         setListaHorasExtra(horasExtraArray);
@@ -120,29 +121,28 @@ const GerirHorasExtra = () => {
   const declineDiaHorasExtra = async (value) => {
     try {
       const data = new Date(value?.Data);
-      const dia = data.getDay();
-      const mes = data.getMonth();
+
+      const dia = data.getDate();
+      const mes = data.getMonth() + 1;
       const ano = data.getFullYear();
 
       let name = "";
       if (utilizadores && utilizadores.length > 0) {
         utilizadores.filter((user) => {
-          if (user._id == value.Utilizador) {
-            name = user.nome;
+          if (user?._id == value?.Utilizador) {
+            name = user?.nome;
           }
         })
       }
 
-      const confirmed = window.confirm("Tem a certeza que deseja recusar o Dia: " + dia + "/" + mes + "/" + ano + " a " + name + "?");
+      const confirmed = window.confirm("Tem a certeza que deseja recusar o dia: " + dia + "/" + mes + "/" + ano + " a " + name + "?");
       if (confirmed) {
         const result = await dispatch(declineDiasHorasExtra(value));
         if (!result.error) {
-          return "Dia Recusado.";
+          setCallUseEffect(!callUseEffect);
         }
       }
-
     } catch (error) {
-      console.error(error);
       return "Ocorreu um erro ao recusar o Dia.";
     }
   };

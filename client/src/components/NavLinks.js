@@ -102,10 +102,12 @@ const NavLinks = () => {
           return null;
         }
 
-        if((user.tipo === 6 || user.tipo === 7) && (id === 5 || id === 6 || id === 7 || id === 8 )){
+        //if((user.tipo === 6 || user.tipo === 7) && (id === 5 || id === 6 || id === 7 || id === 8 || id === 9 )){
+
+        if((user.tipo === 6) && (id === 5 || id === 6 || id === 7 || id === 8 || id === 9 )){
           return null;
         }
-
+        //if(user.tipo !== 7 && user.tipo !== 2 && id === 3){
         if(user.tipo !== 2 && id === 3){
           return null;
         }
@@ -133,9 +135,9 @@ const NavLinks = () => {
           
           )
       }
-
+      
       if(id === 9){
-        if(user.tipo === 2){
+        if(user.tipo === 2 || user?.tipo === 7){
           return (
     
         <React.Fragment key={id}>

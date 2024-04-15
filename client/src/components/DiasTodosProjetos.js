@@ -27,7 +27,6 @@ const DiasTodosProjetos = ({ _id,numeroHoras, projeto, diaSelected }) => {
         formattedMinutes = formattedMinutes.toString().padStart(2, '0');
 
         const formattedTime = `${formattedHours}:${formattedMinutes}`;
-
         return formattedTime;
       } catch (error) {
         console.error(error)
@@ -59,7 +58,7 @@ const DiasTodosProjetos = ({ _id,numeroHoras, projeto, diaSelected }) => {
                     </>
                     ):(
                     <div className="col-md-12 themed-grid-col">
-                    <h4>{numeroHoras}</h4>
+                    <h4>{convertToMinutes(numeroHoras)}</h4>
                     </div>
 
                     )}

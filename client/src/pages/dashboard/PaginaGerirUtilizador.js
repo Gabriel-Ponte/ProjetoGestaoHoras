@@ -26,9 +26,10 @@ const PaginaGerirUtilizadores = () => {
     }
   }, [user, navigate]);
 
+  //{user &&  (user.user.tipo === 2 || user.user.tipo === 7) && <GerirUtilizadores />}
   return (
     <>
-      {user && user.user.tipo === 2 && <GerirUtilizadores />}
+      {user &&  (user.user.tipo === 2) && <GerirUtilizadores />}
     </>
   );
 };

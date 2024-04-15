@@ -345,6 +345,38 @@ const VisualizarHorasProjeto = () => {
   }, [listaDias.length]);
 
 
+  function convertToMinutes(timeString) {
+    if (timeString) {
+      try {
+        let [hours, minutes] = timeString.toString().split(".");
+
+        // Convert the hours to an integer
+        const hoursInt = parseInt(hours, 10);
+        // Convert the fraction of an hour to minutes
+        minutes = parseInt(minutes) < 10 ? `${minutes}0` : minutes;
+
+        if (!minutes) {
+          minutes = 0;
+        }
+        let formattedMinutes = Math.round(minutes * 60) / 100;
+        if (formattedMinutes === 60) {
+          formattedMinutes = 0;
+          // formattedHours += 1;
+        }
+        // Use String.padStart to format hours and minutes with leading zeros
+        const formattedHours = hoursInt.toString().padStart(2, "0");
+        formattedMinutes = formattedMinutes.toString().padStart(2, '0');
+
+        const formattedTime = `${formattedHours}:${formattedMinutes}`;
+        return formattedTime;
+      } catch (error) {
+        console.error(error)
+        return timeString;
+      }
+    }
+    return timeString;
+  }
+  
   // //Change to refresh
   if (loading || !dias || !listaTipoTrabalho) {
     return <Loading />;
@@ -491,7 +523,7 @@ const VisualizarHorasProjeto = () => {
 
 
               <div className='col-12 text-center'>
-                <h5>Numero Total Horas : {numeroTotalHoras}</h5>
+                <h5>Numero Total Horas : {convertToMinutes(numeroTotalHoras)}</h5>
               </div>
             </div>
               )}
@@ -585,13 +617,14 @@ const VisualizarHorasProjeto = () => {
                 <h5>{selectedDay ? selectedDay?.dia === 0 ? `Numero total Horas ${selectedDay?.mes + 1}/${selectedDay?.ano}` : `Numero total Horas ${selectedDay?.dia}/${selectedDay?.mes + 1}/${selectedDay?.ano}` : `Numero Total Horas`}</h5>
               </div>
               <div className="col-6">
-                <p>{projeto?.NumeroHorasTotal}</p>
+                <p>{convertToMinutes(projeto?.NumeroHorasTotal)}</p>
               </div>
             </div>
 
             {typeof projeto?.NumeroHorasTotal === 'number' && (
               <div className="row mb-3">
-                <div className="col-3">
+                <div className="col-1"></div>
+                <div className="col-5 mb-3">
                   <h5>Tipos de Trabalho</h5>
                 </div>
                 <div>
@@ -606,7 +639,7 @@ const VisualizarHorasProjeto = () => {
                               <p>{t.TipoTrabalho}</p>
                             </div>
                             <div className="col-4">
-                              <p>{projeto?.NumeroHorasTipoTrabalho[t.TipoTrabalho]}</p>
+                              <p>{convertToMinutes(projeto?.NumeroHorasTipoTrabalho[t.TipoTrabalho])}</p>
                             </div>
                           </div>
                   

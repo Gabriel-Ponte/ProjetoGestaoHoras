@@ -10,12 +10,14 @@ const FormRowListaHorasExtra = ({ type, value, className, classNameInput, utiliz
 
   const { isLoading } = useSelector((store) => store.allDias);
 
+
   const [initialDate, setDate] = useState([]);
   const [initialName, setName] = useState([]);
   let data = new Date()
 
   useEffect(() => {
     const fullData = new Date(value.Data)
+    console.log(fullData)
     const dataDay = fullData.getDate();
     const dataMonth = fullData.getMonth() + 1;
     const dataYear = fullData.getFullYear();
@@ -33,7 +35,6 @@ const FormRowListaHorasExtra = ({ type, value, className, classNameInput, utiliz
     setDate(data)
    
   }, [id, changed]);
-
 
 
 
