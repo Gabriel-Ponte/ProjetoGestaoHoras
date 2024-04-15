@@ -17,13 +17,12 @@ export const getAllDiasHorasExtraThunk = async (thunkAPI) => {
     const { sort } = thunkAPI.getState().pagamentos || {}; 
     let url= `/dia/getAllDiasHorasExtra?sort=${sort}`
     const resp = await customFetch.get(url);
-    console.log(resp);
+
     return resp?.data;
 
     // const resp = await customFetch.get(`/dia/getAllDiasHorasExtra`);
     // return resp.data;
   } catch (error) {
-    console.log("error" , error)
     return checkForUnauthorizedResponse(error, thunkAPI);
   }
 };

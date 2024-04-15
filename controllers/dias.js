@@ -173,7 +173,6 @@ const getAllDiasHorasExtra = async (req, res) => {
 
     res.status(StatusCodes.OK).json({ diasHorasExtra });
   } catch (error) {
-    console.log(error)
     // Handle the error, e.g., send an error response.
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message });
   }

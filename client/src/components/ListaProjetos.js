@@ -67,7 +67,6 @@ const ListaProjetos = () => {
       }
   };
 
-  console.log(verificaAlterado)
   const handleSort = (tipo) => {
     if (isLoading) return;
     dispatch(handleChange({ name: 'sort', value: tipo }));

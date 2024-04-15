@@ -544,8 +544,7 @@ const ListaProjetos = () => {
     return;
   }, [listaDias, filteredProjetos, filteredProjetos, values.Data]);
 
-  console.log(values)
-
+  
   useEffect(() => {
     verificaDia({ target: { name: 'Data', value: values.Data } });
   }, [verificaDia]);

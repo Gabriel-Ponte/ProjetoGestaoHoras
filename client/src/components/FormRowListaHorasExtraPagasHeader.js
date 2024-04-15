@@ -40,7 +40,6 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, handleChange, pagas }) =
                     
     }else{
 
-
         //Utilizador
         if(sortValue === "Utilizador") {
             return true;
@@ -63,9 +62,14 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, handleChange, pagas }) =
             return false;
         }
 
+        //Horas Extra
+        if(sortValue === "nHoras") {
+            return true;
+        } else if(sortValue === "-nHoras"){
+            return false;
+        }
 
-
-        //Responsavel
+        //Tipo de Trabalho
         if(sortValue === "Tipo") {
             return true;
         } else if(sortValue === "-Tipo"){
@@ -73,9 +77,7 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, handleChange, pagas }) =
         }
         return false;
                     
-
-    }
-
+        }
     }
 
 
@@ -140,7 +142,7 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, handleChange, pagas }) =
         <Wrapper>
             <div className="ListaProjetosHeader">
                 <div className="list-group-item">
-                        <div  className={`${pagas === 0 ? "col-md-10 themed-grid-col" : "col-md-12 themed-grid-col"}`}>
+                        <div  className={`${pagas === 0 ? "col-md-11 themed-grid-col" : "col-md-12 themed-grid-col"}`}>
                             <div className="row text-center">
                                 {pagas === 3 ? (
                                     <>
@@ -213,7 +215,7 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, handleChange, pagas }) =
 
 
                                     <>
-                                        <div className="col-md-3 themed-grid-col">
+                                        <div className="col-md-2 themed-grid-col">
                                         <button
                                                 type="button"
                                                 name="VisualizarButton"
@@ -245,7 +247,7 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, handleChange, pagas }) =
                                                 }
                                             </button>
                                         </div>
-                                        <div className="col-md-2 themed-grid-col">
+                                        <div className="col-md-1 themed-grid-col">
                                         <button
                                                 type="button"
                                                 name="VisualizarButton"
@@ -261,7 +263,32 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, handleChange, pagas }) =
                                                 }
                                             </button>
                                         </div>
-                                        <div className="col-md-5 themed-grid-col">
+
+                                        <div className="col-md-2 themed-grid-col">
+                                        <button
+                                                type="button"
+                                                name="VisualizarButton"
+                                                className="btn buttonHeader"
+                  
+                                            >
+
+                                                Horas Extra{' '}
+                                            </button>
+                                        </div>
+
+
+                                        <div className="col-md-1 themed-grid-col">
+                                        <button
+                                                type="button"
+                                                name="VisualizarButton"
+                                                className="btn buttonHeader"
+                                                onClick={() => toggleSort('nHoras')}
+                                            >
+                                                Tipo{' '}
+                                            </button>
+                                        </div>
+
+                                        <div className="col-md-4 themed-grid-col">
                                         <button
                                                 type="button"
                                                 name="VisualizarButton"
@@ -269,7 +296,7 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, handleChange, pagas }) =
                                                 onClick={() => toggleSort('Tipo')}
                                             >
 
-                                                Tipo{' '}
+                                                Trabalho{' '}
                                                 {verificaActivo === "-Tipo" ?
                                                     <AiOutlineArrowUp /> : (verificaActivo === "Tipo" ?
                                                         <AiOutlineArrowDown /> : <BsArrowLeftShort />

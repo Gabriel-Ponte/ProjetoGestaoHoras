@@ -31,9 +31,9 @@ const folderNameToFind = 'isqctag';
 const folderPath = findFolderByName(folderNameToFind);
 
 if (folderPath) {
-    console.log(`Folder '${folderNameToFind}' found at: ${folderPath}`);
+    // console.log(`Folder '${folderNameToFind}' found at: ${folderPath}`);
 } else {
-    console.log(`Folder '${folderNameToFind}' not found.`);
+    // console.log(`Folder '${folderNameToFind}' not found.`);
 }
 
 //let win;

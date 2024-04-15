@@ -226,7 +226,6 @@ const GerirHorasExtra = () => {
             sortValue={sort}
             pagas={verificaAlterado}
             handleChange={handleChangeSort} />
-
         }
         {(listaHorasExtra && listaHorasExtra.length > 0) ? (
 
@@ -245,7 +244,7 @@ const GerirHorasExtra = () => {
                 </div>
               ) : (
                 <div className="row">
-                  <div className={`${verificaAlterado === 0 ? "col-md-10" : "col-md-12"} text-center tiposTrabalho`}>
+                  <div className={`${verificaAlterado === 0 ? "col-md-11" : "col-md-12"} text-center tiposTrabalho`}>
                     {
                       <FormRowListaHorasExtra
                         type="textarea"
@@ -258,7 +257,7 @@ const GerirHorasExtra = () => {
                   </div>
 
                   {verificaAlterado === 0 && !isLoading &&
-                    <div className="col-md-2 text-center mt-4">
+                    <div className="col-md-1 text-center mt-4">
                       <div className="row text-center">
                         <div className='col-md-6 '>
                           <button type='button'

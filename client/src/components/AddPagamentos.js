@@ -115,7 +115,6 @@ const AddPagamentos = ({ horasExtraEsteMes, horasPorDar, selectedUser, responsab
 
 
   const handleSubmit = async (e) => {
-    console.log("Handel Submit")
     e.preventDefault();
     if (!values.Utilizador || !values.UtilizadorResponsavel || !(values.Mes >= 0 && values.Mes < 12) || !values.Ano || !values.Horas) {
       const requiredFields = ['Utilizador', 'Utilizador Responsavel', 'Mes', 'Ano', 'Horas'];

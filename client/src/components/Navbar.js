@@ -101,7 +101,6 @@ const Navbar = () => {
     navigate('/PaginaAdicionarHoras');
   };
 
-  console.log(user.user.tipo)
 
   return (
     <Wrapper>
