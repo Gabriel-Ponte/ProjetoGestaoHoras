@@ -13,7 +13,7 @@ import PaginaGerirTipoTrabalho from './PaginaGerirTiposTrabalho';
 import PaginaGerirUtilizadores from './PaginaGerirUtilizador';
 import PaginaResetPassword from './PaginaResetPassword'
 import PaginaResetPasswordChange from './PaginaResetPasswordChange'
-import PaginaVisualizarHorasProjeto from './PaginaVisualizarHorasProjeto'
+import PaginaVisualizarHorasProjetos from './PaginaVisualizarHorasProjetos'
 import PaginaGerirHorasExtra from './PaginaGerirHorasExtra'
 
 export {
@@ -32,6 +32,6 @@ export {
     PaginaGerirUtilizadores,
     PaginaResetPassword,
     PaginaResetPasswordChange,
-    PaginaVisualizarHorasProjeto,
+    PaginaVisualizarHorasProjetos,
     PaginaGerirHorasExtra,
 };

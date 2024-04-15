@@ -85,6 +85,15 @@ const Navbar = () => {
     navigate('/PaginaVisualizarHoras');
   }
 
+  const visualizarHorasProjetos=()=>{
+    setShowLogout(false);
+    setDisableAddHoras(false);
+    dispatch(toggleSidebar(false));
+    //window.location.reload(navigate('/PaginaVisualizarHoras'));
+    navigate('/PaginaVisualizarHorasProjetos');
+  }
+
+
   const addHoras = () => {
     setShowLogout(false);
     setDisableAddHoras(false);
@@ -92,6 +101,7 @@ const Navbar = () => {
     navigate('/PaginaAdicionarHoras');
   };
 
+  console.log(user.user.tipo)
 
   return (
     <Wrapper>
@@ -160,6 +170,15 @@ const Navbar = () => {
           disabled={disableAddHoras} >
                 Visualizar Horas
           </button>
+            { (user?.user?.tipo === 2 || user?.user?.tipo === 7) && (
+          <button 
+          className=''
+          onClick={visualizarHorasProjetos} 
+          style={{width:'auto',visibility: disableAddHoras ? 'hidden' : 'visible' }} 
+          disabled={disableAddHoras} >
+                Horas Projetos
+          </button>
+          )}
           </div>
           </div>
 

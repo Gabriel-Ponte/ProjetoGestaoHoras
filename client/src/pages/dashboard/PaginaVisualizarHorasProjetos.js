@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 
-const PaginaVisualizarHorasProjeto = () => {
+const PaginaVisualizarHorasProjetos = () => {
   
   const { user } = useSelector((store) => store.utilizador);
   const navigate = useNavigate();
@@ -15,7 +15,7 @@ const PaginaVisualizarHorasProjeto = () => {
 
       } else {
         toast.error("Sem permissões para aceder a esta página!");
-        navigate('/PaginaVisualizarHorasProjeto');
+        navigate('/paginaVisualizarHorasProjetos');
       }
     } else {
       // Handle the case where user is undefined (optional, depending on your use case)
@@ -31,4 +31,4 @@ const PaginaVisualizarHorasProjeto = () => {
     </>
   );
 };
-export default PaginaVisualizarHorasProjeto;
+export default PaginaVisualizarHorasProjetos;

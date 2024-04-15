@@ -142,7 +142,7 @@ const VisualizarHorasProjeto = () => {
   
           for (let i = 0; i < listaDias.length; i++) {
             const dia = listaDias[i];
-
+            //console.log(listaDias)
             const data = new Date(dia.Data);
             let dataSelected = new Date();
             let condicao = null;
@@ -165,7 +165,7 @@ const VisualizarHorasProjeto = () => {
               condicao = dia.tipoDeTrabalhoHoras;
   
             }
-  
+            //console.log(condicao)
             if (condicao) {
               for (let j = 0; j < dia.tipoDeTrabalhoHoras.length; j++) {
                 const tipoDeTrabalhoHora = dia.tipoDeTrabalhoHoras[j];
@@ -250,7 +250,7 @@ const VisualizarHorasProjeto = () => {
     dispatch(getTipoTrabalho()).then((res) => {
       tipoTrabalhoArray = Array.isArray(res.payload.tipoTrabalho) ? res.payload.tipoTrabalho : [];
       
-      const projetoN = projeto?.Nome ?? "Todos"
+      const projetoN = projeto?.Nome ?? "Todos";
       setProjetoNome(projetoN);
       if (selectedProjeto === "Todos") {
         dispatch(getAllDiasTodos()).then((res) => {
@@ -282,13 +282,18 @@ const VisualizarHorasProjeto = () => {
         dispatch(getAllDias({ projetoId }))
           .then((res) => {
             let count = 0;
-
             if (res.payload.diasAllProjeto) {
               const lista = res.payload.diasAllProjeto;
               {lista.map((projetoSel) => {
               for(let i = 0 ; i < projetoSel?.tipoDeTrabalhoHoras.length ; i++){
                 if(projetoSel?.tipoDeTrabalhoHoras[i].projeto === projeto._id){ 
-                  count += parseFloat(projetoSel?.tipoDeTrabalhoHoras[i]?.horas);
+
+                  const horasArray = projetoSel?.tipoDeTrabalhoHoras[i]?.horas?.split(',');
+
+                  for(let g = 0 ; g < horasArray.length; g++){
+                    count += parseFloat(horasArray[g]);
+                  }
+
                 }
               }
             })
@@ -316,8 +321,8 @@ const VisualizarHorasProjeto = () => {
     });
 
 
-  }, [selectedProjeto, listaDias[0], listaTipoTrabalho?.length, dispatch]);
-
+  }, [selectedProjeto, dispatch]);
+  // selectedProjeto, listaDias[0], listaTipoTrabalho?.length,
   function arrayEquals(a, b) {
     if (a === b) return true;
     if (a == null || b == null) return false;
@@ -545,7 +550,10 @@ const VisualizarHorasProjeto = () => {
                         if (!selectedDay || (isSameMonth && isSameDate)) {
                           for(let i = 0 ; i < dia?.tipoDeTrabalhoHoras.length ; i++){
                               if(dia?.tipoDeTrabalhoHoras[i].projeto === projetoSel._id){
-                                count += parseFloat(dia?.tipoDeTrabalhoHoras[i]?.horas);
+                                const horasArray = dia?.tipoDeTrabalhoHoras[i]?.horas?.split(',');
+                                for(let g = 0 ; g < horasArray.length; g++){
+                                  count += parseFloat(horasArray[g]);
+                                }
                               }
                            }
                         }
@@ -593,13 +601,15 @@ const VisualizarHorasProjeto = () => {
                       return (
                         projeto?.NumeroHorasTipoTrabalho[t.TipoTrabalho] && projeto?.NumeroHorasTipoTrabalho[t.TipoTrabalho] > 0 ? (
                           <div className="row mb-3" key={i}>
+                            <div className='col-2'></div>
                             <div className="col-6">
                               <p>{t.TipoTrabalho}</p>
                             </div>
-                            <div className="col-6">
+                            <div className="col-4">
                               <p>{projeto?.NumeroHorasTipoTrabalho[t.TipoTrabalho]}</p>
                             </div>
                           </div>
+                  
                         ) :
                           null
                       );
