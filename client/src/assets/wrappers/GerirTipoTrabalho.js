@@ -70,10 +70,12 @@ const Wrapper = styled.section`
   }
 }
   .listaTiposTrabalho > div {
+    width: 60%;
     border: 1px solid black; /* Add border between grid items */
     margin-bottom:5%;
     align-items: center;
 }
+
 .tiposTrabalho {
   margin-top: 2%;
 }

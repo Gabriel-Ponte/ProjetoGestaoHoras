@@ -53,7 +53,7 @@ font-size: auto;
   }
 }
   .listaTiposUtilizador > div {
-    width: 70%;
+    width: 90%;
     border: 1px solid black; /* Add border between grid items */
     margin-bottom:5%;
         align-items: center;

@@ -14,6 +14,8 @@ const FormRowSelectTipo = ({ labelText, name, value, handleChange, list, classNa
     value = "Administrador Engenharia";
   }else if(value === 6 && name === "tipo"){
     value = "Administrador Laboratorio";
+  }else if(value === 7 && name === "tipo"){
+    value = "Administrador Recursos Humanos";
   }
 
   if(value === 1 && name === "tipoT"){
