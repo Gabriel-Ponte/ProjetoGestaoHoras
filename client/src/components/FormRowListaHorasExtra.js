@@ -128,7 +128,23 @@ const FormRowListaHorasExtra = ({ type, value,tipoHoras, className, classNameInp
       setTipo("Semana");
 
     } else{
-      setHorasExtra("-"+ value?.NumeroHoras);
+      ///////////////////////////////////////////////// Alterar para ID do tipo de Trabalho mas está a receber o Nome da Base de Dados ////////////////////////////////////////////////////////
+      let count = 0;
+      for(let j = 0; j < value.tipoDeTrabalhoHoras.length ; j++){
+        const tt = value.tipoDeTrabalhoHoras[j];
+        const tipoT = tt.tipoTrabalho.split(',');
+        const hours = tt.horas.split(',');
+        
+        for(let g = 0; g < tipoT.length ; g++){
+          if(tipoT[g].trim() === "Compensação de Horas Extra"){
+            count += hours[g]
+          }
+        }
+      }
+      if(count === 0){
+        count = value?.NumeroHoras;
+      }
+      setHorasExtra("-"+ count);
       setCompensacao(true);
       setTipo("");
     }
