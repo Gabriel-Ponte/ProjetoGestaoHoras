@@ -5,7 +5,7 @@ import { handleChangeDias, getAllDiasHorasExtra, acceptDiasHorasExtra, declineDi
 import Wrapper from '../assets/wrappers/GerirTipoTrabalho';
 import FormRowListaHorasExtra from './FormRowListaHorasExtra';
 import { listaUtilizadores } from '../features/utilizadores/utilizadorSlice';
-import { getAllPagamentos, handleChange } from '../features/pagamentos/pagamentosSlice';
+import { getAllPagamentos, handleChangePagamentos } from '../features/pagamentos/pagamentosSlice';
 import { FcCheckmark } from 'react-icons/fc';
 import { IoMdClose } from 'react-icons/io';
 import { toast } from 'react-toastify';
@@ -161,9 +161,9 @@ const GerirHorasExtra = () => {
   const handleChangeSort = (tipo) => {
     if (verificaAlterado === 3) {
       if (isLoading) return;
-      dispatch(handleChange({ name: 'sort', value: tipo }));
+      dispatch(handleChangePagamentos({ name: 'sort', value: tipo }));
     } else {
-      dispatch(handleChange({ name: 'sort', value: tipo }));
+      dispatch(handleChangePagamentos({ name: 'sort', value: tipo }));
     }
 
     setCallUseEffect(!callUseEffect);
@@ -171,7 +171,7 @@ const GerirHorasExtra = () => {
 
 
   const handleChangeTipo = (tipo) => {
-      dispatch(handleChange({ name: 'tipo', value: tipo }));
+      dispatch(handleChangePagamentos({ name: 'tipo', value: tipo }));
       setVerificaTipo(tipo);
       setCallUseEffect(!callUseEffect);
   };

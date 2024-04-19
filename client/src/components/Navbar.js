@@ -10,7 +10,7 @@ import { getAllDiasHorasExtra } from '../features/allDias/allDiasSlice';
 // import { GoDiffAdded } from 'react-icons/go';
 import { handleChange } from '../features/allProjetos/allProjetosSlice';
 
-
+import { handleChangePagamentos } from '../features/pagamentos/pagamentosSlice';
 const Navbar = () => {
   const [showLogout, setShowLogout] = useState(false);
   const [disableAddHoras, setDisableAddHoras] = useState(false);
@@ -22,9 +22,13 @@ const Navbar = () => {
 
   useEffect(() => {
     try {
+      
+      dispatch(handleChangePagamentos({ name: 'tipo', value: "1" }));
+
       dispatch(getAllDiasHorasExtra()).then((res) => {
         const horasExtraArray = Array.isArray(res?.payload?.diasHorasExtra) ? res.payload.diasHorasExtra : [];
         if(horasExtraArray && horasExtraArray.length > 0){
+
           setVerificaHorasExtra(true)
         } else{
           setVerificaHorasExtra(false)

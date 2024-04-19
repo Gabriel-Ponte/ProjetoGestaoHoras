@@ -61,7 +61,7 @@ const pagamentosSlice = createSlice({
   name: 'pagamento',
   initialState,
   reducers: {
-    handleChange: (state, { payload: { name, value } }) => {
+    handleChangePagamentos: (state, { payload: { name, value } }) => {
       state[name] = value;
     },
     clearValues: () => {
@@ -144,6 +144,6 @@ const pagamentosSlice = createSlice({
   },
 });
 
-export const { handleChange, clearValues, setEditDia } = pagamentosSlice.actions;
+export const { handleChangePagamentos, clearValues, setEditDia } = pagamentosSlice.actions;
 
 export default pagamentosSlice.reducer;
