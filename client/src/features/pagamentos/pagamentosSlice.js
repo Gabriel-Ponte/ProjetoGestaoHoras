@@ -6,6 +6,7 @@ import {addPagamentosUtilizadorThunk, getAllPagamentosThunk, getAllPagamentosUti
 
 const initialState = {
     sort: '',
+    tipo: '',
     isLoadingPagamentos: false,
 };
 

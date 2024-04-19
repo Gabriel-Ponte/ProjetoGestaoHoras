@@ -72,8 +72,7 @@ const compareTipoValues = (tipoA, tipoB, tipo) => {
 };
 
 
-const sortHorasExtra = async (result, sort) => {
-
+const sortHorasExtraTipo = async (result, sort) => {
   if (sort === "Tipo" || sort === "-Tipo") {
     result = await result;
 
@@ -96,9 +95,12 @@ const sortHorasExtra = async (result, sort) => {
 
     result = sortedItems.map((item) => item.item)
 
-  } else if (sort === "-Horas") {
-    result = await result;
+  }
+  return result;
+}
 
+const sortHorasExtra = (result, sort) => {
+  if (sort === "-Horas") {
     result = result.sort((a, b) => {
       const horasA = parseFloat(a.NumeroHoras);
       const horasB = parseFloat(b.NumeroHoras);
@@ -112,7 +114,6 @@ const sortHorasExtra = async (result, sort) => {
       return 0;
     });
   } else if (sort === "Horas") {
-    result = await result;
     result = result.sort((a, b) => {
       const horasA = parseFloat(a.NumeroHoras);
       const horasB = parseFloat(b.NumeroHoras);
@@ -125,142 +126,245 @@ const sortHorasExtra = async (result, sort) => {
       }
       return 0;
     });
-  } else {
-    result = await result.sort(sort);
   }
-
   return result;
 }
 
 const getAllDiasHorasExtra = async (req, res) => {
   try {
-    const { sort } = req.query;
+    const { sort, tipo } = req.query;
     let result = Dias.find({ accepted: { $eq: 1 } });
 
+
     if (sort) {
-      result = await sortHorasExtra(result, sort);
+      if (sort === "Tipo" || sort === "-Tipo") {
+        result = await sortHorasExtraTipo(result, sort);
+      } else if (sort === "Horas" || sort === "-Horas") {
+        result = await result;
+        result = sortHorasExtra(result, sort);
+      } else{
+        result = await result.sort(sort);
+      }
     }
 
     const diasHorasExtra = await result;
-
+    const indicesToRemove = [];
+    const promises = [];
     for (const dia of diasHorasExtra) {
       const tt = dia.tipoDeTrabalhoHoras;
+      let tipoTrT = 0;
 
-      for (const projeto of tt) {
-        // Find and update projeto.projeto
-        const foundProjeto = await Projeto.findOne({ _id: projeto.projeto });
+      promises.push(
+        Promise.all(
+          tt.map(async (projeto) => {
+            const foundProjeto = await Projeto.findOne({ _id: projeto.projeto });
+            if (foundProjeto) {
+              projeto.projeto = foundProjeto.Nome;
+            }
 
-        if (foundProjeto) {
-          projeto.projeto = foundProjeto.Nome;
+            const tipoT = projeto.tipoTrabalho.split(",");
+            for (let i = 0; i < tipoT.length; i++) {
+              const ttFound = await TipoTrabalho.findOne({ _id: tipoT[i] });
+              if (ttFound) {
+                tipoT[i] = ttFound.TipoTrabalho;
+
+                if (ttFound.tipo === 4) {
+                  tipoTrT = 3;
+                }
+              }
+            }
+            projeto.tipoTrabalho = tipoT.join(",");
+          })
+
+          
+        )
+      );
+
+
+      if (tipo) {
+        if(tipo !== "1"){
+          await Promise.all(promises);
         }
-
-
-        const tipoT = projeto.tipoTrabalho.split(",");
-        for (let i = 0; i < tipoT.length; i++) {
-          const ttFound = await TipoTrabalho.findOne({ _id: tipoT[i] });
-          if (ttFound) {
-            tipoT[i] = ttFound.TipoTrabalho;
-          }
+        if ((tipo === "3" && tipoTrT !== 3) || (tipo === "2" && tipoTrT === 3)) {
+          indicesToRemove.push(diasHorasExtra.indexOf(dia));
         }
-        projeto.tipoTrabalho = tipoT.join(",");
       }
+      
+    }
+
+    if(!tipo || tipo === "1"){
+      await Promise.all(promises);
+    }
+
+    if(indicesToRemove && indicesToRemove.length > 0){
+      indicesToRemove.reverse().forEach((index) => {
+        diasHorasExtra.splice(index, 1);
+      });
     }
 
     if (!diasHorasExtra.length) {
         return res.status(StatusCodes.OK).json({ diasHorasExtra });
-      //throw new NotFoundError(`No Dias with Extra Hours found`);
     }
 
     res.status(StatusCodes.OK).json({ diasHorasExtra });
   } catch (error) {
-    // Handle the error, e.g., send an error response.
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message });
   }
 };
 
 const getAllDiasHorasExtraAccepted = async (req, res) => {
   try {
-    const { sort } = req.query;
+    const { sort, tipo } = req.query;
 
     let result = Dias.find({ accepted: { $eq: 2 } });
 
 
     if (sort) {
-      result = await sortHorasExtra(result, sort);
-    }
-
-    const diasHorasExtra = await result;
-
-    for (const dia of diasHorasExtra) {
-      const tt = dia.tipoDeTrabalhoHoras;
-
-      for (const projeto of tt) {
-        // Find and update projeto.projeto
-        const foundProjeto = await Projeto.findOne({ _id: projeto.projeto });
-
-        if (foundProjeto) {
-          projeto.projeto = foundProjeto.Nome;
-        }
-
-
-        const tipoT = projeto.tipoTrabalho.split(",");
-        for (let i = 0; i < tipoT.length; i++) {
-          const ttFound = await TipoTrabalho.findOne({ _id: tipoT[i] });
-          if (ttFound) {
-            tipoT[i] = ttFound.TipoTrabalho;
-          }
-        }
-        projeto.tipoTrabalho = tipoT.join(",");
+      if (sort === "Tipo" || sort === "-Tipo") {
+        result = await sortHorasExtraTipo(result, sort);
+      } else if (sort === "Horas" || sort === "-Horas") {
+        result = await result;
+        result = sortHorasExtra(result, sort);
+      } else{
+        result = await result.sort(sort);
       }
     }
 
+    const diasHorasExtra = await result;
+    const indicesToRemove = [];
+    const promises = [];
+
+    for (const dia of diasHorasExtra) {
+      const tt = dia.tipoDeTrabalhoHoras;
+      let tipoTrT = 0;
+
+      promises.push(
+        Promise.all(
+          tt.map(async (projeto) => {
+            const foundProjeto = await Projeto.findOne({ _id: projeto.projeto });
+            if (foundProjeto) {
+              projeto.projeto = foundProjeto.Nome;
+            }
+
+            const tipoT = projeto.tipoTrabalho.split(",");
+            for (let i = 0; i < tipoT.length; i++) {
+              const ttFound = await TipoTrabalho.findOne({ _id: tipoT[i] });
+              if (ttFound) {
+                tipoT[i] = ttFound.TipoTrabalho;
+
+                if (ttFound.tipo === 4) {
+                  tipoTrT = 3;
+                }
+              }
+            }
+            projeto.tipoTrabalho = tipoT.join(",");
+          })
+        )
+      );
+
+      if (tipo) {
+        if(tipo !== "1"){
+          await Promise.all(promises);
+        }
+        if ((tipo === "3" && tipoTrT !== 3) || (tipo === "2" && tipoTrT === 3)) {
+          indicesToRemove.push(diasHorasExtra.indexOf(dia));
+        }
+      }
+      
+    }
+
+    if(!tipo || tipo === "1"){
+      await Promise.all(promises);
+    }
+
+    if(indicesToRemove && indicesToRemove.length > 0){
+      indicesToRemove.reverse().forEach((index) => {
+        diasHorasExtra.splice(index, 1);
+      });
+    }
+
+
     if (!diasHorasExtra.length) {
-  
         return res.status(StatusCodes.OK).json({ diasHorasExtra });
     }
     res.status(StatusCodes.OK).json({ diasHorasExtra });
   } catch (error) {
-    // Handle the error, e.g., send an error response.
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message });
   }
 };
 
 const getAllDiasHorasExtraDeclined = async (req, res) => {
   try {
-    const { sort } = req.query;
+    const { sort, tipo } = req.query;
 
     let result = Dias.find({ accepted: 3 }); 
+  
 
     if (sort) {
-      result = await sortHorasExtra(result, sort);
-    }
-
-    const diasHorasExtra = await result;
-
-    // Use direct value for comparison
-
-    for (const dia of diasHorasExtra) {
-      const tt = dia.tipoDeTrabalhoHoras;
-
-      for (const projeto of tt) {
-        // Find and update projeto.projeto
-        const foundProjeto = await Projeto.findOne({ _id: projeto.projeto });
-        if (foundProjeto) {
-          projeto.projeto = foundProjeto.Nome;
-        }
-
-
-        const tipoT = projeto.tipoTrabalho.split(",");
-        for (let i = 0; i < tipoT.length; i++) {
-          const ttFound = await TipoTrabalho.findOne({ _id: tipoT[i] });
-          if (ttFound) {
-            tipoT[i] = ttFound.TipoTrabalho;
-          }
-        }
-        projeto.tipoTrabalho = tipoT.join(",");
+      if (sort === "Tipo" || sort === "-Tipo") {
+        result = await sortHorasExtraTipo(result, sort);
+      } else if (sort === "Horas" || sort === "-Horas") {
+        result = await result;
+        result = sortHorasExtra(result, sort);
+      } else{
+        result = await result.sort(sort);
       }
     }
 
+    const diasHorasExtra = await result;
+    const indicesToRemove = [];
+    const promises = [];
+    for (const dia of diasHorasExtra) {
+      const tt = dia.tipoDeTrabalhoHoras;
+      let tipoTrT = 0;
+
+      promises.push(
+        Promise.all(
+          tt.map(async (projeto) => {
+            const foundProjeto = await Projeto.findOne({ _id: projeto.projeto });
+            if (foundProjeto) {
+              projeto.projeto = foundProjeto.Nome;
+            }
+
+            const tipoT = projeto.tipoTrabalho.split(",");
+            for (let i = 0; i < tipoT.length; i++) {
+              const ttFound = await TipoTrabalho.findOne({ _id: tipoT[i] });
+              if (ttFound) {
+                tipoT[i] = ttFound.TipoTrabalho;
+
+                if (ttFound.tipo === 4) {
+                  tipoTrT = 3;
+                }
+              }
+            }
+            projeto.tipoTrabalho = tipoT.join(",");
+          })
+
+          
+        )
+      );
+
+
+      if (tipo) {
+        if(tipo !== "1"){
+          await Promise.all(promises);
+        }
+        if ((tipo === "3" && tipoTrT !== 3) || (tipo === "2" && tipoTrT === 3)) {
+          indicesToRemove.push(diasHorasExtra.indexOf(dia));
+        }
+      }
+      
+    }
+
+    if(!tipo || tipo === "1"){
+      await Promise.all(promises);
+    }
+
+    if(indicesToRemove && indicesToRemove.length > 0){
+      indicesToRemove.reverse().forEach((index) => {
+        diasHorasExtra.splice(index, 1);
+      });
+    }
 
     if (!diasHorasExtra.length) {
       return res.status(StatusCodes.OK).json({ diasHorasExtra });
@@ -268,8 +372,7 @@ const getAllDiasHorasExtraDeclined = async (req, res) => {
 
     res.status(StatusCodes.OK).json({ diasHorasExtra });
   } catch (error) {
-    // Handle the error, e.g., send an error response.
-    console.error(error); // Log the error for debugging
+    console.error(error);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message });
   }
 };
@@ -294,7 +397,6 @@ const acceptDiasHorasExtra = async (req, res) => {
 
 
 const declineDiasHorasExtra = async (req, res) => {
-
   const { id } = req.params;
 
   const diaToDecline = await Dias.findById(id);

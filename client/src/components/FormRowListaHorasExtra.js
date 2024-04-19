@@ -5,11 +5,8 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import LoadingSmaller from './LoadingSmaller';
 
-const FormRowListaHorasExtra = ({ type, value, className, classNameInput, utilizadores, changed  }) => {
+const FormRowListaHorasExtra = ({ type, value,tipoHoras, className, classNameInput, utilizadores, changed  }) => {
   const id = `myTextarea${type}${value}`;
-
-  const { isLoading } = useSelector((store) => store.allDias);
-
 
   const [initialDate, setDate] = useState([]);
   const [initialName, setName] = useState([]);
@@ -197,10 +194,12 @@ const FormRowListaHorasExtra = ({ type, value, className, classNameInput, utiliz
       <div className="col-md-2 text-center" >
           <p style={{ backgroundColor: compensacao ? "#E8FCCF" : "" }}>{convertToMinutes(horasExtra)}</p>
       </div>
+      {(tipoHoras !== 3) && (
       <div className="col-md-1 text-center" >
           <p>{tipo}</p>
       </div>
-      <div className="col-md-4 text-center">
+      )}
+      <div className={tipoHoras !== 3 ? "col-md-4 text-center" : "col-md-5 text-center"}>
       {value?.tipoDeTrabalhoHoras?.map((t, index) => {
         const project = t.projeto;
         const tipoT = t.tipoTrabalho.split(',');

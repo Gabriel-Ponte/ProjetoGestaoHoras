@@ -14,8 +14,10 @@ export const getAllDiasThunk = async (thunkAPI) => {
 
 export const getAllDiasHorasExtraThunk = async (thunkAPI) => {
   try {
-    const { sort } = thunkAPI.getState().pagamentos || {}; 
-    let url= `/dia/getAllDiasHorasExtra?sort=${sort}`
+    
+    const { sort, tipo } = thunkAPI.getState().pagamentos || {}; 
+    
+    let url= `/dia/getAllDiasHorasExtra?sort=${sort}&tipo=${tipo}`
     const resp = await customFetch.get(url);
 
     return resp?.data;
@@ -29,8 +31,8 @@ export const getAllDiasHorasExtraThunk = async (thunkAPI) => {
 
 export const getAllDiasHorasExtraAcceptedThunk = async (thunkAPI) => {
   try {
-    const { sort } = thunkAPI.getState().pagamentos || {}; 
-    let url= `/dia/getAllDiasHorasExtraAccepted?sort=${sort}`
+    const { sort , tipo } = thunkAPI.getState().pagamentos || {}; 
+    let url= `/dia/getAllDiasHorasExtraAccepted?sort=${sort}&tipo=${tipo}`
     const resp = await customFetch.get(url);
     return resp.data;
 
@@ -43,8 +45,8 @@ export const getAllDiasHorasExtraAcceptedThunk = async (thunkAPI) => {
 
 export const getAllDiasHorasExtraDeclinedThunk = async (thunkAPI) => {
   try {
-    const { sort } = thunkAPI.getState().pagamentos || {}; 
-    let url= `/dia/getAllDiasHorasExtraDeclined?sort=${sort}`
+    const { sort ,tipo } = thunkAPI.getState().pagamentos || {}; 
+    let url= `/dia/getAllDiasHorasExtraDeclined?sort=${sort}&tipo=${tipo}`
     const resp = await customFetch.get(url);
     return resp.data;
 

@@ -4,7 +4,7 @@ import { BsArrowLeftShort } from 'react-icons/bs';
 import { useState } from 'react';
 import Wrapper from '../assets/wrappers/ListaProjetosHeader';
 
-const FormRowListaHorasExtraPagasHeader = ({ sortValue, handleChange, pagas }) => {
+const FormRowListaHorasExtraPagasHeader = ({ sortValue, tipoHoras, handleChange, pagas }) => {
 
     const sort =()=>{
         if(pagas === 3){
@@ -276,7 +276,8 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, handleChange, pagas }) =
                                             </button>
                                         </div>
 
-
+                                        {(tipoHoras === 1) ? (
+                                        <>
                                         <div className="col-md-1 themed-grid-col">
                                         <button
                                                 type="button"
@@ -294,17 +295,51 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, handleChange, pagas }) =
                                                 name="VisualizarButton"
                                                 className="btn buttonHeader"
                                                 onClick={() => toggleSort('Tipo')}
+   
                                             >
 
                                                 Trabalho{' '}
-                                                {verificaActivo === "-Tipo" ?
-                                                    <AiOutlineArrowUp /> : (verificaActivo === "Tipo" ?
-                                                        <AiOutlineArrowDown /> : <BsArrowLeftShort />
-                                                    )
+                                                {verificaActivo === "-Tipo" ?   <AiOutlineArrowUp /> : (verificaActivo === "Tipo" ?     <AiOutlineArrowDown /> : <BsArrowLeftShort /> )
                                                 }
                                             </button>
                                         </div>
+                                        </>
+                                         ) : (tipoHoras === 3) ? (
+                                        <div className="col-md-5 themed-grid-col">
+                                        <button
+                                                type="button"
+                                                name="VisualizarButton"
+                                                className="btn buttonHeader"
+      
+                                            >
+                                                Trabalho{' '}
+                                        </button>
+                                         </div>) : (
+                                            <>
+                                            <div className="col-md-1 themed-grid-col">
+                                            <button
+                                                    type="button"
+                                                    name="VisualizarButton"
+                                                    className="btn buttonHeader"
+                                                    onClick={() => toggleSort('nHoras')}
+                                                >
+                                                    Tipo{' '}
+                                                </button>
+                                            </div>
 
+                                            <div className="col-md-4 themed-grid-col">
+                                            <button
+                                                    type="button"
+                                                    name="VisualizarButton"
+                                                    className="btn buttonHeader"
+        
+                                                >
+
+                                                    Trabalho{' '}
+                                                </button>
+                                            </div>
+                                            </>
+                                         )}
                                     </>
                                 )}
                             </div>

@@ -12,7 +12,7 @@ import { toast } from 'react-toastify';
 import FormRowListaHorasExtraPagas from './FormRowListaHorasExtraPagas';
 import FormRowListaHorasExtraPagasHeader from './FormRowListaHorasExtraPagasHeader';
 
-import Loading from './Loading';
+
 import LoadingSmaller from './LoadingSmaller';
 
 
@@ -22,7 +22,8 @@ const GerirHorasExtra = () => {
 
   const [listaHorasExtra, setListaHorasExtra] = useState([]);
   const [verificaAlterado, setVerificaAlterado] = useState(0);
-  const [ loaded , setLoaded] = useState(false);
+  const [verificaTipo, setVerificaTipo] = useState(2);
+  const [loaded, setLoaded] = useState(false);
   const { isLoadingPagamentos, sort } = useSelector((store) => store.pagamentos);
   const { isLoading } = useSelector((store) => store.allDias);
 
@@ -42,6 +43,7 @@ const GerirHorasExtra = () => {
       toast.error("Sem permissões para aceder a esta página!");
       navigate('/PaginaAdicionarHoras');
     }
+    handleChangeTipo(2)
   }, [user?.user, navigate]);
 
   useEffect(() => {
@@ -66,7 +68,7 @@ const GerirHorasExtra = () => {
       dispatch(getAllDiasHorasExtra()).then((res) => {
         const horasExtraArray = Array.isArray(res?.payload?.diasHorasExtra) ? res.payload.diasHorasExtra : [];
         setListaHorasExtra(horasExtraArray);
-        setVerificaAlterado(0);
+
         setLoaded(true);
       });
     } catch (error) {
@@ -80,7 +82,6 @@ const GerirHorasExtra = () => {
       dispatch(getAllDiasHorasExtraAccepted()).then((res) => {
         const horasExtraArray = Array.isArray(res?.payload?.diasHorasExtra) ? res.payload.diasHorasExtra : [];
         setListaHorasExtra(horasExtraArray);
-        setVerificaAlterado(1)
         setLoaded(true);
       });
     } catch (error) {
@@ -88,13 +89,13 @@ const GerirHorasExtra = () => {
       setLoaded(true);
     }
   };
+
+
   const listDeclinedHorasExtra = async () => {
     try {
-
       dispatch(getAllDiasHorasExtraDeclined()).then((res) => {
         const horasExtraArray = Array.isArray(res?.payload?.diasHorasExtra) ? res.payload.diasHorasExtra : [];
         setListaHorasExtra(horasExtraArray);
-        setVerificaAlterado(2);
         setLoaded(true);
       });
     } catch (error) {
@@ -109,12 +110,11 @@ const GerirHorasExtra = () => {
       dispatch(getAllPagamentos()).then((res) => {
         const horasExtraArray = Array.isArray(res?.payload?.pagamentosAll) ? res?.payload?.pagamentosAll : [];
         setListaHorasExtra(horasExtraArray);
-        setVerificaAlterado(3);
         setLoaded(true);
       });
     } catch (error) {
-      console.error(error);       
-      setLoaded(true);    
+      console.error(error);
+      setLoaded(true);
     }
   };
 
@@ -170,6 +170,33 @@ const GerirHorasExtra = () => {
   };
 
 
+  const handleChangeTipo = (tipo) => {
+      dispatch(handleChange({ name: 'tipo', value: tipo }));
+      setVerificaTipo(tipo);
+      setCallUseEffect(!callUseEffect);
+  };
+
+
+  const handleChangeButtonClicked = (tipo) => {
+    setVerificaAlterado(tipo);
+;
+    if (tipo === 0) {
+      handleChangeTipo(2)
+      listHorasExtra()
+    }
+    else if (tipo === 1) {
+      handleChangeTipo(1)
+      listAcceptedHorasExtra();
+    } else if (tipo === 2) {
+          handleChangeTipo(1)
+      listDeclinedHorasExtra();
+    } else if (tipo === 3) {
+      listHorasExtraPagas();
+    }
+
+};
+
+
   return (
     <Wrapper>
       <div className={'row mb-12 text-center tittle'}>
@@ -182,7 +209,7 @@ const GerirHorasExtra = () => {
               className={`btn btn-outline-primary ${verificaAlterado === 0 ? 'active' : ''}`}
               disabled={isLoading}
               aria-checked
-              onClick={() => listHorasExtra()}>
+              onClick={() => handleChangeButtonClicked(0)}>
               Horas Extra por Aceitar
             </button>
           </div>
@@ -190,7 +217,7 @@ const GerirHorasExtra = () => {
             <button type='button'
               className={`btn btn-outline-primary ${verificaAlterado === 1 ? 'active' : ''}`}
               disabled={isLoading}
-              onClick={() => listAcceptedHorasExtra()}>
+              onClick={() => handleChangeButtonClicked(1)}>
               Horas Extra Aceites
             </button>
           </div>
@@ -198,7 +225,7 @@ const GerirHorasExtra = () => {
             <button type='button'
               className={`btn btn-outline-primary ${verificaAlterado === 2 ? 'active' : ''}`}
               disabled={isLoading}
-              onClick={() => listDeclinedHorasExtra()}>
+              onClick={() => handleChangeButtonClicked(2)}>
               Horas Extra Recusadas
             </button>
           </div>
@@ -207,7 +234,7 @@ const GerirHorasExtra = () => {
             <button type='button'
               className={`btn btn-outline-primary ${verificaAlterado === 3 ? 'active' : ''}`}
               disabled={isLoading}
-              onClick={() => listHorasExtraPagas()}>
+              onClick={() => handleChangeButtonClicked(3)}>
               Horas Extra Pagas
             </button>
           </div>
@@ -215,109 +242,171 @@ const GerirHorasExtra = () => {
         </div>
       </div>
       <>
-      {isLoading ? (
-              <div className='d-flex flex-column justify-content-center align-items-center h-500'style={{ maxHeight: '200px' }}>
-    <LoadingSmaller />
-  </div>
-    ) : (
-      <div className="listaGerirHorasExtra text-center">
-        {(listaHorasExtra && listaHorasExtra.length > 0) &&
-          <FormRowListaHorasExtraPagasHeader
-            sortValue={sort}
-            pagas={verificaAlterado}
-            handleChange={handleChangeSort} />
-        }
-        {(listaHorasExtra && listaHorasExtra.length > 0) ? (
+        {isLoading ? (
+          <div className='d-flex flex-column justify-content-center align-items-center h-500' style={{ maxHeight: '200px' }}>
+            <LoadingSmaller />
+          </div>
+        ) : (
+          <div className="listaGerirHorasExtra text-center">
+            {((listaHorasExtra && listaHorasExtra.length > 0) || verificaTipo !== 1) &&
+              <div>
+                {(verificaAlterado !== 3) &&
+                  <div className='row mt-4 mb-4'>
+                  <div className={`${verificaAlterado === 0 ? 'col-md-6' : 'col-md-4'}`}>
+                      <button type='button'
+                        className={`btn btn-outline-secondary ${verificaTipo === 2 ? 'active' : ''}`}
+                        disabled={isLoading}
+                        onClick={() => handleChangeTipo(2)}>
+                        Horas Extra
+                      </button>
+                    </div>
+                    <div className={`${verificaAlterado === 0 ? 'col-md-6' : 'col-md-4'}`}>
+                    <button type='button'
+                        className={`btn btn-outline-secondary ${verificaTipo === 3 ? 'active' : ''}`}
+                        disabled={isLoading}
+                        onClick={() => handleChangeTipo(3)}>
+                        Compensação de Horas Extra
+                        </button>
+                    </div>
+                    {(verificaAlterado !== 0) &&
+                    
+                    <div className='col-md-4'>
+                    <button type='button'
+                        className={`btn btn-outline-secondary ${verificaTipo === 1 ? 'active' : ''}`}
+                        disabled={isLoading}
+                        onClick={() => handleChangeTipo(1)}>
+                        Todos os pedidos
 
-          listaHorasExtra.map((t, i) => (
-            <div className="row text-center" key={i}>
-              <hr></hr>
-              {verificaAlterado === 3 ? (
-                <div>
-                  <FormRowListaHorasExtraPagas
-                    type="textarea"
-                    readOnly={true}
-                    utilizadores={utilizadores}
-                    value={t}
-                    changed={callUseEffect}
-                  />
-                </div>
-              ) : (
-                <div className="row">
-                  <div className={`${verificaAlterado === 0 ? "col-md-11" : "col-md-12"} text-center tiposTrabalho`}>
-                    {
-                      <FormRowListaHorasExtra
-                        type="textarea"
-                        readOnly={true}
-                        utilizadores={utilizadores}
-                        value={t}
-                        changed={callUseEffect}
-                      />
-                    }
-                  </div>
-
-                  {verificaAlterado === 0 && !isLoading &&
-                    <div className="col-md-1 text-center mt-4">
-                      <div className="row text-center">
-                        <div className='col-md-6 '>
-                          <button type='button'
-                            className="btn btn btn-outline-success"
-                            disabled={isLoading}
-                            onClick={() => acceptDiaHorasExtra(t._id)}>
-                            <FcCheckmark />
-                          </button>
-                        </div>
-                        <div className='col-md-6'>
-                          <button
-                            type='button'
-                            disabled={isLoading}
-                            className="btn  btn-outline-danger"
-                            onClick={() => declineDiaHorasExtra(t)}
-                          >
-                            <IoMdClose />
-                          </button>
-                        </div>
-                      </div>
+                      </button>
                     </div>
                   }
-                </div>
-              )}
-            </div>
+                  </div>
+                }
+              </div>
+            }
 
-          )
-          )
-        ) : (
 
-          <>
-            {!isLoading && !isLoadingPagamentos && (loaded === true) ? (
-              <div className="col-md-12 text-center">
-                {verificaAlterado === 0 ? (
-                  <div>
-                    <h1>Sem Pedidos de Horas Extra</h1>
+            {(listaHorasExtra && listaHorasExtra.length > 0) &&
+              <FormRowListaHorasExtraPagasHeader
+                sortValue={sort}
+                pagas={verificaAlterado}
+                tipoHoras={verificaTipo}
+                handleChange={handleChangeSort} />
+            }
+
+
+            {(listaHorasExtra && listaHorasExtra.length > 0) ? (
+              <div>
+
+                {listaHorasExtra.map((t, i) => (
+                  <div className="row text-center" key={i}>
+                    <hr></hr>
+                    {verificaAlterado === 3 ? (
+                      <div>
+                        <FormRowListaHorasExtraPagas
+                          type="textarea"
+                          readOnly={true}
+                          utilizadores={utilizadores}
+                          value={t}
+                          changed={callUseEffect}
+                        />
+                      </div>
+                    ) : (
+                      <div className="row">
+                        <div className={`${verificaAlterado === 0 ? "col-md-11" : "col-md-12"} text-center tiposTrabalho`}>
+                          {
+                            <FormRowListaHorasExtra
+                              type="textarea"
+                              readOnly={true}
+                              utilizadores={utilizadores}
+                              value={t}
+                              changed={callUseEffect}
+                              tipoHoras={verificaTipo}
+                            />
+                          }
+                        </div>
+
+                        {verificaAlterado === 0 && !isLoading &&
+                          <div className="col-md-1 text-center mt-4">
+                            <div className="row text-center">
+                              <div className='col-md-6 '>
+                                <button type='button'
+                                  className="btn btn btn-outline-success"
+                                  disabled={isLoading}
+                                  onClick={() => acceptDiaHorasExtra(t._id)}>
+                                  <FcCheckmark />
+                                </button>
+                              </div>
+                              <div className='col-md-6'>
+                                <button
+                                  type='button'
+                                  disabled={isLoading}
+                                  className="btn  btn-outline-danger"
+                                  onClick={() => declineDiaHorasExtra(t)}
+                                >
+                                  <IoMdClose />
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        }
+                      </div>
+                    )}
                   </div>
-                ) : verificaAlterado === 1 ? (
-                  <div>
-                    <h1>Sem Pedidos de Horas Extra Aceites!</h1>
-                  </div>
-                ) : verificaAlterado === 2 ? (
-                  <div>
-                    <h1>Sem Pedidos de Horas Extra Recusados!</h1>
-                  </div>
-                ) : (
-                  <div>
-                    <h1>Sem Horas Extra Pagas!</h1>
-                  </div>
+
+                )
                 )}
               </div>
-            ): (
-              <div className='d-flex flex-column justify-content-center align-items-center h-200'style={{ maxHeight: '100px' }}>
-                <LoadingSmaller/>
-              </div>
+            ) : (
+              <>
+                {!isLoading && !isLoadingPagamentos && (loaded === true) ? (
+                  <div className="mt-4 col-md-12  text-center ">
+                    {verificaAlterado === 0 ? (
+                      <div>
+                      {(verificaTipo === 1)  ?(
+                         <h1>Sem Pedidos de Horas Extra</h1>
+                       ):(verificaTipo === 2) ? (
+                        <h1>Sem Pedidos de Horas Extra Realizadas!</h1>
+                    ) :(verificaTipo === 3)  &&
+                        <h1>Sem Pedidos de Compensação de Horas Extra</h1>
+                      }
+                      </div>
+                    ) : verificaAlterado === 1 ? (
+                      <div>
+                      {(verificaTipo === 1)  ?(
+                        <h1>Sem Pedidos de Horas Extra Aceites!</h1>
+                       ):(verificaTipo === 2) ? (
+                        <h1>Sem Pedidos de Horas Extra Realizadas Aceites!</h1>
+                    ) :(verificaTipo === 3)  &&
+                        <h1>Sem Pedidos de Compensação de Horas Extra Aceites!</h1>
+                      }
+                      </div>
+                    ) : verificaAlterado === 2 ? (
+                      <div>
+                      {(verificaTipo === 1)  ?(
+                        <h1>Sem Pedidos de Horas Extra Recusados!</h1>
+                       ):(verificaTipo === 2) ? (
+                        <h1>Sem Pedidos de Horas Extra Realizadas Recusados!</h1>
+                    ) :(verificaTipo === 3)  &&
+                        <h1>Sem Pedidos de Compensação de Horas Extra Recusados!</h1>
+                      }
+                      </div>
+                    ) : (
+                      <div>
+                        <h1>Sem Horas Extra Pagas!</h1>
+                      </div>
+                    )}
+    
+                  </div>
+                ) : (
+                  <div className='d-flex flex-column justify-content-center align-items-center h-200' style={{ maxHeight: '100px' }}>
+                    <LoadingSmaller />
+                  </div>
+                )}
+              </>
             )}
-          </>
-        )}
-      </div>
-  )} </>
+          </div>
+        )} </>
     </Wrapper>
   );
 };

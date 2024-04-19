@@ -7,7 +7,6 @@ import LoadingSmaller from './LoadingSmaller';
 
 const FormRowListaHorasExtraPagas = ({ type, value, className, classNameInput, utilizadores, changed  }) => {
   const id = `myTextarea${type}${value}`;
-
   const { isLoadingPagamentos } = useSelector((store) => store.pagamentos);
 
   const [initialDate, setDate] = useState([]);
@@ -29,7 +28,7 @@ const FormRowListaHorasExtraPagas = ({ type, value, className, classNameInput, u
     const mes = (value.Mes + 1)
     data =  (mes < 10 ? "0": "")  + mes + "/" + value.Ano;
     setDate(data)
-  }, [id , changed]);
+  }, [id , changed, utilizadores, data]);
 
   if(isLoadingPagamentos){
     return (
