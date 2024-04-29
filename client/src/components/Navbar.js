@@ -157,6 +157,7 @@ const Navbar = () => {
             <FaCaretDown />
           </button>
           </div>
+          { (showLogout === false) ? (
           <div className='divButtonUtilizador text-center'>
             <div>
           <button 
@@ -184,9 +185,12 @@ const Navbar = () => {
           )}
           </div>
           </div>
+          ) :(
+          <div className={'col-md-12'} >
 
-          <div className={showLogout ? 'dropdown show-dropdown' : 'dropdown'} >
             <div className='row drop'>
+            <div className='col-md-1'></div>
+              <div className='col-md-5 text-center' style={{ backgroundColor: '#B4B4B8' }}>
             <button
               type='button'
               className='dropdown-btn'
@@ -194,19 +198,27 @@ const Navbar = () => {
             >
               Editar Perfil
             </button>
+            </div>
+            <div className='col-md-1'></div>
+
+            <div className='col-md-4 text-center' style={{ backgroundColor: '#B4B4B8' }}>
             <button
               type='button'
-              className='dropdown-btn'
+              className='primary dropdown-btn'
               onClick={logout}
             >
-              logout
+              Log out
             </button>
             </div>
-
+            <div className='col-md-1'></div>
+            </div>
+            </div>
+            )}
           </div>
+          
         </div>
         </div>
-      </div>
+  
     </Wrapper>
   );
 };

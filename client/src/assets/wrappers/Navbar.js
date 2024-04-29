@@ -74,11 +74,11 @@ const Wrapper = styled.nav`
     justify-content: center;
     align-items: center;
     position: absolute;
-    top: 70%;
+    top: 100%;
     left: 35%;
     width:30%;
     visibility: visible;
-    background-color: #E5E5E5;
+    background-color: #B4B4B8;
     z-index: 9998;
   }
 

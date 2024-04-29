@@ -317,7 +317,7 @@ const getAllDiasHorasExtraDeclined = async (req, res) => {
     for (const dia of diasHorasExtra) {
       const tt = dia.tipoDeTrabalhoHoras;
       let tipoTrT = 0;
-
+      let numeroHorasExtra = 0;
       promises.push(
         Promise.all(
           tt.map(async (projeto) => {
@@ -327,6 +327,7 @@ const getAllDiasHorasExtraDeclined = async (req, res) => {
             }
 
             const tipoT = projeto.tipoTrabalho.split(",");
+            const tipoTHoras = projeto.horas.split(",");
             for (let i = 0; i < tipoT.length; i++) {
               const ttFound = await TipoTrabalho.findOne({ _id: tipoT[i] });
               if (ttFound) {
@@ -334,13 +335,14 @@ const getAllDiasHorasExtraDeclined = async (req, res) => {
 
                 if (ttFound.tipo === 4) {
                   tipoTrT = 3;
+                  numeroHorasExtra += tipoTHoras[i];
                 }
               }
             }
             projeto.tipoTrabalho = tipoT.join(",");
+            projeto.numeroHorasExtra = numeroHorasExtra;
           })
-
-          
+       
         )
       );
 

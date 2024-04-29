@@ -1,12 +1,12 @@
 import Wrapper from '../assets/wrappers/NavbarGeral';
-import { FaAlignLeft, FaUserCircle, FaCaretDown } from 'react-icons/fa';
+import { FaUserCircle, FaCaretDown } from 'react-icons/fa';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleSidebar, clearStore } from '../features/utilizadores/utilizadorSlice';
+import { clearStore } from '../features/utilizadores/utilizadorSlice';
 // import { GiHourglass } from 'react-icons/gi';
 // import { GoDiffAdded } from 'react-icons/go';
-import { handleChange } from '../features/allProjetos/allProjetosSlice';
+//import { handleChange } from '../features/allProjetos/allProjetosSlice';
 
 
 const Navbar = () => {

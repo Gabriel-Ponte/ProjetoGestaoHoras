@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Wrapper from '../assets/wrappers/Projeto';
 import { useDispatch } from 'react-redux';
 import { getProjeto, handleChange } from '../features/projetos/projetosSlice';
-import { useNavigate, useHistory  } from 'react-router-dom';
+import { useNavigate  } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import FormRowListaProjetos from './FormRowListaProjetos';
 import { updateProjeto } from '../features/projetos/projetosSlice';
@@ -49,7 +49,6 @@ const Projeto = ({
     NumeroHorasTotal,
     Finalizado,
     finalizado,
-    utilizadores,
     handleAlterado
   });
 
@@ -67,13 +66,11 @@ const Projeto = ({
     Nome,
     Tema,
     Acao,
-    TipoTrabalho,
     Piloto,
     Links,
     NumeroHorasTotal,
     Finalizado,
     finalizado,
-    utilizadores,
     handleAlterado
   });
   //const [verificaResultado, setVerificaResultado] = useState(1);

@@ -2,15 +2,16 @@ import Wrapper from '../assets/wrappers/FormRowListaTipoTrabalho';
 
 import React, { useEffect, useState } from 'react';
 
-import { useSelector, useDispatch } from 'react-redux';
-import LoadingSmaller from './LoadingSmaller';
+//import { useSelector, useDispatch } from 'react-redux';
+//import LoadingSmaller from './LoadingSmaller';
 
 const FormRowListaHorasExtra = ({ type, value,tipoHoras, className, classNameInput, utilizadores, changed  }) => {
   const id = `myTextarea${type}${value}`;
 
+  //console.log(value)
   const [initialDate, setDate] = useState([]);
   const [initialName, setName] = useState([]);
-  const [feriados, setFeriados] = useState([]);
+  //const [feriados, setFeriados] = useState([]);
   const [horasExtra, setHorasExtra] = useState([]);
   const [compensacao , setCompensacao] = useState(false);
   const [tipo, setTipo] = useState([]);
@@ -44,7 +45,7 @@ const FormRowListaHorasExtra = ({ type, value,tipoHoras, className, classNameInp
         { name: "Corpo de Deus", date: calculateCorpusChristi(i) },
       );
     }
-    setFeriados(feriados);
+    //setFeriados(feriados);
     for (const feriado of feriados) {
       if (
         date.getDate() === feriado.date.getDate() &&
@@ -90,7 +91,7 @@ const FormRowListaHorasExtra = ({ type, value,tipoHoras, className, classNameInp
 
 
 
-  let data = new Date()
+  //let data = new Date()
 
   useEffect(() => {
     const fullData = new Date(value.Data)
@@ -151,16 +152,16 @@ const FormRowListaHorasExtra = ({ type, value,tipoHoras, className, classNameInp
 
       if(utilizadores && utilizadores.length > 0){
         utilizadores.filter((user) => {
-          if (user._id == value.Utilizador) {
+          if (user._id === value.Utilizador) {
             setName(user?.nome);
           }
         })
     }
 
 
-    data = dataDay + "/" + dataMonth + "/" + dataYear
+    const data = dataDay + "/" + dataMonth + "/" + dataYear
     setDate(data)
-   
+    
   }, [id, changed, horasExtra, initialName, initialDate, compensacao, tipo]);
 
 
