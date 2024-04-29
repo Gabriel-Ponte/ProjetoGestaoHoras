@@ -12,12 +12,12 @@ const ProjectSchema = new mongoose.Schema(
         Nome: {
             type: String,
             required: [true, "Por favor insira um nome para o projeto"],
-            maxlength: 100,
+            maxlength: 1000,
         },
         Tema: {
             type: String,
             required: [true, "Por favor insira um tema"],
-            maxlength: 100,
+            maxlength: 1000,
         },
         Cliente: {
             type: String,
