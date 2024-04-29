@@ -91,7 +91,27 @@ const Projeto = ({
 
     const nome = e.target.name;
     const value = e.target.value;
-    if(initialState[nome] === value){
+
+    let alreadyChanged = "true";
+    if(nome === "Acao"){
+      if(values["Notas"] ===  initialState["Notas"] && values["Cliente"] ===  initialState["Cliente"] && values["Nome"] ===  initialState["Nome"]){
+        alreadyChanged = "false";
+      }
+    } else if(nome === "Notas"){
+      if(values["Acao"] === initialState["Acao"] && values["Cliente"] ===  initialState["Cliente"] && values["Nome"] ===  initialState["Nome"]){
+        alreadyChanged = "false";
+      }
+    }else if(nome === "Cliente"){
+      if(values["Acao"] === initialState["Acao"] && values["Notas"] ===  initialState["Notas"] && values["Nome"] ===  initialState["Nome"]){
+        alreadyChanged = "false";
+      }
+    }else if(nome === "Nome"){
+      if(values["Acao"] === initialState["Acao"] && values["Cliente"] ===  initialState["Cliente"] && values["Notas"] ===  initialState["Notas"]){
+        alreadyChanged = "false";
+      }
+    }
+
+    if((initialState[nome] === value && alreadyChanged === "false")){
       handleAlterado(false);
       setVerificaAlterado(false);
     }else{
