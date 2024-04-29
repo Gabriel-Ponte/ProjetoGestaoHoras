@@ -116,7 +116,7 @@ const Navbar = () => {
         </button>
         </div>
         {user?.user?.tipo === 1|| user?.user?.tipo === 2 || user?.user?.tipo === 5 ?
-        <div className='col-4 middleButton' >
+        <div className='col-6 middleButton' >
           <button className='btn btn-light' style={{fontSize : "250%", maxHeight: "80px"}} type='button' onClick={returnMain}>Gestão Projetos</button>
         </div>
         : user?.user?.tipo === 7 ? 
@@ -124,11 +124,11 @@ const Navbar = () => {
         <div className='col-5 middleButton' >
         <button className='btn btn-light' style={{fontSize : "200%", maxHeight: "80px"}} type='button' onClick={returnMain}>Gestão Projetos</button>
         </div>
-        <div className='col-7 middleButton' >
+        <div className='col-6 middleButton' >
         <button className='btn btn-light' style={{fontSize : "200%", maxHeight: "80px" , backgroundColor: verificaHorasExtra ? "#A6C48A" : "" , }} type='button' onClick={navGestaoHorasExtra}>Gestão Horas Extra</button>
       </div>
       </div>:
-        <div className='col-4 middleButton' >
+        <div className='col-6 middleButton' >
         <h1 style={{fontSize : "250%", maxHeight: "80px" ,textTransform: 'none'}}>Gestão de Horas</h1>
       </div>
       }
