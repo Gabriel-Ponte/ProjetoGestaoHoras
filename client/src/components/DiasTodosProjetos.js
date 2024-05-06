@@ -1,4 +1,3 @@
-import { id } from 'date-fns/locale';
 import Wrapper from '../assets/wrappers/Dias';
 
 const DiasTodosProjetos = ({ _id,numeroHoras, projeto, diaSelected }) => {

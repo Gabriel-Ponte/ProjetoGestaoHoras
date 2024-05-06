@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { VisualizarHorasProjeto, VisualizarProjeto } from '../../components';
+import { VisualizarHorasProjeto } from '../../components';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';

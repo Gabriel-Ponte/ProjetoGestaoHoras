@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { handleChangeDias, getAllDiasHorasExtra, acceptDiasHorasExtra, declineDiasHorasExtra, getAllDiasHorasExtraAccepted, getAllDiasHorasExtraDeclined } from '../features/allDias/allDiasSlice';
+import { getAllDiasHorasExtra, acceptDiasHorasExtra, declineDiasHorasExtra, getAllDiasHorasExtraAccepted, getAllDiasHorasExtraDeclined } from '../features/allDias/allDiasSlice';
 import Wrapper from '../assets/wrappers/GerirTipoTrabalho';
 import FormRowListaHorasExtra from './FormRowListaHorasExtra';
 import { listaUtilizadores } from '../features/utilizadores/utilizadorSlice';
@@ -129,7 +129,7 @@ const GerirHorasExtra = () => {
       let name = "";
       if (utilizadores && utilizadores.length > 0) {
         utilizadores.filter((user) => {
-          if (user?._id == value?.Utilizador) {
+          if (user?._id === value?.Utilizador) {
             name = user?.nome;
           }
         })
@@ -208,7 +208,7 @@ const GerirHorasExtra = () => {
             <button type='button'
               className={`btn btn-outline-primary ${verificaAlterado === 0 ? 'active' : ''}`}
               disabled={isLoading}
-              aria-checked
+
               onClick={() => handleChangeButtonClicked(0)}>
               Horas Extra por Aceitar
             </button>

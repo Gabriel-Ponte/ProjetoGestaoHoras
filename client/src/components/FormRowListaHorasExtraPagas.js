@@ -1,11 +1,10 @@
 import Wrapper from '../assets/wrappers/FormRowListaTipoTrabalho';
 
 import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import Loading from './Loading';
+import { useSelector } from 'react-redux';
 import LoadingSmaller from './LoadingSmaller';
 
-const FormRowListaHorasExtraPagas = ({ type, value, className, classNameInput, utilizadores, changed  }) => {
+const FormRowListaHorasExtraPagas = ({ type, value,  utilizadores, changed  }) => {
   const id = `myTextarea${type}${value}`;
   const { isLoadingPagamentos } = useSelector((store) => store.pagamentos);
 
@@ -17,10 +16,10 @@ const FormRowListaHorasExtraPagas = ({ type, value, className, classNameInput, u
   useEffect(() => {
       if(utilizadores && utilizadores.length > 0){
         utilizadores.filter((user) => {
-          if (user._id == value.Utilizador) {
+          if (user._id === value.Utilizador) {
             setName(user.nome);
           }
-          if(user._id == value.UtilizadorResponsavel) {
+          if(user._id === value.UtilizadorResponsavel) {
             setNameResponsavel(user.nome);
           }
         })

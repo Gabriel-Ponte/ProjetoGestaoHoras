@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import { Header, BigSidebar, Navbar, SmallSidebar, NavbarGeral } from '../../components';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Wrapper from '../../assets/wrappers/SharedLayout';
 
 const SharedLayout = () => {

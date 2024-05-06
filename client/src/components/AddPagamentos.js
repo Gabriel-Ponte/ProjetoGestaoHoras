@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Wrapper from '../assets/wrappers/AddProjetoForm';
 import { toast } from 'react-toastify';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { addPagamentosUtilizador } from '../features/pagamentos/pagamentosSlice';
 import { AiOutlineClose } from 'react-icons/ai';
 import { IoAddCircleOutline } from "react-icons/io5";

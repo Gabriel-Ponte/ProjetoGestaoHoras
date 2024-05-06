@@ -280,6 +280,7 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
                                                 );
                                               }
                                             }
+                                            return (<div key= {i}></div>);
                                           }
                                         }
                                         )
@@ -307,6 +308,8 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
                                                 convertToInt={handleHorasChange}
                                               />
                                             );
+                                          } else {
+                                            return (<div key={i}></div>);
                                           }
                                         }
                                         )
@@ -347,6 +350,8 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
                                         }
                                       </div>
                                     );
+                                  } else{
+                                    return (<></>);
                                   }
                                 }
                               }

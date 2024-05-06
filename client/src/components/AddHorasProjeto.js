@@ -230,7 +230,7 @@ const verificaDia = useCallback((e) => {
         return <Loading />;
       }
 
-    if (projeto && projeto.projeto === null || typeof projeto.projeto === 'undefined'|| !projeto) {
+    if ((projeto && projeto.projeto === null) || typeof projeto.projeto === 'undefined'|| !projeto) {
         return <Loading />;
     }
     if(!listaDias){

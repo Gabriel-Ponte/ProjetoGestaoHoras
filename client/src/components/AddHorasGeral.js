@@ -75,6 +75,8 @@ const ListaProjetos = () => {
       setAddHorasExtraID(addHorasExtra[0]?._id);
       setcompensacaoID(compensacao[0]?._id);
       //setListaTrabalhoAll(tipoTrabalhoArray.filter(item => item.tipo === 1));
+      //////////////////////////////////////////////////////////
+      setListaTrabalhoAll();
       setListaTrabalhoGeral(tipoTrabalhoArray.filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 5)));
       //setListaTrabalhoGeralOther(tipoTrabalhoArray.filter(item => item.tipo === 3));
     });

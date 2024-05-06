@@ -131,7 +131,7 @@ const FormRowListaHorasExtra = ({ type, value,tipoHoras, className, classNameInp
     } else{
       ///////////////////////////////////////////////// Alterar para ID do tipo de Trabalho mas está a receber o Nome da Base de Dados ////////////////////////////////////////////////////////
       let count = 0;
-      for(let j = 0; j < value.tipoDeTrabalhoHoras.length ; j++){
+      for(let j = 0; j < value?.tipoDeTrabalhoHoras?.length ; j++){
         const tt = value.tipoDeTrabalhoHoras[j];
         const tipoT = tt.tipoTrabalho.split(',');
         const hours = tt.horas.split(',');
