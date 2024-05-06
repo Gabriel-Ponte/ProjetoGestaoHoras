@@ -38,13 +38,14 @@ const ListaProjetos = () => {
   const { user } = useSelector((store) => store.utilizador);
 
 
-  const [sortedProjetos, seTSortedProjetos] = useState([])
+  const [sortedProjetos, seTSortedProjetos] = useState([]);
+  const [filteredProjetos, setFilteredProjetos] = useState([]);
   const [horasT, setHorasT] = useState(0);
   const [DataCopy, setDataCopy] = useState("");
   const [copyExists, setCopyExists] = useState(true);
 
   const [listaDias, setListaDias] = useState([]);
-  const [filteredProjetos, setFilteredProjetos] = useState([]);
+
   const [verificaDiaCalled, setVerificaDiaCalled] = useState(false);
   const [verificaChange, setVerificaChange] = useState(false);
   const [verificaCopiarHoras, setVerificaCopiarHoras] = useState(false);
@@ -93,29 +94,14 @@ const ListaProjetos = () => {
 
 
   useEffect(() => {
+
     if (constLoaded) {
-      const dateP = values.Data ? new Date(values.Data) : new Date();
-      const filteredP = projetos.filter((p) => {
-        const dataI = new Date(p.DataInicio);
-        if (p.DataFim) {
-          const dataF = new Date(p.DataFim);
-          if (dataF < dateP) {
-            return false;
-          }
-        } else if (p.Finalizado) {
-          return false;
-        }
-        if (dataI > dateP) {
-
-          return false;
-        }
-        return true;
-      });
-
-      setFilteredProjetos(filteredP);
-
+        const dateP = values.Data ? new Date(values.Data) : new Date();
+        verificaProjetos(dateP);
     }
   }, [projetos]);
+
+
 
 
   useEffect(() => {
@@ -139,15 +125,16 @@ const ListaProjetos = () => {
         const lista = res.payload.dia
         setListaDias(lista);
 
-        const projetoGeral = (filteredProjetos.filter(item => item.Nome === "Geral"));
-        let countHours = 0;
-
-
         let dayStart = new Date(Date.UTC(2023, 11, 1, 0, 0, 0));
 
         if(dateRegisterUTC > dayStart){
           dayStart = dateRegisterUTC;
         }
+
+
+        const projetosF = getFilteredProjetos(dayStart);
+        const projetoGeral = (projetosF.filter(item => item.Nome === "Geral"));
+        let countHours = 0;
 
 
 
@@ -279,7 +266,7 @@ const ListaProjetos = () => {
               if (
                 currentYear > itemYear ||
                 currentMonth > itemMonth ||
-                (currentMonth == itemMonth  && currentDay > itemDay)
+                (currentMonth === itemMonth  && currentDay > itemDay)
               ) {
                 break;
               }
@@ -378,6 +365,8 @@ const ListaProjetos = () => {
 
 
 
+  
+
   const verificaDiaLast = useCallback((e) => {
     const { value } = e.target;
     const dataEscolhida = new Date(value);
@@ -433,13 +422,15 @@ const ListaProjetos = () => {
       setCopyExists(false);
     }
 
-  }, [DataCopy, filteredProjetos]);
+  }, [DataCopy]);
 
 
   const verificaDia = useCallback((e) => {
     setVerificaCopiarHoras(false);
-
-    const sProjetos = filteredProjetos.slice().sort((a, b) => {
+    const { name, value } = e.target;
+    const data = new Date(value);
+    const projetosF = getFilteredProjetos(data);
+    const sProjetos = projetosF.slice().sort((a, b) => {
       const pilotoAArray = a?.Piloto.split(',') || [];
       const pilotoBArray = b?.Piloto.split(',') || [];
       const nomeA = a?.Nome || [];
@@ -462,8 +453,7 @@ const ListaProjetos = () => {
       return 0;
     });
 
-    const { name, value } = e.target;
-    const data = new Date(value);
+
     let horasExtra = 0;
     for (let i = 0; i < listaDias.length; i++) {
       const DataRecebida = new Date(listaDias[i].Data);
@@ -542,9 +532,109 @@ const ListaProjetos = () => {
     setVerificaChange(false);
     setVerificaDiaCalled(false);
     return;
-  }, [listaDias, filteredProjetos, filteredProjetos, values.Data]);
+  }, [listaDias, values.Data]);
+
+
+  const verificaProjetos = async (dateP) => {
+
+    const currentDay = dateP.getDate();
+    const currentMonth = dateP.getMonth();
+    const currentYear = dateP.getFullYear();
+
+    const filteredP = projetos.filter((p) => {
+      const dataI = new Date(p.DataInicio);
+      if (p.DataFim) {
+        const dataF = new Date(p.DataFim);
+
+        const endDay = dataF.getDate();
+        const endMonth = dataF.getMonth();
+        const endYear = dataF.getFullYear();
+
+       if (
+          currentYear > endYear || (currentYear === endYear && currentMonth > endMonth) ||
+          (
+            currentYear === endYear &&
+            currentMonth === endMonth &&
+            currentDay >= endDay)
+        ) {
+          return false;
+        }
+      } else if (p.Finalizado) {
+        return false;
+      }
+
+
+      const startDay = dataI.getDate();
+      const startMonth = dataI.getMonth();
+      const startYear = dataI.getFullYear();
+
+      if (
+        currentYear < startYear || (currentYear === startYear && currentMonth < startMonth) ||
+        (
+          currentYear === startYear &&
+          currentMonth === startMonth &&
+          currentDay < startDay)
+      ) {
+        return false;
+      }
+
+      return true;
+    });
+    setFilteredProjetos(filteredP);
+    return;
+  };
+
 
   
+  const getFilteredProjetos = (dateP) => {
+
+    const currentDay = dateP.getDate();
+    const currentMonth = dateP.getMonth();
+    const currentYear = dateP.getFullYear();
+    
+    const filteredP = projetos.filter((p) => {
+
+      const dataI = new Date(p.DataInicio);
+      if (p.DataFim) {
+        const dataF = new Date(p.DataFim);
+
+        const endDay = dataF.getDate();
+        const endMonth = dataF.getMonth();
+        const endYear = dataF.getFullYear();
+
+       if (
+          currentYear > endYear || (currentYear === endYear && currentMonth > endMonth) ||
+          (
+            currentYear === endYear &&
+            currentMonth === endMonth &&
+            currentDay >= endDay)
+        ) {
+          return false;
+        }
+      } else if (p.Finalizado) {
+        return false;
+      }
+
+      const startDay = dataI.getDate();
+      const startMonth = dataI.getMonth();
+      const startYear = dataI.getFullYear();
+
+      if (
+        currentYear < startYear || (currentYear === startYear && currentMonth < startMonth) ||
+        (
+          currentYear === startYear &&
+          currentMonth === startMonth &&
+          currentDay < startDay)
+      ) {
+        return false;
+      }
+
+      return true;
+    });
+
+    return filteredP;
+  };
+
   useEffect(() => {
     verificaDia({ target: { name: 'Data', value: values.Data } });
   }, [verificaDia]);
@@ -556,23 +646,31 @@ const ListaProjetos = () => {
     
     const date = new Date(values.Data)
 
-    if (date.getDay() === 5) {
+    
+    const dayOfWeek = date.getDay();
+    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+
+    if (horasT <= 0) {
+      toast.error('Valor inserido invalido!');
+      return;
+    } else if (date.getDay() === 5) {
       if (horasT > 6) {
         values.accepted = 1;
         toast.error('Valor inserido excede as 6 Horas!');
       }
-    } else {
-      if (horasT > 8.5) {
+    }else if(feriadosPortugal(date)){
         values.accepted = 1;
-        toast.error('Valor inserido excede as 8 horas e 30 minutos diários!');
-      }
+        toast.error('Horas inseridas num Feriado!');
+    }else if(isWeekend){
+      values.accepted = 1;
+      toast.error('Horas inseridas num fim de semana!');
+    } else if (horasT > 8.5) {
+      values.accepted = 1;
+      toast.error('Valor inserido excede as 8 horas e 30 minutos diárias!');
     }
-    if (horasT <= 0) {
-      toast.error('Valor inserido invalido!');
-      return;
-    } 
-
+    
     if(activeCompensacao === true){
+      toast.error('Pedido de compensação de horas extra realizado!');
       values.accepted = 1;
     }
     

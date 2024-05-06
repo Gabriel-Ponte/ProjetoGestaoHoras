@@ -9,6 +9,7 @@ import { getPagamentosUtilizadorMes, getAllPagamentosUtilizador, getAllPagamento
 
 import { listaUtilizadores } from '../features/utilizadores/utilizadorSlice';
 import { AddPagamentos, FormRowSelect } from '../components';
+import { getFeriadosPortugalDate } from '../components/FeriadosPortugal';
 import Calendar from './Calendar'
 import { getTipoTrabalho } from '../features/tipoTrabalho/tipoTrabalhoSlice';
 
@@ -43,7 +44,7 @@ const ListaHoras = () => {
   const [totalHorasPagas, setTotalHorasPagas] = useState(null);
   const [horasExtraPagasAteMes, setHorasExtraPagasAteMes] = useState(null);
   const [horasPagasMes, setHorasPagasMes] = useState(null);
-  const [changePagamento, setChangePagamento]= useState(false)
+  const [changePagamento, setChangePagamento] = useState(false)
 
   const [horasCompencacao, setHorasCompencacao] = useState(null);
   const [idCompensacao, setIDCompencacao] = useState(null)
@@ -163,7 +164,7 @@ const ListaHoras = () => {
 
 
   const handleChangePagamento = (() => {
-      setChangePagamento(!changePagamento);
+    setChangePagamento(!changePagamento);
   });
 
   const handleChangeUtilizador = ((e) => {
@@ -431,7 +432,7 @@ const ListaHoras = () => {
       }
     });
 
-  }, [selectedUser, listaDias[0], horasExtra, listaTipoTrabalho?.length, ferias[0], aceitacao[0],changePagamento, dispatch]);
+  }, [selectedUser, listaDias[0], horasExtra, listaTipoTrabalho?.length, ferias[0], aceitacao[0], changePagamento, dispatch]);
 
   function arrayEquals(a, b) {
     if (a === b) return true;
@@ -654,7 +655,7 @@ const ListaHoras = () => {
         });
 
 
-      
+
       const extraAteMes = parseFloat(countHoursUntilMonth) - parseFloat(pagamentosAteMesCount);
       const extraMes = parseFloat(countHoursMonth) - parseFloat(pagamentosMesCount);
 
@@ -813,11 +814,11 @@ const ListaHoras = () => {
                 <div className='row'>
                   {percentagemHoras >= 0 && percentagemHoras !== Infinity && <p>{percentagemHoras.toFixed(1)}%</p>}
                 </div>
-                </div>
+              </div>
 
-               {//////////////////////////////
-               }
-                <div className='col-md-4 text-center'>
+              {//////////////////////////////
+              }
+              <div className='col-md-4 text-center'>
 
                 <div className='row'>
                   {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro") && (
@@ -846,13 +847,13 @@ const ListaHoras = () => {
 
 
 
-                </div>
+              </div>
 
 
-               {//////////////////////////////
-               }
+              {//////////////////////////////
+              }
 
-                <div className='col-md-4 text-center'>
+              <div className='col-md-4 text-center'>
 
                 <div className='row'>
                   {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro") && (
@@ -865,7 +866,7 @@ const ListaHoras = () => {
                     <p>Horas extra pagas até este mês: {convertToMinutes(horasExtraPagasAteMes)}</p>
                   )}
                 </div>
-                
+
                 <div className='row'>
                   {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro") && (
                     <p>Horas Extra pagas este mês: {convertToMinutes(horasPagasMes)}</p>
@@ -946,7 +947,7 @@ const ListaHoras = () => {
               </div>
             )}
           </div>
-          {(user?.user?.tipo === 7) && parseDurationToHours(horasExtra) > 0  &&
+          {(user?.user?.tipo === 7) && parseDurationToHours(horasExtra) > 0 &&
             <AddPagamentos
               horasExtraEsteMes={horasExtraMensal}
               horasPorDar={horasExtra}
@@ -971,6 +972,7 @@ const ListaHoras = () => {
             )}
           </>
         ) : (
+
           <>
 
             {(selectedUser === "Todos" || selectedUser === "Engenharia de Processos" || selectedUser === "Administradores" || selectedUser === "Laboratorio" || selectedUser === "Outro") ? (
@@ -1087,6 +1089,61 @@ const ListaHoras = () => {
                   />
                 </div>
                 <hr></hr>
+
+                <div className='text-center'>
+
+                  {
+                    (() => {
+                      
+                      let isFeriado = false;
+
+                      const selectedDay = dias.find((dia) => {
+                        const data = new Date(dia.Data);
+                        const isSameMonth = month === data.getMonth() && year === data.getFullYear();
+                        const isSameDate = diaSelected === 0 || Number(diaSelected) === data.getDate();
+                        return isSameMonth && isSameDate;
+                      });
+
+                      if (diaSelected !== 0) {
+                        const dataCompare = new Date (year,month,diaSelected ,0 ,0 ,0)
+                        isFeriado = getFeriadosPortugalDate(dataCompare);
+                      } else {
+                        isFeriado = false;
+                      }
+
+
+                      if (selectedDay) {
+                  
+                        return (
+                          <div>
+                            {isFeriado && 
+                              <h4>{isFeriado}</h4>
+                            }
+
+                          </div>
+                        );
+                      } else if (diaSelected === 0) {
+                        return (
+                          <div>
+                            <h2>Sem Horas inseridas neste mês</h2>; 
+                          </div>
+                        );
+                      } else if (diaSelected !== 0 || diaSelected !== "0") {
+                        return (
+                          <div>
+                            {isFeriado && 
+                              <h4>{isFeriado}</h4>
+                            }
+                            <h2>Sem Horas inseridas neste dia {diaSelected}</h2>
+                          </div>
+                        );
+                      }
+
+                    })()
+                  }
+                </div>
+                
+
                 <div>
                   {dias.map((dia) => {
                     for (let a = 0; a < dia.tipoDeTrabalhoHoras.length; a++) {
@@ -1102,34 +1159,19 @@ const ListaHoras = () => {
 
                     if (isSameMonth && isSameDate) {
                       count++;
-                      return <Dia key={dia.Data + selectedUser + count} {...dia} horasPossiveis={possibleHours} listaTT={listaTipoTrabalho} />;
+                      return (
+                        <div>
+                          <Dia key={dia.Data + selectedUser + count} {...dia} horasPossiveis={possibleHours} listaTT={listaTipoTrabalho} />
+                        </div>
+                      );
                     }
-
                     return null;
                   })}
+
                 </div>
 
-                <div className='text-center'>
-                  {dias.filter((dia) => {
-                    const data = new Date(dia.Data);
-                    const isSameMonth = month === data.getMonth() && year === data.getFullYear();
-                    const isSameDate = diaSelected === 0 || Number(diaSelected) === data.getDate();
 
-                    return isSameMonth && isSameDate;
-                  }).length === 0 && diaSelected === 0 && (
-                      <h2>Sem Horas inseridas neste mês</h2>
-                    )}
 
-                  {dias.filter((dia) => {
-                    const data = new Date(dia.Data);
-                    const isSameMonth = month === data.getMonth() && year === data.getFullYear();
-                    const isSameDate = diaSelected === 0 || Number(diaSelected) === data.getDate();
-
-                    return isSameMonth && isSameDate;
-                  }).length === 0 && diaSelected !== 0 && (
-                      <h2>Sem Horas inseridas neste dia {diaSelected}</h2>
-                    )}
-                </div>
               </>
             )}
           </>

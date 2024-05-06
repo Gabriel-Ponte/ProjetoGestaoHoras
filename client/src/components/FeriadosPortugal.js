@@ -60,6 +60,50 @@ const getHolidaysForYear = (year) => {
   return holidays;
 };
 
+
+export function getFeriadosPortugalDate(date) {
+
+  const feriados = [];
+
+  for (let i = date.getFullYear() - 5; i < date.getFullYear() + 5; i++) {
+    feriados.push(
+      { name: "Ano Novo", date: new Date(i, 0, 1) },
+      { name: "Dia da Liberdade", date: new Date(i, 3, 25) },
+      { name: "Dia do Trabalhador", date: new Date(i, 4, 1) },
+      { name: "Dia de Portugal", date: new Date(i, 5, 10) },
+      { name: "Assunção de Nossa Senhora", date: new Date(i, 7, 15) },
+      { name: "Ferias Coletivas", date: new Date(2024, 7, 16) },
+      { name: "Implantação da República", date: new Date(i, 9, 5) },
+      { name: "Dia de Todos os Santos", date: new Date(i, 10, 1) },
+      { name: "Restauração da Independência", date: new Date(i, 11, 1) },
+      { name: "Dia da Imaculada Conceição", date: new Date(i, 11, 8) },
+      { name: "Feriado Municipal", date: new Date(i, 2, 12) },
+      { name: "Ferias Coletivas", date: new Date(2024, 11, 24) },
+      { name: "Natal", date: new Date(i, 11, 25) },
+      { name: "Ferias Coletivas", date: new Date(2024, 11, 26) },
+      { name: "Ferias Coletivas", date: new Date(2023, 11, 26) },
+      { name: "Ferias Coletivas", date: new Date(2024, 11, 31) },
+      { name: "Carnaval", date: calculateEaster(i, "Carnaval") },
+      { name: "Sexta-feira Santa", date: calculateEaster(i, "SextaFeiraSanta") },
+      { name: "Páscoa", date: calculateEaster(i, "DomingoPascoa") },
+      { name: "Segunda-feira de Páscoa", date: new Date(2023, 3, 10) }, //{ name: "Segunda-feira de Páscoa", date: calculateEaster(i, "SegundaPascoa") },
+      { name: "Corpo de Deus", date: calculateCorpusChristi(i) },
+    );
+  }
+
+  for (const feriado of feriados) {
+    if (
+      date.getDate() === feriado.date.getDate() &&
+      date.getMonth() === feriado.date.getMonth() &&
+      date.getFullYear() === feriado.date.getFullYear()
+    ) {
+      return feriado?.name;
+    }
+  }
+  return false;
+}
+
+
 function calculateEaster(year, type) {
     const a = year % 19;
     const b = Math.floor(year / 100);
