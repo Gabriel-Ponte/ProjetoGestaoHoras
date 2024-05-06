@@ -90,7 +90,7 @@ const ListaProjetos = () => {
 
     setConstLoaded(true);
 
-  }, []);
+  }, [dispatch]);
 
 
   useEffect(() => {
@@ -202,7 +202,7 @@ const ListaProjetos = () => {
             return false;
           }
 
-          return;
+          return false;
         });
         setHorasExtra(countHours);
         setHorasExtraAfter(countHours);

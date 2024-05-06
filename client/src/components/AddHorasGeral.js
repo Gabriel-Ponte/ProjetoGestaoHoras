@@ -185,7 +185,7 @@ const ListaProjetos = () => {
             return false;
           }
 
-          return;
+          return false;
         });
         setHorasExtra(countHours);
         setHorasExtraAfter(countHours);
@@ -374,17 +374,17 @@ const ListaProjetos = () => {
 
     if (copiaEscolhida.Data) {
       const tipoDeTrabalhoHoras = {};
-      let sSProjetos = sortedProjetos;
+      //let sSProjetos = sortedProjetos;
       for (let j = 0; j < copiaEscolhida.tipoDeTrabalhoHoras.length; j++) {
         const val = copiaEscolhida.tipoDeTrabalhoHoras[j].projeto;
-        sSProjetos = sortedProjetos.slice().sort((a, b) => {
-          if (a?._id === val && b?._id !== val) {
-            return -1;
-          } else if (a?._id !== val && b?._id === val) {
-            return 1;
-          }
-          return 0;
-        });
+        // sSProjetos = sortedProjetos.slice().sort((a, b) => {
+        //   if (a?._id === val && b?._id !== val) {
+        //     return -1;
+        //   } else if (a?._id !== val && b?._id === val) {
+        //     return 1;
+        //   }
+        //   return 0;
+        // });
         tipoDeTrabalhoHoras[val] = copiaEscolhida.tipoDeTrabalhoHoras[j];
       }
       setValues({
@@ -411,28 +411,28 @@ const ListaProjetos = () => {
   const verificaDia = useCallback((e) => {
     setVerificaCopiarHoras(false);
 
-    const sProjetos = filteredProjetos.slice().sort((a, b) => {
-      const pilotoAArray = a?.Piloto.split(',') || [];
-      const pilotoBArray = b?.Piloto.split(',') || [];
-      const nomeA = a?.Nome || [];
-      const nomeB = b?.Nome || [];
+    // const sProjetos = filteredProjetos.slice().sort((a, b) => {
+    //   const pilotoAArray = a?.Piloto.split(',') || [];
+    //   const pilotoBArray = b?.Piloto.split(',') || [];
+    //   const nomeA = a?.Nome || [];
+    //   const nomeB = b?.Nome || [];
 
-      const pilotoAIncludesUser = pilotoAArray.includes(user.user.id) || pilotoAArray.includes(user.user.nome) || pilotoAArray.includes(user.user.login) || pilotoAArray.includes("Todos");
-      const pilotoBIncludesUser = pilotoBArray.includes(user.user.id) || pilotoBArray.includes(user.user.nome) || pilotoBArray.includes(user.user.login) || pilotoAArray.includes("Todos");
+    //   const pilotoAIncludesUser = pilotoAArray.includes(user.user.id) || pilotoAArray.includes(user.user.nome) || pilotoAArray.includes(user.user.login) || pilotoAArray.includes("Todos");
+    //   const pilotoBIncludesUser = pilotoBArray.includes(user.user.id) || pilotoBArray.includes(user.user.nome) || pilotoBArray.includes(user.user.login) || pilotoAArray.includes("Todos");
 
-      if (nomeA === "Geral") {
-        return -1;
-      } else if (nomeB === "Geral") {
-        return 1;
-      }
+    //   if (nomeA === "Geral") {
+    //     return -1;
+    //   } else if (nomeB === "Geral") {
+    //     return 1;
+    //   }
 
-      if (pilotoAIncludesUser && !pilotoBIncludesUser) {
-        return -1;
-      } else if (!pilotoAIncludesUser && pilotoBIncludesUser) {
-        return 1;
-      }
-      return 0;
-    });
+    //   if (pilotoAIncludesUser && !pilotoBIncludesUser) {
+    //     return -1;
+    //   } else if (!pilotoAIncludesUser && pilotoBIncludesUser) {
+    //     return 1;
+    //   }
+    //   return 0;
+    // });
 
     const { name, value } = e.target;
     const data = new Date(value);
@@ -455,17 +455,17 @@ const ListaProjetos = () => {
       ) {
         const tipoDeTrabalhoHoras = {};
 
-        let sSProjetos = sProjetos;
+        //let sSProjetos = sProjetos;
         for (let j = 0; j < listaDias[i].tipoDeTrabalhoHoras.length; j++) {
           const val = listaDias[i].tipoDeTrabalhoHoras[j].projeto;
-          sSProjetos = sProjetos.slice().sort((a, b) => {
-            if (a?._id === val && b?._id !== val) {
-              return -1;
-            } else if (a?._id !== val && b?._id === val) {
-              return 1;
-            }
-            return 0;
-          });
+          // sSProjetos = sProjetos.slice().sort((a, b) => {
+          //   if (a?._id === val && b?._id !== val) {
+          //     return -1;
+          //   } else if (a?._id !== val && b?._id === val) {
+          //     return 1;
+          //   }
+          //   return 0;
+          // });
           tipoDeTrabalhoHoras[val] = listaDias[i].tipoDeTrabalhoHoras[j];
 
 
@@ -739,18 +739,18 @@ const ListaProjetos = () => {
       }
 
       const tipoDeTrabalhoHoras = {};
-      let sSProjetos = sortedProjetos;
+      //let sSProjetos = sortedProjetos;
       for (let j = 0; j < lastDate?.tipoDeTrabalhoHoras?.length; j++) {
         const val = lastDate.tipoDeTrabalhoHoras[j].projeto;
 
-        sSProjetos = sortedProjetos.slice().sort((a, b) => {
-          if (a?._id === val && b?._id !== val) {
-            return -1;
-          } else if (a?._id !== val && b?._id === val) {
-            return 1;
-          }
-          return 0;
-        });
+        // sSProjetos = sortedProjetos.slice().sort((a, b) => {
+        //   if (a?._id === val && b?._id !== val) {
+        //     return -1;
+        //   } else if (a?._id !== val && b?._id === val) {
+        //     return 1;
+        //   }
+        //   return 0;
+        // });
 
         tipoDeTrabalhoHoras[val] = lastDate.tipoDeTrabalhoHoras[j];
 

@@ -82,7 +82,7 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
   
       setOptions(ListaTrabalhoGeralOther?.split(","));
 
-    }, [listaTipoTrabalho, values.Data]);
+    }, [ListaTrabalhoGeral, listaTipoTrabalho, values.Data]);
 
 
   const dispatch = useDispatch();

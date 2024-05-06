@@ -21,7 +21,7 @@ const AddHorasCopiar = memo(({ verificaCopiarHoras, copiar, DataCopy, verificaDi
     if (loading) {
       fetchData();
     }
-  }, [loading]);
+  }, [loading, copiar, copiarValue]);
 
   const copiarHoras = async (value) => {
     try {
@@ -33,7 +33,6 @@ const AddHorasCopiar = memo(({ verificaCopiarHoras, copiar, DataCopy, verificaDi
       // setLoading(false);  // This should be done in the useEffect
     }
   };
-  
 
   const dataCopyValue = useMemo(() => {
     return DataCopy?.DataCopy ? new Date(DataCopy.DataCopy).toLocaleDateString('en-CA') : '';
