@@ -31,7 +31,7 @@ function Login() {
       return;
     }
     const result = await dispatch(loginUser({ email, password }));
-    if (result.payload.user) {
+    if (result?.payload?.user) {
         if(result.payload.user.tipo === 3 || result.payload.user.tipo === 4 || result.payload.user.tipo === 6){
           setTimeout(() => {
             window.location.reload(navigate('/PaginaAdicionarHoras'));

@@ -7,7 +7,6 @@ import { FormRowSelect } from '../components';
 import Calendar from './Calendar'
 import { getTipoTrabalho } from '../features/tipoTrabalho/tipoTrabalhoSlice';
 import { getAllProjetos } from '../features/allProjetos/allProjetosSlice';
-import DiasTodos from './DiasTodos';
 import DiasTodosProjetos from './DiasTodosProjetos';
 
 
@@ -173,7 +172,7 @@ const VisualizarHorasProjeto = () => {
                   const array = tipoDeTrabalhoHora.horas ? tipoDeTrabalhoHora.horas.split(',') : [];
                   //console.log(array)
                   let values = tipoDeTrabalhoHora.tipoTrabalho ? tipoDeTrabalhoHora.tipoTrabalho.split(',') : [];
-                  let horas = 0;
+                  //let horas = 0;
                   const filteredValues = values
                     .filter(value => listaTipoTrabalho.some(item => item._id === value))
                     .map(value => {
@@ -248,13 +247,13 @@ const VisualizarHorasProjeto = () => {
 
 
     dispatch(getTipoTrabalho()).then((res) => {
-      tipoTrabalhoArray = Array.isArray(res.payload.tipoTrabalho) ? res.payload.tipoTrabalho : [];
+      tipoTrabalhoArray = Array.isArray(res?.payload?.tipoTrabalho) ? res?.payload?.tipoTrabalho : [];
       
       const projetoN = projeto?.Nome ?? "Todos";
       setProjetoNome(projetoN);
       if (selectedProjeto === "Todos") {
         dispatch(getAllDiasTodos()).then((res) => {
-          const listaDiasA = (typeof res.payload.diasAll !== "undefined") ? res.payload.diasAll : [];
+          const listaDiasA = (typeof res?.payload?.diasAll !== "undefined") ? res?.payload?.diasAll : [];
           setVerificaDias(1);
           setListaDiasT(listaDiasA);
           // Remove the matching from listaDias
@@ -282,7 +281,7 @@ const VisualizarHorasProjeto = () => {
         dispatch(getAllDias({ projetoId }))
           .then((res) => {
             let count = 0;
-            if (res.payload.diasAllProjeto) {
+            if (res?.payload?.diasAllProjeto) {
               const lista = res.payload.diasAllProjeto;
               {lista.map((projetoSel) => {
               for(let i = 0 ; i < projetoSel?.tipoDeTrabalhoHoras.length ; i++){

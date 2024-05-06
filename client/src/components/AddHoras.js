@@ -74,7 +74,7 @@ const ListaProjetos = () => {
 
     dispatch(getTipoTrabalho()).then((res) => {
 
-      const tipoTrabalhoArray = Array.isArray(res.payload.tipoTrabalho) ? res.payload.tipoTrabalho : [];
+      const tipoTrabalhoArray = Array.isArray(res?.payload?.tipoTrabalho) ? res?.payload?.tipoTrabalho : [];
       setListaTipoTrabalho(tipoTrabalhoArray);
 
       const compensacao = tipoTrabalhoArray.filter(item => item.tipo === 4);

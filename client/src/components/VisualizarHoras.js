@@ -46,7 +46,7 @@ const ListaHoras = () => {
   const [horasPagasMes, setHorasPagasMes] = useState(null);
   const [changePagamento, setChangePagamento] = useState(false)
 
-  const [horasCompencacao, setHorasCompencacao] = useState(null);
+  // const [horasCompencacao, setHorasCompencacao] = useState(null);
   const [idCompensacao, setIDCompencacao] = useState(null)
   const [userNome, setUserNome] = useState(user?.user?.nome);
 
@@ -190,12 +190,11 @@ const ListaHoras = () => {
     })
   }
 
-
     dispatch(listaUtilizadores());
     let tipoTrabalhoArray = [];
 
     dispatch(getTipoTrabalho()).then((res) => {
-      tipoTrabalhoArray = Array.isArray(res.payload.tipoTrabalho) ? res.payload.tipoTrabalho : [];
+      tipoTrabalhoArray = Array.isArray(res?.payload?.tipoTrabalho) ? res?.payload?.tipoTrabalho : [];
 
       setUserNome(selectedUser); // Update userNome state with the selected user name
       if (selectedUser === "Todos") {
@@ -270,7 +269,7 @@ const ListaHoras = () => {
           setListaDiasT(listaDiasA);
 
           let countHours = 0;
-          let countHoursCompencacao = 0;
+          //let countHoursCompencacao = 0;
           const dayStart = new Date(Date.UTC(2023, 11, 1, 0, 0, 0));
 
           const startDay = dayStart.getDate();
@@ -304,7 +303,7 @@ const ListaHoras = () => {
                 for (let j = 0; j < tt.length; j++) {
                   if (tt[j] === idCompensacao) {
                     countHours -= ttH[j];
-                    countHoursCompencacao += parseFloat(ttH[j]);
+                    //countHoursCompencacao += parseFloat(ttH[j]);
                   }
 
                   if (tt[j] === addHorasExtraID) {
@@ -343,7 +342,7 @@ const ListaHoras = () => {
           }
 
           const valueHE = parseFloat(countHours) - parseFloat(pagamentosCount);
-          setHorasCompencacao(countHoursCompencacao);
+          //setHorasCompencacao(countHoursCompencacao);
           setHorasExtra(convertToMinutes(valueHE))
           setTotalHorasPagas(pagamentosCount);
 
