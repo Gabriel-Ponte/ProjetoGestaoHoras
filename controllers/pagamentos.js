@@ -2,7 +2,7 @@ const Pagamentos = require("../models/Pagamentos");
 const User = require("../models/Utilizador");
 
 const { StatusCodes } = require("http-status-codes");
-
+const { NotFoundError } = require("../errors");
 
 const getAllPagamentos = async (req, res) => {
   try {
@@ -113,7 +113,6 @@ const getAllPagamentos = async (req, res) => {
 
 const getAllPagamentosUtilizador = async (req, res) => {
     try {
-
       const utilizador = req.params.id;
 
       const aUtilizador = await User.findOne({
@@ -121,13 +120,13 @@ const getAllPagamentosUtilizador = async (req, res) => {
       });
 
       if (!aUtilizador) {
-        throw new NotFoundError(`Não existe um utilizador com id ${Utilizador}`);
+        throw new NotFoundError(`Não existe um utilizador com id ${utilizador}`);
       }
 
       const pagamentosAllUtilizador = await Pagamentos.find({ Utilizador: utilizador });
 
       if (!pagamentosAllUtilizador.length) {
-        throw new NotFoundError(`Não foram encontradas horas inseridas`);
+        return res.status(StatusCodes.OK).json();
       }
   
       pagamentosAllUtilizador.sort((a, b) => {

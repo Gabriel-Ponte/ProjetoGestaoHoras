@@ -5,7 +5,7 @@ import Loading from './Loading';
 import Dia from './Dias';
 import DiaTodos from './DiasTodos';
 import { getAllDiasUtilizador, getAllDiasTodos, getAllDiasUtilizadorTipo } from '../features/allDias/allDiasSlice';
-import { getPagamentosUtilizadorMes, getAllPagamentosUtilizador, getAllPagamentosUtilizadorResponsavel } from '../features/pagamentos/pagamentosSlice';
+import { getAllPagamentosUtilizador } from '../features/pagamentos/pagamentosSlice';
 
 import { listaUtilizadores } from '../features/utilizadores/utilizadorSlice';
 import { AddPagamentos, FormRowSelect } from '../components';
@@ -170,7 +170,7 @@ const ListaHoras = () => {
   const handleChangeUtilizador = ((e) => {
 
     const selectedID = e.target.options[e.target.selectedIndex].getAttribute('data-key');
-    const selectedValue = e.target.value;
+    //const selectedValue = e.target.value;
 
     const { value } = e.target;
 
@@ -181,12 +181,14 @@ const ListaHoras = () => {
   });
 
   useEffect(() => {
-    const day = selectedDay ? selectedDay : today;
+    //const day = selectedDay ? selectedDay : today;
     let pagamentosUtilizadorArray = [];
+  if (selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Outro" && selectedUser !== "Administradores") {
     dispatch(getAllPagamentosUtilizador({ selectedUserID })).then((res) => {
       pagamentosUtilizadorArray = Array.isArray(res?.payload?.pagamentosAllUtilizador) ? res.payload.pagamentosAllUtilizador : [];
       setListaPagamentos(pagamentosUtilizadorArray)
     })
+  }
 
 
     dispatch(listaUtilizadores());
@@ -976,9 +978,10 @@ const ListaHoras = () => {
           <>
 
             {(selectedUser === "Todos" || selectedUser === "Engenharia de Processos" || selectedUser === "Administradores" || selectedUser === "Laboratorio" || selectedUser === "Outro") ? (
-              <>
-                <div className='col-12'>
+              <div key={"todos"}>
+                <div className='col-12' key={"divMainTodos"}>
                   <Calendar
+                    key={"calendarTodos"}
                     handleChange={handleChangeCalendario}
                     inserted={listaDias}
                     feriados={getFeriados}
@@ -990,11 +993,11 @@ const ListaHoras = () => {
 
                   />
                 </div>
-                <hr></hr>
+                <hr key={"hrTodos"}></hr>
 
 
 
-                <div className='text-center'>
+                <div className='text-center'  key={"text_centerTodos"}>
                   {listaDiasT.filter((dia) => {
                     const data = new Date(dia.Data);
                     const isSameMonth = month === data.getMonth() && year === data.getFullYear();
@@ -1056,7 +1059,7 @@ const ListaHoras = () => {
                     .map(({ user, count, dias }) => {
                       if (checkFound) {
                         return <DiaTodos
-                          key={user._id}
+                          key={user._id + "todos"}
                           Dias={dias}
                           horasPossiveis={possibleHoursTodos}
                           NumeroHoras={count}
@@ -1071,13 +1074,13 @@ const ListaHoras = () => {
                   }
                 </div>
 
-              </>
+              </div>
             ) : (
 
 
 
 
-              <>
+              <div key={"utilizadorSeleccionado"}>
                 <div className='col-12'>
                   <Calendar
                     handleChange={handleChangeCalendario}
@@ -1160,7 +1163,7 @@ const ListaHoras = () => {
                     if (isSameMonth && isSameDate) {
                       count++;
                       return (
-                        <div>
+                        <div key={count + selectedUser}>
                           <Dia key={dia.Data + selectedUser + count} {...dia} horasPossiveis={possibleHours} listaTT={listaTipoTrabalho} />
                         </div>
                       );
@@ -1172,7 +1175,7 @@ const ListaHoras = () => {
 
 
 
-              </>
+              </div>
             )}
           </>
         )

@@ -43,7 +43,7 @@ export const getAllPagamentosUtilizadorThunk = async ( thunkAPI , selectedUser )
       const userId= selectedUser?.selectedUserID;
       //const userId = utilizador?.user?.user?.id;
       const resp = await customFetch.get(`/pagamento/getAllPagamentosUtilizador/${userId}`);
-      return resp.data;
+      return resp?.data;
     } catch (error) {
       return checkForUnauthorizedResponse(error, thunkAPI);
     }
