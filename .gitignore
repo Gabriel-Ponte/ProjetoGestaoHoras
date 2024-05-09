@@ -1,4 +1,3 @@
 .env
-client/src/utils/axios.js
-node_modules
+/node_modules
 
