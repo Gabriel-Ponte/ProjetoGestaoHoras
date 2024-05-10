@@ -61,6 +61,18 @@ const VisualizarProjeto = () => {
       setUpdatedListaDias(listaDias);
       const projetoId = projeto?.projeto?._id;
 
+      if(projeto.projeto.Versao && projeto.projeto.Versao > 1){
+        dispatch(getProjetoAllVersoes(projetoId)).then((res) => {
+          console.log(res.payload)
+          if (res.payload.listaVersoes) {
+          } else {
+          }
+        })
+        .catch((error) => {
+          // Handle error if necessary
+        });
+
+      }
       if (selectedUser !== "Todos") {
         dispatch(getAllDiasProjetoUtilizador({ projetoId, selectedUser }))
           .then((res) => {

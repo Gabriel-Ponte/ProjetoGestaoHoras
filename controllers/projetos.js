@@ -162,6 +162,7 @@ const updateProjeto = async (req, res) => {
     }
     if(Nome !== projeto.Nome || Tema !== projeto.Tema || Cliente !== projeto.Cliente ||  Piloto !== projeto.Piloto || Acao !== projeto.Acao || Notas !== projeto.Notas){
       await ProjetosVersion.create({ 
+        id:projetoId,
         _id_P: projeto?._id_P,
         Versao: projeto?.Versao,
         Nome: projeto?.Nome,
@@ -220,7 +221,7 @@ const updateProjetoLink = async (req, res) => {
         _id: projetoId,
       },
       
-      { id:projetoId, Links: Links , LinkResumo: LinkResumo },
+      { Links: Links , LinkResumo: LinkResumo },
       { new: true, runValidators: true }
     );
     if (!projetoUpdate) {
