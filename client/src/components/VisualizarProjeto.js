@@ -8,6 +8,7 @@ import { listaUtilizadores } from '../features/utilizadores/utilizadorSlice';
 import { getProjetoAllVersoes } from '../features/projetos/projetosSlice';
 import { FormRowSelect } from '../components';
 import Calendar from './Calendar'
+import VisualizarHorasProjetoVersion from './VisualizarProjetoVersion';
 
 
 const VisualizarProjeto = () => {
@@ -37,17 +38,25 @@ const VisualizarProjeto = () => {
 
   const { user, utilizadores } = useSelector((store) => store.utilizador);
   const { projeto, isLoading } = useSelector((store) => store.projeto);
+
   const { dias } = useSelector((store) => store.allDias);
   const [verificaDias, setVerificaDias] = useState(0);
   const [values, setValues] = useState(null);
+  const [valuesVisualizar, setValuesVisualizar] = useState(null);
   const [selectedUser, setSelectedUser] = useState(user.user.tipo === 1 ? user?.user?.nome : "Todos");
   const [selectedDay, setSelectedDay] = useState();
   const [getFeriados, setFeriados] = useState([]);
   const [listaDias, setListaDias] = useState([]);
   const [updatedListaDias, setUpdatedListaDias] = useState([]);
   const [listaTipoTrabalho, setListaTipoTrabalho] = useState([]);
+  const [listaVProjeto, setListaVProjeto] = useState([]);
+  const [state, setState] = useState([]);
+
+
+
   const dispatch = useDispatch();
   const formattedListUtilizadores = Array.isArray(utilizadores) ? utilizadores : [];
+
 
 
   useEffect(() => {
@@ -57,15 +66,17 @@ const VisualizarProjeto = () => {
       const year = selectedDay ? selectedDay.ano : today.getFullYear();
       const dayFer = new Date(year, month, 0);
       feriadosPortugal(dayFer);
+      setValuesVisualizar(createInitialState(projeto.projeto));
       setValues(createInitialState(projeto.projeto));
       setUpdatedListaDias(listaDias);
       const projetoId = projeto?.projeto?._id;
 
       if(projeto.projeto.Versao && projeto.projeto.Versao > 1){
         dispatch(getProjetoAllVersoes(projetoId)).then((res) => {
-          console.log(res.payload)
-          if (res.payload.listaVersoes) {
+          if (res.payload.projeto) {
+            setListaVProjeto(res.payload.projeto)
           } else {
+            setListaVProjeto([])
           }
         })
         .catch((error) => {
@@ -248,6 +259,24 @@ const VisualizarProjeto = () => {
   }, [selectedDay, selectedUser, listaDias, dispatch, setValues]);
 
 
+
+  
+  const handleChangeVersion = useCallback((event) => {
+
+    if(event.target.value === "Atual"){
+      setValuesVisualizar(values);
+      setState(1);
+    }else{
+      const selectedProjetoVersion = listaVProjeto.find(projetoVersion => projetoVersion.createdAt === event.target.value);
+
+      setValuesVisualizar(createInitialState(selectedProjetoVersion));
+      setState(0);
+    }
+
+
+  }, [selectedUser, listaDias]);
+
+
   function feriadosPortugal(date) {
 
     const feriados = [];
@@ -337,6 +366,7 @@ const VisualizarProjeto = () => {
 
   return (
     <Wrapper>
+
       <div className="mainVisualiza">
 
         <div className="col-12">
@@ -346,115 +376,40 @@ const VisualizarProjeto = () => {
               <div className="col-12 text-center mb-5 ">
                 <h1>{values.Nome}</h1>
               </div>
-              <div className="col-7 left text-center" >
+              {listaVProjeto && listaVProjeto.length > 0 && (
+                <div className="container">
+                  <h2>Seleccione uma Versão:</h2>
+                  <select id="pageSelect" onChange={(event) => handleChangeVersion(event)}>
 
-                {/* <div className="row mb-3">
-                  <div className="col-6">
-                    <h5>Tema</h5>
-                  </div>
-                  <div className="col-6 text-start">
-                    <p>{values.Tema}</p>
-                  </div>
-                </div> */}
-                <div className="row mb-3">
-                  <div className="col-6">
-                    <h5>Cliente</h5>
-                  </div>
-                  <div className="col-6 text-start">
-                    <p>{values.Cliente}</p>
-                  </div>
+                    <option key="default" value="Atual">
+                      Atual
+                    </option>
+  
+                    {listaVProjeto.map((projetoVersion, index) => {
+                      const date = new Date(projetoVersion.createdAt);
+                      const day = date.getDate();
+                      let month = date.getMonth() + 1; 
+                      month = month < 10 ? '0' + month : month; 
+                      const year = date.getFullYear();
+                      const hour = date.getHours(); 
+                      const min = date.getMinutes(); 
+                      const sec = date.getSeconds(); 
+
+                      const data = `${day}/${month}/${year} ${hour}:${min}:${sec}`; 
+                      return (
+                        <option key={index} value={projetoVersion.createdAt}>
+                          {data}
+                        </option>
+                      );
+                    })}
+                  </select>
                 </div>
-
-                <div className="row mb-3">
-                  <div className="col-6 text-center">
-                    <h5 className="">
-                      Piloto/s
-                    </h5>
-                  </div>
-                  <div className="col-6 text-start">
-                    {values.Piloto &&
-                      (() => {
-                        //const updatedSeparatedArray = Array.isArray(values.Piloto) ? (values.Piloto.length > 0 ? values.Piloto[0].split(/[,\/]/) : []) : values.Piloto.split(/[,\/]/);
-                        const updatedSeparatedArray = Array.isArray(values.Piloto) ? values.Piloto.length > 0 ? values.Piloto[0].split(/[,/]/) : [] : values.Piloto.split(/[,/]/);
-                        if (updatedSeparatedArray && utilizadores) {
-                          for (let i = 0; i < updatedSeparatedArray.length; i++) {
-                            for (let a = 0; a < utilizadores.length; a++) {
-                              if (updatedSeparatedArray[i] === utilizadores[a]._id) {
-                                updatedSeparatedArray[i] = utilizadores[a].nome;
-                              }
-                            }
-                          }
-                        }
-                        return (
-                          <>
-                            {values.Piloto ? (
-                              updatedSeparatedArray.map((item, index) => (
-                                <p key={index}>{item}</p>
-                              ))
-                            ) : (
-                              <p>Sem Pilotos</p>
-                            )}
-                          </>
-                        );
-                      })()}
-
-                  </div>
-                </div>
-
-                <div className="row mb-3">
-                  <div className="col-6 text-center">
-                    <h5 className="">
-                      Ação
-                    </h5>
-                  </div>
-                  <div className="col-6 text-start">
-                    <p>{values.Acao ? values.Acao : "Sem Ações"}</p>
-                  </div>
-                </div>
-
-                <div className="row mb-3">
-                  <div className="col-6 text-center">
-                    <h5 className="">
-                      Notas
-                    </h5>
-                  </div>
-                  <div className="col-6 text-start">
-                    <p>{values.Notas ? values.Notas : "Sem Notas"}</p>
-                  </div>
-                </div>
-
-                <div className="row mb-3">
-                  <div className="col-6 text-center">
-                    <h5 className="">
-                      Links
-                    </h5>
-                  </div>
-                  <div className="col-6 text-start">
-                    <p>{values.Links ? values.Links : "Sem Links"}</p>
-                  </div>
-                </div>
-                <div className="row mb-3">
-                  <div className="col-6 text-center">
-                    <h5 className="">
-                      Realizado
-                    </h5>
-                  </div>
-                  <div className="col-6 text-start">
-                    <p>{values.Finalizado === true ? "Sim" : "Não"}</p>
-                  </div>
-                </div>
-                {values.Finalizado === true ? (
-                  <div className="row mb-3">
-                    <div className="col-7 text-center">
-                      <h5>Resultado</h5>
-                    </div>
-                    <div className="col-5 text-start">
-                      <p style={{ width: "100%" }}> {values.Resultado === true ? "Sucesso" : "Insucesso"}</p>
-                    </div>
-                  </div>
-                ) : null}
-              </div>
-
+              )}
+              <VisualizarHorasProjetoVersion
+                      values={valuesVisualizar}
+                      utilizadores={utilizadores}
+                      estado={state}
+             />
               <div className="col-5 text-center right">
 
                 {(user?.user?.tipo === 2) ? (

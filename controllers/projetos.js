@@ -72,7 +72,6 @@ const getAllProjetos = async (req, res) => {
 
 
 const getProjeto = async (req, res) => {
-
   const { id: projetoId } = req.params;
   const projeto = await Projeto.findOne({
     _id: projetoId,
@@ -85,13 +84,10 @@ const getProjeto = async (req, res) => {
 
 const getProjetoTodasVersoes = async (req, res) => {
   try{
-    console.log(req.params)
   const { id: projetoId } = req.params;
-  console.log(projetoId)
-  const projeto = await ProjetosVersion.find({
-    _id: projetoId,
-  });
-  console.log(projeto)
+  const projeto = await ProjetosVersion.find({ id: projetoId }).sort({ createdAt: -1 });
+
+
   if (!projeto) {
     throw new NotFoundError(`Não existem versões no projeto com id ${projetoId}`);
   }
@@ -173,7 +169,7 @@ const updateProjeto = async (req, res) => {
         DataObjetivo: projeto?.DataObjetivo,
         DataFim:projeto?.DataFim,
         TipoTrabalho:projeto?.TipoTrabalho,
-        Piloto:projeto?.Finalizado,
+        Piloto:projeto?.Piloto,
         Notas: projeto?.Notas,
         Links: projeto?.Links,
         LinkResumo: projeto?.LinkResumo,
