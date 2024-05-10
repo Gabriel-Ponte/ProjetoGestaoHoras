@@ -27,6 +27,7 @@ const VisualizarProjeto = () => {
       Acao: projeto.Acao,
       Piloto: projeto.Piloto,
       Links: projeto.Links,
+      LinkResumo: projeto.LinkResumo,
       Finalizado: projeto.Finalizado,
       Resultado: projeto.Resultado,
       Notas: projeto.Notas,

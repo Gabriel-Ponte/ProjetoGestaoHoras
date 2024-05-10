@@ -7,6 +7,7 @@ const VisualizarHorasProjetoVersion = ({
     utilizadores,
     estado
   }) => {
+    console.log(values)
     return(
         <div className="col-7 left text-center" >
 
@@ -101,7 +102,7 @@ const VisualizarHorasProjetoVersion = ({
             </h5>
           </div>
           <div className="col-6 text-start">
-            <p>{values.Links ? values.Links : "Sem Link A3"}</p>
+            <p style={{ wordWrap: 'break-word' }}>{values.Links ? values.Links : "Sem Link A3"}</p>
           </div>
         </div>
         <div className="row mb-3">
@@ -111,7 +112,7 @@ const VisualizarHorasProjetoVersion = ({
             </h5>
           </div>
           <div className="col-6 text-start">
-            <p>{values.LinkResumo ? values.LinkResumo : "Sem Link Resumo"}</p>
+            <p style={{ wordWrap: 'break-word' }}>{values.LinkResumo ? values.LinkResumo : "Sem Link Resumo"}</p>
           </div>
         </div>
         <div className="row mb-3">
