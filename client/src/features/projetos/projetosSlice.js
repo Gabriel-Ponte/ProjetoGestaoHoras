@@ -11,7 +11,9 @@ import {
   editProjetoThunk, 
   getProjetoThunk,
   getClientesThunk,
-  exportProjetosThunk
+  exportProjetosThunk,
+  insertProjetoLinkThunk,
+  getProjetoAllVersoesThunk
 } from './projetosThunk';
 
 
@@ -46,10 +48,23 @@ export const updateProjeto = createAsyncThunk(
     return editProjetoThunk('/projeto/editProjeto', projeto, thunkAPI);
   });
 
+  export const insertProjetoLink = createAsyncThunk(
+    'projeto/insertProjetoLink',
+    async (projeto, thunkAPI) => {
+      return insertProjetoLinkThunk('/projeto/updateLink', projeto, thunkAPI);
+    });
+
 export const getProjeto = createAsyncThunk(
   'projeto/getProjeto',
   async (id , thunkAPI) => {
     return getProjetoThunk('/projeto/getProjeto', id);
+  }
+);
+
+export const getProjetoAllVersoes = createAsyncThunk(
+  'projeto/todasVersoes',
+  async (id , thunkAPI) => {
+    return getProjetoAllVersoesThunk('/projeto/todasVersoes', id);
   }
 );
 
@@ -121,6 +136,23 @@ const projetoSlice = createSlice({
         toast.error(payload);
       })
 
+
+      .addCase(insertProjetoLink.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(insertProjetoLink.fulfilled, (state, { payload }) => {
+        const projeto = payload;
+        addProjetoToLocalStorage(projeto);
+        state.isLoading = false;
+        toast.success('Link alterado!');
+      })
+      .addCase(insertProjetoLink.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(payload);
+      })
+
+
+
       .addCase(getProjeto.pending, (state) => {
         state.isLoading = true;
       })
@@ -133,6 +165,22 @@ const projetoSlice = createSlice({
         state.isLoading = false;
         toast.error(payload);
       })
+
+
+      
+      .addCase(getProjetoAllVersoes.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getProjetoAllVersoes.fulfilled, (state, { payload }) => {
+        state.listaVersoes = payload;
+        state.isLoading = false;
+      })
+      .addCase(getProjetoAllVersoes.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(payload);
+      })
+
+      
 
       .addCase(getProjetoList.pending, (state) => {
         state.isLoading = true;

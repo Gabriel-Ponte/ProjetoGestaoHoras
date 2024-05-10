@@ -39,6 +39,14 @@ const Wrapper = styled.article`
       width: 50vw;
     }
 
+    .buttonProjetoLinks{
+      font-size: 3vw;
+      margin: auto; 
+      margin-top:2%;
+      width: 50vw;
+    }
+
+
     .reactIcon{
       font-size: 5vw;
     }
@@ -107,6 +115,12 @@ const Wrapper = styled.article`
     margin: auto;
     width:80%;
     font-size: 1vw;
+    padding: 0;
+  }
+  .buttonProjetoLinks{
+    margin: auto;
+    width:80%;
+    font-size: 0.7vw;
     padding: 0;
   }
 }

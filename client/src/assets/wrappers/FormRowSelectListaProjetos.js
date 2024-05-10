@@ -24,6 +24,20 @@ const Wrapper = styled.section`
   .form__field[name="Notas"]  {
     text-align:left;
   }
+  .form__field[name="Links"]  {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: #E5E5E5;
+    width: 2000%;
+    text-align:left;
+  }
+  .form__field[name="LinkResumo"]  {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: #E5E5E5;
+    width: 120%;
+    text-align:left;
+  }
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -50,7 +64,7 @@ const Wrapper = styled.section`
     display: flex;
     resize :none;
     width: 100%;
-    height: 80%;
+    height: 100%;
     outline: 0;
     border: 0;
     font-size: 1rem;
@@ -77,9 +91,8 @@ const Wrapper = styled.section`
 
   .form__field:focus {
     position: relative;
-
     width: 120%;
-    height:  150px; ;
+    height:  150px; 
     resize: both;
     z-index: 1;
     padding-bottom: 6px;  
@@ -90,6 +103,16 @@ const Wrapper = styled.section`
     background-color: #FFFFFF;
     overflow: auto;
   }
+
+  .form__field[name="Links"]:focus,
+  .form__field[name="LinkResumo"]:focus {
+      font-weight: 500;
+      background-color: #E5E5E5;
+      margin-top: 10px;
+      margin-bottom: 10px;
+  }
+
+
 
   .form__field__date {
     font-family: inherit;

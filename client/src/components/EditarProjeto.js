@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import Wrapper from '../assets/wrappers/LoginPage';
 import { FormRow, FormRowCheckbox, FormRowCheckboxMultiple } from '../components';
 
 import { useNavigate } from 'react-router-dom';
@@ -52,6 +51,7 @@ function VisualizarProjeto() {
           TipoTrabalho: StringListaTrabalho,
           Piloto: projeto.projeto.Piloto,
           Links: projeto.projeto.Links,
+          LinkResumo: projeto.projeto.LinkResumo,
           Finalizado: projeto.projeto.Finalizado,
           NumeroHorasTotal: projeto.projeto.NumeroHorasTotal,
           Resultado: projeto.projeto.Resultado,
@@ -72,6 +72,7 @@ function VisualizarProjeto() {
           TipoTrabalho: StringListaTrabalho,
           Piloto: projeto.Piloto,
           Links: projeto.Links,
+          LinkResumo: projeto.LinkResumo,
           Finalizado: projeto.Finalizado,
           NumeroHorasTotal: projeto.NumeroHorasTotal,
           Resultado: projeto.Resultado,
@@ -129,7 +130,7 @@ function VisualizarProjeto() {
         values.Resultado = false;
         values.DataFim = "";
       }catch{
-        await setValues({ ...values, ["Resultado"]: false , ["DataFim"]: "" });
+        await setValues({ ...values, Resultado: false , DataFim: "" });
       }
       }
  
@@ -321,11 +322,22 @@ function VisualizarProjeto() {
                     className="form-control"
                     id="Links"
                     name="Links"
-                    labelText = "Links"
+                    labelText = "Link A3"
                     placeholder="Links"
                     value={values.Links}
                     handleChange={handleChange}
                   />
+
+                <FormRow
+                    type="text"
+                    className="form-control"
+                    id="LinkResumo"
+                    name="LinkResumo"
+                    labelText = "Link Resumo"
+                    placeholder="LinkResumo"
+                    value={values.LinkResumo}
+                    handleChange={handleChange}
+                  />      
                   <div className="form-control">
 
                   <FormRowCheckboxMultiple

@@ -24,6 +24,7 @@ const initialState = {
   TipoTrabalho: '',
   Piloto: '',
   Links: '',
+  LinkResumo: '',
 };
 
 const AddProjectForm = () => {
@@ -240,12 +241,23 @@ const AddProjectForm = () => {
             classNameInput='col-md-9'
             id="Links"
             name="Links"
-            labelText="Links:"
+            labelText="Link A3:"
             placeholder="Links"
             value={values.Links}
             handleChange={handleChange}
           />
-
+          <FormRow
+            type="text"
+            className="row mb-3 text-center" 
+            classNameLabel='col-md-3 text-end' 
+            classNameInput='col-md-9'
+            id="LinkResumo"
+            name="LinkResumo"
+            labelText="Link Resumo:"
+            placeholder="LinkResumo"
+            value={values.LinkResumo}
+            handleChange={handleChange}
+          />
 
           <FormRowCheckboxMultiple
             type="text"

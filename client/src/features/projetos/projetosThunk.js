@@ -32,6 +32,17 @@ export const editProjetoThunk = async (url, projeto, thunkAPI) => {
   }
 };
 
+export const insertProjetoLinkThunk = async (url, projeto, thunkAPI) => {
+  try {
+    const resp = await customFetch.patch(`/projetos/updateLink/${projeto._id}`, projeto);
+    thunkAPI.dispatch(clearValues());
+    return resp.data;
+  } catch (error) {
+    return checkForUnauthorizedResponse(error, thunkAPI);
+  }
+};
+
+
 
 export const getProjetoThunk = async ( thunkAPI ,projetoId) => {
   try {
@@ -42,6 +53,15 @@ export const getProjetoThunk = async ( thunkAPI ,projetoId) => {
   }
 };
 
+
+export const getProjetoAllVersoesThunk = async ( thunkAPI ,projetoId) => {
+  try {
+    const resp = await customFetch.get(`/projetos/todasVersoes/${projetoId}`);
+    return resp.data;
+  } catch (error) {
+    return checkForUnauthorizedResponse(error, thunkAPI);
+  }
+};
 
 export const getClientesThunk = async ( thunkAPI ,projetoId) => {
   try {

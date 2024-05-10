@@ -5,6 +5,7 @@ import Loading from './Loading';
 import { getAllDias, getAllDiasProjetoUtilizador } from '../features/allDias/allDiasSlice';
 import { getTipoTrabalho } from '../features/tipoTrabalho/tipoTrabalhoSlice';
 import { listaUtilizadores } from '../features/utilizadores/utilizadorSlice';
+import { getProjetoAllVersoes } from '../features/projetos/projetosSlice';
 import { FormRowSelect } from '../components';
 import Calendar from './Calendar'
 
@@ -30,6 +31,7 @@ const VisualizarProjeto = () => {
       Notas: projeto.Notas,
       NumeroHorasTotal: "Sem Horas Inseridas no Projeto",
       NumeroHorasTipoTrabalho: "",
+      Versao: projeto.Versao,
     };
   }
 
@@ -46,6 +48,7 @@ const VisualizarProjeto = () => {
   const [listaTipoTrabalho, setListaTipoTrabalho] = useState([]);
   const dispatch = useDispatch();
   const formattedListUtilizadores = Array.isArray(utilizadores) ? utilizadores : [];
+
 
   useEffect(() => {
     if (projeto) {

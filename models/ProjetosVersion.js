@@ -3,8 +3,12 @@ const Counter = require("./idCounter");
 
 
 
-const ProjectSchema = new mongoose.Schema(
+const ProjectVersioningSchema = new mongoose.Schema(
     {
+        id: {
+            type: String,
+            default: 0,
+        },
         _id_P: {
             type: Number,
             default: 0,
@@ -48,7 +52,6 @@ const ProjectSchema = new mongoose.Schema(
             type: String,
             //required: [true, "Por favor insira um Tipo de Trabalho"],
         },
-
         Piloto: {
             type: String,
             default: "Todos",
@@ -93,18 +96,11 @@ const ProjectSchema = new mongoose.Schema(
 
 
 
-ProjectSchema.pre('save', async function(next) {
+ProjectVersioningSchema.pre('save', async function(next) {
     const doc = this;
-    const sequence = await Counter.findOneAndUpdate(
-        { _id_P: '_id_P' },
-        { $inc: { sequence_value: 1 } },
-        { returnOriginal: false, upsert: true }
-    );
-    doc._id_P = sequence.sequence_value;
-    doc.Versao += 1;
     next();
 });
 
 
 
-module.exports = mongoose.model("Projeto", ProjectSchema);
+module.exports = mongoose.model("ProjetoVersionamento", ProjectVersioningSchema);

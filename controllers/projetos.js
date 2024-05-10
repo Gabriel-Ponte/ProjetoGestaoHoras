@@ -1,4 +1,5 @@
 const Projeto = require("../models/Projeto");
+const ProjetosVersion = require("../models/ProjetosVersion");
 const User = require("../models/Utilizador");
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, NotFoundError } = require("../errors");
@@ -82,6 +83,25 @@ const getProjeto = async (req, res) => {
   res.status(StatusCodes.OK).json({ projeto });
 };
 
+const getProjetoTodasVersoes = async (req, res) => {
+  try{
+    console.log(req.params)
+  const { id: projetoId } = req.params;
+  console.log(projetoId)
+  const projeto = await ProjetosVersion.find({
+    _id: projetoId,
+  });
+  console.log(projeto)
+  if (!projeto) {
+    throw new NotFoundError(`Não existem versões no projeto com id ${projetoId}`);
+  }
+  res.status(StatusCodes.OK).json({ projeto });
+} catch (error){
+  console.error(error)
+  throw new NotFoundError(`Não Encontrado`);
+}
+};
+
 
 const getClientesProjeto = async (req, res) => {
 
@@ -118,6 +138,9 @@ const updateProjeto = async (req, res) => {
     Tema,
     Cliente,
     DataInicio,
+    Piloto,
+    Acao,
+    Notas
   } = req.body;
 
   const { id: projetoId } = req.params;
@@ -125,22 +148,89 @@ const updateProjeto = async (req, res) => {
     if (Nome === "" || Tema === "" || Cliente === "" || DataInicio === "") {
       throw new BadRequestError("Nome, Tema, Cliente, DataInicio precisam ser preenchidos");
     }
-    const projeto = await Projeto.findByIdAndUpdate(
+
+    const projeto = await Projeto.findById(
+      {
+        _id: projetoId,
+      }
+    );
+
+    let vers = projeto.Versao || 1;
+    
+    if(!projeto.Versao){
+      projeto.Versao = vers;
+    }
+    if(Nome !== projeto.Nome || Tema !== projeto.Tema || Cliente !== projeto.Cliente ||  Piloto !== projeto.Piloto || Acao !== projeto.Acao || Notas !== projeto.Notas){
+      await ProjetosVersion.create({ 
+        _id_P: projeto?._id_P,
+        Versao: projeto?.Versao,
+        Nome: projeto?.Nome,
+        Tema: projeto?.Tema,
+        Cliente: projeto?.Cliente,
+        Acao: projeto?.Acao,
+        DataInicio:projeto?.DataInicio,
+        DataObjetivo: projeto?.DataObjetivo,
+        DataFim:projeto?.DataFim,
+        TipoTrabalho:projeto?.TipoTrabalho,
+        Piloto:projeto?.Finalizado,
+        Notas: projeto?.Notas,
+        Links: projeto?.Links,
+        LinkResumo: projeto?.LinkResumo,
+        NumeroHorasTotal:projeto?.NumeroHorasTotal,
+        OrçamentoAprovado: projeto?.OrçamentoAprovado,
+        Finalizado: projeto?.Finalizado,
+        Resultado: projeto?.Resultado
+       });
+       vers = vers + 1;
+    }
+
+
+
+    const projetoUpdate = await Projeto.findByIdAndUpdate(
       {
         _id: projetoId,
       },
-      req.body,
+      { Versao: vers, ...req.body },
       { new: true, runValidators: true }
     );
-    if (!projeto) {
+    if (!projetoUpdate) {
       throw new NotFoundError(`Não existe um projeto com id ${req.params.id}`);
     }
-    res.status(StatusCodes.OK).json({ projeto });
+    res.status(StatusCodes.OK).json({ projetoUpdate });
   } catch (error) {
     console.error(error);
   }
 };
 
+
+const updateProjetoLink = async (req, res) => {
+  const {
+    Links,
+    LinkResumo,
+  } = req.body;
+
+  const { id: projetoId } = req.params;
+  try {
+    if (Links === "" && LinkResumo === "") {
+      throw new BadRequestError("Link precisa ser preenchido");
+    }
+
+    const projetoUpdate = await Projeto.findByIdAndUpdate(
+      {
+        _id: projetoId,
+      },
+      
+      { id:projetoId, Links: Links , LinkResumo: LinkResumo },
+      { new: true, runValidators: true }
+    );
+    if (!projetoUpdate) {
+      throw new NotFoundError(`Não existe um projeto com id ${req.params.id}`);
+    }
+    res.status(StatusCodes.OK).json({ projetoUpdate });
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 
 const deleteProjeto = async (req, res) => {
@@ -161,8 +251,10 @@ const deleteProjeto = async (req, res) => {
 module.exports = {
   getAllProjetos,
   getProjeto,
+  getProjetoTodasVersoes,
   createProjeto,
   updateProjeto,
+  updateProjetoLink,
   deleteProjeto,
   exportProjetos,
   getClientesProjeto,

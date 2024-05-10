@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Wrapper from '../assets/wrappers/Projeto';
 import { useDispatch } from 'react-redux';
-import { getProjeto, handleChange } from '../features/projetos/projetosSlice';
+import { getProjeto, handleChange, insertProjetoLink } from '../features/projetos/projetosSlice';
 import { useNavigate  } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import FormRowListaProjetos from './FormRowListaProjetos';
@@ -24,6 +24,7 @@ const Projeto = ({
   TipoTrabalho,
   Piloto,
   Links,
+  LinkResumo,
   NumeroHorasTotal,
   Finalizado,
   finalizado,
@@ -46,6 +47,7 @@ const Projeto = ({
     TipoTrabalho,
     Piloto,
     Links,
+    LinkResumo,
     NumeroHorasTotal,
     Finalizado,
     finalizado,
@@ -68,14 +70,17 @@ const Projeto = ({
     Acao,
     Piloto,
     Links,
+    LinkResumo,
     NumeroHorasTotal,
     Finalizado,
     finalizado,
     handleAlterado
   });
+  
   //const [verificaResultado, setVerificaResultado] = useState(1);
   const [verificaAlterado, setVerificaAlterado] = useState(false);
-
+  const [addLink, setAddLink] = useState(0);
+  
   const toggleEdit = async (idP) => {
     const projeto = await dispatch(getProjeto(idP));
     if (projeto.payload.projeto) {
@@ -110,15 +115,16 @@ const Projeto = ({
         alreadyChanged = "false";
       }
     }
-
+    if(nome !== "Links" && nome !== "LinkResumo"){
     if((initialState[nome] === value && alreadyChanged === "false")){
       handleAlterado(false);
       setVerificaAlterado(false);
     }else{
-      if(verificaAlterado === false){
-      handleAlterado(true);
-      }
-      setVerificaAlterado(true);
+        if(verificaAlterado === false){
+        handleAlterado(true);
+        }
+        setVerificaAlterado(true);
+    }       
     }
     setValues({ ...values, [nome]: value });
 
@@ -153,11 +159,50 @@ const Projeto = ({
   };
 
 
-  const toggleAddHoras = async (idP) => {
-    await dispatch(getProjeto(idP));
-    window.location.reload(navigate('/PaginaAdicionarHorasProjeto'));
+  // const toggleAddHoras = async (idP) => {
+  //   await dispatch(getProjeto(idP));
+  //   window.location.reload(navigate('/PaginaAdicionarHorasProjeto'));
+  // };
+
+
+  const toggleAddLinkA3 = async () => {
+    setAddLink(1);
   };
 
+  const toggleAddLinkResumo = async () => {
+    setAddLink(2);
+  };
+  const toggleCloseAddLink = async () => {
+    if(addLink === 1){
+      setValues({ ...values, Links: initialState.Links });
+    } else if(addLink === 2){
+      setValues({ ...values, LinkResumo: initialState.LinkResumo });
+    }
+
+    setAddLink(0);
+  };
+
+  const toggleAddLinkDB = async (e)  => {
+    setAddLink(false);
+    e.preventDefault();
+    if (addLink === 1 && !values.Links) {
+      toast.error('Por favor, insira o Link!');
+      return;
+    } else if(addLink === 2 && !values.LinkResumo){
+      toast.error('Por favor, insira o Link!');
+      return;
+    }
+    try {
+      const result = await dispatch(insertProjetoLink(values));
+      if (!result.error) {
+        setAddLink(0)
+      }
+    } catch (error) {
+      toast.error('Erro ao atualizar!');
+      console.error(error);
+    }
+
+  };
 
   let dias;
   const alertaDias = new Date(values.DataObjetivo).getTime() - new Date().getTime();
@@ -361,6 +406,69 @@ const Projeto = ({
             <div className="col-md-1 themed-grid-col " >
             <div className="col-md-11 themed-grid-col " >
             {
+               addLink === 1 ? (
+               <>
+               <div className='col-md-12 text-end'>
+                  <button
+                          type='button'
+                          className='btn btn-outline-danger'
+                          onClick={toggleCloseAddLink}
+                        >
+                         <IoMdClose/>
+                </button>
+                </div>
+              <div className='row text-center'>
+                  <FormRowListaProjetos
+                    type="textarea"
+                    id={"LinkA3 " + _id}
+                    name="Links"
+                    classNameInput="form__field"
+                    value={values.Links}
+                    handleChange={handleChangeProjeto}
+                  />
+              </div>
+              <div className='row mb-2 text-center'>
+              <button
+                        type='button'
+                        className='btn btn-outline-primary'
+                        onClick={toggleAddLinkDB}
+                      >
+                        Inserir
+                      </button>
+                      </div>
+               </>
+              ) : addLink === 2 ? (
+                <>
+                <div className='col-md-12 text-end'>
+                <button
+                      type='button'
+                      className='btn btn-outline-danger'
+                      onClick={toggleCloseAddLink}
+                    >
+                        <IoMdClose/>
+                </button>
+                </div>
+                <div className='row text-center'>
+                    <FormRowListaProjetos
+                      type="textarea"
+                      id={"LinkResumo " + _id}
+                      name="LinkResumo"
+                      classNameInput="form__field"
+                      value={values.LinkResumo}
+                      handleChange={handleChangeProjeto}
+                    />
+                </div>
+                <div className='row mb-2 text-center'>
+                <button
+                          type='button'
+                          className='btn btn-outline-success'
+                          onClick={toggleAddLinkDB}
+                        >
+                          Inserir
+                        </button>
+                        </div>
+                 </>
+            ) : (
               verificaAlterado === true ? (
                 <><div className='row mb-2 text-center'>
                   </div>
@@ -398,8 +506,42 @@ const Projeto = ({
                           Visualizar
                         </button>
                       </div>
+                      {
+                        values.Links === "" ? (
+                            <div className='row mb-2 text-center'>
+                              <button
+                                type='button'
+                                className='btn btn-outline-success buttonProjetoLinks'
+                                onClick={() => toggleAddLinkA3()}
+                              >
+                                Adicionar Link A3
+                              </button>
+                            </div>
+                        ) : (
+                          <div className='row mb-2 text-center'>
+                            <a href={values.Links}  className='btn btn-outline-link buttonProjeto' target="_blank" rel="noreferrer" > Abrir A3</a>
+                          </div>
+                        )
+                      }
+                      {
+                        values.LinkResumo === "" ? (
+                            <div className='row mb-2 text-center'>
+                              <button
+                                type='button'
+                                className='btn btn-outline-success buttonProjetoLinks'
+                                onClick={() => toggleAddLinkResumo()}
+                              >
+                                Adicionar Link Resumo
+                              </button>
+                            </div>
+                        ) : (
+                          <div className='row mb-2 text-center'>
+                            <a href={values.LinkResumo}  className='btn btn-outline-link buttonProjeto' target="_blank" rel="noreferrer"> Abrir Resumo</a>
+                          </div>
+                        )
+                      }
    
-                      {finalizado !== true && (
+                      {/* {finalizado !== true && (
                       <div className='row  text-center'>
                         <button
                           type='button'
@@ -409,9 +551,9 @@ const Projeto = ({
                           Adicionar Horas
                         </button>
                       </div>
-                      )}
+                      )} */}
                   </>
-                )
+                ))
             }
             </div>
             </div>
