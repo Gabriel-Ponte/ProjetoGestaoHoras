@@ -607,7 +607,7 @@ const ListaProjetos = () => {
           (
             currentYear === endYear &&
             currentMonth === endMonth &&
-            currentDay >= endDay)
+            currentDay > endDay)
         ) {
           return false;
         }

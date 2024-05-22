@@ -29,9 +29,10 @@ export const getAllProjetos = createAsyncThunk(
   'allProjetos/getProjetos', getAllProjetosThunk  );
 
 export const getAllProjetos1 = createAsyncThunk(
-  'allProjetos/getProjetos', async (sort, { rejectWithValue }) => {
+  'allProjetos/getAllProjetos1', async (sort, { rejectWithValue }) => {
     try {
       const getAllP = getAllProjetosThunkAdd(sort);
+
       return getAllP;
     }
     catch (error) {
@@ -69,12 +70,27 @@ const allProjetosSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(getAllProjetos.fulfilled, (state, { payload }) => {
+  
         state.isLoading = false;
         state.projetos = payload.projetos;
         state.numOfPages = payload.numOfPages;
         state.totalProjetos = payload.totalProjetos;
       })
       .addCase(getAllProjetos.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(payload);
+      })
+
+      .addCase(getAllProjetos1.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getAllProjetos1.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.projetos = payload.projetos;
+        state.numOfPages = payload.numOfPages;
+        state.totalProjetos = payload.totalProjetos;
+      })
+      .addCase(getAllProjetos1.rejected, (state, { payload }) => {
         state.isLoading = false;
         toast.error(payload);
       })

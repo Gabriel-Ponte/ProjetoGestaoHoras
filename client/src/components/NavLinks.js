@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import links from '../utils/links';
 import { AiOutlineArrowDown } from 'react-icons/ai';
 import { useSelector, useDispatch } from 'react-redux';
-import { getAllProjetos } from '../features/allProjetos/allProjetosSlice';
+import { getAllProjetos, getAllProjetos1 } from '../features/allProjetos/allProjetosSlice';
 import { getProjeto } from '../features/projetos/projetosSlice';
 import PageBtnContainer from './PageBtnContainer';
 import { useNavigate } from 'react-router-dom';
@@ -41,7 +41,7 @@ const NavLinks = () => {
   };
 
   useEffect(() => {
-    dispatch(getAllProjetos());
+    dispatch(getAllProjetos1());
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 

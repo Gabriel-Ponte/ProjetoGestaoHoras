@@ -32,6 +32,7 @@ export const getAllProjetosThunkAdd = async (_, thunkAPI) => {
   if(_){
     projetoFinalizado = _
   }
+
   
   let url= `/projetos?page=1&limit=100000&Finalizado=${projetoFinalizado}`
 

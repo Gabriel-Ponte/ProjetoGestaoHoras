@@ -7,7 +7,6 @@ const VisualizarHorasProjetoVersion = ({
     utilizadores,
     estado
   }) => {
-    console.log(values)
     return(
         <div className="col-7 left text-center" >
 
