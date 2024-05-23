@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import links from '../utils/links';
 import { AiOutlineArrowDown } from 'react-icons/ai';
 import { useSelector, useDispatch } from 'react-redux';
-import { getAllProjetos, getAllProjetos1 } from '../features/allProjetos/allProjetosSlice';
+//import { getAllProjetos, getAllProjetos1 } from '../features/allProjetos/allProjetosSlice';
 import { getProjeto } from '../features/projetos/projetosSlice';
 import PageBtnContainer from './PageBtnContainer';
 import { useNavigate } from 'react-router-dom';
@@ -40,10 +40,10 @@ const NavLinks = () => {
     }
   };
 
-  useEffect(() => {
-    dispatch(getAllProjetos1());
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page]);
+  // useEffect(() => {
+  //   //dispatch(getAllProjetos1());
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [page]);
 
   const setProjetosV = async (idP) => {
     try {
@@ -73,7 +73,7 @@ const NavLinks = () => {
   const handleCloseModal = ()=>{
    setLocalState(false);
    dispatch(toggleSidebar(false));
-}
+  }
   
 
   const handleChangeExportProjetos = () => {
@@ -91,6 +91,57 @@ const NavLinks = () => {
     }
 
   };
+
+
+  const getFilteredProjetos = () => {
+    const dateP = new Date();
+    const currentDay = dateP.getDate();
+    const currentMonth = dateP.getMonth();
+    const currentYear = dateP.getFullYear();
+    
+    const filteredP = projetos.filter((p) => {
+
+      const dataI = new Date(p.DataInicio);
+      if (p.DataFim) {
+        const dataF = new Date(p.DataFim);
+
+        const endDay = dataF.getDate();
+        const endMonth = dataF.getMonth();
+        const endYear = dataF.getFullYear();
+
+       if (
+          currentYear > endYear || (currentYear === endYear && currentMonth > endMonth) ||
+          (
+            currentYear === endYear &&
+            currentMonth === endMonth &&
+            currentDay > endDay)
+        ) {
+          return false;
+        }
+      } else if (p.Finalizado) {
+        return false;
+      }
+
+      const startDay = dataI.getDate();
+      const startMonth = dataI.getMonth();
+      const startYear = dataI.getFullYear();
+
+      if (
+        currentYear < startYear || (currentYear === startYear && currentMonth < startMonth) ||
+        (
+          currentYear === startYear &&
+          currentMonth === startMonth &&
+          currentDay < startDay)
+      ) {
+        return false;
+      }
+
+      return true;
+    });
+
+    return filteredP;
+  };
+  
 
   return (
     <Wrapper>
@@ -219,7 +270,8 @@ const NavLinks = () => {
               </button>
               {id === 6 && showProjeto && (
                 <div className="projetos" style={{ textAlign: "right", marginLeft:"100px"}}>
-                  {projetos.map((projeto) => (
+
+                  {getFilteredProjetos().map((projeto) => (
                     <div key={"projeto-" + projeto._id}>
                       <NavLink
                         
@@ -240,7 +292,7 @@ const NavLinks = () => {
 
               {id === 7 && showProjetoV && (
                 <div className="projetos" style={{ textAlign: "right", marginLeft:"100px"}}>
-                  {projetos.map((projeto) => (
+                  {getFilteredProjetos().map((projeto) => (
                     <div key={"V-" + projeto._id}>
                       <NavLink
                        //
