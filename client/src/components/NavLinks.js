@@ -16,7 +16,6 @@ import { exportDia } from '../features/allDias/allDiasSlice';
 const NavLinks = () => {
   const {
     projetos,
-    page,
     numOfPages,
   } = useSelector((store) => store.allProjetos);
   const [showProjeto, setShowProjeto] = useState(false);

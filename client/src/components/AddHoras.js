@@ -63,7 +63,7 @@ const ListaProjetos = () => {
   const [addHorasExtraID, setAddHorasExtraID] = useState();
   const [horasExtraTT, setHorasExtraTT] = useState(0);
   const { feriadosPortugal } = useFeriadosPortugal();
-
+  const [startHorasT , setStartHorasT] = useState(values?.NumeroHoras ? values?.NumeroHoras : 0);
   const [constLoaded, setConstLoaded] = useState(false);
 
   useEffect(() => {
@@ -404,6 +404,8 @@ const ListaProjetos = () => {
         });
         tipoDeTrabalhoHoras[val] = copiaEscolhida.tipoDeTrabalhoHoras[j];
       }
+
+
       setValues({
         ...values,
         Utilizador: user.user.login,
@@ -499,6 +501,12 @@ const ListaProjetos = () => {
           }
         }
 
+        if(listaDias[i].accepted === 2){
+        setStartHorasT(listaDias[i].NumeroHoras);
+      } else{
+        setStartHorasT(0);
+      }
+
         setValues({
           ...values,
           [name]: value,
@@ -520,6 +528,8 @@ const ListaProjetos = () => {
     if(horasExtra === 0){
       setHorasExtraTT(0);
     }
+
+    setStartHorasT(0);
 
     setValues({
       ...values,
@@ -641,7 +651,7 @@ const ListaProjetos = () => {
 
 
   const handleDia = async (e) => {
-    setButtonClicked(true);
+    // setButtonClicked(true);
     e.preventDefault();
     
     const date = new Date(values.Data)
@@ -649,31 +659,69 @@ const ListaProjetos = () => {
     
     const dayOfWeek = date.getDay();
     const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+    let count = 0;
 
+    if(values.accepted !== 2){
     if (horasT <= 0) {
       toast.error('Valor inserido invalido!');
       return;
     } else if (date.getDay() === 5) {
       if (horasT > 6) {
-        values.accepted = 1;
+        count++;
         toast.error('Valor inserido excede as 6 Horas!');
       }
     }else if(feriadosPortugal(date)){
-        values.accepted = 1;
+        count++;
         toast.error('Horas inseridas num Feriado!');
     }else if(isWeekend){
-      values.accepted = 1;
+
+      count++;
       toast.error('Horas inseridas num fim de semana!');
     } else if (horasT > 8.5) {
-      values.accepted = 1;
+
+      count++;
       toast.error('Valor inserido excede as 8 horas e 30 minutos diárias!');
     }
     
+
     if(activeCompensacao === true){
-      toast.error('Pedido de compensação de horas extra realizado!');
-      values.accepted = 1;
+        for (let key in values.tipoDeTrabalhoHoras) {
+          const horasTipoTrabalhoArray = values.tipoDeTrabalhoHoras[key]?.horas?.split(',') || [];
+          const tipoTrabalhoArray = values.tipoDeTrabalhoHoras[key]?.tipoTrabalho?.split(',') || [];
+          for (let a = 0; a < tipoTrabalhoArray.length; a++) {
+          if((tipoTrabalhoArray[a] === compensacaoID) && (horasTipoTrabalhoArray[a] > 0)){
+            toast.error('Pedido de compensação de horas extra realizado!');
+            count++;
+          }
+        }
+      }
     }
+
+
+    if(count === 0 ){
+      values.accepted = 0;
+    } else{
+      values.accepted = 1;
+    } 
+  }
     
+
+
+    for (let key in values.tipoDeTrabalhoHoras) {
+      const tt = values.tipoDeTrabalhoHoras[key];
+      const horasTipoTrabalhoArray = values.tipoDeTrabalhoHoras[key]?.horas?.split(',') || [];
+      const tipoTrabalhoArray = values.tipoDeTrabalhoHoras[key]?.tipoTrabalho?.split(',') || [];
+      for (let a = horasTipoTrabalhoArray.length - 1; a >= 0; a--) {
+          if (horasTipoTrabalhoArray[a] <= 0) {
+              horasTipoTrabalhoArray.splice(a, 1);
+              tipoTrabalhoArray.splice(a, 1);
+          }
+      }
+  
+      values.tipoDeTrabalhoHoras[key].horas = horasTipoTrabalhoArray.join(',');
+      values.tipoDeTrabalhoHoras[key].tipoTrabalho = tipoTrabalhoArray.join(',');
+  }
+
 
     values.Utilizador = user.user.id;
     if (verificaDiaCalled) {
@@ -685,6 +733,8 @@ const ListaProjetos = () => {
       window.location.reload();
     }, 1000);
   };
+
+
 
   const handleHorasChange = (projectId, tipoTrabalho, projectName, e) => {
 
@@ -915,6 +965,8 @@ const ListaProjetos = () => {
 
 
 
+
+
   const matchFoundProjeto = new Array(sortedProjetos.length).fill(false);
   const arrayTipoTrabalho = Object.entries(values.tipoDeTrabalhoHoras).map(([key, value]) => ({ _id: key, ...value }));
 
@@ -950,6 +1002,7 @@ const ListaProjetos = () => {
     }
     return timeString;
   }
+
 
 
   if (!values.loaded) {
@@ -1052,7 +1105,8 @@ const ListaProjetos = () => {
               <div className="card-body">
                 <button
                   type="submit"
-                  disabled={values.accepted === 2 || isLoading || buttonClicked }
+                  disabled={(values.accepted === 2 && startHorasT >= 8.5) || isLoading || buttonClicked }
+
                   onClick={(e) => { handleDia(e) }}
                   className="w-100 btn btn-lg btn-primary"
                 >

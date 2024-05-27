@@ -96,6 +96,17 @@ const Wrapper = styled.section`
     margin-bottom:auto;
   }
 
+
+  .horasCompensacao{
+    width:10px;
+    height:10px;
+    background-color: #3C5B6F;
+    display: inline-block;
+    vertical-align: middle;
+    margin-top:auto;
+    margin-bottom:auto;
+  }
+
   .feriados{
     width:10px;
     height:10px;

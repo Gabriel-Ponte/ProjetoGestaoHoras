@@ -46,7 +46,7 @@ const ListaHoras = () => {
   const [horasPagasMes, setHorasPagasMes] = useState(null);
   const [changePagamento, setChangePagamento] = useState(false)
 
-  // const [horasCompencacao, setHorasCompencacao] = useState(null);
+  const [horasCompensacao, setHorasCompensacao] = useState([]);
   const [idCompensacao, setIDCompencacao] = useState(null)
   const [userNome, setUserNome] = useState(user?.user?.nome);
 
@@ -303,7 +303,8 @@ const ListaHoras = () => {
                 for (let j = 0; j < tt.length; j++) {
                   if (tt[j] === idCompensacao) {
                     countHours -= ttH[j];
-                    //countHoursCompencacao += parseFloat(ttH[j]);
+
+                  //countHoursCompencacao += parseFloat(ttH[j]);
                   }
 
                   if (tt[j] === addHorasExtraID) {
@@ -385,8 +386,47 @@ const ListaHoras = () => {
             }
             setListaTipoTrabalho(tipoTrabalhoArray);
           }
+          
 
+          if(idCompensacao && dias){
+            // Filter the dias array to get the matching Compensacao and update the state
+            const updatedCompensacao = dias.filter((dia) => {
+              for (let i = 0; i < dia.tipoDeTrabalhoHoras.length; i++) {
+                const tiposTrabalho = dia.tipoDeTrabalhoHoras[i]?.tipoTrabalho?.split(',')
+                  .filter((tipo, index) => {
+                    const horasArray = dia.tipoDeTrabalhoHoras[i]?.horas?.split(',');
+                    return horasArray && horasArray[index] > 0;
+                  });
 
+                return tiposTrabalho.includes(idCompensacao);
+              }
+              return null;
+            });
+            if (!arrayEquals(ferias, updatedCompensacao)) {
+              setHorasCompensacao(updatedCompensacao);
+            }
+
+            // Remove the matching ferias from listaDias
+            if (listaDiasA) {
+              const updatedListaDias = listaDiasA.filter((dia) => {
+                for (let i = 0; i < dia.tipoDeTrabalhoHoras.length; i++) {
+                  const aListaDias = dia.tipoDeTrabalhoHoras[i]?.tipoTrabalho?.split(',').filter((tipo, index) => {
+
+                    const horasArray = dia.tipoDeTrabalhoHoras[i]?.horas?.split(',');
+                    return horasArray && horasArray[index] > 0;
+                  });
+
+                  return !aListaDias.includes(idFerias);
+                }
+                return null;
+              })
+
+              if (!arrayEquals(listaDias, updatedListaDias)) {
+                setListaDias(updatedListaDias);
+              }
+            }
+            setListaTipoTrabalho(tipoTrabalhoArray);
+          }
 
           ////////////////////////////
 
@@ -900,7 +940,7 @@ const ListaHoras = () => {
                 <p className='feriados'></p>
               </div>
             </div>
-
+            {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro") && (
             <div className='row'>
               <div className='col-9 text-end'>
                 <p>Férias</p>
@@ -909,6 +949,17 @@ const ListaHoras = () => {
                 <p className='ferias'></p>
               </div>
             </div>
+            )}
+            {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro") && (
+            <div className='row'>
+              <div className='col-9 text-end'>
+                <p>Horas Compensação</p>
+              </div>
+              <div className='col-3'>
+                <p className='horasCompensacao'></p>
+              </div>
+            </div>
+            )}
             <div className='row'>
               <div className='col-9 text-end'>
                 <p>Horário Completo</p>
@@ -1086,6 +1137,7 @@ const ListaHoras = () => {
                     inserted={listaDias}
                     feriados={getFeriados}
                     ferias={ferias}
+                    compensacao ={horasCompensacao}
                     aceitacao={aceitacao}
                     horasExtraID={addHorasExtraIDS}
                   />
