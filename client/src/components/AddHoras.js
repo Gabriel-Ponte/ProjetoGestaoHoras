@@ -651,7 +651,7 @@ const ListaProjetos = () => {
 
 
   const handleDia = async (e) => {
-    // setButtonClicked(true);
+    setButtonClicked(true);
     e.preventDefault();
     
     const date = new Date(values.Data)
