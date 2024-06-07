@@ -197,9 +197,6 @@ const GerirHorasExtra = () => {
 };
 
 
-console.log(listaHorasExtra)
-
-
   return (
     <Wrapper>
       <div className={'row mb-12 text-center tittle'}>

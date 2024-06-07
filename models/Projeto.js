@@ -87,6 +87,11 @@ const ProjectSchema = new mongoose.Schema(
             default: false,
             required: false,
         },
+        Tipo: {
+            type: Number,
+            default:"",
+            required: false,
+        },
     },
     { timestamps: true }
 );

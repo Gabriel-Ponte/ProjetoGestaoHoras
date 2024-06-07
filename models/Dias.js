@@ -50,6 +50,10 @@ const DiasSchema = new mongoose.Schema(
           type: Number,
           default: 0,
         },
+        associated: {
+          type: String,
+          required: false,
+        },
     },
     { timestamps: true }
 );

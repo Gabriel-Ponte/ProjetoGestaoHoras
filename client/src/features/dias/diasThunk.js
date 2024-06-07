@@ -28,10 +28,38 @@ export const editDiaThunk = async (dia ,thunkAPI) => {
 
 export const createDiaThunk = async (dia, thunkAPI) => {
   try {
+
     const resp = await customFetch.post('/dia', dia);
     thunkAPI.dispatch(clearValues());
     return resp.data.msg;
   } catch (error) {
+    return checkForUnauthorizedResponse(error, thunkAPI);
+  }
+};
+
+
+export const createDiaDomingoThunk = async (dia, thunkAPI) => {
+  try {
+    const resp = await customFetch.post('/dia/domingo', dia);
+    thunkAPI.dispatch(clearValues());
+    return resp.data.msg;
+  } catch (error) {
+    return checkForUnauthorizedResponse(error, thunkAPI);
+  }
+};
+
+
+
+export const getDiaIDThunk = async (value, thunkAPI) => {
+  try {
+    //const resp = await customFetch.delete(`/dia/${diaId}`);
+    const resp = await customFetch.get(`/dia/getDiaID/${value.associated}` ,value);
+    //thunkAPI.dispatch(getAllDias());
+
+    return resp.data;
+  } catch (error) {
+    console.error(error)
+    //thunkAPI.dispatch(hideLoading());
     return checkForUnauthorizedResponse(error, thunkAPI);
   }
 };

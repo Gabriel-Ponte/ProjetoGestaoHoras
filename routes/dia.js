@@ -19,9 +19,12 @@ const {
   acceptDiasHorasExtra,
   getAllDiasHorasExtraAccepted,
   getAllDiasHorasExtraDeclined,
+  createDiaDomingo,
+  getDiaID,
 } = require("../controllers/dias");
 
 router.route("/").post(createDia);
+router.route("/domingo").post(createDiaDomingo);
 router.route("/diasUtilizador/:utilizador").get(getAllDiasUtilizador);
 router.route("/diasUtilizadorTipo/:utilizador").get(getAllDiasUtilizadorTipo);
 router.route("/getAllDias").get(getAllDias);
@@ -34,7 +37,7 @@ router.route("/diasUtilizador/:utilizador/:projeto").get(getDiasProjetoUtilizado
 
 
 //router.route("/").get(getAllProjetos);
-
+router.route("/getDiaID/:id").get(getDiaID);
 router.route("/:user").get(getDia);
 router.route("/exportDias/").post(exportDias);
 

@@ -47,6 +47,7 @@ const ListaHoras = () => {
   const [changePagamento, setChangePagamento] = useState(false)
 
   const [horasCompensacao, setHorasCompensacao] = useState([]);
+  const [horasCompensacaoDomingo, setHorasCompensacaoDomingo] = useState([]);
   const [idCompensacao, setIDCompencacao] = useState(null)
   const [userNome, setUserNome] = useState(user?.user?.nome);
 
@@ -85,7 +86,6 @@ const ListaHoras = () => {
   }
 
   function feriadosPortugal(date) {
-
     const feriados = [];
 
     for (let i = date.getFullYear() - 5; i < date.getFullYear() + 5; i++) {
@@ -258,6 +258,8 @@ const ListaHoras = () => {
           setListaTipoTrabalho(tipoTrabalhoArray);
         });
       } else {
+
+
         dispatch(getAllDiasUtilizador({ userNome: selectedUser })).then((res) => {
           const listaDiasA = (typeof res.payload.diasAllUtilizador !== "undefined") ? res.payload.diasAllUtilizador : [];
           const idFerias = tipoTrabalhoArray.find((tipo) => tipo.TipoTrabalho === "Ferias")?._id;
@@ -433,7 +435,7 @@ const ListaHoras = () => {
           if (dias) {
             // Filter the dias array to get the matching aceitacao and update the state
             const updatedAceitacao = dias.filter((dia) => {
-              if (dia.accepted === 1) {
+              if (dia.accepted === 1 || dia.accepted === 4) {
                 return dia;
               }
               return null;
@@ -442,6 +444,20 @@ const ListaHoras = () => {
 
             if (!arrayEquals(aceitacao, updatedAceitacao)) {
               setAceitacao(updatedAceitacao);
+            }
+
+
+
+            const updatedCompensacaoDomingo = dias.filter((dia) => {
+              if (dia.accepted === 5) {
+                return dia;
+              }
+              return null;
+            });
+
+
+            if (!arrayEquals(horasCompensacaoDomingo, updatedCompensacaoDomingo)) {
+              setHorasCompensacaoDomingo(updatedCompensacaoDomingo);
             }
 
             // Remove the matching aceitacao from listaDias
@@ -473,8 +489,10 @@ const ListaHoras = () => {
       }
     });
 
-  }, [selectedUser, listaDias[0], horasExtra, listaTipoTrabalho?.length, ferias[0], aceitacao[0], changePagamento, dispatch]);
+  }, [selectedUser, horasExtra, listaDias,aceitacao, changePagamento, dispatch]);
 
+  //  }, [selectedUser, listaDias[0], horasExtra, listaTipoTrabalho?.length, ferias[0], aceitacao[0], changePagamento, dispatch]);
+  
   function arrayEquals(a, b) {
     if (a === b) return true;
     if (a == null || b == null) return false;
@@ -989,6 +1007,7 @@ const ListaHoras = () => {
               </div>
             </div>
             {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro") && (
+              <>
               <div className='row'>
                 <div className='col-9 text-end'>
                   <p>Horas em Aceitação</p>
@@ -997,6 +1016,18 @@ const ListaHoras = () => {
                   <p className='filtro'></p>
                 </div>
               </div>
+
+
+              <div className='row'>
+              <div className='col-9 text-end'>
+                <p>Compensação Domingo</p>
+              </div>
+              <div className='col-3'>
+                <p className='compensDomingo'></p>
+              </div>
+              </div>
+             
+              </>
             )}
           </div>
           {(user?.user?.tipo === 7) && parseDurationToHours(horasExtra) > 0 &&
@@ -1138,6 +1169,7 @@ const ListaHoras = () => {
                     feriados={getFeriados}
                     ferias={ferias}
                     compensacao ={horasCompensacao}
+                    compensacaoDomingo = {horasCompensacaoDomingo}
                     aceitacao={aceitacao}
                     horasExtraID={addHorasExtraIDS}
                   />

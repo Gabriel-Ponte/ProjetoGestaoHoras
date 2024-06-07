@@ -25,6 +25,7 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
     const [StringListaTrabalho, setStringListaTrabalho] = useState();
     const [StringListaTrabalhoGeral, setStringListaTrabalhoGeral] = useState();
     const [StringListaTrabalhoGeralOther, setStringListaTrabalhoGeralOther] = useState();
+    const [StringListaTrabalhoCompensacaoD, setStringListaTrabalhoCompensacaoD] = useState();
     const [listaTrabalhoGeralAdd, setListaTrabalhoGeralAdd] = useState();
     const [options, setOptions] = useState();
 
@@ -48,10 +49,10 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
 
       if((dateDay >=  startDay && dateMonth === startMonth && dateYear === startYear)  || dateYear > startYear || dateMonth > startMonth){
         if((dateDay <=  endDay && dateMonth === startMonth && dateYear === startYear)){
-          setListaTrabalhoGeralAdd(ListaTrabalhoGeral.filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 5)));
+          setListaTrabalhoGeralAdd(ListaTrabalhoGeral.filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 5 || item.tipo === 6)));
           ListaTrabalhoGeralString = listaTipoTrabalho.filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 5)).map(item => item.TipoTrabalho).join(",");
         } else {
-          setListaTrabalhoGeralAdd(ListaTrabalhoGeral.filter(item => (item.tipo === 2 || item.tipo === 4)));
+          setListaTrabalhoGeralAdd(ListaTrabalhoGeral.filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 6)));
           ListaTrabalhoGeralString = listaTipoTrabalho
           .filter(item => (item.tipo === 2 || item.tipo === 4))
           .map(item => item.TipoTrabalho).join(",");
@@ -73,7 +74,17 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
         .filter(item => item.tipo === 3)
         .map(item => item.TipoTrabalho)
         .join(",");
+
+        const ListaTrabalhoGeralDomingo = listaTipoTrabalho
+        .filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 6))
+        .map(item => item.TipoTrabalho)
+        .join(",");
+
+
   
+
+      setStringListaTrabalhoCompensacaoD(ListaTrabalhoGeralDomingo);
+
       setStringListaTrabalho(ListaTrabalho);
   
       setStringListaTrabalhoGeral(ListaTrabalhoGeralString);
@@ -82,7 +93,7 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
   
       setOptions(ListaTrabalhoGeralOther?.split(","));
 
-    }, [ListaTrabalhoGeral, listaTipoTrabalho, values.Data]);
+    }, [ listaTipoTrabalho, values.Data]);
 
 
   const dispatch = useDispatch();
@@ -99,6 +110,8 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
   });
 
   const handleTipoTrabalho = async (inputValue) => {
+
+
     if (inputValue && inputValue.trim() !== "") {
       const values = StringListaTrabalhoGeral?.split(",");
 
@@ -169,6 +182,9 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
       };
     });
   };
+
+
+
 
   return (
     <>
@@ -241,17 +257,21 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
                                   const valuesHorasTypeArray = values.tipoDeTrabalhoHoras[project._id].horas ? values.tipoDeTrabalhoHoras[project._id].horas?.split(",") : [];
 
                                   matchFoundProjeto[idProjeto] = true;
+                  
+
                                   return (
                                     
                                     <div key={"EditarDia" + ID}>
 
-                                      {(project.Nome !== "Geral" ? StringListaTrabalho : StringListaTrabalhoGeral)?.split(",").map((t, i) =>
+                                      {(((values?.accepted === 5 || values?.accepted === 4) && project.Nome === "Geral") ?  StringListaTrabalhoCompensacaoD :  project.Nome !== "Geral" ? StringListaTrabalho : StringListaTrabalhoGeral)?.split(",").map((t, i) =>
                                         itemTypeArray.map((iT, iId) => {  
-                                          if ((project.Nome !== "Geral" ? ListaTrabalhoAll[i]._id : listaTrabalhoGeralAdd[i]._id) === iT) {
 
+                                          if ((project.Nome !== "Geral" ? ListaTrabalhoAll[i]._id : listaTrabalhoGeralAdd[i]._id) === iT) {
                                             matchFound[i] = true;
+
                                             return (
                                               <TimePickerClock
+                                              disabled={listaTrabalhoGeralAdd[i].tipo === 6}
                                                 key={i}
                                                 name={t}
                                                 selectedTime={valuesHorasTypeArray[iId] != null && !isNaN(valuesHorasTypeArray[iId])
@@ -323,7 +343,7 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
                                         {(project.Nome !== "Geral" ? StringListaTrabalho : StringListaTrabalhoGeral)?.split(",").map((t, i) => {
                                           const ttID = (listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(","))
                                           let value = "";
-
+                                          
                                           if (values.tipoDeTrabalhoHoras[project._id]) {
                                             const valuesHorasTypeArray = values.tipoDeTrabalhoHoras[project._id].horas ? values.tipoDeTrabalhoHoras[project._id].horas?.split(",") : [];
                                             const valuesTTTypeArray = values.tipoDeTrabalhoHoras[project._id].tipoTrabalho ? values.tipoDeTrabalhoHoras[project._id].tipoTrabalho?.split(",") : [];

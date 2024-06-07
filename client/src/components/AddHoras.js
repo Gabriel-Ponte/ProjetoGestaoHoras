@@ -5,10 +5,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getAllProjetos1, handleChange } from '../features/allProjetos/allProjetosSlice';
 import { getTipoTrabalho } from '../features/tipoTrabalho/tipoTrabalhoSlice';
 import { toast } from 'react-toastify';
-import { createDia, getDia, editDia } from '../features/dias/diasSlice';
+import { createDia, getDia, editDia, createDiaDomingo } from '../features/dias/diasSlice';
 import { AddHorasCopiar, AddHorasDropdown, FormRow, useFeriadosPortugal } from '../components';
 
 import Loading from './Loading';
+import AddHorasDomingo from './AddHorasDomingo';
 
 
 
@@ -21,6 +22,7 @@ const initialState = {
   tipoDeTrabalhoHoras: [],
   loaded: false,
   accepted: 0,
+  associated: ''
 };
 
 
@@ -66,6 +68,8 @@ const ListaProjetos = () => {
   const [startHorasT , setStartHorasT] = useState(values?.NumeroHoras ? values?.NumeroHoras : 0);
   const [constLoaded, setConstLoaded] = useState(false);
 
+  const [modalBoxActive, setModalBoxActive] = useState(false);
+  
   useEffect(() => {
     dispatch(handleChange({ name: 'projetoFinalizado', value: "false" }));
     dispatch(handleChange({ name: 'DataObjetivoC', value: "true" }));
@@ -82,7 +86,7 @@ const ListaProjetos = () => {
       setAddHorasExtraID(addHorasExtra[0]?._id);
       setcompensacaoID(compensacao[0]?._id);
       setListaTrabalhoAll(tipoTrabalhoArray.filter(item => item.tipo === 1));
-      setListaTrabalhoGeral(tipoTrabalhoArray.filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 5)));
+      setListaTrabalhoGeral(tipoTrabalhoArray.filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 5 || item.tipo === 6)));
   
       setListaTrabalhoGeralOther(tipoTrabalhoArray.filter(item => item.tipo === 3));
     });
@@ -650,6 +654,58 @@ const ListaProjetos = () => {
   }, [verificaDia]);
 
 
+
+  const handleCloseModal = ()=>{
+    setButtonClicked(false);
+    setModalBoxActive(false)
+   }
+  
+   const handleConfirm = async  (Data)=>{
+
+      values.Utilizador = user.user.id;
+      values.associated = Data
+      await dispatch(createDiaDomingo(values));
+
+      toast.error('Horas Inseridas num Domingo!');
+      
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+
+      
+   }
+   const checkDate = (dataChoosen)=>{
+    const data = new Date(dataChoosen);
+      
+    const itemDay = data.getDate();
+    const itemMonth = data.getMonth();
+    const itemYear = data.getFullYear();
+
+
+    for (let i = 0; i < listaDias.length; i++) {
+      const DataRecebida = new Date(listaDias[i].Data);
+
+
+      const currentDay = DataRecebida.getDate();
+      const currentMonth = DataRecebida.getMonth();
+      const currentYear = DataRecebida.getFullYear();
+
+
+      if (
+        currentYear === itemYear &&
+        currentMonth === itemMonth &&
+        currentDay === itemDay
+      ) {      
+        return true;
+      } 
+    }
+
+    return false;
+    
+   }
+
+
+   
   const handleDia = async (e) => {
     setButtonClicked(true);
     e.preventDefault();
@@ -661,7 +717,7 @@ const ListaProjetos = () => {
     const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
     let count = 0;
 
-    if(values.accepted !== 2){
+    if(values.accepted !== 2) {
     if (horasT <= 0) {
       toast.error('Valor inserido invalido!');
       return;
@@ -676,13 +732,17 @@ const ListaProjetos = () => {
     }else if(isWeekend){
 
       count++;
-      toast.error('Horas inseridas num fim de semana!');
+      if(!dayOfWeek === 0 || horasT < 8)
+        {
+          toast.error('Horas inseridas num fim de semana!');
+        }
     } else if (horasT > 8.5) {
 
       count++;
       toast.error('Valor inserido excede as 8 horas e 30 minutos diárias!');
     }
     
+
 
     if(activeCompensacao === true){
         for (let key in values.tipoDeTrabalhoHoras) {
@@ -696,6 +756,8 @@ const ListaProjetos = () => {
         }
       }
     }
+
+
 
 
     if(count === 0 ){
@@ -722,16 +784,22 @@ const ListaProjetos = () => {
       values.tipoDeTrabalhoHoras[key].tipoTrabalho = tipoTrabalhoArray.join(',');
   }
 
-
-    values.Utilizador = user.user.id;
-    if (verificaDiaCalled) {
-      await dispatch(editDia(values));
-    } else {
-      await dispatch(createDia(values));
+  if(dayOfWeek === 0 && horasT >= 8)
+    {
+      setValues(values)
+      setModalBoxActive(true);
+    }else{
+      
+      values.Utilizador = user.user.id;
+      if (verificaDiaCalled) {
+        await dispatch(editDia(values));
+      } else {
+        await dispatch(createDia(values));
+      }
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     }
-    setTimeout(() => {
-      window.location.reload();
-    }, 1000);
   };
 
 
@@ -1003,8 +1071,6 @@ const ListaProjetos = () => {
     return timeString;
   }
 
-
-
   if (!values.loaded) {
     return <Loading />;
   } else if (isLoading) {
@@ -1014,6 +1080,16 @@ const ListaProjetos = () => {
     return (
       <Wrapper>
         <div className="container">
+        {modalBoxActive &&           
+        <AddHorasDomingo
+              handleDateChoosen={handleConfirm}
+              handleClose={handleCloseModal}
+              state={true} 
+              dataReceived={values.Data ? new Date(values.Data).toLocaleDateString('en-CA') : ''}
+              feriadosPortugal={feriadosPortugal}
+              checkDate={checkDate}
+          /> }
+
           <div>
             <div className='row'>
               <div className='col-6'>
@@ -1105,7 +1181,7 @@ const ListaProjetos = () => {
               <div className="card-body">
                 <button
                   type="submit"
-                  disabled={(values.accepted === 2 && startHorasT >= 8.5) || isLoading || buttonClicked }
+                  disabled={(values.accepted === 2 && startHorasT >= 8.5) || isLoading || buttonClicked ||  (values.accepted === 4 || values.accepted === 5)}
 
                   onClick={(e) => { handleDia(e) }}
                   className="w-100 btn btn-lg btn-primary"

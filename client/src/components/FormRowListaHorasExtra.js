@@ -14,6 +14,7 @@ const FormRowListaHorasExtra = ({ type, value,tipoHoras, className, classNameInp
   //const [feriados, setFeriados] = useState([]);
   const [horasExtra, setHorasExtra] = useState([]);
   const [compensacao , setCompensacao] = useState(false);
+  const [ associated , setAssociated] = useState([])
   const [tipo, setTipo] = useState([]);
 
   function feriadosPortugal(date) {
@@ -104,6 +105,7 @@ const FormRowListaHorasExtra = ({ type, value,tipoHoras, className, classNameInp
     const dayOfWeek = fullData.getDay();
 
     const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+    const isDomingo = dayOfWeek === 0;
     const isFriday = dayOfWeek === 5;
    
     if (feriadosPortugal(fullData)) {
@@ -114,7 +116,12 @@ const FormRowListaHorasExtra = ({ type, value,tipoHoras, className, classNameInp
     } else if (isWeekend) {
       setHorasExtra(value?.NumeroHoras);
       setCompensacao(false);
+
+      if(isDomingo){
+        setTipo("Domingo");
+      }else{
       setTipo("Fim semana");
+    }
 
     } else if (isFriday && (parseFloat(value?.NumeroHoras) > 6)) {
       const horasExtraVal = parseFloat(value?.NumeroHoras) - 6;
@@ -148,6 +155,37 @@ const FormRowListaHorasExtra = ({ type, value,tipoHoras, className, classNameInp
       setHorasExtra("-"+ count);
       setCompensacao(true);
       setTipo("");
+    }
+
+
+
+
+    if(value?.associated && value?.associated?.length > 0){
+
+
+    try {
+
+      const jsonObject = JSON.parse(value.associated);
+  
+      for(let i  = 0;i < jsonObject.length; i++){
+
+        const assData = new Date(jsonObject[i].Data);
+        const assDay = assData.getDate();
+        const assMonth = assData.getMonth() + 1;
+        const assYear = assData.getFullYear();
+
+        const assNewData = assDay + "/" + assMonth + "/" + assYear;
+
+        jsonObject[i].Data = assNewData;
+      }
+
+
+
+      setAssociated(jsonObject);
+
+    }catch (error) {
+      console.error(error)
+    }
     }
 
       if(utilizadores && utilizadores.length > 0){
@@ -242,6 +280,32 @@ const FormRowListaHorasExtra = ({ type, value,tipoHoras, className, classNameInp
       })}
     </div>
       </div>
+
+
+
+
+
+
+      {associated && associated.length >0 &&  associated.map((diaAss, i) => (
+      <div key={diaAss + "_" + i}>
+        <div className="row mb-3" >
+          <div className={"col-md-2 text-center"}>
+            </div>
+            <div className="col-md-2 text-center">
+              <p>{diaAss.Data}</p>
+            </div>
+            <div className="col-md-1 text-center">
+            <p>{convertToMinutes(diaAss?.NumeroHoras)}</p>
+        </div>
+        <div className="col-md-2 text-center"></div>
+        <div className="col-md-2 text-start" >
+            <p>Compensação Domingo </p>
+        </div>
+
+      </div>
+      </div>
+            ))
+      }
     </Wrapper>
   );
 };

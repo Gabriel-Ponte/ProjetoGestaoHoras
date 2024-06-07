@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 import { getUserFromLocalStorage } from '../../utils/localStorage';
-import { createDiaThunk, deleteDiaThunk, editDiaThunk , getDiaThunk} from './diasThunk';
+import { createDiaDomingoThunk, createDiaThunk, deleteDiaThunk, editDiaThunk ,getDiaIDThunk , getDiaThunk} from './diasThunk';
 
 
 const initialState = {
@@ -9,6 +9,10 @@ const initialState = {
 };
 
 export const createDia = createAsyncThunk('dias/createDia', createDiaThunk);
+
+export const createDiaDomingo = createAsyncThunk('dias/createDiaDomingo', createDiaDomingoThunk);
+
+
 
 export const deleteDia = createAsyncThunk('dias/deleteDia', deleteDiaThunk);
 
@@ -21,6 +25,10 @@ export const getDia = createAsyncThunk(
     return getDiaThunk('/Dias/getDias', data, id);
   }
 );
+
+
+export const getDiaID = createAsyncThunk('dias/getDiaID', getDiaIDThunk);
+
 
 const diasSlice = createSlice({
   name: 'dia',
@@ -52,6 +60,20 @@ const diasSlice = createSlice({
       state.isLoading = false;
       toast.error(payload);
     })
+
+
+    .addCase(createDiaDomingo.pending, (state) => {
+      state.isLoading = true;
+    })
+    .addCase(createDiaDomingo.fulfilled, (state) => {
+      state.isLoading = false;
+      toast.success('Dia adicionado!');
+    })
+    .addCase(createDiaDomingo.rejected, (state, { payload }) => {
+      state.isLoading = false;
+      toast.error(payload);
+    })
+
     .addCase(deleteDia.fulfilled, (state, { payload }) => {
       toast.success(payload);
     })

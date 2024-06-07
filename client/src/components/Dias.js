@@ -3,19 +3,31 @@ import Wrapper from '../assets/wrappers/Dias';
 import { useDispatch } from 'react-redux';
 import { getProjetoList } from '../features/projetos/projetosSlice';
 import { AiFillDelete } from 'react-icons/ai';
-import { deleteDia } from '../features/dias/diasSlice';
+import { deleteDia, getDia, getDiaID } from '../features/dias/diasSlice';
 import { toast } from 'react-toastify';
 
-const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPossiveis, listaTT, accepted }) => {
+const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, associated, horasPossiveis, listaTT, accepted }) => {
   const dispatch = useDispatch();
   const [projeto, setProjeto] = useState([]);
+  const [diaAssociated, setDiaAssociated] = useState([]);
   // const [horasTotal, sethorasTotal] = useState([]);
   // const navigate = useNavigate();
   // let horasT = 0;
 
 
+
+
   useEffect(() => {
     try{
+
+      if(associated){
+
+        dispatch(getDiaID({ associated })).then((res) => {
+          const data = res?.payload?.dia?.Data; 
+          setDiaAssociated(data)
+
+        })
+      }
     const projetoList = tipoDeTrabalhoHoras.map(({ tipoTrabalho, horas, projeto }) => {
       // horasT += Number(horas);
       const horasArray = horas.split(',') || [];
@@ -119,7 +131,7 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPos
               <div className="col-md-3 themed-grid-col">
                 <h3>{Data ? new Date(Data).toLocaleDateString('en-CA') : ''}</h3>
               </div>
-              {accepted !== 2 && accepted !== 3 &&
+              {accepted !== 2 && accepted !== 3 && accepted !== 5 &&
               <div>
 
                 <button type='submit'
@@ -154,7 +166,7 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, horasPos
                             
                             if (trabalho === listaTT[i]?._id) {
                               counter++;
-                              return <p key={index}>{listaTT[i].TipoTrabalho.trim()}</p>;
+                              return <p key={index}>{listaTT[i].TipoTrabalho.trim()} {(accepted === 5 || accepted === 4) ? diaAssociated ? new Date(diaAssociated).toLocaleDateString('en-CA') : '': ""}</p>;
                             }
                           }}
                           if (counter === 0) {

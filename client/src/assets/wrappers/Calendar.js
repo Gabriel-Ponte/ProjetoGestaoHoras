@@ -226,7 +226,12 @@ const Wrapper = styled.section`
     border-radius: 4px;
     
 }
-
+.calendar .calendar-inner .calendar-body .calendar-compensacaoDomingo {
+    cursor: default;
+    background: #CCCCCC;
+    border-radius: 4px;
+    
+}
 .calendar .calendar-inner .calendar-body .calendar-inicio {
     background: #588157;
     border-radius: 4px;

@@ -105,7 +105,10 @@ const GerirTipoTrabalho = () => {
             valueTipo = 3
           }else if(value === "Extra"){
             valueTipo = 5
-          }else{
+          }else if(value === "Compensação Domingo"){
+            valueTipo = 6
+          }else
+          {
             valueTipo = 4
           }
 
@@ -179,7 +182,6 @@ const GerirTipoTrabalho = () => {
                   value={t.TipoTrabalho}
                   handleChange={(e) => handleChangeTipoTrabalho(e, t._id)}
                 />
-                
               }
               <div className="col-md-12 text-center tiposTrabalho">
                 <FormRowSelectTipo
@@ -191,7 +193,7 @@ const GerirTipoTrabalho = () => {
                     handleChange={(e) => handleChangeTipoTrabalho(e, t._id)}
                     placeholder="Escolha um tipo"
                     value={t.tipo}
-                    list={[["Projetos"], ["Geral"], ["Outro"], ["Compensação"], ["Extra"]]}
+                    list={[["Projetos"], ["Geral"], ["Outro"], ["Compensação"], ["Extra"], ["Compensação Domingo"]]}
                 />
                 </div>
             </div>

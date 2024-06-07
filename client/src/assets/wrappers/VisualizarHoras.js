@@ -85,7 +85,15 @@ const Wrapper = styled.section`
     margin-top:auto;
     margin-bottom:auto;
   }
-
+  .compensDomingo{
+    width:10px;
+    height:10px;
+    background-color:  #CCCCCC;
+    display: inline-block;
+    vertical-align: middle;
+    margin-top:auto;
+    margin-bottom:auto;
+  }
   .ferias{
     width:10px;
     height:10px;

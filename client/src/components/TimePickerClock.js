@@ -3,7 +3,7 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 
 const MemoizedDesktopTimePicker = React.memo(TimePicker);
 
-const TimePickerClock = React.memo(({ name, projectID, ttID, projectNome, selectedTime, convertToInt }) => {
+const TimePickerClock = React.memo(({ disabled, name, projectID, ttID, projectNome, selectedTime, convertToInt }) => {
   // Memoize the convertToInt function
   const memoizedConvertToInt = useCallback((newTime) => {
     const hours = newTime.getHours();
@@ -21,7 +21,7 @@ const TimePickerClock = React.memo(({ name, projectID, ttID, projectNome, select
 
   // Memoize the formattedTimeValue
   const formattedTimeValue = useMemo(() => new Date(`2023-01-01T${selectedTime}:00`), [selectedTime]);
-
+  
   return (
     <div className="row mb-3 text-center">
       <div className="col-md-9 text-start themed-grid-col" >
@@ -29,6 +29,7 @@ const TimePickerClock = React.memo(({ name, projectID, ttID, projectNome, select
       </div>
       <div className="col-md-3 themed-grid-col">
         <MemoizedDesktopTimePicker
+          disabled={disabled}
           value={formattedTimeValue}
           onChange={memoizedConvertToInt}
           timeSteps={{ minutes: 15 }}

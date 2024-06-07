@@ -28,7 +28,10 @@ const FormRowSelectTipo = ({ labelText, name, value, handleChange, list, classNa
     value = "Compensação";
   }else if(value === 5 && name === "tipoT"){
     value = "Extra";
+  }else if(value === 6 && name === "tipoT"){
+    value = "Compensação Domingo";
   }
+  
   
 
   const containerStyle = {
@@ -53,7 +56,7 @@ const FormRowSelectTipo = ({ labelText, name, value, handleChange, list, classNa
         value={value}
         onChange={handleChange}
         className='form-select'
-        disabled={value === "Compensação" || value === "Extra"}
+        disabled={value === "Compensação" || value === "Extra" || value === "Compensação Domingo"}
       >
         {list.map((itemValue, index) => {
           

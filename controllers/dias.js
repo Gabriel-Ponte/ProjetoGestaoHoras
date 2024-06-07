@@ -10,11 +10,19 @@ const { exportExcell } = require("../exportExcellHours");
 
 
 const { exportExcellHoursProjetos } = require("../exportExcellHoursProjetos");
+const { log, Console } = require("console");
+const { json } = require("body-parser");
 
 const getAllDias = async (req, res) => {
   try {
 
-    const diasAll = await Dias.find({ accepted: { $ne: 3 } });
+    const diasAll = await Dias.find({
+      $nor: [
+        { accepted: 3 },
+        { accepted: 6 }
+      ]
+    });
+    
     if (!diasAll.length) {
       throw new NotFoundError(`Não foram encontradas horas inseridas`);
     }
@@ -208,127 +216,149 @@ function calculateEaster(year, type) {
   }
 
 
-
-const getAllDiasHorasExtra = async (req, res) => {
-  try {
-    const { sort, tipo } = req.query;
-    let result = Dias.find({ accepted: { $eq: 1 } });
-
-
-    if (sort) {
-      if (sort === "Tipo" || sort === "-Tipo") {
-        result = await sortHorasExtraTipo(result, sort);
-      } else if (sort === "Horas" || sort === "-Horas") {
-        result = await result;
-        result = sortHorasExtra(result, sort);
-      } else {
-        result = await result.sort(sort);
-      }
-    }
-
-
-
-    const diasHorasExtra = await result;
-    const indicesToRemove = [];
-    const promises = [];
-    for (const dia of diasHorasExtra) {
-
-
-
-      const tt = dia.tipoDeTrabalhoHoras;
-      let tipoTrT = 0;
-
-      promises.push(
-        Promise.all(
-          tt.map(async (projeto) => {
-            const foundProjeto = await Projeto.findOne({ _id: projeto.projeto });
-            if (foundProjeto) {
-              projeto.projeto = foundProjeto.Nome;
-            }
-
-            const tipoT = projeto.tipoTrabalho.split(",");
-            for (let i = 0; i < tipoT.length; i++) {
-              const ttFound = await TipoTrabalho.findOne({ _id: tipoT[i] });
-              if (ttFound) {
-                tipoT[i] = ttFound.TipoTrabalho;
-
-                if (ttFound.tipo === 4) {
-                  tipoTrT = 3;
-                }
-              }
-            }
-            projeto.tipoTrabalho = tipoT.join(",");
-          })
-
-
-        )
-      );
-
-
-      if (tipo) {
-        let count = 0;
-        if (tipo !== "1") {
-          await Promise.all(promises);
-          if (tipoTrT !== 3) {
-
-
-              const date = new Date(dia?.Data);
-              const horasT = dia?.NumeroHoras;
-              const dayOfWeek = date.getDay();
-              const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-       
-
-              if (horasT > 8.5) {
-                count++;
-              } else if (date.getDay() === 5) {
-                if (horasT > 6) {
-                  count++;
-                }
-              } else if (isWeekend) {
-                count++;
-              } else if(getFeriadosPortugalDate(date)){
-                count ++;
-              }
-
-                if (count === 0) {
-
-                await Dias.findByIdAndUpdate(
-                  dia?._id,
-                  {
-                    accepted: 0,
-                  },
-                  { new: true, runValidators: true }
-                );
-
-            }
-          }
-            if ((tipo === "3" && tipoTrT !== 3) || (tipo === "2" && tipoTrT === 3) || (tipoTrT !== 3 && count === 0)) {
-              indicesToRemove.push(diasHorasExtra.indexOf(dia));
-            }
+  const getAllDiasHorasExtra = async (req, res) => {
+    try {
+      const { sort, tipo } = req.query;
   
+      // Initial query to get Dias: 1
+      let result = Dias.find({ accepted: 1 });
+  
+      // Sorting
+      if (sort) {
+        if (sort === "Tipo" || sort === "-Tipo") {
+          result = sortHorasExtraTipo(result, sort); 
+        } else if (sort === "Horas" || sort === "-Horas") {
+          result = sortHorasExtra(result, sort);
+        } else {
+          result = result.sort(sort);
         }
       }
+  
+      let diasHorasExtra = await result;
+      const indicesToRemove = [];
+      const indicesNotToRemove = [];
+      // Process tipoDeTrabalhoHoras
+      await Promise.all(
+        diasHorasExtra.map(async (dia) => {
+          const tt = dia.tipoDeTrabalhoHoras;
+          let tipoTrT = 0;
+  
+          // Processing each project
+          await Promise.all(
+            dia.tipoDeTrabalhoHoras.map(async (projeto , index) => {
+              const indexDia = diasHorasExtra.indexOf(dia);
+              // Finding the project
+              const foundProjeto = await Projeto.findOne({ _id: projeto.projeto });
+              if (foundProjeto) {
+                projeto.projeto = foundProjeto.Nome;
+              }
+  
+              // Processing tipoTrabalho
+              const tipoT = projeto.tipoTrabalho.split(",");
+              for (let i = 0; i < tipoT.length; i++) {
+                const ttFound = await TipoTrabalho.findOne({ _id: tipoT[i] });
+                if (ttFound) {
+                  tipoT[i] = ttFound.TipoTrabalho;
+                  if (ttFound.tipo === 4) {
+                    tipoTrT = 3;
+                  }
+                }
+              }
+              projeto.tipoTrabalho = tipoT.join(",");
+  
+              if ((tipo === "3" && tipoTrT !== 3) || (tipo === "2" && tipoTrT === 3)) {      
+                if ((indicesNotToRemove && indicesNotToRemove.includes(indexDia)) ||indicesToRemove && (indicesToRemove.includes(indexDia))) {
+              } else {
+                  indicesToRemove.push(indexDia);
+              }
+  
+              } else if((tipo === "3" && tipoTrT === 3) ){
+                try {
+                  indicesNotToRemove.push(indexDia);
+                  
+                  if(indicesToRemove && indicesToRemove.includes(indexDia)){
+                    indicesToRemove.remove(indexDia);
+                  }
+                } catch (error) {
+                    console.error(error)
+                } 
+              }
+            })
+          );
+  
+          // Handling associated days for tipo = 1
+          if (tipo === "1") {
+            const date = new Date(dia?.Data);
+            const dayOfWeek = date.getDay();
+            const isSunday = dayOfWeek === 0;
+            if (isSunday) {
+              const associatedDay = await Dias.findOne({ associated: dia?._id });
+              if (associatedDay) {
+                const diaAssociated = {
+                  _id: associatedDay?._id?.toString(),
+                  _id_D: associatedDay?._id_D?.toString(),
+                  Data: associatedDay?.Data?.toString(),
+                  NumeroHoras: associatedDay?.NumeroHoras?.toString(),
+                  tipoDeTrabalhoHoras: associatedDay?.tipoDeTrabalhoHoras,
+                  Utilizador: associatedDay?.Utilizador?.toString(),
+                  accepted: associatedDay?.accepted,
+                  associated: associatedDay?.associated?.toString(),
+                  createdAt: associatedDay?.createdAt?.toString(),
+                  updatedAt: associatedDay?.updatedAt?.toString(),
+                };
+                dia["associated"] = JSON.stringify([diaAssociated]);
+              }
+            }
+          }
+        })
+      );
+  
+  
+      
+      if (indicesToRemove && indicesToRemove.length > 0) {
+        indicesToRemove.sort((a, b) => a - b);
+  
+        indicesToRemove.reverse().forEach((index) => {
+          diasHorasExtra.splice(index, 1);
+        });
+      }
+  
+      // Handling associated days for tipo !== 1
+      if (tipo !== "1") {
+        await Promise.all(
+          diasHorasExtra.map(async (dia) => {
+            const date = new Date(dia?.Data);
+            const dayOfWeek = date.getDay();
+            const isSunday = dayOfWeek === 0;
+            if (isSunday) {
+              const associatedDay = await Dias.findOne({ associated: dia?._id });
+              if (associatedDay) {
+                const diaAssociated = [{
+                  _id: associatedDay?._id?.toString(),
+                  _id_D: associatedDay?._id_D?.toString(),
+                  Data: associatedDay?.Data?.toString(),
+                  NumeroHoras: associatedDay?.NumeroHoras?.toString(),
+                  tipoDeTrabalhoHoras: associatedDay?.tipoDeTrabalhoHoras,
+                  Utilizador: associatedDay?.Utilizador?.toString(),
+                  accepted: associatedDay?.accepted,
+                  associated: associatedDay?.associated?.toString(),
+                  createdAt: associatedDay?.createdAt?.toString(),
+                  updatedAt: associatedDay?.updatedAt?.toString(),
+                }];
+                dia["associated"] = JSON.stringify(diaAssociated);
+              }
+            }
+          })
+        );
+      }
+  
+      // Sending response
+      res.status(StatusCodes.OK).json({ diasHorasExtra });
+    } catch (error) {
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message });
     }
+  };
 
-    if (!tipo || tipo === "1") {
-      await Promise.all(promises);
-    }
-
-    if (indicesToRemove && indicesToRemove.length > 0) {
-      indicesToRemove.reverse().forEach((index) => {
-        diasHorasExtra.splice(index, 1);
-      });
-    }
-    if (!diasHorasExtra.length) {
-      return res.status(StatusCodes.OK).json({ diasHorasExtra });
-    }
-
-    res.status(StatusCodes.OK).json({ diasHorasExtra });
-  } catch (error) {
-    console.error(error)
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message });
-  }
-};
 
 
 
@@ -336,77 +366,139 @@ const getAllDiasHorasExtraAccepted = async (req, res) => {
   try {
     const { sort, tipo } = req.query;
 
-    let result = Dias.find({ accepted: { $eq: 2 } });
+    // Initial query to get Dias with accepted: 2
+    let result = Dias.find({ accepted: 2 });
 
-
+    // Sorting
     if (sort) {
       if (sort === "Tipo" || sort === "-Tipo") {
-        result = await sortHorasExtraTipo(result, sort);
+        result = sortHorasExtraTipo(result, sort); // Assuming sortHorasExtraTipo is an efficient function
       } else if (sort === "Horas" || sort === "-Horas") {
-        result = await result;
-        result = sortHorasExtra(result, sort);
+        result = sortHorasExtra(result, sort); // Assuming sortHorasExtra is an efficient function
       } else {
-        result = await result.sort(sort);
+        result = result.sort(sort); // Mongoose sort function
       }
     }
 
-    const diasHorasExtra = await result;
+    let diasHorasExtra = await result;
     const indicesToRemove = [];
-    const promises = [];
+    const indicesNotToRemove = [];
+    // Process tipoDeTrabalhoHoras
+    await Promise.all(
+      diasHorasExtra.map(async (dia) => {
+        const tt = dia.tipoDeTrabalhoHoras;
+        let tipoTrT = 0;
 
-    for (const dia of diasHorasExtra) {
-      const tt = dia.tipoDeTrabalhoHoras;
-      let tipoTrT = 0;
-
-      promises.push(
-        Promise.all(
-          tt.map(async (projeto) => {
+        // Processing each project
+        await Promise.all(
+          dia.tipoDeTrabalhoHoras.map(async (projeto , index) => {
+            const indexDia = diasHorasExtra.indexOf(dia);
+            // Finding the project
             const foundProjeto = await Projeto.findOne({ _id: projeto.projeto });
             if (foundProjeto) {
               projeto.projeto = foundProjeto.Nome;
             }
 
+            // Processing tipoTrabalho
             const tipoT = projeto.tipoTrabalho.split(",");
             for (let i = 0; i < tipoT.length; i++) {
               const ttFound = await TipoTrabalho.findOne({ _id: tipoT[i] });
               if (ttFound) {
                 tipoT[i] = ttFound.TipoTrabalho;
-
                 if (ttFound.tipo === 4) {
                   tipoTrT = 3;
                 }
               }
             }
             projeto.tipoTrabalho = tipoT.join(",");
+
+            if ((tipo === "3" && tipoTrT !== 3) || (tipo === "2" && tipoTrT === 3)) {      
+              if ((indicesNotToRemove && indicesNotToRemove.includes(indexDia)) ||indicesToRemove && (indicesToRemove.includes(indexDia))) {
+            } else {
+                indicesToRemove.push(indexDia);
+            }
+
+            } else if((tipo === "3" && tipoTrT === 3) ){
+              try {
+                indicesNotToRemove.push(indexDia);
+                
+                if(indicesToRemove && indicesToRemove.includes(indexDia)){
+                  indicesToRemove.remove(indexDia);
+                }
+              } catch (error) {
+                  console.error(error)
+              } 
+            }
           })
-        )
-      );
+        );
 
-      if (tipo) {
-        if (tipo !== "1") {
-          await Promise.all(promises);
+        // Handling associated days for tipo = 1
+        if (tipo === "1") {
+          const date = new Date(dia?.Data);
+          const dayOfWeek = date.getDay();
+          const isSunday = dayOfWeek === 0;
+          if (isSunday) {
+            const associatedDay = await Dias.findOne({ associated: dia?._id });
+            if (associatedDay) {
+              const diaAssociated = {
+                _id: associatedDay?._id?.toString(),
+                _id_D: associatedDay?._id_D?.toString(),
+                Data: associatedDay?.Data?.toString(),
+                NumeroHoras: associatedDay?.NumeroHoras?.toString(),
+                tipoDeTrabalhoHoras: associatedDay?.tipoDeTrabalhoHoras,
+                Utilizador: associatedDay?.Utilizador?.toString(),
+                accepted: associatedDay?.accepted,
+                associated: associatedDay?.associated?.toString(),
+                createdAt: associatedDay?.createdAt?.toString(),
+                updatedAt: associatedDay?.updatedAt?.toString(),
+              };
+              dia["associated"] = JSON.stringify([diaAssociated]);
+            }
+          }
         }
-        if ((tipo === "3" && tipoTrT !== 3) || (tipo === "2" && tipoTrT === 3)) {
-          indicesToRemove.push(diasHorasExtra.indexOf(dia));
-        }
-      }
+      })
+    );
 
-    }
 
-    if (!tipo || tipo === "1") {
-      await Promise.all(promises);
-    }
-
+    
     if (indicesToRemove && indicesToRemove.length > 0) {
+      indicesToRemove.sort((a, b) => a - b);
+
       indicesToRemove.reverse().forEach((index) => {
         diasHorasExtra.splice(index, 1);
       });
     }
 
-
-    if (!diasHorasExtra.length) {
-      return res.status(StatusCodes.OK).json({ diasHorasExtra });
+    // Handling associated days for tipo !== 1
+    if (tipo !== "1") {
+      await Promise.all(
+        diasHorasExtra.map(async (dia) => {
+          const date = new Date(dia?.Data);
+          const dayOfWeek = date.getDay();
+          const isSunday = dayOfWeek === 0;
+          if (isSunday) {
+            const associatedDay = await Dias.findOne({ associated: dia?._id });
+            if (associatedDay) {
+              const diaAssociated = [{
+                _id: associatedDay?._id?.toString(),
+                _id_D: associatedDay?._id_D?.toString(),
+                Data: associatedDay?.Data?.toString(),
+                NumeroHoras: associatedDay?.NumeroHoras?.toString(),
+                tipoDeTrabalhoHoras: associatedDay?.tipoDeTrabalhoHoras,
+                Utilizador: associatedDay?.Utilizador?.toString(),
+                accepted: associatedDay?.accepted,
+                associated: associatedDay?.associated?.toString(),
+                createdAt: associatedDay?.createdAt?.toString(),
+                updatedAt: associatedDay?.updatedAt?.toString(),
+              }];
+              dia["associated"] = JSON.stringify(diaAssociated);
+            }
+          }
+        })
+      );
     }
+
+    // Sending response
     res.status(StatusCodes.OK).json({ diasHorasExtra });
   } catch (error) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message });
@@ -417,84 +509,141 @@ const getAllDiasHorasExtraDeclined = async (req, res) => {
   try {
     const { sort, tipo } = req.query;
 
+    // Initial query to get Dias with accepted: 3 Declined
     let result = Dias.find({ accepted: 3 });
 
-
+    // Sorting
     if (sort) {
       if (sort === "Tipo" || sort === "-Tipo") {
-        result = await sortHorasExtraTipo(result, sort);
+        result = sortHorasExtraTipo(result, sort); 
       } else if (sort === "Horas" || sort === "-Horas") {
-        result = await result;
-        result = sortHorasExtra(result, sort);
+        result = sortHorasExtra(result, sort); 
       } else {
-        result = await result.sort(sort);
+        result = result.sort(sort); // Mongoose sort function
       }
     }
 
-    const diasHorasExtra = await result;
+    let diasHorasExtra = await result;
     const indicesToRemove = [];
-    const promises = [];
-    for (const dia of diasHorasExtra) {
-      const tt = dia.tipoDeTrabalhoHoras;
-      let tipoTrT = 0;
-      let numeroHorasExtra = 0;
-      promises.push(
-        Promise.all(
-          tt.map(async (projeto) => {
+    const indicesNotToRemove = [];
+    // Process tipoDeTrabalhoHoras
+    await Promise.all(
+      diasHorasExtra.map(async (dia) => {
+        const tt = dia.tipoDeTrabalhoHoras;
+        let tipoTrT = 0;
+
+        // Processing each project
+        await Promise.all(
+          dia.tipoDeTrabalhoHoras.map(async (projeto , index) => {
+            const indexDia = diasHorasExtra.indexOf(dia);
+            // Finding the project
             const foundProjeto = await Projeto.findOne({ _id: projeto.projeto });
             if (foundProjeto) {
               projeto.projeto = foundProjeto.Nome;
             }
 
+            // Processing tipoTrabalho
             const tipoT = projeto.tipoTrabalho.split(",");
-            const tipoTHoras = projeto.horas.split(",");
             for (let i = 0; i < tipoT.length; i++) {
               const ttFound = await TipoTrabalho.findOne({ _id: tipoT[i] });
               if (ttFound) {
                 tipoT[i] = ttFound.TipoTrabalho;
-
                 if (ttFound.tipo === 4) {
                   tipoTrT = 3;
-                  numeroHorasExtra += tipoTHoras[i];
                 }
               }
             }
             projeto.tipoTrabalho = tipoT.join(",");
-            projeto.numeroHorasExtra = numeroHorasExtra;
+
+            if ((tipo === "3" && tipoTrT !== 3) || (tipo === "2" && tipoTrT === 3)) {      
+              if ((indicesNotToRemove && indicesNotToRemove.includes(indexDia)) ||indicesToRemove && (indicesToRemove.includes(indexDia))) {
+            } else {
+                indicesToRemove.push(indexDia);
+            }
+
+            } else if((tipo === "3" && tipoTrT === 3) ){
+              try {
+                indicesNotToRemove.push(indexDia);
+                
+                if(indicesToRemove && indicesToRemove.includes(indexDia)){
+                  indicesToRemove.remove(indexDia);
+                }
+              } catch (error) {
+                  console.error(error)
+              } 
+            }
           })
+        );
 
-        )
-      );
-
-
-      if (tipo) {
-        if (tipo !== "1") {
-          await Promise.all(promises);
+        // Handling associated days for tipo = 1
+        if (tipo === "1") {
+          const date = new Date(dia?.Data);
+          const dayOfWeek = date.getDay();
+          const isSunday = dayOfWeek === 0;
+          if (isSunday) {
+            const associatedDay = await Dias.findOne({ associated: dia?._id });
+            if (associatedDay) {
+              const diaAssociated = {
+                _id: associatedDay?._id?.toString(),
+                _id_D: associatedDay?._id_D?.toString(),
+                Data: associatedDay?.Data?.toString(),
+                NumeroHoras: associatedDay?.NumeroHoras?.toString(),
+                tipoDeTrabalhoHoras: associatedDay?.tipoDeTrabalhoHoras,
+                Utilizador: associatedDay?.Utilizador?.toString(),
+                accepted: associatedDay?.accepted,
+                associated: associatedDay?.associated?.toString(),
+                createdAt: associatedDay?.createdAt?.toString(),
+                updatedAt: associatedDay?.updatedAt?.toString(),
+              };
+              dia["associated"] = JSON.stringify([diaAssociated]);
+            }
+          }
         }
-        if ((tipo === "3" && tipoTrT !== 3) || (tipo === "2" && tipoTrT === 3)) {
-          indicesToRemove.push(diasHorasExtra.indexOf(dia));
-        }
-      }
+      })
+    );
 
-    }
 
-    if (!tipo || tipo === "1") {
-      await Promise.all(promises);
-    }
-
+    
     if (indicesToRemove && indicesToRemove.length > 0) {
+      indicesToRemove.sort((a, b) => a - b);
+
       indicesToRemove.reverse().forEach((index) => {
         diasHorasExtra.splice(index, 1);
       });
     }
 
-    if (!diasHorasExtra.length) {
-      return res.status(StatusCodes.OK).json({ diasHorasExtra });
+    // Handling associated days for tipo !== 1
+    if (tipo !== "1") {
+      await Promise.all(
+        diasHorasExtra.map(async (dia) => {
+          const date = new Date(dia?.Data);
+          const dayOfWeek = date.getDay();
+          const isSunday = dayOfWeek === 0;
+          if (isSunday) {
+            const associatedDay = await Dias.findOne({ associated: dia?._id });
+            if (associatedDay) {
+              const diaAssociated = [{
+                _id: associatedDay?._id?.toString(),
+                _id_D: associatedDay?._id_D?.toString(),
+                Data: associatedDay?.Data?.toString(),
+                NumeroHoras: associatedDay?.NumeroHoras?.toString(),
+                tipoDeTrabalhoHoras: associatedDay?.tipoDeTrabalhoHoras,
+                Utilizador: associatedDay?.Utilizador?.toString(),
+                accepted: associatedDay?.accepted,
+                associated: associatedDay?.associated?.toString(),
+                createdAt: associatedDay?.createdAt?.toString(),
+                updatedAt: associatedDay?.updatedAt?.toString(),
+              }];
+              dia["associated"] = JSON.stringify(diaAssociated);
+            }
+          }
+        })
+      );
     }
 
+    // Sending response
     res.status(StatusCodes.OK).json({ diasHorasExtra });
   } catch (error) {
-    console.error(error);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message });
   }
 };
@@ -509,8 +658,19 @@ const acceptDiasHorasExtra = async (req, res) => {
     },
     { new: true, runValidators: true }
   );
+  const associatedDay = await Dias.findOne({ associated: id });
 
+  if(associatedDay) {
 
+      const idAss = associatedDay?._id;
+      await Dias.findByIdAndUpdate(
+        idAss,
+        {
+          accepted: 5,
+        },
+        { new: true, runValidators: true }
+      );
+  }
   if (!dia) {
     throw new NotFoundError(`Não existe um dia com id ${id}`);
   }
@@ -522,7 +682,6 @@ const declineDiasHorasExtra = async (req, res) => {
   const { id } = req.params;
 
   const diaToDecline = await Dias.findById(id);
-
 
   const tipoTrabalhoHoras = diaToDecline.tipoDeTrabalhoHoras;
   const user = await User.findOne({ _id: req.body.Utilizador });
@@ -553,6 +712,19 @@ const declineDiasHorasExtra = async (req, res) => {
     },
     { new: true, runValidators: true }
   );
+
+  const associatedDay = await Dias.findOne({ associated: id });
+
+  if(associatedDay) {
+      const idAss = associatedDay?._id;
+      await Dias.findByIdAndUpdate(
+        idAss,
+        {
+          accepted: 6,
+        },
+        { new: true, runValidators: true }
+      );
+  }
 
   try {
     const data = new Date(req?.body?.Data)
@@ -632,8 +804,11 @@ const getAllDiasUtilizadorTipo = async (req, res) => {
     const userIds = users.map(user => user._id);
 
 
-
-    const diasAllUtilizador = await Dias.find({ accepted: { $ne: 3 }, Utilizador: { $in: userIds } });
+    const diasAllUtilizador = await Dias.find({ 
+       $nor: [
+      { accepted: 3 },
+      { accepted: 6 }
+    ], Utilizador: { $in: userIds } });
 
     if (!diasAllUtilizador.length) {
       throw new NotFoundError(`Não foram encontradas horas inseridas para utilizadores do tipo ${utilizador}.`);
@@ -657,7 +832,10 @@ const getAllDiasUtilizador = async (req, res) => {
 
   const diasAllUtilizador = await Dias.find({
     Utilizador: u1._id,
-    accepted: { $ne: 3 },
+    $nor: [
+      { accepted: 3 },
+      { accepted: 6 }
+    ],
   });
 
   if (!diasAllUtilizador.length) {
@@ -677,7 +855,10 @@ const getAllDiasProjeto = async (req, res) => {
   } = req;
 
 
-  const diasAllProjeto = await Dias.find({ accepted: { $ne: 3 }, "tipoDeTrabalhoHoras.projeto": projeto });
+  const diasAllProjeto = await Dias.find({       $nor: [
+    { accepted: 3 },
+    { accepted: 6 }
+  ], "tipoDeTrabalhoHoras.projeto": projeto });
 
   if (!diasAllProjeto.length) {
     throw new NotFoundError(`No Dias found`);
@@ -688,7 +869,11 @@ const getAllDiasProjeto = async (req, res) => {
 
 const getDiasUtilizador = async (req, res) => {
   req.body.createdBy = req.user.userId;
-  const diasUtilizador = await Dias.find({ accepted: { $ne: 3 } });
+  const diasUtilizador = await Dias.find({       
+    $nor: [
+    { accepted: 3 },
+    { accepted: 6 }
+  ] });
   let x = 0;
   const listaUtilizador = null;
   for (i == 0; i < diasUtilizador.length; i++) {
@@ -715,7 +900,11 @@ const getDiasProjetoUtilizador = async (req, res) => {
   });
 
   const diasAllProjeto = await Dias.find({
-    Utilizador: u1._id, "tipoDeTrabalhoHoras.projeto": projeto, accepted: { $ne: 3 },
+    Utilizador: u1._id, "tipoDeTrabalhoHoras.projeto": projeto,      
+    $nor: [
+      { accepted: 3 },
+      { accepted: 6 }
+    ],
   });
   if (!diasAllProjeto.length) {
     throw new NotFoundError(`Utilizador ${utilizador} não possui horas inseridas neste projeto`);
@@ -730,10 +919,14 @@ const getDia = async (req, res) => {
       params: { user: login },
     } = req;
     const dia = await Dias.find({
-      accepted: { $ne: 3 },
+      $nor: [
+        { accepted: 3 },
+        { accepted: 6 }
+      ],
       Utilizador: login,
 
     });
+
     if (!dia) {
       throw new NotFoundError(`Não existem horas nesta data ${ChangeDiaData}`);
     }
@@ -744,6 +937,23 @@ const getDia = async (req, res) => {
 };
 
 
+const getDiaID = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const dia = await Dias.findById(id);
+
+    if (!dia) {
+      throw new NotFoundError(`Dia não encontrado com o id ${id}`);
+    }
+
+
+    res.status(StatusCodes.OK).json({ dia });
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message });
+  }
+};
+
 const getDiaInf = async (req, res) => {
   try {
     const {
@@ -751,7 +961,10 @@ const getDiaInf = async (req, res) => {
     } = req;
     const dia = await Dias.find({
       Utilizador: login,
-      accepted: { $ne: 3 },
+      $nor: [
+        { accepted: 3 },
+        { accepted: 6 }
+      ],
     });
     if (!dia) {
       throw new NotFoundError(`Não existem horas nesta data ${ChangeDiaData}`);
@@ -814,6 +1027,173 @@ const createDia = async (req, res) => {
 
 };
 
+
+const createDiaDomingo = async (req, res) => {
+  try {
+  const aUtilizador = await User.findOne({
+    _id: req.body.Utilizador,
+  });
+
+  const tipoDeTrabalhoHorasArray = [];
+  for (let index = 0; index < Object.keys(req.body.tipoDeTrabalhoHoras).length; index++) {
+    const obj = req.body.tipoDeTrabalhoHoras[Object.keys(req.body.tipoDeTrabalhoHoras)[index]];
+    let tipoTrabalho = "";
+    let horas = "";
+    for (let key in obj) {
+      if (key == "tipoTrabalho") {
+        if (tipoTrabalho !== "") {
+          tipoTrabalho += ",";
+        }
+        tipoTrabalho += obj[key];
+      } else if (key == "horas") {
+        if (horas !== "") {
+          horas += ",";
+        }
+        horas += obj[key];
+      }
+    }
+    const tipoTrabalhoHoras = await TipoTrabalhoHoras.create({
+      projeto: Object.keys(req.body.tipoDeTrabalhoHoras)[index],
+      tipoTrabalho: tipoTrabalho,
+      horas: horas,
+    });
+    tipoDeTrabalhoHorasArray.push(tipoTrabalhoHoras);
+  }    
+
+  
+  const findDia = await Dias.find({
+    Utilizador: aUtilizador._id,
+    Data: req.body.Data,
+  });
+
+
+  let dia = "";
+  if(findDia && findDia.length > 0){
+    const id = findDia[0]._id;
+    dia = await Dias.findByIdAndUpdate(
+      id,
+      {
+        Data: req.body.Data,
+        NumeroHoras: req.body.NumeroHoras,
+        tipoDeTrabalhoHoras: tipoDeTrabalhoHorasArray,
+        accepted: req?.body?.accepted,
+      },
+      { new: true, runValidators: true }
+    );
+  
+  } else{
+      dia = await Dias.create({
+        Data: req.body.Data,
+        NumeroHoras: req.body.NumeroHoras,
+        tipoDeTrabalhoHoras: tipoDeTrabalhoHorasArray,
+        Utilizador: aUtilizador._id,
+        accepted: req?.body?.accepted,
+      });
+  }
+
+  const findProjetoGeral =  await Projeto.findOne({ Tipo: 1 });
+  let idProjeto = "";
+
+  if(!findProjetoGeral){
+    const projetoGeral =  await Projeto.findOne({ Nome: "Geral" });
+    idProjeto = projetoGeral?._id;
+     await Projeto.findByIdAndUpdate(
+      idProjeto,
+      {
+        Tipo: 1
+      },
+      { new: true, runValidators: true }
+    );
+  
+  } else{
+    idProjeto = findProjetoGeral?._id;
+  }
+
+
+  
+  if(req?.body?.associated){
+    const data = new Date(req?.body?.associated);
+    const tipoDeTrabalhoHorasArrayA = [];
+
+    const [findDiaAssociated1, findDiaAssociated2] = await Promise.all([
+      Dias.find({ associated: dia?._id ,      $nor: [
+        { accepted: 3 },
+        { accepted: 6 }
+      ]}),
+      Dias.find({ Utilizador: aUtilizador._id, Data: data ,      $nor: [
+        { accepted: 3 },
+        { accepted: 6 }
+      ] })
+    ]);
+    
+    const findDiaAssociated = findDiaAssociated1.length > 0 ? findDiaAssociated1 : findDiaAssociated2;
+
+    const dayOfWeek = data.getDay();
+    const isFriday = dayOfWeek === 5;
+
+    const findTT = await TipoTrabalho.findOne({
+      tipo: 6,
+
+    });
+    let horasA = 8.5;
+    if(isFriday) {
+      horasA = 6;
+    }
+
+    const tipoTrabalhoHorasA = await TipoTrabalhoHoras.create({
+      projeto: idProjeto,
+      tipoTrabalho: findTT.id,
+      horas: horasA,
+    });
+
+    tipoDeTrabalhoHorasArrayA.push(tipoTrabalhoHorasA);
+
+    if(findDiaAssociated && findDiaAssociated.length > 0){
+
+      const id = findDiaAssociated[0]?._id;
+
+
+      await Dias.findByIdAndUpdate(
+        id,
+        {
+          Data: data,
+          NumeroHoras: horasA,
+          tipoDeTrabalhoHoras: tipoDeTrabalhoHorasArrayA,
+          accepted: 4,
+          associated: dia?._id,
+        }
+      );
+
+    } else{
+      await Dias.create({
+        Data: data,
+        NumeroHoras: horasA ,
+        tipoDeTrabalhoHoras: tipoDeTrabalhoHorasArrayA,
+        Utilizador: aUtilizador._id,
+        accepted: 4,
+        associated: dia?._id,
+      });
+
+    }
+  }
+
+
+  if (!aUtilizador) {
+    throw new NotFoundError(`Não existe um utilizador com id ${userID}`);
+  }
+
+  res.status(StatusCodes.CREATED).json({
+    dia: {
+      Data: dia.Data,
+      NumeroHoras: dia.NumeroHoras,
+      tipoDeTrabalhoHoras: dia.tipoDeTrabalhoHoras,
+      Utilizador: dia.Utilizador,
+    },
+  });
+} catch (error) {
+    console.error(error)
+}
+};
 
 
 const updateDia = async (req, res) => {
@@ -958,7 +1338,9 @@ module.exports = {
   getAllDiasUtilizadorTipo,
   getAllDias,
   getDia,
+  getDiaID,
   createDia,
+  createDiaDomingo,
   updateDia,
   deleteDia,
   acceptDiasHorasExtra,
