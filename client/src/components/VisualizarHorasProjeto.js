@@ -339,7 +339,7 @@ const VisualizarHorasProjeto = () => {
 
     setTimeout(() => {
       setLoading(false);
-    }, 1);
+    }, 100);
 
   }, [listaDias.length]);
 
@@ -535,6 +535,7 @@ const VisualizarHorasProjeto = () => {
                       inicio={projeto?.DataInicio}
                       objetivo={projeto?.DataObjetivo}
                       fim={projeto?.DataFim}
+                      selectedDate={selectedDay}
                     />
                   ) : verificaDias === 2 ? (
                     <Calendar
@@ -543,6 +544,7 @@ const VisualizarHorasProjeto = () => {
                       inicio={projeto?.DataInicio}
                       objetivo={projeto?.DataObjetivo}
                       fim={projeto?.DataFim}
+                      selectedDate={selectedDay}
                     />
                   ) : null}
             </div>

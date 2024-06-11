@@ -1253,6 +1253,47 @@ const deleteDia = async (req, res) => {
       throw new NotFoundError(`Não existe um dia com id ${id}`);
     }
 
+    const data = new Date(dia.Data);
+    const dayOfWeek = data.getDay();
+    const isSunday = dayOfWeek === 0;
+
+    if(dia.accepted && (dia.accepted === 4 || dia.accepted === 5)){
+      const idAss = dia.associated;
+
+      const diaAss = await Dias.findById(idAss);
+
+      if(diaAss){
+      const tipoDeTrabalhoHorasIdsAss = diaAss.tipoDeTrabalhoHoras.map(item => item._id);
+
+      const promises = tipoDeTrabalhoHorasIdsAss.map(async tipoDeTrabalhoHoraId => {
+        await TipoTrabalhoHoras.findOneAndDelete({ _id: tipoDeTrabalhoHoraId });
+      });
+
+      await Promise.all(promises);
+
+      await Dias.findOneAndDelete({ _id: diaAss._id });
+
+      }
+
+    } else if(isSunday){
+
+      const associatedDay = await Dias.findOne({ associated: id });
+
+      if(associatedDay){
+
+
+      const tipoDeTrabalhoHorasIdsAss = associatedDay.tipoDeTrabalhoHoras.map(item => item._id);
+
+      const promises = tipoDeTrabalhoHorasIdsAss.map(async tipoDeTrabalhoHoraId => {
+        await TipoTrabalhoHoras.findOneAndDelete({ _id: tipoDeTrabalhoHoraId });
+      });
+
+      await Promise.all(promises);
+
+      await Dias.findOneAndDelete({ _id: associatedDay._id });
+    }
+    } 
+
     const tipoDeTrabalhoHorasIds = dia.tipoDeTrabalhoHoras.map(item => item._id);
 
     const promises = tipoDeTrabalhoHorasIds.map(async tipoDeTrabalhoHoraId => {

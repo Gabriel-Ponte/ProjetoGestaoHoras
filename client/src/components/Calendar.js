@@ -5,8 +5,8 @@ import { MdKeyboardArrowRight } from 'react-icons/md';
 import { toast } from 'react-toastify';
 import useFeriadosPortugal from "./FeriadosPortugal";
 
-const CalendarControl = ({ handleChange, inserted, feriados, ferias, compensacao, compensacaoDomingo, inicio, fim, objetivo,aceitacao, vProjeto, todos, numberUsers, horasExtraID }) => {
-    const [calendar, setCalendar] = useState(new Date());
+const CalendarControl = ({ handleChange, inserted, feriados, ferias, compensacao, compensacaoDomingo, inicio, fim, objetivo,aceitacao, vProjeto, todos, numberUsers, horasExtraID, selectedDate }) => {
+    const [calendar, setCalendar] = useState(selectedDate ? new Date(selectedDate.ano , selectedDate.mes , 1 ,0 , 0, 0) : new Date());
     const calWeekDays = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
     const calMonthName = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
     const { feriadosPortugal } = useFeriadosPortugal();
@@ -15,6 +15,7 @@ const CalendarControl = ({ handleChange, inserted, feriados, ferias, compensacao
     useEffect(() => {
         plotDates(calendar);
     }, []);
+
 
     useEffect(() => {
         displayMonth();

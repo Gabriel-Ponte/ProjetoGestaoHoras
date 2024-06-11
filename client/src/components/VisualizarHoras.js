@@ -5,8 +5,9 @@ import Loading from './Loading';
 import Dia from './Dias';
 import DiaTodos from './DiasTodos';
 import { getAllDiasUtilizador, getAllDiasTodos, getAllDiasUtilizadorTipo } from '../features/allDias/allDiasSlice';
+import { deleteDia } from '../features/dias/diasSlice';
 import { getAllPagamentosUtilizador } from '../features/pagamentos/pagamentosSlice';
-
+import { toast } from 'react-toastify';
 import { listaUtilizadores } from '../features/utilizadores/utilizadorSlice';
 import { AddPagamentos, FormRowSelect } from '../components';
 import { getFeriadosPortugalDate } from '../components/FeriadosPortugal';
@@ -177,7 +178,7 @@ const ListaHoras = () => {
     setChange(!change);
     setSelectedUserID(selectedID);
     setSelectedUser(value);
-    setSelectedDay({ dia: 0, mes: today.getMonth(), ano: today.getFullYear() });
+    // setSelectedDay({ dia: 0, mes: today.getMonth(), ano: today.getFullYear() });
   });
 
   useEffect(() => {
@@ -489,7 +490,7 @@ const ListaHoras = () => {
       }
     });
 
-  }, [selectedUser, horasExtra, listaDias,aceitacao, changePagamento, dispatch]);
+  }, [selectedUser, horasExtra, listaDias,listaDias.length,  aceitacao, changePagamento, dispatch]);
 
   //  }, [selectedUser, listaDias[0], horasExtra, listaTipoTrabalho?.length, ferias[0], aceitacao[0], changePagamento, dispatch]);
   
@@ -737,19 +738,16 @@ const ListaHoras = () => {
     setPossibleHours(possibleHoursCount);
     setHorasRealizadas(horasRealizadasCount);
 
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [listaPagamentos, listaDias, selectedDay, percentagemHoras, horasRealizadas, selectedUser]);
+  }, [listaPagamentos, listaDias, listaDias.length, selectedDay, percentagemHoras, horasRealizadas, selectedUser]);
 
   useEffect(() => {
-
     setLoading(true);
-
     setTimeout(() => {
       setLoading(false);
-    }, 1);
+    }, 50);
 
-  }, [listaDias.length, ferias[0]]);
+  }, [listaDias.length, ferias[0], aceitacao]);
 
   const diaSelected = selectedDay ? selectedDay.dia : 0;
   const month = selectedDay ? selectedDay.mes : today.getMonth();
@@ -767,6 +765,33 @@ const ListaHoras = () => {
     filteredUsers = filteredUsers.filter((user) => user && (user.tipo === 4 || user.tipo === 7));
   }
 
+
+  
+  const deleteDiaConfirm = async (id ,data) => {
+    try {
+      const dataString = (data ? new Date(data).toLocaleDateString('en-CA') : '')
+      const confirmed = window.confirm("Tem a certeza que deseja apagar o Dia: "+ dataString +"?");
+
+      if (confirmed) {
+        const result = await dispatch(deleteDia(id));
+        if (!result.error) {
+          toast.success("Dia Apagado")
+          const updatedListaDias = listaDias.filter(dia => dia._id !== id);
+
+          setListaDias(updatedListaDias);
+          selectedDay.dia = 0;
+          setSelectedDay(selectedDay)
+            // setTimeout(() => {
+            //   window.location.href = '/PaginaVisualizarHoras';
+            // }, 1000);
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      return "Ocorreu um erro ao apagar o Tipo de Trabalho.";
+    }
+  };
+  
   function convertToMinutes(timeString) {
 
     if (timeString) {
@@ -815,8 +840,7 @@ const ListaHoras = () => {
 
   let checkFound = false;
   let count = 0;
-
-
+ 
 
   return (
     <Wrapper>
@@ -1071,7 +1095,7 @@ const ListaHoras = () => {
                     todos={true}
                     numberUsers={filteredUsers.length}
                     horasExtraID={addHorasExtraIDS}
-
+                    selectedDate={selectedDay}
                   />
                 </div>
                 <hr key={"hrTodos"}></hr>
@@ -1172,6 +1196,7 @@ const ListaHoras = () => {
                     compensacaoDomingo = {horasCompensacaoDomingo}
                     aceitacao={aceitacao}
                     horasExtraID={addHorasExtraIDS}
+                    selectedDate={selectedDay}
                   />
                 </div>
                 <hr></hr>
@@ -1247,7 +1272,7 @@ const ListaHoras = () => {
                       count++;
                       return (
                         <div key={count + selectedUser}>
-                          <Dia key={dia.Data + selectedUser + count} {...dia} horasPossiveis={possibleHours} listaTT={listaTipoTrabalho} />
+                          <Dia key={dia.Data + selectedUser + count} {...dia} horasPossiveis={possibleHours} listaTT={listaTipoTrabalho} deleteDay={deleteDiaConfirm}/>
                         </div>
                       );
                     }

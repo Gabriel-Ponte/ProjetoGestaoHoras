@@ -6,7 +6,7 @@ import { AiFillDelete } from 'react-icons/ai';
 import { deleteDia, getDia, getDiaID } from '../features/dias/diasSlice';
 import { toast } from 'react-toastify';
 
-const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, associated, horasPossiveis, listaTT, accepted }) => {
+const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, associated, horasPossiveis, listaTT, accepted, deleteDay }) => {
   const dispatch = useDispatch();
   const [projeto, setProjeto] = useState([]);
   const [diaAssociated, setDiaAssociated] = useState([]);
@@ -69,20 +69,22 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, associat
   
   const deleteDiaConfirm = async (id ,data) => {
     try {
-      const dataString = (data ? new Date(data).toLocaleDateString('en-CA') : '')
 
-      const confirmed = window.confirm("Tem a certeza que deseja apagar o Dia: "+ dataString +"?");
+      deleteDay(id ,data);
+    //   const dataString = (data ? new Date(data).toLocaleDateString('en-CA') : '')
 
-      if (confirmed) {
-        const result = await dispatch(deleteDia(id));
-        if (!result.error) {
-          toast.success("Dia Apagado")
-            setTimeout(() => {
-              window.location.href = '/PaginaVisualizarHoras';
-            }, 1000);
-          ;
-        }
-      }
+    //   const confirmed = window.confirm("Tem a certeza que deseja apagar o Dia: "+ dataString +"?");
+
+    //   if (confirmed) {
+    //     const result = await dispatch(deleteDia(id));
+    //     if (!result.error) {
+    //       toast.success("Dia Apagado")
+    //         setTimeout(() => {
+    //           window.location.href = '/PaginaVisualizarHoras';
+    //         }, 1000);
+    //       ;
+    //     }
+    //   }
     } catch (error) {
       console.error(error);
       return "Ocorreu um erro ao apagar o Tipo de Trabalho.";

@@ -661,7 +661,7 @@ const ListaProjetos = () => {
    }
   
    const handleConfirm = async  (Data)=>{
-
+      values.accepted = 1;
       values.Utilizador = user.user.id;
       values.associated = Data
       await dispatch(createDiaDomingo(values));
