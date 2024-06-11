@@ -539,6 +539,7 @@ const ListaProjetos = () => {
       ...values,
       [name]: value,
       NumeroHoras: "",
+      accepted: 0,
       tipoDeTrabalhoHoras: [],
     });
     seTSortedProjetos(sProjetos)
@@ -721,12 +722,8 @@ const ListaProjetos = () => {
     if (horasT <= 0) {
       toast.error('Valor inserido invalido!');
       return;
-    } else if (date.getDay() === 5) {
-      if (horasT > 6) {
-        count++;
-        toast.error('Valor inserido excede as 6 Horas!');
-      }
-    }else if(feriadosPortugal(date)){
+    } else if(feriadosPortugal(date)){
+
         count++;
         toast.error('Horas inseridas num Feriado!');
     }else if(isWeekend){
@@ -736,6 +733,11 @@ const ListaProjetos = () => {
         {
           toast.error('Horas inseridas num fim de semana!');
         }
+    } else if (date.getDay() === 5) {
+      if (horasT > 6) {
+        count++;
+        toast.error('Valor inserido excede as 6 Horas!');
+      }
     } else if (horasT > 8.5) {
 
       count++;

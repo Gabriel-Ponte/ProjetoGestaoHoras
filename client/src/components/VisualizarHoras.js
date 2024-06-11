@@ -777,8 +777,14 @@ const ListaHoras = () => {
         if (!result.error) {
           toast.success("Dia Apagado")
           const updatedListaDias = listaDias.filter(dia => dia._id !== id);
-
+          const updateAceitacao = aceitacao.filter(dia => dia._id !== id);
+          const updatedFerias = ferias.filter(dia => dia._id !== id);          
+          
+          
+          setFerias(updatedFerias);
           setListaDias(updatedListaDias);
+          setAceitacao(updateAceitacao);
+
           selectedDay.dia = 0;
           setSelectedDay(selectedDay)
             // setTimeout(() => {
