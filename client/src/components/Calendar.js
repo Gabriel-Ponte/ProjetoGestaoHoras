@@ -14,12 +14,13 @@ const CalendarControl = ({ handleChange, inserted, feriados, ferias, compensacao
 
     useEffect(() => {
         plotDates(calendar);
+        // eslint-disable-next-line
     }, []);
-
 
     useEffect(() => {
         displayMonth();
         displayYear();
+        // eslint-disable-next-line
     }, [calendar, inicio, vProjeto]);
 
     function daysInMonth(month, year) {
@@ -531,12 +532,9 @@ const CalendarControl = ({ handleChange, inserted, feriados, ferias, compensacao
 
 
     function attachEvents() {
-        let prevBtn = document.querySelector(".calendar .calendar-prev a");
-        let nextBtn = document.querySelector(".calendar .calendar-next a");
         let todayDate = document.querySelector(".calendar .calendar-today-date");
         let dateNumber = document.querySelectorAll(".calendar .dateNumber");
-        prevBtn.addEventListener("click", navigateToPreviousMonth);
-        nextBtn.addEventListener("click", navigateToNextMonth);
+
         todayDate.addEventListener("click", navigateToCurrentMonth);
         for (var i = 0; i < dateNumber.length; i++) {
             dateNumber[i].addEventListener("click", selectDate, false);
@@ -549,9 +547,9 @@ const CalendarControl = ({ handleChange, inserted, feriados, ferias, compensacao
                 <div className="calendar-inner">
                     <div className="calendar-controls">
                         <div className="calendar-prev text-end">
-                            <a>
+                            <button className=".calendar .calendar-prev" onClick={navigateToPreviousMonth}>
                                 <MdKeyboardArrowLeft width="128" height="128" />
-                            </a>
+                            </button>
                         </div>
                         <div className="calendar-year-month">
                             <div className="calendar-month-label"></div>
@@ -559,9 +557,9 @@ const CalendarControl = ({ handleChange, inserted, feriados, ferias, compensacao
                             <div className="calendar-year-label"></div>
                         </div>
                         <div className="calendar-next text-start">
-                            <a>
+                            <button className=".calendar .calendar-next a" onClick={navigateToNextMonth}>
                                 <MdKeyboardArrowRight width="128" height="128" />
-                            </a>
+                            </button>
                         </div>
                     </div>
                     <div className="calendar-today-date">

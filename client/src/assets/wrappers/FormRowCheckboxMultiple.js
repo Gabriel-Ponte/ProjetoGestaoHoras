@@ -39,6 +39,23 @@ const Wrapper = styled.section`
     margin:auto;
 }
 
+    .checkboxRow::-webkit-scrollbar {
+      width: 15px;
+  }
+
+  .checkboxRow::-webkit-scrollbar-track {
+      background: #f1f1f1;
+  }
+
+  .checkboxRow::-webkit-scrollbar-thumb {
+      background: #CCCCCC;
+      border-radius: 10px;
+  }
+
+  .checkboxRow::-webkit-scrollbar-thumb:hover {
+      background: #000;
+  }
+
 .multiselect {
     width: 200px;
   }
@@ -57,6 +74,23 @@ const Wrapper = styled.section`
     width:50%;
     margin: auto;
     overflow-y: auto;
+  }
+
+    .form-select::-webkit-scrollbar {
+      width: 15px;
+  }
+
+  .form-select::-webkit-scrollbar-track {
+      background: #f1f1f1;
+  }
+
+  .form-select::-webkit-scrollbar-thumb {
+      background: #000;
+      border-radius: 10px;
+  }
+
+  .form-select::-webkit-scrollbar-thumb:hover {
+      background: #555;
   }
   .selectBox select {
     width: 100%;

@@ -269,8 +269,8 @@ const Wrapper = styled.section`
 }
 
 
-.calendar .calendar-inner .calendar-controls .calendar-next a,
-.calendar .calendar-inner .calendar-controls .calendar-prev a {
+.calendar .calendar-inner .calendar-controls .calendar-next button,
+.calendar .calendar-inner .calendar-controls .calendar-prev button {
     color: var(--calendar-font-color);
     font-family: arial, consolas, sans-serif;
     font-size: 1vw;
@@ -280,16 +280,17 @@ const Wrapper = styled.section`
     background: var(--calendar-nextprev-bg-color);
     margin: 10px 0 10px 0;
     cursor: pointer;
+    border: none;
 }
 
-.calendar .calendar-inner .calendar-controls .calendar-next a svg,
-.calendar .calendar-inner .calendar-controls .calendar-prev a svg {
+.calendar .calendar-inner .calendar-controls .calendar-next button svg,
+.calendar .calendar-inner .calendar-controls .calendar-prev button svg {
     height: 20px;
     width: 20px;
 }
 
-.calendar .calendar-inner .calendar-controls .calendar-next a svg path,
-.calendar .calendar-inner .calendar-controls .calendar-prev a svg path{
+.calendar .calendar-inner .calendar-controls .calendar-next button svg path,
+.calendar .calendar-inner .calendar-controls .calendar-prev button svg path{
 
 }
 

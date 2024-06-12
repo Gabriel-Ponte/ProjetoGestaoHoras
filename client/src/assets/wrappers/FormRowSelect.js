@@ -47,6 +47,22 @@ const Wrapper = styled.section`
     margin: auto;
     overflow-y: auto;
   }
+
+
+  .form-select::-webkit-scrollbar {
+      width: 15px;
+  }
+
+  .form-select::-webkit-scrollbar-track {
+      background: #f1f1f1;
+  }
+
+  .form-select::-webkit-scrollbar-thumb {
+      background: #CCCCCC;
+      border-radius: 10px;
+  }
+
+
   .selectBox select {
     width: 100%;
     font-weight: bold;
