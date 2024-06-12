@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 
 
 import TimePickerClock from './TimePickerClock';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 

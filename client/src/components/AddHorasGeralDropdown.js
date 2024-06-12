@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 import TimePickerClock from './TimePickerClock';
 import OptionsPanel from './OptionsPanel';
 
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 
