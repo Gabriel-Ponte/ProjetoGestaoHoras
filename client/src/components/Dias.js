@@ -3,8 +3,7 @@ import Wrapper from '../assets/wrappers/Dias';
 import { useDispatch } from 'react-redux';
 import { getProjetoList } from '../features/projetos/projetosSlice';
 import { AiFillDelete } from 'react-icons/ai';
-import { deleteDia, getDia, getDiaID } from '../features/dias/diasSlice';
-import { toast } from 'react-toastify';
+import { getDiaID } from '../features/dias/diasSlice';
 
 const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, associated, horasPossiveis, listaTT, accepted, deleteDay }) => {
   const dispatch = useDispatch();

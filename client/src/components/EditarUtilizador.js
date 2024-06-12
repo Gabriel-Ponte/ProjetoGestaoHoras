@@ -94,7 +94,7 @@ const EditarUtilizador = () => {
         if (!result.error) {
           setTimeout(() => {
             dispatch(toggleSidebar(false));
-            {window.location.reload(navigate('/PaginaPrincipal'))}
+            window.location.reload(navigate('/PaginaPrincipal'));
           }, 2000);
         }
       } catch (error) {

@@ -11,7 +11,7 @@ const FormRowCheckboxMultiple = ({ labelText, name, value, handleChange, handleC
     const updatedSeparatedArray = Array.isArray(value) ? (value.length > 0 ? value[0].split(/[,/]/) : []) : value.split(/[,/]/);
     const separatedArrayId = [...updatedSeparatedArray];
 
-    let nome = false;
+    //let nome = false;
     for (let a = 0; a < updatedSeparatedArray.length; a++) {
       let matchFound = false;
       for (let i = 0; i < list.length; i++) {
@@ -24,7 +24,7 @@ const FormRowCheckboxMultiple = ({ labelText, name, value, handleChange, handleC
           updatedSeparatedArray[a] = list[i].nome;
           separatedArrayId[a] = list[i]._id;
           matchFound = true;
-          nome = true;
+          //nome = true;
           break;
         }
       }

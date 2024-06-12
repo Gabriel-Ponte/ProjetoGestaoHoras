@@ -772,7 +772,7 @@ const ListaProjetos = () => {
 
 
     for (let key in values.tipoDeTrabalhoHoras) {
-      const tt = values.tipoDeTrabalhoHoras[key];
+      //const tt = values.tipoDeTrabalhoHoras[key];
       const horasTipoTrabalhoArray = values.tipoDeTrabalhoHoras[key]?.horas?.split(',') || [];
       const tipoTrabalhoArray = values.tipoDeTrabalhoHoras[key]?.tipoTrabalho?.split(',') || [];
       for (let a = horasTipoTrabalhoArray.length - 1; a >= 0; a--) {

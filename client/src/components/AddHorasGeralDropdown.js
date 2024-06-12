@@ -63,10 +63,7 @@ const AddHorasGeralDropdown = React.memo(({ sortedProjetos, verificaChange, list
         .join(",");
       }
 
-      const ListaTrabalho = listaTipoTrabalho
-      .filter(item => item.tipo === 1)
-      .map(item => item.TipoTrabalho)
-      .join(",");
+      //const ListaTrabalho = listaTipoTrabalho.filter(item => item.tipo === 1).map(item => item.TipoTrabalho).join(",");
 
       const ListaTrabalhoGeralOther = listaTipoTrabalho
         .filter(item => item.tipo === 3)

@@ -1,24 +1,24 @@
-import { Route, Navigate, Routes } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { PaginaAdicionarHoras, PaginaVisualizarHoras, SharedLayout } from './dashboard';
+// import { PaginaAdicionarHoras, PaginaVisualizarHoras, SharedLayout } from './dashboard';
 
 const ProtectedRoute = ({ children }) => {
   const { user } = useSelector((store) => store.utilizador);
   
-  const TipoRoutes = () => {
-    return (
-      <Routes>
-        <Route
-          element={
-              <SharedLayout />
-          }
-          >
-              <Route path='paginaVisualizarHoras' element={<PaginaVisualizarHoras />} />
-              <Route path='paginaAdicionarHoras' element={<PaginaAdicionarHoras />} />
-        </Route>
-      </Routes>
-    );
-  };
+  // const TipoRoutes = () => {
+  //   return (
+  //     <Routes>
+  //       <Route
+  //         element={
+  //             <SharedLayout />
+  //         }
+  //         >
+  //             <Route path='paginaVisualizarHoras' element={<PaginaVisualizarHoras />} />
+  //             <Route path='paginaAdicionarHoras' element={<PaginaAdicionarHoras />} />
+  //       </Route>
+  //     </Routes>
+  //   );
+  // };
   
 
   if (user?.user?.tipo === 1 || user?.user?.tipo === 2 || user?.user?.tipo === 5) {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+// import axios from 'axios';
 import { updatePassword } from '../features/utilizadores/utilizadorSlice';
 import { useDispatch } from 'react-redux';
 import { FormRow, Header, Footer } from '../components';
