@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect,useMemo, useState, useLayoutEffect } from 'react';
 import Wrapper from '../assets/wrappers/VisualizarHoras';
 import { useSelector, useDispatch } from 'react-redux';
 import Loading from './Loading';
@@ -13,6 +13,7 @@ import { AddPagamentos, FormRowSelect } from '../components';
 import { getFeriadosPortugalDate } from '../components/FeriadosPortugal';
 import Calendar from './Calendar'
 import { getTipoTrabalho } from '../features/tipoTrabalho/tipoTrabalhoSlice';
+
 
 
 const ListaHoras = () => {
@@ -51,14 +52,21 @@ const ListaHoras = () => {
   const [horasCompensacaoDomingo, setHorasCompensacaoDomingo] = useState([]);
   const [idCompensacao, setIDCompencacao] = useState(null)
   const [userNome, setUserNome] = useState(user?.user?.nome);
-
+  const [triggerEffect, setTriggerEffect] = useState(true);
   const [change, setChange] = useState(false);
+
   const dispatch = useDispatch();
 
-  const formattedListUtilizadores = Array.isArray(utilizadores) ? utilizadores : [];
-  const today = new Date();
+  //const formattedListUtilizadores1 = Array.isArray(utilizadores) ? utilizadores : [];
+  //const today = new Date();
 
+  const today = useMemo(() => {
+    return new Date();;
+  }, []);
 
+  const formattedListUtilizadores = useMemo(() => {
+    return Array.isArray(utilizadores) ? utilizadores : [];
+  }, [utilizadores]);
 
 
   function getPossibleHoursCount(month, year) {
@@ -158,6 +166,8 @@ const ListaHoras = () => {
     return new Date(ano, domingoPascoa.getMonth(), domingoPascoa.getDate() + 60);
   }
 
+
+  
   const handleChangeCalendario = ((dia, mes, ano) => {
     const [selectedDia, selectedMes, selectedAno] = [dia, mes, ano];
     setSelectedDay({ dia: selectedDia, mes: selectedMes, ano: selectedAno });
@@ -480,9 +490,9 @@ const ListaHoras = () => {
                 return null;
               })
 
-              if (!arrayEquals(listaDias, updatedListaDias)) {
-                //setListaDias(updatedListaDias);
-              }
+              // if (!arrayEquals(listaDias, updatedListaDias)) {
+              //   //setListaDias(updatedListaDias);
+              // }
             }
 
           }
@@ -490,7 +500,7 @@ const ListaHoras = () => {
       }
     });
 
-  }, [selectedUser, horasExtra, listaDias,listaDias.length,  aceitacao, changePagamento, dispatch]);
+  }, [selectedUser, horasExtra, listaDias, listaDias.length,  aceitacao, changePagamento, dispatch]);
 
   //  }, [selectedUser, listaDias[0], horasExtra, listaTipoTrabalho?.length, ferias[0], aceitacao[0], changePagamento, dispatch]);
   
@@ -504,6 +514,8 @@ const ListaHoras = () => {
     }
     return true;
   }
+
+
 
   useEffect(() => {
     const month = selectedDay ? selectedDay.mes : today.getMonth();
@@ -741,13 +753,14 @@ const ListaHoras = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listaPagamentos, listaDias, listaDias.length, selectedDay, percentagemHoras, horasRealizadas, selectedUser]);
 
-  useEffect(() => {
+  
+  useLayoutEffect(() => {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-    }, 50);
+    }, 750);
+  }, [selectedUser,aceitacao, ferias[0], listaDias]);
 
-  }, [listaDias.length, ferias[0], aceitacao]);
 
   const diaSelected = selectedDay ? selectedDay.dia : 0;
   const month = selectedDay ? selectedDay.mes : today.getMonth();
@@ -782,8 +795,9 @@ const ListaHoras = () => {
           
           
           setFerias(updatedFerias);
-          setListaDias(updatedListaDias);
           setAceitacao(updateAceitacao);
+          setListaDias(updatedListaDias);
+
 
           selectedDay.dia = 0;
           setSelectedDay(selectedDay)

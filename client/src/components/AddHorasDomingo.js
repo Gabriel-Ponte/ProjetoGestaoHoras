@@ -81,7 +81,6 @@ const AddHorasDomingo = ({ handleDateChoosen,handleClose, state, checkDate,dataR
         textAlign: "center",
     };
 
-
 const verificaDia = useCallback((e) => {
     const { value } = e.target; 
 

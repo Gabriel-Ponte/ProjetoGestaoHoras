@@ -13,9 +13,9 @@ const NavLinksModalBox = ({ handleExport,handleClose, state}) => {
     const [selectedUser, setSelectedUser] = useState("Todos");
     const [change, setChange] = useState(false);
 
-    const openModalBox = () => {
-        setOpen(true);
-    };
+    // const openModalBox = () => {
+    //     setOpen(true);
+    // };
 
 
     const handleExportButton = () => {
@@ -41,10 +41,10 @@ const NavLinksModalBox = ({ handleExport,handleClose, state}) => {
         handleExport(tipo)
     };
 
-    const handleCloseButton = () => {
-        setOpen(false);
-        handleClose();
-    };
+    // const handleCloseButton = () => {
+    //     setOpen(false);
+    //     handleClose();
+    // };
 
 
     const handleChangeUtilizador = ((e) => {

@@ -131,7 +131,7 @@ const AddPagamentos = ({ horasExtraEsteMes, horasPorDar, selectedUser, responsab
     }
 
     try {
-      const result = await dispatch(addPagamentosUtilizador(values));
+      await dispatch(addPagamentosUtilizador(values));
       toast.success("Horas pagas adicionadas!");
       handleChange();
 
