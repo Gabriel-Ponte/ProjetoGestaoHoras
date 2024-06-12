@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 
-import { FaCaretDown } from 'react-icons/fa';
+// import { FaCaretDown } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
 import { createTipoTrabalhoOther } from '../features/tipoTrabalho/tipoTrabalhoSlice';
 import { toast } from 'react-toastify';
