@@ -2,8 +2,10 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 const ExcelJS = require('exceljs');
 
-function updateExcell() {
+  const updateExcell = async () => {
+    let ret = false;
 
+  try {
   // MongoDB connection settings
   const dbName = 'myproject'; // Replace with your database name
   const collectionName = 'projetos'; // Replace with your collection name
@@ -14,8 +16,10 @@ function updateExcell() {
   // Excel template file path
   const templateFilePath = './Template.xlsx';
 
-  (async () => {
-    try {
+
+
+
+
       // Connect to MongoDB
       const url = process.env.MONGO_URI;
       await mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -138,16 +142,21 @@ function updateExcell() {
         }
       });
 
-      // Save Excel file
-      await workbook.xlsx.writeFile(excelFilePath);
+    // Save the workbook
+    await workbook.xlsx.writeFile(excelFilePath)
+      .then(() => {
+        ret = true;
+      })
+      .catch((error) => {
+        ret = false;
+      });
 
+  } catch (error) {
+    console.error("Error Export Horas", error);
+    ret = false;
+  }
 
-    } catch (error) {
-      //console.error('An error occurred:', error);
-    } finally {
-      //mongoose.connection.close();
-    }
-  })();
+  return ret;
 }
 
 module.exports = {

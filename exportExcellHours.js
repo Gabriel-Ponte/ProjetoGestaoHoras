@@ -714,7 +714,6 @@ const exportExcell = async (tipo) => {
         });
       }
     }
-    console.log(excelFilePath)
 
     // Function to convert a numerical index to a corresponding Excel column letter
     function getExcelColumnLetter(index) {

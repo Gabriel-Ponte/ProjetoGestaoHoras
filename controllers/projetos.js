@@ -6,27 +6,37 @@ const { BadRequestError, NotFoundError } = require("../errors");
 const { updateExcell } = require("../exportMongoDB")
 require('dotenv').config();
 
-const exportProjetos = async(req, res) =>{
+const exportProjetos = async (req, res) => {
   const { userID: userID } = req.body;
-  
-  const user = await User.findOne({
-    _id: userID,
-  });
-  if(!user){
-    throw new NotFoundError(`Não foi encontrado o utilizador com id ${userID}`);
+  try {
+    const user = await User.findOne({
+      _id: userID,
+    });
+    if (!user) {
+      throw new NotFoundError(`Não foi encontrado o utilizador com id ${userID}`);
+    }
+
+
+    if (user.tipo === 2 || user.tipo === 5 || user.tipo === 7) {
+      const exp = await updateExcell();
+
+      if (exp) {
+        res.status(StatusCodes.OK).json(`Ficheiro exportado para ${process.env.EXCEL_EXPORT}`);
+      } else {
+        throw new BadRequestError(`Ocorreu um erro ao exportar o ficheiro. Verifique se este se encontra aberto!`);
+      }
+    }
+    else {
+      throw new BadRequestError(`O utilizador ${user.nome} não possui permissões para exportar`);
+    }
+  } catch (error) {
+    throw new BadRequestError(`O utilizador não possui permissões para exportar`);
   }
 
-  if(user.tipo == 2){
-    updateExcell();
-    res.status(StatusCodes.OK).json(`Ficheiro exportado para ${process.env.EXCEL_EXPORT}`);
-  }
-  else{
-    throw new NotFoundError(`O utilizador ${user.nome} não possui permissões para exportar`);
-  }
 }
 
 const getAllProjetos = async (req, res) => {
-  const { search, Finalizado, tipoTrabalho, sort ,DataObjetivo} = req.query;
+  const { search, Finalizado, tipoTrabalho, sort, DataObjetivo } = req.query;
   const queryObject = {
   };
   if (search) {
@@ -37,7 +47,7 @@ const getAllProjetos = async (req, res) => {
     queryObject.TipoTrabalho = { $exists: true, $ne: "" };
   }
 
-  if (Finalizado ==="false" || Finalizado ==="true") {
+  if (Finalizado === "false" || Finalizado === "true") {
     queryObject.Finalizado = Finalizado;
   }
 
@@ -50,12 +60,12 @@ const getAllProjetos = async (req, res) => {
 
   let result;
 
-  if(queryObject){
+  if (queryObject) {
     result = Projeto.find(queryObject);
-  }else{
+  } else {
     result = Projeto.find();
   }
-  
+
   const page = Number(req.query.page) || 1;
   const limit = Number(req.query.limit) || 5;
   const skip = (page - 1) * limit;
@@ -83,19 +93,19 @@ const getProjeto = async (req, res) => {
 };
 
 const getProjetoTodasVersoes = async (req, res) => {
-  try{
-  const { id: projetoId } = req.params;
-  const projeto = await ProjetosVersion.find({ id: projetoId }).sort({ createdAt: -1 });
+  try {
+    const { id: projetoId } = req.params;
+    const projeto = await ProjetosVersion.find({ id: projetoId }).sort({ createdAt: -1 });
 
 
-  if (!projeto) {
-    throw new NotFoundError(`Não existem versões no projeto com id ${projetoId}`);
+    if (!projeto) {
+      throw new NotFoundError(`Não existem versões no projeto com id ${projetoId}`);
+    }
+    res.status(StatusCodes.OK).json({ projeto });
+  } catch (error) {
+    console.error(error)
+    throw new NotFoundError(`Não Encontrado`);
   }
-  res.status(StatusCodes.OK).json({ projeto });
-} catch (error){
-  console.error(error)
-  throw new NotFoundError(`Não Encontrado`);
-}
 };
 
 
@@ -152,33 +162,33 @@ const updateProjeto = async (req, res) => {
     );
 
     let vers = projeto.Versao || 1;
-    
-    if(!projeto.Versao){
+
+    if (!projeto.Versao) {
       projeto.Versao = vers;
     }
-    if(Nome !== projeto.Nome || Tema !== projeto.Tema || Cliente !== projeto.Cliente ||  Piloto !== projeto.Piloto || Acao !== projeto.Acao || Notas !== projeto.Notas){
-      await ProjetosVersion.create({ 
-        id:projetoId,
+    if (Nome !== projeto.Nome || Tema !== projeto.Tema || Cliente !== projeto.Cliente || Piloto !== projeto.Piloto || Acao !== projeto.Acao || Notas !== projeto.Notas) {
+      await ProjetosVersion.create({
+        id: projetoId,
         _id_P: projeto?._id_P,
         Versao: projeto?.Versao,
         Nome: projeto?.Nome,
         Tema: projeto?.Tema,
         Cliente: projeto?.Cliente,
         Acao: projeto?.Acao,
-        DataInicio:projeto?.DataInicio,
+        DataInicio: projeto?.DataInicio,
         DataObjetivo: projeto?.DataObjetivo,
-        DataFim:projeto?.DataFim,
-        TipoTrabalho:projeto?.TipoTrabalho,
-        Piloto:projeto?.Piloto,
+        DataFim: projeto?.DataFim,
+        TipoTrabalho: projeto?.TipoTrabalho,
+        Piloto: projeto?.Piloto,
         Notas: projeto?.Notas,
         Links: projeto?.Links,
         LinkResumo: projeto?.LinkResumo,
-        NumeroHorasTotal:projeto?.NumeroHorasTotal,
+        NumeroHorasTotal: projeto?.NumeroHorasTotal,
         OrçamentoAprovado: projeto?.OrçamentoAprovado,
         Finalizado: projeto?.Finalizado,
         Resultado: projeto?.Resultado
-       });
-       vers = vers + 1;
+      });
+      vers = vers + 1;
     }
 
 
@@ -216,8 +226,8 @@ const updateProjetoLink = async (req, res) => {
       {
         _id: projetoId,
       },
-      
-      { Links: Links , LinkResumo: LinkResumo },
+
+      { Links: Links, LinkResumo: LinkResumo },
       { new: true, runValidators: true }
     );
     if (!projetoUpdate) {

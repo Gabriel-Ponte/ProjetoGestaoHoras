@@ -25,7 +25,9 @@ export const checkForUnauthorizedResponse = (error, thunkAPI) => {
     thunkAPI.dispatch(clearStore());
     return thunkAPI.rejectWithValue('Não autorizado! A fazer Logout...');
   }
-  return thunkAPI.rejectWithValue(error.response?.data?.error || 'Ocorreu um erro!');
+
+  const errorFinal = error.response?.data?.error ?? error.response?.data?.msg ?? 'Ocorreu um erro!';
+  return thunkAPI.rejectWithValue(errorFinal);
 };
 
 export default customFetch;

@@ -29,6 +29,7 @@ export const exportProjeto = createAsyncThunk(
     return exportProjetosThunk(thunkAPI, id);
   }
   );
+  
 
 export const createProjeto = createAsyncThunk(
   'projeto/createProjeto',
@@ -209,19 +210,26 @@ const projetoSlice = createSlice({
         toast.error(payload);
       })
 
-      
       .addCase(exportProjeto.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(exportProjeto.fulfilled, (state, { payload }) => {
+      .addCase(exportProjeto.fulfilled, (state , { payload }) => {
         state.isLoading = false;
-        toast.success(payload);
+        if (payload && payload.error) {
+          toast.error(payload.error);
+        }else{
+          toast.success(payload);
+        }
+  
       })
       .addCase(exportProjeto.rejected, (state, { payload }) => {
         state.isLoading = false;
-        toast.error(payload);
+        if (payload && payload.error) {
+          toast.error(payload.error);
+        }else{
+          toast.error("Erro ao exportar ficheiro. Verifique se está aberto!");
+        }
       })
-
   },
 });
 
