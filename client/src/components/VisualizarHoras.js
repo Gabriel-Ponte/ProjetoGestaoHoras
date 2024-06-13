@@ -516,7 +516,6 @@ const ListaHoras = () => {
   }
 
 
-
   useEffect(() => {
     const month = selectedDay ? selectedDay.mes : today.getMonth();
     const year = selectedDay ? selectedDay.ano : today.getFullYear();
@@ -753,7 +752,7 @@ const ListaHoras = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listaPagamentos, listaDias, listaDias.length, selectedDay, percentagemHoras, horasRealizadas, selectedUser]);
 
-  
+
   useLayoutEffect(() => {
     setLoading(true);
     setTimeout(() => {
