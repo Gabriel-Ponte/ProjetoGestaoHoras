@@ -44,6 +44,8 @@ const GerirHorasExtra = () => {
       navigate('/PaginaAdicionarHoras');
     }
     handleChangeTipo(2)
+
+  // eslint-disable-next-line
   }, [user?.user, navigate]);
 
   useEffect(() => {
@@ -59,7 +61,7 @@ const GerirHorasExtra = () => {
     } else if (verificaAlterado === 3) {
       listHorasExtraPagas();
     }
-
+  // eslint-disable-next-line
   }, [callUseEffect, dispatch]);
 
 
@@ -132,6 +134,7 @@ const GerirHorasExtra = () => {
           if (user?._id === value?.Utilizador) {
             name = user?.nome;
           }
+          return false;
         })
       }
 

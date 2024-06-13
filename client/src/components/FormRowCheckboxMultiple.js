@@ -38,6 +38,7 @@ const FormRowCheckboxMultiple = ({ labelText, name, value, handleChange, handleC
       }
     }
     setSelectedOptions(updatedSeparatedArray);
+    // eslint-disable-next-line
   }, [value, list]);
 
   useEffect(() => {
@@ -79,6 +80,7 @@ const FormRowCheckboxMultiple = ({ labelText, name, value, handleChange, handleC
       return;
     }
   }
+  // eslint-disable-next-line
   }, [selectedOptions, list]);
 
   const handleCheckboxChange = (option, id) => {

@@ -37,7 +37,7 @@ const Navbar = () => {
     } catch (error) {
       console.error(error);
     }
-}, [user?.user, navigate]);
+}, [user?.user, navigate, dispatch]);
 
   const toggle = () => {
     setShowLogout(false);

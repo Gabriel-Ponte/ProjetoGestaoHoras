@@ -8,12 +8,13 @@ const FormRowListaHorasExtraPagas = ({ type, value,  utilizadores, changed  }) =
   const id = `myTextarea${type}${value}`;
   const { isLoadingPagamentos } = useSelector((store) => store.pagamentos);
 
-  const [initialDate, setDate] = useState([]);
-  const [initialName, setName] = useState([]);
-  const [initialNameResponsavel, setNameResponsavel] = useState([]);
-  let data = new Date()
+  const [initialDate, setDate] = useState('');
+  const [initialName, setName] = useState('');
+  const [initialNameResponsavel, setNameResponsavel] = useState('');
+
 
   useEffect(() => {
+    let data = new Date()
       if(utilizadores && utilizadores.length > 0){
         utilizadores.filter((user) => {
           if (user._id === value.Utilizador) {
@@ -22,12 +23,13 @@ const FormRowListaHorasExtraPagas = ({ type, value,  utilizadores, changed  }) =
           if(user._id === value.UtilizadorResponsavel) {
             setNameResponsavel(user.nome);
           }
+          return false;
         })
     }
     const mes = (value.Mes + 1)
     data =  (mes < 10 ? "0": "")  + mes + "/" + value.Ano;
     setDate(data)
-  }, [id , changed, utilizadores, data]);
+  }, [id , changed, value, utilizadores]);
 
   if(isLoadingPagamentos){
     return (

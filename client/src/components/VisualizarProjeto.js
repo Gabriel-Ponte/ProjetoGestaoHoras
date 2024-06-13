@@ -119,7 +119,7 @@ const VisualizarProjeto = () => {
           });
       }
     }
-
+  // eslint-disable-next-line
   }, [selectedUser,listaDias.length, projeto, dispatch]);
 
   useEffect(() => {
@@ -138,7 +138,7 @@ const VisualizarProjeto = () => {
     });
 
     dispatch(listaUtilizadores());
-
+  // eslint-disable-next-line
   }, [selectedUser,listaDias, dispatch]);
 
 
@@ -147,12 +147,14 @@ const VisualizarProjeto = () => {
   const handleChangeCalendario = useCallback((dia, mes, ano) => {
     const [selectedDia, selectedMes, selectedAno] = [dia, mes, ano];
     setSelectedDay({ dia: selectedDia, mes: selectedMes, ano: selectedAno });
+    // eslint-disable-next-line
   }, [selectedUser, listaDias]);
 
 
   const handleChangeUtilizador = useCallback((e) => {
     const { value } = e.target;
     setSelectedUser(value);
+    // eslint-disable-next-line
   }, [selectedUser, listaDias, dispatch]);
 
   useEffect(() => {
@@ -274,7 +276,7 @@ const VisualizarProjeto = () => {
       setState(0);
     }
 
-
+   // eslint-disable-next-line
   }, [selectedUser, listaDias]);
 
 

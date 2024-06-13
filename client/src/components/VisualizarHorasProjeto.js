@@ -283,20 +283,19 @@ const VisualizarHorasProjeto = () => {
             let count = 0;
             if (res?.payload?.diasAllProjeto) {
               const lista = res.payload.diasAllProjeto;
-              {lista.map((projetoSel) => {
-              for(let i = 0 ; i < projetoSel?.tipoDeTrabalhoHoras.length ; i++){
-                if(projetoSel?.tipoDeTrabalhoHoras[i].projeto === projeto._id){ 
 
-                  const horasArray = projetoSel?.tipoDeTrabalhoHoras[i]?.horas?.split(',');
-
-                  for(let g = 0 ; g < horasArray.length; g++){
-                    count += parseFloat(horasArray[g]);
+              lista.forEach((projetoSel) => {
+                for (let i = 0; i < projetoSel?.tipoDeTrabalhoHoras?.length; i++) {
+                  if (projetoSel.tipoDeTrabalhoHoras[i].projeto === projeto._id) {
+                    const horasArray = projetoSel.tipoDeTrabalhoHoras[i].horas?.split(',');
+              
+                    for (let g = 0; g < horasArray.length; g++) {
+                      count += parseFloat(horasArray[g]);
+                    }
                   }
-
                 }
-              }
-            })
-          }
+              });
+          
 
           if(count > 0){
             setVerificaDias(1);
@@ -319,8 +318,9 @@ const VisualizarHorasProjeto = () => {
       }
     });
 
-
+  // eslint-disable-next-line
   }, [selectedProjeto, dispatch]);
+
   // selectedProjeto, listaDias[0], listaTipoTrabalho?.length,
   function arrayEquals(a, b) {
     if (a === b) return true;
@@ -339,9 +339,9 @@ const VisualizarHorasProjeto = () => {
 
     setTimeout(() => {
       setLoading(false);
-    }, 100);
-
-  }, [listaDias.length]);
+    }, 750);
+  // eslint-disable-next-line
+  }, [selectedProjeto, listaDias.length]);
 
 
   function convertToMinutes(timeString) {
@@ -350,7 +350,7 @@ const VisualizarHorasProjeto = () => {
         let [hours, minutes] = timeString.toString().split(".");
 
         // Convert the hours to an integer
-        const hoursInt = parseInt(hours, 10);
+        const hoursInt = parseInt(hours, 10) ? parseInt(hours, 10)  : 0;
         // Convert the fraction of an hour to minutes
         minutes = parseInt(minutes) < 10 ? `${minutes}0` : minutes;
 
@@ -554,7 +554,10 @@ const VisualizarHorasProjeto = () => {
 
             
             {selectedProjeto === "Todos" ? (<>
-              {listaProjetos.map((projetoSel) => {
+            
+              {
+              
+              listaProjetos.map((projetoSel) => {
                     const filteredDias = listaDiasT.filter((dia) => {
                     if(dia?.tipoDeTrabalhoHoras){
                       for(let i = 0 ; i < dia?.tipoDeTrabalhoHoras.length ; i++){
@@ -562,7 +565,9 @@ const VisualizarHorasProjeto = () => {
                         return true;
                       }
                     }    
-                    } 
+                    }
+                    
+                    return false;
                   })
 
                     let count = 0;
@@ -594,7 +599,9 @@ const VisualizarHorasProjeto = () => {
                         return null;
                       });
                     }
+
                     return { projetoSel, count, dias };
+
                   }).sort((a, b) => b.count - a.count)
                     .map(({ projetoSel, count, dias }) => {
                         return <DiasTodosProjetos

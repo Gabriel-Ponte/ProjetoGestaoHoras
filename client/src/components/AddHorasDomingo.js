@@ -44,7 +44,7 @@ const AddHorasDomingo = ({ handleDateChoosen,handleClose, state, checkDate,dataR
     };
 
     const [data, setData] = useState(incrementDateByOneDay(dataReceived));
-    const [open, setOpen] = useState(state);
+    const [open] = useState(state);
 
 
 
@@ -107,7 +107,8 @@ const verificaDia = useCallback((e) => {
         } else{
             toast.error("Data escolhida não permitida! \n Por favor escolha um dia posterior ao Inserido!")
         }
-    })
+    // eslint-disable-next-line
+    }, []);
 
 
     return (

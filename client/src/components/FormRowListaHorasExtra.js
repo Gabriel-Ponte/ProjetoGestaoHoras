@@ -193,13 +193,16 @@ const FormRowListaHorasExtra = ({ type, value,tipoHoras, className, classNameInp
           if (user._id === value.Utilizador) {
             setName(user?.nome);
           }
+          return false;
         })
+
+      
     }
 
 
     const data = dataDay + "/" + dataMonth + "/" + dataYear
     setDate(data)
-    
+    // eslint-disable-next-line
   }, [id, changed, horasExtra, initialName, initialDate, compensacao, tipo]);
 
 

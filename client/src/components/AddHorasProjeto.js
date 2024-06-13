@@ -41,12 +41,13 @@ const ListaProjetos = () => {
             const tipoTrabalhoArray = Array.isArray(res.payload.tipoTrabalho) ? res.payload.tipoTrabalho : [];
             setListaTipoTrabalho(tipoTrabalhoArray);
         });
-    }, [totalProjetos]);
+    }, [totalProjetos, dispatch]);
 
     useEffect(() => {
         dispatch(getDia(values.Data, user.user.id)).then((res) => {
             setListaDias(res.payload.dia);
         });
+        // eslint-disable-next-line
     }, []);
 
 
@@ -81,11 +82,13 @@ const verificaDia = useCallback((e) => {
       setHorasT(0);
       setVerificaDiaCalled(false);
     }
+    // eslint-disable-next-line
   }, [listaDias, setValues, setHorasT, setVerificaDiaCalled]);
 
 
     useEffect(() => {
         verificaDia({ target: { name: 'Data', value: values.Data } });
+    // eslint-disable-next-line
     }, [listaDias]);
 
 

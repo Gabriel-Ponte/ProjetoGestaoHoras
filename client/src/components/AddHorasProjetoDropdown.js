@@ -121,6 +121,7 @@ const AddHorasProjetoDropdown = React.memo(({ sortedProjetos,verificaChange, lis
                                               }
                                             }
                                           }
+                                          return false;
                                         }
                                         )
                                       )
@@ -148,6 +149,7 @@ const AddHorasProjetoDropdown = React.memo(({ sortedProjetos,verificaChange, lis
                                               />
                                             );
                                           }
+                                          return false;
                                         }
                                         )
                                       )}
@@ -189,8 +191,8 @@ const AddHorasProjetoDropdown = React.memo(({ sortedProjetos,verificaChange, lis
                                     );
                                   }
                                 }
-                              }
-                              )
+                                return false;
+                              })
                             }
                           </div>
                         </div>

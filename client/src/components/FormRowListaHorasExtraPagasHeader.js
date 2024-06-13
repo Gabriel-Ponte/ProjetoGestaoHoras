@@ -131,6 +131,8 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, tipoHoras, handleChange,
                 await handleChange(verificaSortData ? '-Data' : 'Data');
                 break;
 
+            default:
+                break;
         }
 
 

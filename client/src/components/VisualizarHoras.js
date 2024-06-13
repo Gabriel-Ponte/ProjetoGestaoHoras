@@ -499,7 +499,7 @@ const ListaHoras = () => {
         });
       }
     });
-
+  // eslint-disable-next-line
   }, [selectedUser, horasExtra, listaDias, listaDias.length,  aceitacao, changePagamento, dispatch]);
 
   //  }, [selectedUser, listaDias[0], horasExtra, listaTipoTrabalho?.length, ferias[0], aceitacao[0], changePagamento, dispatch]);
@@ -758,6 +758,8 @@ const ListaHoras = () => {
     setTimeout(() => {
       setLoading(false);
     }, 750);
+
+  // eslint-disable-next-line
   }, [selectedUser,aceitacao, ferias[0], listaDias]);
 
 

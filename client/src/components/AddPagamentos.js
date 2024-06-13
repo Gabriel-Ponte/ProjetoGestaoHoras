@@ -59,7 +59,7 @@ const AddPagamentos = ({ horasExtraEsteMes, horasPorDar, selectedUser, responsab
     catch (error) {
       console.error(error)
     }
-
+   // eslint-disable-next-line
   }, [month, horasPorDar, year, horasExtraEsteMes, selectedUser]);
 
 

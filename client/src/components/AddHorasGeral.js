@@ -82,7 +82,7 @@ const ListaProjetos = () => {
     });
 
     setConstLoaded(true);
-
+  // eslint-disable-next-line
   }, []);
 
 
@@ -106,6 +106,7 @@ const ListaProjetos = () => {
       });
       setFilteredProjetos(filteredP);
     }
+    // eslint-disable-next-line
   }, [projetos]);
 
 
@@ -346,6 +347,8 @@ const ListaProjetos = () => {
         });
       });
     }
+
+  // eslint-disable-next-line
   }, [filteredProjetos]);
 
 
@@ -404,7 +407,7 @@ const ListaProjetos = () => {
     } else {
       setCopyExists(false);
     }
-
+    // eslint-disable-next-line
   }, [DataCopy, filteredProjetos]);
 
 
@@ -513,12 +516,15 @@ const ListaProjetos = () => {
     setVerificaChange(false);
     setVerificaDiaCalled(false);
     return;
+
+  // eslint-disable-next-line
   }, [listaDias, filteredProjetos, filteredProjetos, values.Data]);
 
 
 
   useEffect(() => {
     verificaDia({ target: { name: 'Data', value: values.Data } });
+  // eslint-disable-next-line
   }, [verificaDia]);
 
 

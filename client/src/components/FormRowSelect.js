@@ -25,6 +25,7 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
 
   useEffect(() => {
     setSelectedOption(Array.isArray(separatedArray) ? separatedArray : (value ? value.split(',') : []));
+    // eslint-disable-next-line
   }, [value]);
   
   const handleMultiChange = async (event) => {

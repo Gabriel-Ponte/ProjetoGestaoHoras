@@ -75,7 +75,7 @@ const AddHorasGeralDropdown = React.memo(({ sortedProjetos, verificaChange, list
       setStringListaTrabalhoGeralOther(ListaTrabalhoGeralOther);
   
       setOptions(ListaTrabalhoGeralOther?.split(","));
-
+    // eslint-disable-next-line
     }, [listaTipoTrabalho, values.Data]);
 
 
@@ -252,6 +252,7 @@ const AddHorasGeralDropdown = React.memo(({ sortedProjetos, verificaChange, list
                                               }
                                             }
                                           }
+                                          return false;
                                         }
                                         )
                                       )
@@ -279,6 +280,7 @@ const AddHorasGeralDropdown = React.memo(({ sortedProjetos, verificaChange, list
                                               />
                                             );
                                           }
+                                          return false;
                                         }
                                         )
                                       )}
@@ -320,6 +322,7 @@ const AddHorasGeralDropdown = React.memo(({ sortedProjetos, verificaChange, list
                                     );
                                   }
                                 }
+                                return false;
                               }
                               )
                             }

@@ -93,6 +93,7 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
   
       setOptions(ListaTrabalhoGeralOther?.split(","));
 
+    // eslint-disable-next-line
     }, [ listaTipoTrabalho, values.Data]);
 
 

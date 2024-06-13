@@ -18,7 +18,9 @@ const FormRowCheckboxListaClientes = ({ labelText, name, value, handleChange, li
   // useEffect to handle updating the parent component when the checkboxes change
   useEffect(() => {
     handleChange(name, selectedOption);
-  }, [selectedOption]);
+
+    // eslint-disable-next-line
+  }, [selectedOption, name]);
 
   // Handle checkbox change
   const handleCheckboxChange = (option) => {

@@ -15,7 +15,6 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, associat
 
 
 
-
   useEffect(() => {
     try{
 
@@ -63,7 +62,7 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, associat
   }catch{
     console.error("Error Dias")
   }
-  }, [tipoDeTrabalhoHoras, dispatch]);
+  }, [tipoDeTrabalhoHoras,associated, dispatch]);
 
   
   const deleteDiaConfirm = async (id ,data) => {
