@@ -52,7 +52,7 @@ const ListaHoras = () => {
   const [horasCompensacaoDomingo, setHorasCompensacaoDomingo] = useState([]);
   const [idCompensacao, setIDCompencacao] = useState(null)
   const [userNome, setUserNome] = useState(user?.user?.nome);
-  const [triggerEffect, setTriggerEffect] = useState(true);
+  // const [triggerEffect, setTriggerEffect] = useState(true);
   const [change, setChange] = useState(false);
 
   const dispatch = useDispatch();
@@ -472,28 +472,28 @@ const ListaHoras = () => {
             }
 
             // Remove the matching aceitacao from listaDias
-            if (listaDiasA) {
-              const updatedListaDias = listaDiasA.filter((dia) => {
-                if (dia.accepted !== 1) {
-                  return dia;
-                }
+            // if (listaDiasA) {
+            //   const updatedListaDias = listaDiasA.filter((dia) => {
+            //     if (dia.accepted !== 1) {
+            //       return dia;
+            //     }
 
-                for (let i = 0; i < dia.tipoDeTrabalhoHoras.length; i++) {
-                  const aListaDias = dia.tipoDeTrabalhoHoras[i]?.tipoTrabalho?.split(',').filter((tipo, index) => {
+            //     for (let i = 0; i < dia.tipoDeTrabalhoHoras.length; i++) {
+            //       const aListaDias = dia.tipoDeTrabalhoHoras[i]?.tipoTrabalho?.split(',').filter((tipo, index) => {
 
-                    const horasArray = dia.tipoDeTrabalhoHoras[i]?.horas?.split(',');
-                    return horasArray && horasArray[index] > 0;
-                  });
+            //         const horasArray = dia.tipoDeTrabalhoHoras[i]?.horas?.split(',');
+            //         return horasArray && horasArray[index] > 0;
+            //       });
 
-                  return !aListaDias.includes(idFerias);
-                }
-                return null;
-              })
+            //       return !aListaDias.includes(idFerias);
+            //     }
+            //     return null;
+            //   })
 
-              // if (!arrayEquals(listaDias, updatedListaDias)) {
-              //   //setListaDias(updatedListaDias);
-              // }
-            }
+            //   // if (!arrayEquals(listaDias, updatedListaDias)) {
+            //   //   //setListaDias(updatedListaDias);
+            //   // }
+            // }
 
           }
         });

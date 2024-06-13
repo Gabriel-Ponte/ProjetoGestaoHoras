@@ -2,8 +2,11 @@ import { useState, useEffect } from 'react';
 import Wrapper from '../assets/wrappers/FormRowCheckboxMultiple';
 
 const FormRowCheckboxMultiple = ({ labelText, name, value, handleChange, handleChangeSubmit, list, className, classNameLabelResult, classNameLabel, classNameInput, classNameResult }) => {
+  // eslint-disable-next-line no-useless-escape
   const [controlArray] = useState(Array.isArray(value) ? (value.length > 0 ? value[0].split(/[,\/]/) : []) : value.split(/[,\/]/));
   const [selectedOptions, setSelectedOptions] = useState([]);
+
+  // eslint-disable-next-line no-useless-escape
   const [separatedArray, setSeparatedArray] = useState(Array.isArray(value) ? (value.length > 0 ? value[0].split(/[,\/]/) : []) : value.split(/[,\/]/));
   //const [selectedIDs, setSelectedIDs] = useState([]);
  
@@ -38,6 +41,7 @@ const FormRowCheckboxMultiple = ({ labelText, name, value, handleChange, handleC
   }, [value, list]);
 
   useEffect(() => {
+    // eslint-disable-next-line no-useless-escape
     const updatedSeparatedArray = Array.isArray(value) ? (value.length > 0 ? value[0].split(/[,\/]/) : []) : value.split(/[,\/]/);
     const separatedArrayId = [...updatedSeparatedArray];
 

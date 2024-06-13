@@ -12,7 +12,7 @@ const DeleteFromDB = ({ id, name, isLoading, type }) => {
   const [showModal, setShowModal] = useState(false);
   const [modalName, setModalName] = useState('');
   const [modalType, setModalType] = useState('');
-  const [modalId, setModalId] = useState('');
+  const [setModalId] = useState('');
   const handleClose = () => {
     setShowModal(false);
   };

@@ -81,7 +81,7 @@ const AddHorasGeralDropdown = React.memo(({ sortedProjetos, verificaChange, list
 
   const dispatch = useDispatch();
 
-  const [showProjeto, setShowProjeto] = useState({});
+  const [showProjeto] = useState({});
 
 
   // Initialize horasP as an object

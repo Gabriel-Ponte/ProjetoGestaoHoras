@@ -9,8 +9,8 @@ const imageBuffer = fs.readFileSync(imagePath);
 
 // extra security packages
 const helmet = require("helmet");
-const xss = require("xss-clean");
-
+const xssClean = require("xss-clean");
+const xss = require("xss");
 const express = require("express");
 const app = express();
 
@@ -40,8 +40,12 @@ app.set("trust proxy", 1);
 app.use(express.static(path.resolve(__dirname, "./client/build/")));
 app.use(express.json());
 app.use(helmet());
-app.use(xss());
+app.use(xssClean());
 
+app.post('/sanitize', (req, res) => {
+  const sanitizedInput = xss(req.body.input);
+  res.send({ sanitizedInput });
+});
 
 
 // routes
