@@ -81,7 +81,7 @@ const VisualizarProjeto = () => {
           }
         })
         .catch((error) => {
-          // Handle error if necessary
+          console.error(error)
         });
 
       }
@@ -99,7 +99,7 @@ const VisualizarProjeto = () => {
             }
           })
           .catch((error) => {
-            // Handle error if necessary
+            console.log(error)
           });
       } else {
         const userLogin = user?.user?.login;

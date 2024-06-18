@@ -92,7 +92,7 @@ const allDiasSlice = createSlice({
       state.page = 1;
       state[name] = value;
     },
-    clearAllDiasState: (state) => initialState,
+    clearAllDiasState: () => initialState,
   },
 
 
@@ -105,7 +105,7 @@ const allDiasSlice = createSlice({
       state.isLoading = false;
       state.dias = payload.diasAllProjeto;
     })
-    .addCase(getAllDias.rejected, (state, { payload }) => {
+    .addCase(getAllDias.rejected, (state) => {
       state.isLoading = false;
       //toast.error(payload);
     })
@@ -120,7 +120,7 @@ const allDiasSlice = createSlice({
       state.isLoading = false;
 
     })
-    .addCase(getAllDiasUtilizador.rejected, (state, { payload }) => {
+    .addCase(getAllDiasUtilizador.rejected, (state) => {
       state.isLoading = false;
       //toast.error(payload);
     })
@@ -135,7 +135,7 @@ const allDiasSlice = createSlice({
       state.isLoading = false;
 
     })
-    .addCase(getAllDiasUtilizadorTipo.rejected, (state, { payload }) => {
+    .addCase(getAllDiasUtilizadorTipo.rejected, (state) => {
       state.isLoading = false;
       //toast.error(payload);
     })
@@ -149,7 +149,7 @@ const allDiasSlice = createSlice({
       state.isLoading = false;
 
     })
-    .addCase(getAllDiasProjetoUtilizador.rejected, (state, { payload }) => {
+    .addCase(getAllDiasProjetoUtilizador.rejected, (state) => {
       state.isLoading = false;
       //toast.error(payload);
     })
@@ -184,7 +184,7 @@ const allDiasSlice = createSlice({
       state.isLoading = false;
       toast.success(payload);
     })
-    .addCase(getAllDiasTodos.rejected, (state, { payload }) => {
+    .addCase(getAllDiasTodos.rejected, (state) => {
       state.isLoading = false;
     })
     
@@ -196,7 +196,7 @@ const allDiasSlice = createSlice({
       state.isLoading = false;
       toast.success(payload);
     })
-    .addCase(getAllDiasHorasExtra.rejected, (state, { payload }) => {
+    .addCase(getAllDiasHorasExtra.rejected, (state) => {
       state.isLoading = false;
     })
 
@@ -210,7 +210,7 @@ const allDiasSlice = createSlice({
       state.isLoading = false;
       toast.success(payload);
     })
-    .addCase(getAllDiasHorasExtraAccepted.rejected, (state, { payload }) => {
+    .addCase(getAllDiasHorasExtraAccepted.rejected, (state) => {
       state.isLoading = false;
     })
 
@@ -222,19 +222,19 @@ const allDiasSlice = createSlice({
       state.isLoading = false;
       toast.success(payload);
     })
-    .addCase(getAllDiasHorasExtraDeclined.rejected, (state, { payload }) => {
+    .addCase(getAllDiasHorasExtraDeclined.rejected, (state) => {
       state.isLoading = false;
     })
 
     .addCase(acceptDiasHorasExtra.pending, (state) => {
       state.isLoading = true;
     })
-    .addCase(acceptDiasHorasExtra.fulfilled, (state , { payload }) => {
+    .addCase(acceptDiasHorasExtra.fulfilled, (state) => {
       toast.success("Horas Extra aceites!");
       state.isLoading = false;
     })
     
-    .addCase(acceptDiasHorasExtra.rejected, (state, { payload }) => {
+    .addCase(acceptDiasHorasExtra.rejected, (state) => {
       toast.error("Ocorreu um Erro ao aceitar as Horas Extra!");
       state.isLoading = false;
     })
@@ -242,11 +242,11 @@ const allDiasSlice = createSlice({
     .addCase(declineDiasHorasExtra.pending, (state) => {
       state.isLoading = true;
     })
-    .addCase(declineDiasHorasExtra.fulfilled, (state , { payload }) => {
+    .addCase(declineDiasHorasExtra.fulfilled, (state) => {
       toast.success("Horas Extra recusadas!");
       state.isLoading = false;
     })
-    .addCase(declineDiasHorasExtra.rejected, (state, { payload }) => {
+    .addCase(declineDiasHorasExtra.rejected, (state) => {
       toast.error("Ocorreu um Erro ao aceitar as Horas Extra!");
       state.isLoading = false;
 

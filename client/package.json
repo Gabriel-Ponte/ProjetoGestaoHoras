@@ -7,7 +7,7 @@
     "start": "vite --host",
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
+    "lint": "eslint . --report-unused-disable-directives --max-warnings 0 --fix",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -34,6 +34,7 @@
     "web-vitals": "^4.1.1"
   },
   "devDependencies": {
+    "prop-types":"15.8.1",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",

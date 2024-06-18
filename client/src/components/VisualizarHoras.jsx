@@ -749,7 +749,7 @@ const ListaHoras = () => {
     setPossibleHours(possibleHoursCount);
     setHorasRealizadas(horasRealizadasCount);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [listaPagamentos, listaDias, listaDias.length, selectedDay, percentagemHoras, horasRealizadas, selectedUser]);
 
 
@@ -1278,12 +1278,12 @@ const ListaHoras = () => {
 
                 <div>
                   {dias.map((dia) => {
-                    for (let a = 0; a < dia.tipoDeTrabalhoHoras.length; a++) {
-                      if (dia.tipoDeTrabalhoHoras[a].length > 0) {
-                        for (let j = 0; j < dia.tipoDeTrabalhoHoras[a].length; j++) {
-                        }
-                      }
-                    }
+                    // for (let a = 0; a < dia.tipoDeTrabalhoHoras.length; a++) {
+                    //   if (dia.tipoDeTrabalhoHoras[a].length > 0) {
+                    //     for (let j = 0; j < dia.tipoDeTrabalhoHoras[a].length; j++) {
+                    //     }
+                    //   }
+                    // }
 
                     const data = new Date(dia.Data);
                     const isSameMonth = month === data.getMonth() && year === data.getFullYear();

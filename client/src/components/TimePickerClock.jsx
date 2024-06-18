@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import PropTypes from 'prop-types'; 
 
 const MemoizedDesktopTimePicker = React.memo(TimePicker);
 
@@ -39,5 +40,15 @@ const TimePickerClock = React.memo(({ disabled, name, projectID, ttID, projectNo
     </div>
   );
 });
+
+TimePickerClock.propTypes = {
+  name : PropTypes.string.isRequired,
+  projectID: PropTypes.string.isRequired, 
+  ttID: PropTypes.string.isRequired, 
+  projectNome: PropTypes.string.isRequired,
+  //selectedTime: PropTypes.string.isRequired,
+  convertToInt: PropTypes.func.isRequired,
+}
+
 
 export default TimePickerClock;

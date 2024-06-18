@@ -200,7 +200,7 @@ const userSlice = createSlice({
       .addCase(resetPassword.pending, (state) => {
         state.isLoadingU = true;
       })
-      .addCase(resetPassword.fulfilled, (state, { payload }) => {
+      .addCase(resetPassword.fulfilled, (state) => {
         state.isLoadingU = false;
         toast.success("Email enviado!")
       })
@@ -239,7 +239,7 @@ const userSlice = createSlice({
       .addCase(deleteUser.pending, (state) => {
         state.isLoadingU = true;
       })
-      .addCase(deleteUser.fulfilled, (state, { payload }) => {
+      .addCase(deleteUser.fulfilled, (state) => {
         state.isLoadingU = false;
         toast.success(`Utilizador Eliminado!`);
       })
@@ -262,7 +262,7 @@ const userSlice = createSlice({
         toast.error(payload);
       })
 
-      .addCase(clearStore.rejected, (state, action) => {
+      .addCase(clearStore.rejected, () => {
         toast.error('Ocorreu um erro!');
       })
 

@@ -1,7 +1,9 @@
 import Wrapper from '../assets/wrappers/FormRowListaTipoTrabalho';
 import { useEffect } from 'react';
+import PropTypes from 'prop-types'; 
 
-const FormRow = ({ type, name, value, handleChange, className, classNameInput }) => {
+
+const FormRow = ({ type, name, value, handleChange, className, classNameInput, keyGet }) => {
   const id = `myTextarea${type}${name}${value}`;
 
   useEffect(() => {
@@ -17,7 +19,7 @@ const FormRow = ({ type, name, value, handleChange, className, classNameInput })
 
   return (
     <Wrapper>
-      <div className={/*className ? className :*/ 'form__group field'}>
+      <div className={/*className ? className :*/ 'form__group field'} key={keyGet}>
         {type === 'textarea' ? (
           <textarea
             id={id}
@@ -41,5 +43,19 @@ const FormRow = ({ type, name, value, handleChange, className, classNameInput })
     </Wrapper>
   );
 };
+
+
+
+FormRow.propTypes = {
+  type: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  labelText: PropTypes.string,
+  className: PropTypes.string,
+  classNameInput: PropTypes.string,
+  keyGet: PropTypes.string.isRequired,
+}
+
 
 export default FormRow;

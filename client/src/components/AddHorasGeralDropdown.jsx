@@ -333,7 +333,7 @@ const AddHorasGeralDropdown = React.memo(({ sortedProjetos, verificaChange, list
 
 
                     <div className={`col-md-2  text-start ${showProjeto[project._id] ? "hidden-dropdown" : "show-dropdown"}`}>
-                      {values.tipoDeTrabalhoHoras[project._id]?.horas && values.tipoDeTrabalhoHoras[project._id]?.horas?.split(",").map((t, i) => {
+                      {values.tipoDeTrabalhoHoras[project._id]?.horas && values.tipoDeTrabalhoHoras[project._id]?.horas?.split(",").map((t) => {
                         horasP[project._id] += +t;
                         return null;
                       })}

@@ -94,11 +94,11 @@ const diasSlice = createSlice({
     .addCase(getDia.pending, (state) => {
       state.isLoading = true;
     })
-    .addCase(getDia.fulfilled, (state , { payload }) => {
+    .addCase(getDia.fulfilled, (state ) => {
       //const dia = payload.dia;
       state.isLoading = false;
     })
-    .addCase(getDia.rejected, (state, { payload }) => {
+    .addCase(getDia.rejected, (state) => {
       state.isLoading = false;
       //toast.error(payload);
     })

@@ -49,12 +49,12 @@ const AddProjectForm = () => {
   /////////////////////////////////////////////////////////////////////////////////////
   useEffect(() => {
     dispatch(listaUtilizadores());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [listaDeUtilizadores]);
 
   useEffect(() => {
     dispatch(getClientes());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [listaClientes]);
 
   if (isLoadingU) {

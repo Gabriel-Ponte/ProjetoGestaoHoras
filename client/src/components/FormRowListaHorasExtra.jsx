@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 //import { useSelector, useDispatch } from 'react-redux';
 //import LoadingSmaller from './LoadingSmaller';
 
-const FormRowListaHorasExtra = ({ type, value,tipoHoras, className, classNameInput, utilizadores, changed  }) => {
+const FormRowListaHorasExtra = ({ type, value, tipoHoras, className, classNameInput, utilizadores, changed }) => {
   const id = `myTextarea${type}${value}`;
 
   //console.log(value)
@@ -13,8 +13,8 @@ const FormRowListaHorasExtra = ({ type, value,tipoHoras, className, classNameInp
   const [initialName, setName] = useState([]);
   //const [feriados, setFeriados] = useState([]);
   const [horasExtra, setHorasExtra] = useState([]);
-  const [compensacao , setCompensacao] = useState(false);
-  const [ associated , setAssociated] = useState([])
+  const [compensacao, setCompensacao] = useState(false);
+  const [associated, setAssociated] = useState([])
   const [tipo, setTipo] = useState([]);
 
   function feriadosPortugal(date) {
@@ -107,7 +107,7 @@ const FormRowListaHorasExtra = ({ type, value,tipoHoras, className, classNameInp
     const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
     const isDomingo = dayOfWeek === 0;
     const isFriday = dayOfWeek === 5;
-   
+
     if (feriadosPortugal(fullData)) {
       setHorasExtra(value?.NumeroHoras);
       setCompensacao(false);
@@ -117,11 +117,11 @@ const FormRowListaHorasExtra = ({ type, value,tipoHoras, className, classNameInp
       setHorasExtra(value?.NumeroHoras);
       setCompensacao(false);
 
-      if(isDomingo){
+      if (isDomingo) {
         setTipo("Domingo");
-      }else{
-      setTipo("Fim semana");
-    }
+      } else {
+        setTipo("Fim semana");
+      }
 
     } else if (isFriday && (parseFloat(value?.NumeroHoras) > 6)) {
       const horasExtraVal = parseFloat(value?.NumeroHoras) - 6;
@@ -135,74 +135,71 @@ const FormRowListaHorasExtra = ({ type, value,tipoHoras, className, classNameInp
       setCompensacao(false);
       setTipo("Semana");
 
-    } else{
+    } else {
       ///////////////////////////////////////////////// Alterar para ID do tipo de Trabalho mas está a receber o Nome da Base de Dados ////////////////////////////////////////////////////////
       let count = 0;
-      for(let j = 0; j < value?.tipoDeTrabalhoHoras?.length ; j++){
+      for (let j = 0; j < value?.tipoDeTrabalhoHoras?.length; j++) {
         const tt = value.tipoDeTrabalhoHoras[j];
         const tipoT = tt.tipoTrabalho.split(',');
         const hours = tt.horas.split(',');
-        
-        for(let g = 0; g < tipoT.length ; g++){
-          if(tipoT[g].trim() === "Compensação de Horas Extra"){
+
+        for (let g = 0; g < tipoT.length; g++) {
+          if (tipoT[g].trim() === "Compensação de Horas Extra") {
             count += hours[g]
           }
         }
       }
-      if(count === 0){
+      if (count === 0) {
         count = value?.NumeroHoras;
       }
-      setHorasExtra("-"+ count);
+      setHorasExtra("-" + count);
       setCompensacao(true);
       setTipo("");
     }
 
 
 
+    const substring = '"';
+    const found = value?.associated?.includes(substring);
+    if (value?.associated && value?.associated?.length > 0 && found) {
+      try {
+        const jsonObject = JSON.parse(value?.associated);
+        for (let i = 0; i < jsonObject.length; i++) {
 
-    if(value?.associated && value?.associated?.length > 0){
+          const assData = new Date(jsonObject[i].Data);
+          const assDay = assData.getDate();
+          const assMonth = assData.getMonth() + 1;
+          const assYear = assData.getFullYear();
+
+          const assNewData = assDay + "/" + assMonth + "/" + assYear;
+
+          jsonObject[i].Data = assNewData;
+        }
 
 
-    try {
 
-      const jsonObject = JSON.parse(value.associated);
-  
-      for(let i  = 0;i < jsonObject.length; i++){
+        setAssociated(jsonObject);
 
-        const assData = new Date(jsonObject[i].Data);
-        const assDay = assData.getDate();
-        const assMonth = assData.getMonth() + 1;
-        const assYear = assData.getFullYear();
-
-        const assNewData = assDay + "/" + assMonth + "/" + assYear;
-
-        jsonObject[i].Data = assNewData;
+      } catch (error) {
+        console.error(error)
       }
-
-
-
-      setAssociated(jsonObject);
-
-    }catch (error) {
-      console.error(error)
-    }
     }
 
-      if(utilizadores && utilizadores.length > 0){
-        utilizadores.filter((user) => {
-          if (user._id === value.Utilizador) {
-            setName(user?.nome);
-          }
-          return false;
-        })
+    if (utilizadores && utilizadores.length > 0) {
+      utilizadores.filter((user) => {
+        if (user._id === value.Utilizador) {
+          setName(user?.nome);
+        }
+        return false;
+      })
 
-      
+
     }
 
 
     const data = dataDay + "/" + dataMonth + "/" + dataYear
     setDate(data)
-     
+
   }, [id, changed, horasExtra, initialName, initialDate, compensacao, tipo]);
 
 
@@ -241,73 +238,73 @@ const FormRowListaHorasExtra = ({ type, value,tipoHoras, className, classNameInp
     <Wrapper>
       <div className="row mb-3" >
         <div className={"col-md-2 text-center"}>
-            <p>{initialName}</p>
-          </div>
-          <div className="col-md-2 text-center">
-            <p>{initialDate}</p>
-          </div>
-          <div className="col-md-1 text-center">
-          <p>{convertToMinutes(value?.NumeroHoras)}</p>
-      </div>
-      <div className="col-md-2 text-center" >
-          <p style={{ backgroundColor: compensacao ? "#E8FCCF" : "" }}>{convertToMinutes(horasExtra)}</p>
-      </div>
-      {(tipoHoras !== 3) && (
-      <div className="col-md-1 text-center" >
-          <p>{tipo}</p>
-      </div>
-      )}
-      <div className={tipoHoras !== 3 ? "col-md-4 text-center" : "col-md-5 text-center"}>
-      {value?.tipoDeTrabalhoHoras?.map((t, index) => {
-        const project = t.projeto;
-        const tipoT = t.tipoTrabalho.split(',');
-        const hours = t.horas.split(',');
-        return(
-        <div key={`${index}`} className='row' >
-        <div className='col-md-12'>
-            <h5>{project.trim()}</h5>
+          <p>{initialName}</p>
         </div>
-        {tipoT.map((tt, j) => (
-            <div key={`${index}_${j}`} className='row'>
-            <div className='col-md-8'>
-              <p>{tt.trim()}</p>
-            </div>
-            <div className='col-md-4 text-center'>
-              <p>{convertToMinutes(hours[j].trim())}</p>
-            </div>
-            </div>
-        ))}
-    
+        <div className="col-md-2 text-center">
+          <p>{initialDate}</p>
+        </div>
+        <div className="col-md-1 text-center">
+          <p>{convertToMinutes(value?.NumeroHoras)}</p>
+        </div>
+        <div className="col-md-2 text-center" >
+          <p style={{ backgroundColor: compensacao ? "#E8FCCF" : "" }}>{convertToMinutes(horasExtra)}</p>
+        </div>
+        {(tipoHoras !== 3) && (
+          <div className="col-md-1 text-center" >
+            <p>{tipo}</p>
+          </div>
+        )}
+        <div className={tipoHoras !== 3 ? "col-md-4 text-center" : "col-md-5 text-center"}>
+          {value?.tipoDeTrabalhoHoras?.map((t, index) => {
+            const project = t.projeto;
+            const tipoT = t.tipoTrabalho.split(',');
+            const hours = t.horas.split(',');
+            return (
+              <div key={`${index}`} className='row' >
+                <div className='col-md-12'>
+                  <h5>{project.trim()}</h5>
+                </div>
+                {tipoT.map((tt, j) => (
+                  <div key={`${index}_${j}`} className='row'>
+                    <div className='col-md-8'>
+                      <p>{tt.trim()}</p>
+                    </div>
+                    <div className='col-md-4 text-center'>
+                      <p>{convertToMinutes(hours[j].trim())}</p>
+                    </div>
+                  </div>
+                ))}
+
+              </div>
+            );
+          })}
+        </div>
       </div>
-          );
-      })}
-    </div>
-      </div>
 
 
 
 
 
 
-      {associated && associated.length >0 &&  associated.map((diaAss, i) => (
-      <div key={diaAss + "_" + i}>
-        <div className="row mb-3" >
-          <div className={"col-md-2 text-center"}>
+      {associated && associated.length > 0 && associated.map((diaAss, i) => (
+        <div key={diaAss + "_" + i}>
+          <div className="row mb-3" >
+            <div className={"col-md-2 text-center"}>
             </div>
             <div className="col-md-2 text-center">
               <p>{diaAss.Data}</p>
             </div>
             <div className="col-md-1 text-center">
-            <p>{convertToMinutes(diaAss?.NumeroHoras)}</p>
-        </div>
-        <div className="col-md-2 text-center"></div>
-        <div className="col-md-2 text-start" >
-            <p>Compensação Domingo </p>
-        </div>
+              <p>{convertToMinutes(diaAss?.NumeroHoras)}</p>
+            </div>
+            <div className="col-md-2 text-center"></div>
+            <div className="col-md-2 text-start" >
+              <p>Compensação Domingo </p>
+            </div>
 
-      </div>
-      </div>
-            ))
+          </div>
+        </div>
+      ))
       }
     </Wrapper>
   );

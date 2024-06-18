@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import DefaultUserImg from "../assets/image/DefaultUserImg.png";
 import Wrapper from '../assets/wrappers/ModalFoto';
 import { Buffer } from 'buffer';
-
+import PropTypes from 'prop-types'; 
 
 
 function ModalFoto({ label, name, value, handleChange, className }) {
@@ -32,7 +32,7 @@ function ModalFoto({ label, name, value, handleChange, className }) {
     else{
     setFoto(value);
   }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+   
   }, [file, value]);
 
   const handleFileInputChange = (file) => {
@@ -252,6 +252,14 @@ function ModalFoto({ label, name, value, handleChange, className }) {
       </div>
     </Wrapper>
   );
+}
+
+
+ModalFoto.propTypes = {
+  label: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  className: PropTypes.string.isRequired,
 }
 
 export default ModalFoto;

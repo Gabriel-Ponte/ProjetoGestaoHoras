@@ -121,7 +121,7 @@ const AddUtilizador = () => {
       }
   };
 
-  const toggleMember = e => {
+  const toggleMember = () => {
     // handle form submission logic here
     setValues({ ...values });
   };
@@ -179,6 +179,7 @@ const AddUtilizador = () => {
               label="Password"
               labelText="Password"
               className="form-control"
+              autocomp= ""
               value={values.password}
               handleChange={handleChange}
             />

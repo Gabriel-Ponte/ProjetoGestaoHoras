@@ -62,7 +62,7 @@ const allProjetosSlice = createSlice({
     changePage: (state, { payload }) => {
       state.page = payload;
     },
-    clearAllProjetosState: (state) => initialState,
+    clearAllProjetosState: () => initialState,
   },
   extraReducers: (builder) => {
     builder

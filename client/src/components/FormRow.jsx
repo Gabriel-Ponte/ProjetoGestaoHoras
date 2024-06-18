@@ -1,4 +1,6 @@
 import Wrapper from '../assets/wrappers/FormRowSelect';
+import PropTypes from 'prop-types'; 
+
 
 const FormRow = ({ type, name, value, handleChange, labelText, className, classNameLabel, classNameInput,classNameInputDate, required, autocomp }) => {
   // Calculate the content size
@@ -21,7 +23,6 @@ const FormRow = ({ type, name, value, handleChange, labelText, className, classN
       textSize = "60%"
     }
   }
-
 
   return (
     <Wrapper>
@@ -70,5 +71,21 @@ const FormRow = ({ type, name, value, handleChange, labelText, className, classN
     </Wrapper>
   );
 };
+
+
+FormRow.propTypes = {
+  type: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  labelText: PropTypes.string,
+  className: PropTypes.string.isRequired,
+  classNameLabel: PropTypes.string,
+  classNameInput: PropTypes.string,
+  classNameInputDate: PropTypes.string,
+  required: PropTypes.string,
+  autocomp: PropTypes.string,
+}
+
 
 export default FormRow;

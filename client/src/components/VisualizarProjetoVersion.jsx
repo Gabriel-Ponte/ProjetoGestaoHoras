@@ -1,3 +1,6 @@
+import PropTypes from 'prop-types'; 
+
+
 const VisualizarHorasProjetoVersion = ({
     values,
     utilizadores,
@@ -18,7 +21,7 @@ const VisualizarHorasProjetoVersion = ({
             <h5>Cliente</h5>
           </div>
           <div className="col-6 text-start">
-            <p>{values.Cliente}</p>
+            <p>{values?.Cliente}</p>
           </div>
         </div>
 
@@ -29,7 +32,7 @@ const VisualizarHorasProjetoVersion = ({
             </h5>
           </div>
           <div className="col-6 text-start">
-            {values.Piloto &&
+            {values?.Piloto &&
               (() => {
                 //const updatedSeparatedArray = Array.isArray(values.Piloto) ? (values.Piloto.length > 0 ? values.Piloto[0].split(/[,\/]/) : []) : values.Piloto.split(/[,\/]/);
                 const updatedSeparatedArray = Array.isArray(values.Piloto) ? values.Piloto.length > 0 ? values.Piloto[0].split(/[,/]/) : [] : values.Piloto.split(/[,/]/);
@@ -44,7 +47,7 @@ const VisualizarHorasProjetoVersion = ({
                 }
                 return (
                   <>
-                    {values.Piloto ? (
+                    {values?.Piloto ? (
                       updatedSeparatedArray.map((item, index) => (
                         <p key={index}>{item}</p>
                       ))
@@ -65,7 +68,7 @@ const VisualizarHorasProjetoVersion = ({
             </h5>
           </div>
           <div className="col-6 text-start">
-            <p>{values.Acao ? values.Acao : "Sem Ações"}</p>
+            <p>{values?.Acao ? values.Acao : "Sem Ações"}</p>
           </div>
         </div>
 
@@ -76,7 +79,7 @@ const VisualizarHorasProjetoVersion = ({
             </h5>
           </div>
           <div className="col-6 text-start">
-            <p>{values.Notas ? values.Notas : "Sem Notas"}</p>
+            <p>{values?.Notas ? values.Notas : "Sem Notas"}</p>
           </div>
         </div>
         <div className="row mb-3">
@@ -133,5 +136,10 @@ const VisualizarHorasProjetoVersion = ({
     );
   };
 
+
+  VisualizarHorasProjetoVersion.propTypes = {
+    values: PropTypes.object.isRequired,
+    utilizadores: PropTypes.array.isRequired,
+  }
   export default VisualizarHorasProjetoVersion;
 

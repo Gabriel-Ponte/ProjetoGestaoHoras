@@ -117,7 +117,7 @@ export const getAllDiasProjetoUtilizadorThunk = async (utilizadorId,projeto, thu
   }
 };
 
-export const exportDiasThunk = async ( url, userID ,userTipo ,thunkAPI) => {
+export const exportDiasThunk = async ( url, userID ,userTipo) => {
   try {
     const resp = await customFetch.post(`/dia/exportDias/` , { userID, userTipo });
     return resp.data;

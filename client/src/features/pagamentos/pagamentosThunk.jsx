@@ -19,6 +19,7 @@ export const getAllPagamentosThunk = async (thunkAPI) => {
     return resp.data;
 
   } catch (error) {
+    console.error(error);
     //return checkForUnauthorizedResponse(error, thunkAPI);
   }
 };

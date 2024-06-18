@@ -234,7 +234,7 @@ const VisualizarHorasProjeto = () => {
           });
         }
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+       
     }, [selectedDay, selectedProjeto, listaDias, dispatch, setProjeto]);
   
   useEffect(() => {

@@ -8,6 +8,8 @@ import FormRowListaProjetos from './FormRowListaProjetos';
 import { updateProjeto } from '../features/projetos/projetosSlice';
 import { FcCheckmark } from 'react-icons/fc';
 import { IoMdClose } from 'react-icons/io';
+import PropTypes from 'prop-types'; 
+
 
 const Projeto = ({
   _id,
@@ -565,4 +567,28 @@ const Projeto = ({
     </Wrapper>
   );
 };
+
+
+Projeto.propTypes = {
+  _id: PropTypes.string.isRequired,
+  Cliente: PropTypes.string.isRequired,
+  DataInicio: PropTypes.string,
+  DataObjetivo: PropTypes.string,
+  DataFim: PropTypes.string,
+  Notas: PropTypes.string.isRequired,
+  OrcamentoAprovado: PropTypes.string,
+  Resultado: PropTypes.bool.isRequired,
+  Nome: PropTypes.string.isRequired,
+  Tema: PropTypes.string.isRequired,
+  Acao: PropTypes.string.isRequired,
+  TipoTrabalho: PropTypes.string.isRequired,
+  Piloto: PropTypes.string.isRequired,
+  Links: PropTypes.string.isRequired,
+  LinkResumo: PropTypes.string.isRequired,
+  NumeroHorasTotal: PropTypes.string,
+  Finalizado: PropTypes.bool.isRequired,
+  // finalizado: PropTypes.bool.isRequired,
+  utilizadores: PropTypes.array.isRequired,
+  handleAlterado: PropTypes.func.isRequired,
+}
 export default Projeto;

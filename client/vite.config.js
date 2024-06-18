@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import fs from 'fs';
-import path from 'path';
+// import fs from 'fs';
+// import path from 'path';
 //import mkcert from 'vite-plugin-mkcert'
 
 
@@ -14,11 +14,9 @@ export default defineConfig({
     port: 3000, // Customize the development server port
     open: true, // Automatically open the browser on server start
     verbose: true, // Enable verbose logging
-    https: {
-      key: fs.readFileSync(path.resolve(__dirname, 'key.pem')),
-      cert: fs.readFileSync(path.resolve(__dirname, 'cert.pem')),
-    },
+
   },
+  logLevel: 'silent', // silent
   build: {
     outDir: 'build', // Specify the output directory
     rollupOptions: {

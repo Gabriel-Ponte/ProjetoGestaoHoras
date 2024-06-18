@@ -8,7 +8,10 @@ import FormRowListaTipoTrabalho from './FormRowListaTipoTrabalho';
 import FormRowSelectTipo from './FormRowSelectTipo';
 import { toast } from 'react-toastify';
 
-const GerirTipoTrabalho = () => {
+
+
+
+const GerirTipoTrabalho =  React.memo(() => {
   const [listaTipoTrabalho, setListaTipoTrabalho] = useState([]);
   const [initialState, setInitialState] = useState([]);
   const [verificaAlterado, setVerificaAlterado] = useState({});
@@ -27,17 +30,18 @@ const GerirTipoTrabalho = () => {
       toast.error("Sem permissões para aceder a esta página!");
       navigate('/PaginaAdicionarHoras');
     }
-  }, [user, navigate]);
-  //let StringListaTrabalho = listaTipoTrabalho.map(item => item.TipoTrabalho).join(",");
 
 
-  useEffect(() => {
     dispatch(getTipoTrabalho()).then((res) => {
       const tipoTrabalhoArray = Array.isArray(res.payload.tipoTrabalho) ? res.payload.tipoTrabalho : [];
       setListaTipoTrabalho(tipoTrabalhoArray);
       setInitialState(tipoTrabalhoArray);
     });
-  }, [callUseEffect, dispatch]);
+
+  }, [user, navigate]);
+  //let StringListaTrabalho = listaTipoTrabalho.map(item => item.TipoTrabalho).join(",");
+
+
 
 
   const handleLista = async (e) => {
@@ -91,8 +95,8 @@ const GerirTipoTrabalho = () => {
 
   const handleChangeTipoTrabalho = (e, id) => {
     const value = e.target.value;
-    const name = e.target.id;
-    
+    const name = e.target.name;
+  
     const updatedListaTipoTrabalho = listaTipoTrabalho.map((item, i) => {
       if (item._id === id) {
         if(name === "tipoT"){
@@ -173,17 +177,18 @@ const GerirTipoTrabalho = () => {
       <div className="listaTiposTrabalho">
         {listaTipoTrabalho.map((t, i) => (
           <div className="row text-center" key={i}>
-            <div className="col-md-8 text-center tiposTrabalho">
-              {
+            <div className="col-md-8 text-center tiposTrabalho" key={i + "tt"}>
+              
                 <FormRowListaTipoTrabalho
                   type="textarea"
                   id="TipoTrabalhoProjeto"
                   name="TipoTrabalho"
                   value={t.TipoTrabalho}
+                  keyGet={`tt-${i}`}
                   handleChange={(e) => handleChangeTipoTrabalho(e, t._id)}
                 />
-              }
-              <div className="col-md-12 text-center tiposTrabalho">
+              
+              <div className="col-md-12 text-center tiposTrabalho"  key={i + "stt"}>
                 <FormRowSelectTipo
                     type="text"
                     className="col-md-12"
@@ -193,6 +198,8 @@ const GerirTipoTrabalho = () => {
                     handleChange={(e) => handleChangeTipoTrabalho(e, t._id)}
                     placeholder="Escolha um tipo"
                     value={t.tipo}
+                    key={`sttKey-${t._id}`}
+                    keyGet={`${t._id}`}
                     list={[["Projetos"], ["Geral"], ["Outro"], ["Compensação"], ["Extra"], ["Compensação Domingo"]]}
                 />
                 </div>
@@ -230,9 +237,9 @@ const GerirTipoTrabalho = () => {
         <div className={'row text-center novoTrabalho'}>
           <div className={'col-md-6 ttLabel'}>
             <div className={'form-row'}>
-              <label  className="form-label">
+              <p  className="form-label">
                 Adicionar Tipo de Trabalho:
-              </label>
+              </p>
             </div>
           </div>
           <div className={'col-md-6 ttInput'}>
@@ -256,6 +263,6 @@ const GerirTipoTrabalho = () => {
 
     </Wrapper>
   );
-};
+});
 
 export default GerirTipoTrabalho;

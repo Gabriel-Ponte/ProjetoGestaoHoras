@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import Wrapper from '../assets/wrappers/FormRowSelect';
+import PropTypes from 'prop-types'; 
+
 
 const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, handleLista, className, classNameLabel, classNameInput, classNameResult, todos }) => {
   if (multiple === null) {
@@ -302,5 +304,23 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
     </Wrapper>
   );
 };
+
+
+FormRowSelect.propTypes = {
+  labelText: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  list: PropTypes.array.isRequired, 
+  multiple: PropTypes.bool.isRequired,
+  handleLista: PropTypes.func,
+  className: PropTypes.string,
+  classNameLabel: PropTypes.string, 
+  classNameInput: PropTypes.string, 
+  classNameResult: PropTypes.string,
+  todos: PropTypes.number,
+
+}
+
 
 export default FormRowSelect;

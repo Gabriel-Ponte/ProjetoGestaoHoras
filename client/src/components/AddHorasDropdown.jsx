@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback} from 'react';
 
 import { FaCaretDown } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
@@ -12,23 +12,23 @@ import OptionsPanel from './OptionsPanel';
 
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import PropTypes from 'prop-types'; 
 
 
-
-
-const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipoTrabalho, 
-  values, handleHorasChange, convertToMinutes,
-  arrayTipoTrabalho, matchFoundProjeto, ListaTrabalhoAll,
+const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipoTrabalho, values, handleHorasChange, convertToMinutes, arrayTipoTrabalho, matchFoundProjeto, ListaTrabalhoAll,
   ListaTrabalhoGeral, ListaTrabalhoGeralOther, setListaTrabalhoGeralOther,
   setListaTipoTrabalho, setListaTrabalhoGeral }) => {
 
-    const [StringListaTrabalho, setStringListaTrabalho] = useState();
-    const [StringListaTrabalhoGeral, setStringListaTrabalhoGeral] = useState();
-    const [StringListaTrabalhoGeralOther, setStringListaTrabalhoGeralOther] = useState();
-    const [StringListaTrabalhoCompensacaoD, setStringListaTrabalhoCompensacaoD] = useState();
-    const [listaTrabalhoGeralAdd, setListaTrabalhoGeralAdd] = useState();
-    const [options, setOptions] = useState();
+    const [StringListaTrabalho, setStringListaTrabalho] = useState('');
+    const [StringListaTrabalhoGeral, setStringListaTrabalhoGeral] = useState('');
+    const [StringListaTrabalhoGeralOther, setStringListaTrabalhoGeralOther] = useState('');
+    const [StringListaTrabalhoCompensacaoD, setStringListaTrabalhoCompensacaoD] = useState('');
+    const [listaTrabalhoGeralAdd, setListaTrabalhoGeralAdd] = useState([]);
+    const [options, setOptions] = useState([]);
 
+    const [showProjeto, setShowProjeto] = useState({});
+
+    const dispatch = useDispatch();
 
     useEffect(() => {
       const date = new Date(values.Data);
@@ -80,9 +80,6 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
         .map(item => item.TipoTrabalho)
         .join(",");
 
-
-  
-
       setStringListaTrabalhoCompensacaoD(ListaTrabalhoGeralDomingo);
 
       setStringListaTrabalho(ListaTrabalho);
@@ -93,13 +90,11 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
   
       setOptions(ListaTrabalhoGeralOther?.split(","));
 
-    // eslint-disable-next-line
+     
     }, [ listaTipoTrabalho, values.Data]);
 
 
-  const dispatch = useDispatch();
 
-  const [showProjeto, setShowProjeto] = useState({});
 
 
   // Initialize horasP as an object
@@ -110,38 +105,40 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
     horasP[project._id] = 0;
   });
 
-  const handleTipoTrabalho = async (inputValue) => {
+  // const horasP = useMemo(() => {
+  //   const initialHorasP = {};
+  //   sortedProjetos.forEach(project => {
+  //     initialHorasP[project._id] = 0;
+  //   });
+  //   return initialHorasP;
+  // }, [sortedProjetos]);
 
 
+  const handleTipoTrabalho = useCallback(async (inputValue) => {
     if (inputValue && inputValue.trim() !== "") {
-      const values = StringListaTrabalhoGeral?.split(",");
+      const values = StringListaTrabalhoGeral.split(",");
 
       if (!values.map(value => value.toLowerCase()).includes(inputValue.toLowerCase())) {
-        // Handle when inputValue is not already in StringListaTrabalhoGeral
-
-        // Create a mapping to preserve the original case
         const inputValueMap = new Map();
         let originalCaseInputValue = "";
         if (!options.some(option => option.toLowerCase() === inputValue.toLowerCase())) {
           await dispatch(createTipoTrabalhoOther({ TipoTrabalho: inputValue, tipo: 3 })).then((res) => {
-
             const tipoTrabalhoArray = Array.isArray(res.payload.tipoTrabalho) ? res.payload.tipoTrabalho : [res.payload.tipoTrabalho];
 
             const updatedListaTrabalhoGeral = [...ListaTrabalhoGeral, ...tipoTrabalhoArray];
             const updatedListaTipoTrabalho = [...listaTipoTrabalho, ...tipoTrabalhoArray];
 
-            setListaTipoTrabalho(updatedListaTipoTrabalho,);
+            setListaTipoTrabalho(updatedListaTipoTrabalho);
             setListaTrabalhoGeral(updatedListaTrabalhoGeral);
           })
           originalCaseInputValue = inputValue;
         } else {
           options.forEach(option => inputValueMap.set(option.toLowerCase(), option));
           originalCaseInputValue = inputValueMap.get(inputValue.toLowerCase());
-          // Remove originalCaseInputValue from options
           const updatedOptions = options.filter(option => option.toLowerCase() !== inputValue.toLowerCase());
           setOptions(updatedOptions);
 
-          const normalizedInputValue = originalCaseInputValue.toLowerCase(); // or .toUpperCase()
+          const normalizedInputValue = originalCaseInputValue.toLowerCase();
           const tipoTrabalho = ListaTrabalhoGeralOther.filter(item => item.TipoTrabalho.toLowerCase() === normalizedInputValue);
           const updatedListaTrabalhoGeral = [...ListaTrabalhoGeral, ...tipoTrabalho];
 
@@ -150,40 +147,41 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
           const updatedListaTrabalhoGeralOther = ListaTrabalhoGeralOther.filter(item => item.TipoTrabalho.toLowerCase() !== normalizedInputValue);
           setListaTrabalhoGeralOther(updatedListaTrabalhoGeralOther);
 
-          // tipoTrabalhoArray.filter(item => item.tipo === 3))
+          let NovaStringListaTrabalhoGeralOther = StringListaTrabalhoGeralOther.split(",");
 
-
-          let NovaStringListaTrabalhoGeralOther = StringListaTrabalhoGeralOther?.split(",");
-
-          // Use the mapping to get the original case of inputValue
           NovaStringListaTrabalhoGeralOther = NovaStringListaTrabalhoGeralOther.filter(item => item !== originalCaseInputValue);
 
           setStringListaTrabalhoGeralOther(NovaStringListaTrabalhoGeralOther.join(","));
         }
 
-        let NovaStringListaTrabalhoGeral = StringListaTrabalhoGeral?.split(",");
-
-        // Use the mapping to get the original case of inputValue
+        let NovaStringListaTrabalhoGeral = StringListaTrabalhoGeral.split(",");
 
         NovaStringListaTrabalhoGeral.push(originalCaseInputValue);
 
         setStringListaTrabalhoGeral(NovaStringListaTrabalhoGeral.join(","));
-
       } else {
         toast.error('Valor inserido não permitido!');
       }
     }
-  }
+  }, [StringListaTrabalhoGeral, options, dispatch, ListaTrabalhoGeral, listaTipoTrabalho, ListaTrabalhoGeralOther, StringListaTrabalhoGeralOther]);
 
-  const handleDropdownToggle = (projectId) => {
-    setShowProjeto((prevShowProjeto) => {
-      return {
-        ...prevShowProjeto,
-        [projectId]: !prevShowProjeto[projectId],
-      };
-    });
-  };
 
+  // const handleDropdownToggle = (projectId) => {
+  //   setShowProjeto((prevShowProjeto) => {
+  //     return {
+  //       ...prevShowProjeto,
+  //       [projectId]: !prevShowProjeto[projectId],
+  //     };
+  //   });
+  // };
+
+
+  const handleDropdownToggle = useCallback((projectId) => {
+    setShowProjeto((prevShowProjeto) => ({
+      ...prevShowProjeto,
+      [projectId]: !prevShowProjeto[projectId],
+    }));
+  }, []);
 
 
 
@@ -402,4 +400,24 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
     </>
   );
 });
+
+
+AddHorasDropdown.propTypes = {
+  sortedProjetos: PropTypes.array.isRequired,
+  verificaChange: PropTypes.bool.isRequired,
+  listaTipoTrabalho: PropTypes.array.isRequired,
+  values: PropTypes.object.isRequired,
+  handleHorasChange: PropTypes.func.isRequired,
+  convertToMinutes: PropTypes.func.isRequired,
+  arrayTipoTrabalho: PropTypes.array.isRequired,
+  matchFoundProjeto: PropTypes.array.isRequired,
+  ListaTrabalhoAll: PropTypes.array.isRequired,
+  ListaTrabalhoGeral: PropTypes.array.isRequired,
+  ListaTrabalhoGeralOther: PropTypes.array.isRequired,
+  setListaTrabalhoGeralOther: PropTypes.func.isRequired,
+  setListaTipoTrabalho: PropTypes.func.isRequired,
+  setListaTrabalhoGeral : PropTypes.func.isRequired,
+}
+
+
 export default AddHorasDropdown;

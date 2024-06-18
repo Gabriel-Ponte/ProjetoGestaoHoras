@@ -10,9 +10,9 @@ const PageBtnContainer = ({ small }) => {
   const pages = Array.from({ length: numOfPages }, (_, index) => {
     return index + 1;
   });
-  if (small) {
+  // if (small) {
 
-  }
+  // }
 
   const nextPage = () => {
     let newPage = page + 1;

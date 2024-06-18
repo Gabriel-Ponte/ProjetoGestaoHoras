@@ -602,11 +602,8 @@ const ListaProjetos = () => {
     setFilteredProjetos(filteredP);
     return;
   };
-
-
   
   const getFilteredProjetos = (dateP) => {
-
     const currentDay = dateP.getDate();
     const currentMonth = dateP.getMonth();
     const currentYear = dateP.getFullYear();
@@ -656,7 +653,6 @@ const ListaProjetos = () => {
 
   useEffect(() => {
     verificaDia({ target: { name: 'Data', value: values.Data } });
-     
   }, [verificaDia]);
 
 
@@ -805,7 +801,7 @@ const ListaProjetos = () => {
       }
       setTimeout(() => {
         window.location.reload();
-      }, 1000);
+      }, 500);
     }
   };
 
@@ -1039,9 +1035,6 @@ const ListaProjetos = () => {
   }
 
 
-
-
-
   const matchFoundProjeto = new Array(sortedProjetos.length).fill(false);
   const arrayTipoTrabalho = Object.entries(values.tipoDeTrabalhoHoras).map(([key, value]) => ({ _id: key, ...value }));
 
@@ -1071,7 +1064,7 @@ const ListaProjetos = () => {
 
         return formattedTime;
       } catch (error) {
-        console.error(error)
+
         return timeString;
       }
     }
@@ -1086,6 +1079,7 @@ const ListaProjetos = () => {
 
     return (
       <Wrapper>
+        {sortedProjetos && sortedProjetos.length > 0 &&
         <div className="container">
         {modalBoxActive &&           
         <AddHorasDomingo
@@ -1156,23 +1150,23 @@ const ListaProjetos = () => {
           </div>
           <div className="list-group mx-1 w-auto">
 
-            <AddHorasDropdown
-              sortedProjetos={sortedProjetos}
-              verificaChange={verificaChange}
-              listaTipoTrabalho={listaTipoTrabalho}
-              values={values}
-              handleHorasChange={handleHorasChange}
-              convertToMinutes={convertToMinutes}
-              arrayTipoTrabalho={arrayTipoTrabalho}
-              matchFoundProjeto={matchFoundProjeto}
-              ListaTrabalhoAll={ListaTrabalhoAll}
-              ListaTrabalhoGeral={ListaTrabalhoGeral}
-              ListaTrabalhoGeralOther={ListaTrabalhoGeralOther}
-              setListaTipoTrabalho={setListaTipoTrabalho}
-              setListaTrabalhoGeral={setListaTrabalhoGeral}
-              setListaTrabalhoGeralOther={setListaTrabalhoGeralOther}
-            />
-
+              <AddHorasDropdown
+                sortedProjetos={sortedProjetos}
+                verificaChange={verificaChange}
+                listaTipoTrabalho={listaTipoTrabalho}
+                values={values}
+                handleHorasChange={handleHorasChange}
+                convertToMinutes={convertToMinutes}
+                arrayTipoTrabalho={arrayTipoTrabalho}
+                matchFoundProjeto={matchFoundProjeto}
+                ListaTrabalhoAll={ListaTrabalhoAll}
+                ListaTrabalhoGeral={ListaTrabalhoGeral}
+                ListaTrabalhoGeralOther={ListaTrabalhoGeralOther}
+                setListaTipoTrabalho={setListaTipoTrabalho}
+                setListaTrabalhoGeral={setListaTrabalhoGeral}
+                setListaTrabalhoGeralOther={setListaTrabalhoGeralOther}
+              />
+        
             <div className="card text-center">
               <div className="card-body">
                 <h5 className="card-title">
@@ -1199,6 +1193,7 @@ const ListaProjetos = () => {
             </div>
           </div>
         </div>
+            }
       </Wrapper>
     );
   }

@@ -21,6 +21,7 @@ const convertToInt = (horas) => {
     }
     return horasNumber;
   } catch (error) {
+
     if (horas < 0) {
       return 0.0;
     } else {
@@ -98,6 +99,7 @@ const AddPagamentos = ({ horasExtraEsteMes, horasPorDar, selectedUser, responsab
         return formattedTime;
 
       } catch (error) {
+        console.error(error)
         return timeString.toString();
       }
     }

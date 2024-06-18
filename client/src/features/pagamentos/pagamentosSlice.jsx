@@ -131,11 +131,11 @@ const pagamentosSlice = createSlice({
     .addCase(getPagamentosUtilizadorMes.pending, (state) => {
       state.isLoadingPagamentos = true;
     })
-    .addCase(getPagamentosUtilizadorMes.fulfilled, (state , { payload }) => {
+    .addCase(getPagamentosUtilizadorMes.fulfilled, (state) => {
       //const dia = payload.dia;
       state.isLoadingPagamentos = false;
     })
-    .addCase(getPagamentosUtilizadorMes.rejected, (state, { payload }) => {
+    .addCase(getPagamentosUtilizadorMes.rejected, (state) => {
       state.isLoadingPagamentos = false;
       //toast.error(payload);
     })

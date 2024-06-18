@@ -19,7 +19,7 @@ function VisualizarProjeto() {
 
   useEffect(() => {
     dispatch(listaUtilizadores());
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+   
   }, [listaDeUtilizadores, projeto, isLoading]);
   
   const formattedListUtilizadores = Array.isArray(utilizadores) ? utilizadores.filter(user => user.email.endsWith('isqctag.pt')) : [];
@@ -30,7 +30,7 @@ function VisualizarProjeto() {
     dispatch(getTipoTrabalho()).then((res) => {
       setListaTipoTrabalho(Array.isArray(res.payload.tipoTrabalho) ? res.payload.tipoTrabalho : []);
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+   
   }, []);
 
 
@@ -81,7 +81,7 @@ function VisualizarProjeto() {
         setValues(initialState);
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+   
   }, [projeto, listaTipoTrabalho]);
 
 
@@ -91,7 +91,7 @@ function VisualizarProjeto() {
     }
   }, [projeto]);
 
-  const handleSubmitPiloto = async (e) =>{
+  const handleSubmitPiloto = async () =>{
     try {
       const result = await dispatch(updateProjeto(values));
       if (!result.error) {
@@ -106,7 +106,7 @@ function VisualizarProjeto() {
   }
 
   
-  const handleSubmit = async (e) => {
+  const handleSubmit = async () => {
     if (!values.Nome || !values.Cliente || !values.DataInicio || !values.DataObjetivo || !values.Tema || !values.Piloto) {
       const requiredFields = ['Nome', 'Cliente', 'DataInicio', 'DataObjetivo', 'Tema', 'Piloto'];
       const emptyField = requiredFields.find(field => !values[field]);
@@ -194,7 +194,7 @@ function VisualizarProjeto() {
     return <Loading />;
   }
 
-  const toggleMember = e => {
+  const toggleMember = () => {
     // handle form submission logic here
     setValues({ ...values });
   };

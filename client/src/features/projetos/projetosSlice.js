@@ -57,21 +57,21 @@ export const updateProjeto = createAsyncThunk(
 
 export const getProjeto = createAsyncThunk(
   'projeto/getProjeto',
-  async (id , thunkAPI) => {
+  async (id ) => {
     return getProjetoThunk('/projeto/getProjeto', id);
   }
 );
 
 export const getProjetoAllVersoes = createAsyncThunk(
   'projeto/todasVersoes',
-  async (id , thunkAPI) => {
+  async (id) => {
     return getProjetoAllVersoesThunk('/projeto/todasVersoes', id);
   }
 );
 
 export const getClientes = createAsyncThunk(
   'projeto/getClientes',
-  async (id , thunkAPI) => {
+  async () => {
     return getClientesThunk('/projeto/getClientes');
   }
 );
@@ -117,7 +117,7 @@ const projetoSlice = createSlice({
         state.isLoading = false;
         toast.error(payload);
       })
-      .addCase(deleteProjeto.fulfilled, (state, { payload }) => {
+      .addCase(deleteProjeto.fulfilled, () => {
         toast.success("Projeto Apagado");
       })
       .addCase(deleteProjeto.rejected, (state, { payload }) => {

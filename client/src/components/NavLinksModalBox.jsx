@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import FormRowSelect from './FormRowSelect';
 import { useSelector } from 'react-redux';
+import PropTypes from 'prop-types'; 
 
 
 const NavLinksModalBox = ({ handleExport,handleClose, state}) => {
@@ -125,5 +126,12 @@ const styleBox = {
         </div>
     );
 };
+
+NavLinksModalBox.propTypes = {
+    handleExport: PropTypes.func.isRequired,
+    handleClose: PropTypes.func.isRequired,
+    state: PropTypes.bool.isRequired,
+  }
+
 
 export default NavLinksModalBox;

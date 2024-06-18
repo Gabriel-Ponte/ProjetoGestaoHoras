@@ -89,7 +89,7 @@ const tipoTrabalhoSlice = createSlice({
 
 
 
-      .addCase(deleteTipoTrabalho.fulfilled, (state, { payload }) => {
+      .addCase(deleteTipoTrabalho.fulfilled, () => {
         toast.success('Tipo de Trabalho Apagado');
       })
       .addCase(deleteTipoTrabalho.rejected, (state, { payload }) => {
@@ -98,7 +98,7 @@ const tipoTrabalhoSlice = createSlice({
       .addCase(editTipoTrabalho.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(editTipoTrabalho.fulfilled, (state, { payload }) => {
+      .addCase(editTipoTrabalho.fulfilled, (state) => {
         state.isLoading = false;
         //const tipoTrabalho = payload;
         toast.success('Tipo de Trabalho modificado...');
@@ -111,7 +111,7 @@ const tipoTrabalhoSlice = createSlice({
       .addCase(getTipoTrabalho.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getTipoTrabalho.fulfilled, (state, { payload }) => {
+      .addCase(getTipoTrabalho.fulfilled, (state) => {
         state.isLoading = false;
       })
       .addCase(getTipoTrabalho.rejected, (state, { payload }) => {
@@ -122,7 +122,7 @@ const tipoTrabalhoSlice = createSlice({
       .addCase(createTipoTrabalhoOther.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(createTipoTrabalhoOther.fulfilled, (state, { payload }) => {
+      .addCase(createTipoTrabalhoOther.fulfilled, (state) => {
         state.isLoading = false;
         toast.success('Tipo de Trabalho Adicionado');
       })
