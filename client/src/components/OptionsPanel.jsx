@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { IoAddOutline } from 'react-icons/io5'
+import PropTypes from 'prop-types'; 
 
 function OptionsPanel({ options, handleTipoTrabalho}) {
 
@@ -44,7 +45,7 @@ function OptionsPanel({ options, handleTipoTrabalho}) {
         />
         <button
           type="submit"
-          onClick={(e) => { handleSelectOption(inputValue) }}>
+          onClick={() => { handleSelectOption(inputValue) }}>
             <IoAddOutline /> 
         </button>
       </div>
@@ -66,6 +67,12 @@ function OptionsPanel({ options, handleTipoTrabalho}) {
 
 
     );
+  }
+
+
+  OptionsPanel.propTypes = {
+    options: PropTypes.array.isRequired, 
+    handleTipoTrabalho: PropTypes.func.isRequired,
   }
 
   export default OptionsPanel;

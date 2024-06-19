@@ -2,8 +2,8 @@
 //const OpenSSL = require('node-openssl-cert');
 
 import OpenSSL from "node-openssl-cert";
-import fs from "fs";
-import path from "path";
+// import fs from "fs";
+// import path from "path";
 // const fs = require('fs');
 // const path = require('path');
 
@@ -69,12 +69,12 @@ openssl.generateRSAPrivateKey(options, (err, key) => {
       extensions: selfSignOptions.extensions
     }, (err, crt) => {
       if (err) {
-        console.error('Error self-signing CSR:', err);
+        console.error('Error self-signing CSR:', err ,crt);
         return;
       }
 
-      fs.writeFileSync(path.join(__dirname, 'key.pem'), key);
-      fs.writeFileSync(path.join(__dirname, 'cert.pem'), crt);
+      // fs.writeFileSync(path.join(__dirname, 'key.pem'), key);
+      // fs.writeFileSync(path.join(__dirname, 'cert.pem'), crt);
       console.log('Certificates generated successfully');
     });
   });

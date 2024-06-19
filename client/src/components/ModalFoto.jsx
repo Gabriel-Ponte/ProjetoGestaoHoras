@@ -257,6 +257,10 @@ function ModalFoto({ label, name, value, handleChange, className }) {
 
 ModalFoto.propTypes = {
   label: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([
+    PropTypes.object.isRequired,
+    PropTypes.string.isRequired
+  ]).isRequired,
   name: PropTypes.string.isRequired,
   handleChange: PropTypes.func.isRequired,
   className: PropTypes.string.isRequired,

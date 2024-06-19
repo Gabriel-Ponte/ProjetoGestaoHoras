@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTipoTrabalho, createTipoTrabalho, deleteTipoTrabalho, editTipoTrabalho } from '../features/tipoTrabalho/tipoTrabalhoSlice';
@@ -11,7 +11,7 @@ import { toast } from 'react-toastify';
 
 
 
-const GerirTipoTrabalho =  React.memo(() => {
+const GerirTipoTrabalho =  () => {
   const [listaTipoTrabalho, setListaTipoTrabalho] = useState([]);
   const [initialState, setInitialState] = useState([]);
   const [verificaAlterado, setVerificaAlterado] = useState({});
@@ -263,6 +263,6 @@ const GerirTipoTrabalho =  React.memo(() => {
 
     </Wrapper>
   );
-});
+};
 
-export default GerirTipoTrabalho;
+export default memo(GerirTipoTrabalho);

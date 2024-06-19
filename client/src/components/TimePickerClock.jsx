@@ -1,10 +1,10 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, memo } from 'react';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import PropTypes from 'prop-types'; 
 
-const MemoizedDesktopTimePicker = React.memo(TimePicker);
+const MemoizedDesktopTimePicker = memo(TimePicker);
 
-const TimePickerClock = React.memo(({ disabled, name, projectID, ttID, projectNome, selectedTime, convertToInt }) => {
+const TimePickerClock = ({ disabled, name, projectID, ttID, projectNome, selectedTime, convertToInt }) => {
   // Memoize the convertToInt function
   const memoizedConvertToInt = useCallback((newTime) => {
     const hours = newTime.getHours();
@@ -39,16 +39,20 @@ const TimePickerClock = React.memo(({ disabled, name, projectID, ttID, projectNo
       </div>
     </div>
   );
-});
+};
 
 TimePickerClock.propTypes = {
+  disabled: PropTypes.bool,
   name : PropTypes.string.isRequired,
   projectID: PropTypes.string.isRequired, 
   ttID: PropTypes.string.isRequired, 
   projectNome: PropTypes.string.isRequired,
-  //selectedTime: PropTypes.string.isRequired,
+  selectedTime: PropTypes.oneOfType([
+    PropTypes.bool.isRequired,
+    PropTypes.string.isRequired
+  ]).isRequired,
   convertToInt: PropTypes.func.isRequired,
 }
 
 
-export default TimePickerClock;
+export default memo(TimePickerClock);

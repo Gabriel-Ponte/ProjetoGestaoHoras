@@ -1,4 +1,5 @@
 import Wrapper from '../assets/wrappers/Dias';
+import PropTypes from 'prop-types'; 
 
 const DiasTodosProjetos = ({ _id,numeroHoras, projeto, diaSelected }) => {
 
@@ -73,5 +74,13 @@ const DiasTodosProjetos = ({ _id,numeroHoras, projeto, diaSelected }) => {
 
   );
 };
+
+
+DiasTodosProjetos.propTypes = {
+  _id: PropTypes.string,
+  numeroHoras: PropTypes.number.isRequired,
+  projeto: PropTypes.object.isRequired,
+  diaSelected: PropTypes.object,
+}
 
 export default DiasTodosProjetos;

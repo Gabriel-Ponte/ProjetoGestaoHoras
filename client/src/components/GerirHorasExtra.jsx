@@ -145,7 +145,7 @@ const GerirHorasExtra = () => {
           setCallUseEffect(!callUseEffect);
         }
       }
-    } catch (error) {
+    } catch {
       return "Ocorreu um erro ao recusar o Dia.";
     }
   };

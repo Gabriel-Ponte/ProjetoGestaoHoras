@@ -1,4 +1,5 @@
 import Wrapper from '../assets/wrappers/Dias';
+import PropTypes from 'prop-types'; 
 
 const DiasTodos = ({ _id,horasPossiveis, NumeroHoras, Utilizador, diaSelected }) => {
 
@@ -80,5 +81,16 @@ const DiasTodos = ({ _id,horasPossiveis, NumeroHoras, Utilizador, diaSelected })
 
   );
 };
+
+DiasTodos.propTypes = {
+  _id: PropTypes.string,
+  horasPossiveis: PropTypes.number.isRequired,
+  NumeroHoras: PropTypes.number,
+  Utilizador: PropTypes.object.isRequired,
+  diaSelected: PropTypes.oneOfType([
+    PropTypes.number.isRequired,
+    PropTypes.string.isRequired
+  ]).isRequired,
+}
 
 export default DiasTodos;

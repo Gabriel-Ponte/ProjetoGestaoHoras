@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 
 // import { FaCaretDown } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
@@ -12,11 +12,11 @@ import OptionsPanel from './OptionsPanel';
 
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import PropTypes from 'prop-types'; 
 
 
 
-
-const AddHorasGeralDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipoTrabalho, 
+const AddHorasGeralDropdown = ({ sortedProjetos, verificaChange, listaTipoTrabalho, 
   values, handleHorasChange, convertToMinutes,
   arrayTipoTrabalho, matchFoundProjeto, ListaTrabalhoAll,
   ListaTrabalhoGeral, ListaTrabalhoGeralOther, setListaTrabalhoGeralOther,
@@ -75,7 +75,7 @@ const AddHorasGeralDropdown = React.memo(({ sortedProjetos, verificaChange, list
       setStringListaTrabalhoGeralOther(ListaTrabalhoGeralOther);
   
       setOptions(ListaTrabalhoGeralOther?.split(","));
-    // eslint-disable-next-line
+     
     }, [listaTipoTrabalho, values.Data]);
 
 
@@ -349,5 +349,24 @@ const AddHorasGeralDropdown = React.memo(({ sortedProjetos, verificaChange, list
       </LocalizationProvider>
     </>
   );
-});
-export default AddHorasGeralDropdown;
+};
+
+AddHorasGeralDropdown.propTypes = {
+    sortedProjetos: PropTypes.array.isRequired,
+    verificaChange: PropTypes.bool.isRequired,
+    listaTipoTrabalho: PropTypes.array.isRequired,
+    values: PropTypes.object.isRequired,
+    handleHorasChange: PropTypes.func.isRequired,
+    convertToMinutes: PropTypes.func.isRequired,
+    arrayTipoTrabalho: PropTypes.array.isRequired,
+    matchFoundProjeto: PropTypes.array.isRequired,
+    ListaTrabalhoAll: PropTypes.array.isRequired,
+    ListaTrabalhoGeral: PropTypes.array.isRequired,
+    ListaTrabalhoGeralOther: PropTypes.array.isRequired,
+    setListaTrabalhoGeralOther: PropTypes.func.isRequired,
+    setListaTipoTrabalho: PropTypes.func.isRequired,
+    setListaTrabalhoGeral : PropTypes.func.isRequired,
+  }
+
+
+export default memo(AddHorasGeralDropdown);

@@ -3,6 +3,7 @@ import { AiOutlineArrowUp } from 'react-icons/ai';
 import { BsArrowLeftShort } from 'react-icons/bs';
 import { useState } from 'react';
 import Wrapper from '../assets/wrappers/ListaProjetosHeader';
+import PropTypes from 'prop-types'; 
 
 const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
 
@@ -286,5 +287,15 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
         </Wrapper>
     );
 }
+
+
+ListaProjetosHeader.propTypes = {
+    sortValue: PropTypes.string,
+    handleChange: PropTypes.func.isRequired,
+    finalizado: PropTypes.oneOfType([
+        PropTypes.bool.isRequired,
+        PropTypes.string.isRequired
+      ]).isRequired,
+  }
 
 export default ListaProjetosHeader;

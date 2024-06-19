@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Fragment,useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import links from '../utils/links';
 import { AiOutlineArrowDown } from 'react-icons/ai';
@@ -163,7 +163,7 @@ const NavLinks = () => {
         }
         if(id === 8){
           return (
-            <React.Fragment key={id}>
+            <Fragment key={id}>
           <button style={{ marginTop: '5%' }}
               onClick={handleChangeExportProjetos}
             >
@@ -181,7 +181,7 @@ const NavLinks = () => {
             </button>
 
 
-          </React.Fragment>
+          </Fragment>
           
           )
       }
@@ -190,7 +190,7 @@ const NavLinks = () => {
         if(user.tipo === 2 || user?.tipo === 7){
           return (
     
-        <React.Fragment key={id}>
+        <Fragment key={id}>
 
 
           {localState && <NavLinksModalBox 
@@ -218,12 +218,12 @@ const NavLinks = () => {
             </button>
   
   
-          </React.Fragment>
+          </Fragment>
           
           )
         }else{
         return (
-          <React.Fragment key={id}>
+          <Fragment key={id}>
         <button style={{ marginTop: '5%' }}
             onClick={handleChangeExportHoras}
           >
@@ -243,7 +243,7 @@ const NavLinks = () => {
           </button>
 
 
-        </React.Fragment>
+        </Fragment>
         
         )
     }
@@ -251,7 +251,7 @@ const NavLinks = () => {
 
         if (id === 6 || id === 7) {
           return (
-            <React.Fragment key={id}>
+            <Fragment key={id}>
               <button type="button" 
               className="btn btn-link" 
               onClick={id === 6 ? handleShowProjetos : id === 7 ? handleShowProjetosV : null} >
@@ -310,7 +310,7 @@ const NavLinks = () => {
                   {numOfPages > 1 && <PageBtnContainer small="true" />}
                 </div>
               )}
-            </React.Fragment>
+            </Fragment>
           );
         }
         else {

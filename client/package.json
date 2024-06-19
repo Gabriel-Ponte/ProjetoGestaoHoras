@@ -8,7 +8,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0 --fix",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "serve": "serve -s build"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -18,7 +19,6 @@
     "@reduxjs/toolkit": "^2.2.5",
     "@testing-library/jest-dom": "^6.4.6",
     "axios": "^1.7.2",
-    "buffer": "^6.0.3",
     "date-fns": "^3.6.0",
     "moment": "^2.29.4",
     "node-openssl-cert": "^0.1.42",
@@ -34,17 +34,15 @@
     "web-vitals": "^4.1.1"
   },
   "devDependencies": {
-    "prop-types":"15.8.1",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
-    "esbuild-plugin-eslint": "^0.3.12",
-    "eslint": "^9.4.0",
-    "eslint-plugin-react": "^7.34.2",
-    "eslint-plugin-react-hooks": "^4.6.2",
-    "eslint-plugin-react-refresh": "^0.4.7",
-    "vite": "^5.3.1",
-    "vite-plugin-mkcert": "^1.17.5"
+    "eslint": "^9.5.0",
+    "eslint-plugin-react": "^7.34.3",
+    "globals": "^15.6.0",
+    "prop-types": "15.8.1",
+    "serve": "^14.2.3",
+    "vite": "^5.3.1"
   },
   "eslintConfig": {
     "extends": [

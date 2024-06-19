@@ -8,7 +8,7 @@ import { IoAddCircleOutline } from "react-icons/io5";
 
 import Loading from './Loading';
 import NumberPicker from "react-widgets/NumberPicker";
-
+import PropTypes from 'prop-types'; 
 
 const convertToInt = (horas) => {
   try {
@@ -20,7 +20,7 @@ const convertToInt = (horas) => {
       horasNumber = "0";
     }
     return horasNumber;
-  } catch (error) {
+  } catch {
 
     if (horas < 0) {
       return 0.0;
@@ -212,6 +212,15 @@ const AddPagamentos = ({ horasExtraEsteMes, horasPorDar, selectedUser, responsab
   );
 };
 
+AddPagamentos.propTypes = {
+  horasExtraEsteMes: PropTypes.number.isRequired,
+  horasPorDar: PropTypes.string.isRequired,
+  selectedUser: PropTypes.string,
+  responsableUser: PropTypes.string.isRequired,
+  month: PropTypes.number.isRequired,
+  year: PropTypes.number.isRequired,
+  handleChange: PropTypes.func.isRequired,
+}
 
 
 export default AddPagamentos;

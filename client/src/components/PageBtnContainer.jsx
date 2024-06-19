@@ -2,6 +2,7 @@ import { HiChevronDoubleLeft, HiChevronDoubleRight } from 'react-icons/hi';
 import Wrapper from '../assets/wrappers/PageBtnContainer';
 import { useSelector, useDispatch } from 'react-redux';
 import { changePage } from '../features/allProjetos/allProjetosSlice';
+import PropTypes from 'prop-types'; 
 
 const PageBtnContainer = ({ small }) => {
   const { numOfPages, page } = useSelector((store) => store.allProjetos);
@@ -71,4 +72,9 @@ const PageBtnContainer = ({ small }) => {
   );
 
 };
+
+PageBtnContainer.propTypes = {
+  small: PropTypes.bool.isRequired,
+}
+
 export default PageBtnContainer;

@@ -51,7 +51,7 @@ const VisualizarProjeto = () => {
   const [updatedListaDias, setUpdatedListaDias] = useState([]);
   const [listaTipoTrabalho, setListaTipoTrabalho] = useState([]);
   const [listaVProjeto, setListaVProjeto] = useState([]);
-  const [state, setState] = useState([]);
+  // const [state, setState] = useState([]);
 
 
 
@@ -99,7 +99,7 @@ const VisualizarProjeto = () => {
             }
           })
           .catch((error) => {
-            console.log(error)
+            console.error(error)
           });
       } else {
         const userLogin = user?.user?.login;
@@ -268,12 +268,12 @@ const VisualizarProjeto = () => {
 
     if(event.target.value === "Atual"){
       setValuesVisualizar(values);
-      setState(1);
+      // setState(1);
     }else{
       const selectedProjetoVersion = listaVProjeto.find(projetoVersion => projetoVersion.createdAt === event.target.value);
 
       setValuesVisualizar(createInitialState(selectedProjetoVersion));
-      setState(0);
+      // setState(0);
     }
 
     

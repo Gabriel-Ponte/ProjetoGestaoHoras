@@ -181,7 +181,7 @@ const ListaProjetos = () => {
 
     const matchFoundProjeto = new Array(projetos.length).fill(false);
     const arrayTipoTrabalho = Object.entries(values.tipoDeTrabalhoHoras).map(([key, value]) => ({ _id: key, ...value }));
-    let counter = 0;
+    //let counter = 0;
     return (
         <Wrapper>
             <div className="container">
@@ -244,7 +244,7 @@ const ListaProjetos = () => {
                             <div key={"NewDia" + projeto._id}>
                                 {verificaDiaCalled && values.tipoDeTrabalhoHoras.length !== 0 && Array.isArray(arrayTipoTrabalho) &&
                                     arrayTipoTrabalho.map((item, ID) => {
-                                        counter++;
+                                        // counter++;
                                         const projectTypeArray = projeto.TipoTrabalho ? projeto.TipoTrabalho.split(",") : [];
                                         const itemTypeArray = item.tipoTrabalho ? item.tipoTrabalho.split(",") : [];
                                         const matchFound = new Array(itemTypeArray.length + 1).fill(false);
@@ -252,14 +252,14 @@ const ListaProjetos = () => {
                                         if (projeto._id === item.projeto) {
                                             const valuesHorasTypeArray = values.tipoDeTrabalhoHoras[projeto._id].horas ? values.tipoDeTrabalhoHoras[projeto._id].horas.split(",") : [];
                                             matchFoundProjeto[projeto._id] = true;
-                                            let counter1 = -1;
+                                            // let counter1 = -1;
                                             return (
                                                 <div key={"EditarDia" + ID}>
                                                     {projectTypeArray.map((t, i) =>
                                                         itemTypeArray.map((iT, iId) => {
                                                             if (t === iT) {
                                                                 matchFound[i] = true;
-                                                                counter1++;
+                                                                // counter1++;
                                                                 return (
                                                                     <div className="row mb-3 text-center" key={"EditarDiaTTFound" + iId}>
                                                                         <div className="col-md-3 themed-grid-col">

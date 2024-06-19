@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import PropTypes from 'prop-types'; 
 
 
-const FormRow = ({ type, name, value, handleChange, className, classNameInput, keyGet }) => {
+const FormRow = ({ type, name, value, handleChange, classNameInput, keyGet }) => {
   const id = `myTextarea${type}${name}${value}`;
 
   useEffect(() => {
@@ -29,6 +29,7 @@ const FormRow = ({ type, name, value, handleChange, className, classNameInput, k
             onChange={handleChange}
             className={classNameInput ? classNameInput : 'form__field refresh'}
           />
+
         ) : (
           <input
             id={id}
@@ -44,15 +45,12 @@ const FormRow = ({ type, name, value, handleChange, className, classNameInput, k
   );
 };
 
-
-
 FormRow.propTypes = {
   type: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   handleChange: PropTypes.func.isRequired,
   labelText: PropTypes.string,
-  className: PropTypes.string,
   classNameInput: PropTypes.string,
   keyGet: PropTypes.string.isRequired,
 }

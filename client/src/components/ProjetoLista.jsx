@@ -587,7 +587,10 @@ Projeto.propTypes = {
   LinkResumo: PropTypes.string.isRequired,
   NumeroHorasTotal: PropTypes.string,
   Finalizado: PropTypes.bool.isRequired,
-  // finalizado: PropTypes.bool.isRequired,
+  finalizado: PropTypes.oneOfType([
+    PropTypes.bool.isRequired,
+    PropTypes.string.isRequired
+  ]).isRequired,
   utilizadores: PropTypes.array.isRequired,
   handleAlterado: PropTypes.func.isRequired,
 }

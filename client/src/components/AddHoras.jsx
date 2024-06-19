@@ -1063,8 +1063,7 @@ const ListaProjetos = () => {
         const formattedTime = `${formattedHours}:${formattedMinutes}`;
 
         return formattedTime;
-      } catch (error) {
-
+      } catch {
         return timeString;
       }
     }

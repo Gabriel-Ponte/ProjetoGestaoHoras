@@ -110,13 +110,13 @@ const styleBox = {
                     </Typography>
                     <div className='row col-md-12'>
                     <div className='col-md-6 text-center' >
-                    <button  type="button" className="btn btn-outline-success"  variant="contained" onClick={handleExportButton} sx={{ mt: 2 }}>
+                    <button  type="button" className="btn btn-outline-success" onClick={handleExportButton}>
                         Exportar
                     </button>
                     </div>
                     <div className='col-md-6 text-center'>
  
-                    <button  type="button" className="btn btn-outline-danger" variant="contained" onClick={handleClose} sx={{ mt: 2 }}>
+                    <button  type="button" className="btn btn-outline-danger" onClick={handleClose}>
                         Fechar
                     </button>
                     </div>

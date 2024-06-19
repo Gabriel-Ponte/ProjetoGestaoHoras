@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Wrapper from '../assets/wrappers/FormRowCheckboxMultiple';
+import PropTypes from 'prop-types'; 
 
 const FormRowCheckboxMultiple = ({ labelText, name, value, handleChange, handleChangeSubmit, list, className, classNameLabelResult, classNameLabel, classNameInput, classNameResult }) => {
   // eslint-disable-next-line no-useless-escape
@@ -83,7 +84,7 @@ const FormRowCheckboxMultiple = ({ labelText, name, value, handleChange, handleC
    
   }, [selectedOptions, list]);
 
-  const handleCheckboxChange = (option, id) => {
+  const handleCheckboxChange = (option) => {
     let updatedOptions;
     let updatedIDs;
     
@@ -124,7 +125,8 @@ const FormRowCheckboxMultiple = ({ labelText, name, value, handleChange, handleC
             name={name}
             value={ids[index]}
             checked={selectedOptions.includes(option)}
-            onChange={() => handleCheckboxChange(option, ids[index])}
+            onChange={() => handleCheckboxChange(option)}
+            // onChange={() => handleCheckboxChange(option, ids[index])}
           />
         </div>
       </div>
@@ -149,7 +151,8 @@ const FormRowCheckboxMultiple = ({ labelText, name, value, handleChange, handleC
         {value && (
           <div className={'row text-end'}>
             <div className={classNameLabelResult ? classNameLabelResult : 'form-label text-end'}>
-              <p className="text-end">{'Selecionado: ' || name + ': '}</p>
+            <p className="text-end">{'Selecionado: '}</p>
+              {/* <p className="text-end">{name ? name + ': ' : 'Selecionado: ' }</p> */}
             </div>
             <div className={classNameResult ? classNameResult : 'form-label'}>
               <p className="text-center">{Array.isArray(separatedArray) ? separatedArray.join(', ') : separatedArray}</p>
@@ -160,5 +163,27 @@ const FormRowCheckboxMultiple = ({ labelText, name, value, handleChange, handleC
     </Wrapper>
   );
 };
+
+FormRowCheckboxMultiple.propTypes = {
+  labelText :PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([
+    PropTypes.array.isRequired,
+    PropTypes.string.isRequired
+  ]).isRequired,
+  handleChange: PropTypes.func.isRequired,
+  handleChangeSubmit: PropTypes.func,
+  list: PropTypes.array.isRequired,
+  className: PropTypes.string.isRequired,
+  classNameLabelResult: PropTypes.string.isRequired,
+  classNameLabel: PropTypes.string.isRequired,
+  classNameInput: PropTypes.string.isRequired,
+  classNameResult: PropTypes.string.isRequired,
+}
+
+//PropTypes.oneOfType([
+//   PropTypes.bool.isRequired,
+//   PropTypes.string.isRequired
+// ]).isRequired,
 
 export default FormRowCheckboxMultiple;

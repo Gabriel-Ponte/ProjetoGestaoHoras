@@ -1,11 +1,11 @@
 import Wrapper from '../assets/wrappers/FormRowListaTipoTrabalho';
-
 import { useEffect, useState } from 'react';
+import PropTypes from 'prop-types'; 
 
 //import { useSelector, useDispatch } from 'react-redux';
 //import LoadingSmaller from './LoadingSmaller';
 
-const FormRowListaHorasExtra = ({ type, value, tipoHoras, className, classNameInput, utilizadores, changed }) => {
+const FormRowListaHorasExtra = ({ type, value, tipoHoras, utilizadores, changed }) => {
   const id = `myTextarea${type}${value}`;
 
   //console.log(value)
@@ -309,5 +309,15 @@ const FormRowListaHorasExtra = ({ type, value, tipoHoras, className, classNameIn
     </Wrapper>
   );
 };
+
+FormRowListaHorasExtra.propTypes = {
+  type: PropTypes.string.isRequired,
+  value: PropTypes.object.isRequired,
+  tipoHoras: PropTypes.number.isRequired,
+  handleChange: PropTypes.func,
+  utilizadores: PropTypes.array.isRequired,
+  changed: PropTypes.bool.isRequired,
+}
+
 
 export default FormRowListaHorasExtra;

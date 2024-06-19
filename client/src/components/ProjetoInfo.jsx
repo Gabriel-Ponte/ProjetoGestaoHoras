@@ -1,4 +1,5 @@
 import Wrapper from '../assets/wrappers/ProjetoInfo';
+import PropTypes from 'prop-types'; 
 
 const ProjetoInfo = ({ icon, text }) => {
   return (
@@ -8,4 +9,10 @@ const ProjetoInfo = ({ icon, text }) => {
     </Wrapper>
   );
 };
+
+
+ProjetoInfo.propTypes = {
+  icon: PropTypes.string.isRequired,
+  text: PropTypes.string.isRequired,
+}
 export default ProjetoInfo;

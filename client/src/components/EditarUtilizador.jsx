@@ -103,7 +103,7 @@ const EditarUtilizador = () => {
   };
 
 
-  const toggleMember = e => {
+  const toggleMember = () => {
     setValues({ ...values });
   };
 

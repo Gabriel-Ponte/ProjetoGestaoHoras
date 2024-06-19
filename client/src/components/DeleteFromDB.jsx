@@ -5,6 +5,8 @@ import { deleteProjeto } from '../features/projetos/projetosSlice';
 import { deleteUser } from "../features/utilizadores/utilizadorSlice";
 import { toggleSidebar } from '../features/utilizadores/utilizadorSlice';
 import { AiFillDelete } from 'react-icons/ai';
+import PropTypes from 'prop-types'; 
+
 
 const DeleteFromDB = ({ id, name, isLoading, type }) => {
   const dispatch = useDispatch();
@@ -12,7 +14,7 @@ const DeleteFromDB = ({ id, name, isLoading, type }) => {
   const [showModal, setShowModal] = useState(false);
   const [modalName, setModalName] = useState('');
   const [modalType, setModalType] = useState('');
-  const [setModalId] = useState('');
+  // const [modalID, setModalId] = useState('');
   const handleClose = () => {
     setShowModal(false);
   };
@@ -20,7 +22,7 @@ const DeleteFromDB = ({ id, name, isLoading, type }) => {
   const handleModal = (id, name, type) => {
     setModalName(name);
     setModalType(type);
-    setModalId(id);
+    // setModalId(id);
     setShowModal(true);
   };
 
@@ -93,5 +95,11 @@ const DeleteFromDB = ({ id, name, isLoading, type }) => {
   );
 };
 
+DeleteFromDB.propTypes = {
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  type: PropTypes.string.isRequired,
+}
 
 export default DeleteFromDB;

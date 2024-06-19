@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Wrapper from '../assets/wrappers/FormRowCheckboxMultiple';
+import PropTypes from 'prop-types'; 
 
 const FormRowCheckboxListaClientes = ({ labelText, name, value, handleChange, list, className, classNameLabelResult, classNameLabel, classNameInput, classNameResult }) => {
   // Define state for selected checkboxes
@@ -82,7 +83,8 @@ const FormRowCheckboxListaClientes = ({ labelText, name, value, handleChange, li
         {value && (
           <div className={'row text-end'}>
             <div className={classNameLabelResult ? classNameLabelResult : 'form-label text-end'}>
-              <p className="text-end">{'Selecionado: ' || name + ': '}</p>
+            <p className="text-end">{'Selecionado: '}</p>
+              {/* <p className="text-end">{name ? (name + ': ') : 'Selecionado: ' }</p> */}
             </div>
             <div className={classNameResult ? classNameResult : 'form-label'}>
               <p className="text-center">{selectedOption}</p>
@@ -94,4 +96,22 @@ const FormRowCheckboxListaClientes = ({ labelText, name, value, handleChange, li
   );
 };
 
+FormRowCheckboxListaClientes.propTypes = {
+  labelText: PropTypes.string,
+  name : PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([
+    PropTypes.array.isRequired,
+    PropTypes.string.isRequired
+  ]).isRequired,
+  handleChange: PropTypes.func.isRequired,
+  list: PropTypes.object, 
+  className: PropTypes.string.isRequired, 
+  classNameLabelResult: PropTypes.string.isRequired, 
+  classNameLabel: PropTypes.string.isRequired, 
+  classNameInput: PropTypes.string.isRequired, 
+  classNameResult : PropTypes.string.isRequired,
+}
+
+
+//   labelText,  handleChange, list, className, classNameLabelResult, classNameLabel, classNameInput, classNameResult 
 export default FormRowCheckboxListaClientes;

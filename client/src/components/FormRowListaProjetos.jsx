@@ -1,5 +1,7 @@
 import Wrapper from '../assets/wrappers/FormRowSelectListaProjetos';
 import { useEffect } from 'react';
+import PropTypes from 'prop-types'; 
+
 
 const FormRow = ({ type, name, value, handleChange, className, classNameInput, id }) => {
   const idF = `${id}`;
@@ -40,5 +42,16 @@ const FormRow = ({ type, name, value, handleChange, className, classNameInput, i
     </Wrapper>
   );
 };
+
+FormRow.propTypes = {
+  type: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  className: PropTypes.string,
+  classNameInput: PropTypes.string,
+  id: PropTypes.string.isRequired,
+}
+
 
 export default FormRow;

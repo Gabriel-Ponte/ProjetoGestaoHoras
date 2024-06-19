@@ -287,7 +287,7 @@ const verificaDia = useCallback((e) => {
                     arrayTipoTrabalho={arrayTipoTrabalho}
                     matchFoundProjeto={matchFoundProjeto}
                     ListaTrabalhoAll={listaTipoTrabalho}
-                    setListaTipoTrabalho={setListaTipoTrabalho}
+                    // setListaTipoTrabalho={setListaTipoTrabalho}
                     />
       
                         <div className="card text-center">

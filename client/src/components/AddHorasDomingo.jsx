@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import FormRow from './FormRow';
 import { toast } from 'react-toastify';
-
+import PropTypes from 'prop-types'; 
 
 const AddHorasDomingo = ({ handleDateChoosen,handleClose, state, checkDate,dataReceived, feriadosPortugal}) => {
 
@@ -112,14 +112,13 @@ const verificaDia = useCallback((e) => {
 
 
     return (
-        <div key ="1">
+        <>
             <Modal sx={style} open={open} aria-describedby="modal-modal-description">
                 <Box sx={styleBox}>
                     <Typography className="mb-5" id="modal-modal-title" variant="h4" component="h2">
                         Escolha um dia para Compensar o Domingo
                     </Typography>
-                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-
+                    <div id="modal-modal-description" >
                     <FormRow
                         type="date"
                         className="dataAddHoras form__field__date"
@@ -130,27 +129,36 @@ const verificaDia = useCallback((e) => {
                         value={new Date(data).toLocaleDateString('en-CA')}
                         handleChange={verificaDia}
                     />
+                </div>
 
-
-
-                    </Typography>
+         
                     <div className='row col-md-12'>
                     <div className='col-md-6 text-center' >
-                    <button  type="button" className="btn btn-outline-success"  variant="contained" onClick={handleConfirmButton} sx={{ mt: 2 }}>
+                    <button  type="button" className="btn btn-outline-success"  onClick={handleConfirmButton} >
                         Confirmar
                     </button>
                     </div>
                     <div className='col-md-6 text-center'>
  
-                    <button  type="button" className="btn btn-outline-danger" variant="contained" onClick={handleClose} sx={{ mt: 2 }}>
+                    <button  type="button" className="btn btn-outline-danger" onClick={handleClose} >
                         Fechar
                     </button>
                     </div>
                     </div>
                 </Box>
             </Modal>
-        </div>
+        </>
     );
 };
+
+AddHorasDomingo.propTypes = {
+    handleDateChoosen: PropTypes.func.isRequired,
+    handleClose: PropTypes.func.isRequired, 
+    state: PropTypes.bool.isRequired, 
+    checkDate: PropTypes.func.isRequired,
+    dataReceived: PropTypes.string.isRequired, 
+    feriadosPortugal: PropTypes.func.isRequired,
+
+  }
 
 export default AddHorasDomingo;

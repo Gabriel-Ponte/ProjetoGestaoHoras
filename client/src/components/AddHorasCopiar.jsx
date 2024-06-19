@@ -2,8 +2,9 @@ import { memo, useMemo, useState, useEffect } from 'react';
 import { FormRow } from '../components';
 import { AiOutlineClose } from 'react-icons/ai';
 import LoadingSmaller from './LoadingSmaller';
+import PropTypes from 'prop-types'; 
 
-const AddHorasCopiar = memo(({ verificaCopiarHoras, copiar, DataCopy, verificaDiaLast, handleDia, copyExists, buttonClicked }) => {
+const AddHorasCopiar = ({ verificaCopiarHoras, copiar, DataCopy, verificaDiaLast, handleDia, copyExists, buttonClicked }) => {
   const [loading, setLoading] = useState(false);
   const [copiarValue ,setCopiarValue] = useState(false);
 
@@ -92,6 +93,17 @@ const AddHorasCopiar = memo(({ verificaCopiarHoras, copiar, DataCopy, verificaDi
       )}
     </>
   );
-});
+};
 
-export default AddHorasCopiar;
+
+AddHorasCopiar.propTypes = {
+  verificaCopiarHoras: PropTypes.bool.isRequired,
+  copiar: PropTypes.func.isRequired,
+  DataCopy: PropTypes.object.isRequired,
+  verificaDiaLast: PropTypes.func.isRequired,
+  handleDia: PropTypes.func.isRequired,
+  copyExists: PropTypes.bool.isRequired,
+  buttonClicked: PropTypes.bool.isRequired,
+}
+
+export default memo(AddHorasCopiar);

@@ -264,9 +264,8 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
           {value && name !== 'listaProjetos' && (
             <div className={className ? className : 'row mb-3 text-center'}>
               <div className={classNameLabel ? classNameLabel : 'form-label'}>
-                <p>
-                  {'Selecionado: ' || name + ': '}
-                </p>
+              <p className="text-end">{'Selecionado: '}</p>
+              {/* <p className="text-end">{name ? name + ': ' : 'Selecionado: ' }</p> */}
               </div>
               <div className={classNameResult ? classNameResult : 'form-label'}>
                 <p>

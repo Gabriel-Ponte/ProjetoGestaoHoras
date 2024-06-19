@@ -13,7 +13,11 @@ import pluginReactConfig from "eslint-plugin-react/configs/recommended.js";
         version: "18.2",
       },
     }
-  }
+  }, {
+    rules: {
+      "react/react-in-jsx-scope": "off", // Disable the rule requiring React in scope
+    },
+  },
   ];
   
 

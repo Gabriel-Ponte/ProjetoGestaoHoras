@@ -170,6 +170,7 @@ const ListaHoras = () => {
   
   const handleChangeCalendario = ((dia, mes, ano) => {
     const [selectedDia, selectedMes, selectedAno] = [dia, mes, ano];
+
     setSelectedDay({ dia: selectedDia, mes: selectedMes, ano: selectedAno });
   });
 
@@ -517,8 +518,8 @@ const ListaHoras = () => {
 
 
   useEffect(() => {
-    const month = selectedDay ? selectedDay.mes : today.getMonth();
-    const year = selectedDay ? selectedDay.ano : today.getFullYear();
+    const month = selectedDay ? selectedDay?.mes : today.getMonth();
+    const year = selectedDay ? selectedDay?.ano : today.getFullYear();
     let possibleHoursCount = getPossibleHoursCount(month, year);
     let horasRealizadasCount = 0;
 
@@ -763,7 +764,7 @@ const ListaHoras = () => {
   }, [selectedUser,aceitacao, ferias[0], listaDias]);
 
 
-  const diaSelected = selectedDay ? selectedDay.dia : 0;
+  const diaSelected = selectedDay ? selectedDay?.dia : 0;
   const month = selectedDay ? selectedDay.mes : today.getMonth();
   const year = selectedDay ? selectedDay.ano : today.getFullYear();
 
@@ -1075,7 +1076,7 @@ const ListaHoras = () => {
               </>
             )}
           </div>
-          {(user?.user?.tipo === 7) && parseDurationToHours(horasExtra) > 0 &&
+          {(user?.user?.tipo === 7) && parseDurationToHours(horasExtra) > 0 && (selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro") && 
             <AddPagamentos
               horasExtraEsteMes={horasExtraMensal}
               horasPorDar={horasExtra}
@@ -1257,7 +1258,7 @@ const ListaHoras = () => {
                       } else if (diaSelected === 0) {
                         return (
                           <div>
-                            <h2>Sem Horas inseridas neste mês</h2>; 
+                            <h2>Sem Horas inseridas neste mês</h2>
                           </div>
                         );
                       } else if (diaSelected !== 0 || diaSelected !== "0") {
@@ -1293,7 +1294,8 @@ const ListaHoras = () => {
                       count++;
                       return (
                         <div key={count + selectedUser}>
-                          <Dia key={dia.Data + selectedUser + count} {...dia} horasPossiveis={possibleHours} listaTT={listaTipoTrabalho} deleteDay={deleteDiaConfirm}/>
+                          {/* <Dia key={dia.Data + selectedUser + count} {...dia} horasPossiveis={possibleHours} listaTT={listaTipoTrabalho} deleteDay={deleteDiaConfirm}/> */}
+                          <Dia key={dia.Data + selectedUser + count} {...dia} listaTT={listaTipoTrabalho} deleteDay={deleteDiaConfirm}/>
                         </div>
                       );
                     }

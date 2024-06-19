@@ -378,6 +378,7 @@ const VisualizarHorasProjeto = () => {
   
   // //Change to refresh
   if (loading || !dias || !listaTipoTrabalho) {
+    
     return <Loading />;
   }
 

@@ -4,6 +4,7 @@ import { MdKeyboardArrowLeft } from 'react-icons/md';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import { toast } from 'react-toastify';
 import useFeriadosPortugal from "./FeriadosPortugal";
+import PropTypes from 'prop-types'; 
 
 const CalendarControl = ({ handleChange, inserted, feriados, ferias, compensacao, compensacaoDomingo, inicio, fim, objetivo,aceitacao, vProjeto, todos, numberUsers, horasExtraID, selectedDate }) => {
     const [calendar, setCalendar] = useState(selectedDate ? new Date(selectedDate.ano , selectedDate.mes , 1 ,0 , 0, 0) : new Date());
@@ -13,14 +14,12 @@ const CalendarControl = ({ handleChange, inserted, feriados, ferias, compensacao
     const localDate = new Date();
 
     useEffect(() => {
-        plotDates(calendar);
-         
+        plotDates(calendar);     
     }, []);
 
     useEffect(() => {
         displayMonth();
         displayYear();
-         
     }, [calendar, inicio, vProjeto]);
 
     function daysInMonth(month, year) {
@@ -85,15 +84,15 @@ const CalendarControl = ({ handleChange, inserted, feriados, ferias, compensacao
 
     function navigateToCurrentMonth() {
         let newCalendar;
-        setCalendar((prevCalendar) => {
-            const currentMonth = new Date().getMonth();
-            const currentYear = new Date().getFullYear();
-            handleChange(0, currentMonth, currentYear);
-            newCalendar = new Date(currentYear, currentMonth, 1);
-            plotDates(newCalendar);
-            return newCalendar;
-        });
-    }
+        const currentMonth = new Date().getMonth();
+        const currentYear = new Date().getFullYear();
+
+        handleChange(0, currentMonth, currentYear);
+        newCalendar = new Date(currentYear, currentMonth, 1);
+
+        plotDates(newCalendar);
+        setCalendar(newCalendar);
+}
 
     function displayYear() {
         const yearLabel = document.querySelector(".calendar .calendar-year-label");
@@ -532,10 +531,10 @@ const CalendarControl = ({ handleChange, inserted, feriados, ferias, compensacao
 
 
     function attachEvents() {
-        let todayDate = document.querySelector(".calendar .calendar-today-date");
-        let dateNumber = document.querySelectorAll(".calendar .dateNumber");
+        // let todayDate = document.querySelector(".calendar .calendar-today-date");
+        let dateNumber = document.querySelectorAll(".calendar .number-item");
 
-        todayDate.addEventListener("click", navigateToCurrentMonth);
+        // todayDate.addEventListener("click", navigateToCurrentMonth);
         for (var i = 0; i < dateNumber.length; i++) {
             dateNumber[i].addEventListener("click", selectDate, false);
         }
@@ -562,7 +561,7 @@ const CalendarControl = ({ handleChange, inserted, feriados, ferias, compensacao
                             </button>
                         </div>
                     </div>
-                    <div className="calendar-today-date">
+                    <div className="calendar-today-date"  onClick={navigateToCurrentMonth}>
                         {calWeekDays[localDate.getDay()]} {localDate.getDate()} {calMonthName[localDate.getMonth()]} {localDate.getFullYear()}
                     </div>
                     <div className="calendar-body"></div>
@@ -571,5 +570,23 @@ const CalendarControl = ({ handleChange, inserted, feriados, ferias, compensacao
         </Wrapper>
     );
 };
+
+CalendarControl.propTypes = {
+    handleChange: PropTypes.func.isRequired, 
+    inserted: PropTypes.array, 
+    feriados: PropTypes.array.isRequired, 
+    ferias: PropTypes.array, 
+    compensacao: PropTypes.array, 
+    compensacaoDomingo: PropTypes.array, 
+    inicio: PropTypes.string, 
+    fim: PropTypes.string, 
+    objetivo: PropTypes.string,
+    aceitacao: PropTypes.array, 
+    vProjeto: PropTypes.array, 
+    todos: PropTypes.bool, 
+    numberUsers: PropTypes.number, 
+    horasExtraID: PropTypes.string, 
+    selectedDate: PropTypes.object, 
+  }
 
 export default CalendarControl;

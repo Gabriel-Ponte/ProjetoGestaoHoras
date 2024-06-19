@@ -1,6 +1,6 @@
 
-import { useState, useEffect, useCallback} from 'react';
-
+import { memo, useState, useEffect, useCallback } from 'react';
+//, useMemo
 import { FaCaretDown } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
 import { createTipoTrabalhoOther } from '../features/tipoTrabalho/tipoTrabalhoSlice';
@@ -15,7 +15,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import PropTypes from 'prop-types'; 
 
 
-const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipoTrabalho, values, handleHorasChange, convertToMinutes, arrayTipoTrabalho, matchFoundProjeto, ListaTrabalhoAll,
+const AddHorasDropdown = ({ sortedProjetos, verificaChange, listaTipoTrabalho, values, handleHorasChange, convertToMinutes, arrayTipoTrabalho, matchFoundProjeto, ListaTrabalhoAll,
   ListaTrabalhoGeral, ListaTrabalhoGeralOther, setListaTrabalhoGeralOther,
   setListaTipoTrabalho, setListaTrabalhoGeral }) => {
 
@@ -35,6 +35,8 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
       const dayStart = new Date(Date.UTC(2023, 11, 1, 0, 0, 0));
       const dayEnd = new Date(Date.UTC(2023, 11, 10, 0, 0, 0));
 
+      // const isWithinRange = (date) => date >= dayStart && date <= dayEnd;
+
       const dateDay = date.getDate();
       const dateMonth = date.getMonth();
       const dateYear = date.getFullYear();
@@ -46,6 +48,7 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
       const endDay = dayEnd.getDate();
 
       let ListaTrabalhoGeralString = [];
+
 
       if((dateDay >=  startDay && dateMonth === startMonth && dateYear === startYear)  || dateYear > startYear || dateMonth > startMonth){
         if((dateDay <=  endDay && dateMonth === startMonth && dateYear === startYear)){
@@ -92,9 +95,6 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
 
      
     }, [ listaTipoTrabalho, values.Data]);
-
-
-
 
 
   // Initialize horasP as an object
@@ -166,16 +166,6 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
   }, [StringListaTrabalhoGeral, options, dispatch, ListaTrabalhoGeral, listaTipoTrabalho, ListaTrabalhoGeralOther, StringListaTrabalhoGeralOther]);
 
 
-  // const handleDropdownToggle = (projectId) => {
-  //   setShowProjeto((prevShowProjeto) => {
-  //     return {
-  //       ...prevShowProjeto,
-  //       [projectId]: !prevShowProjeto[projectId],
-  //     };
-  //   });
-  // };
-
-
   const handleDropdownToggle = useCallback((projectId) => {
     setShowProjeto((prevShowProjeto) => ({
       ...prevShowProjeto,
@@ -183,6 +173,18 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
     }));
   }, []);
 
+  const renderTimePickerClock = useCallback((obtainKey,project, t, ttID, value, dis) => (
+    <TimePickerClock
+      disabled = {dis}
+      key={obtainKey}
+      name={t}
+      selectedTime={convertToMinutes(value)}
+      projectID={project._id}
+      ttID={ttID}
+      projectNome={project.Nome}
+      convertToInt={handleHorasChange}
+    />
+  ), [convertToMinutes, handleHorasChange]);
 
 
   return (
@@ -190,7 +192,7 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         {sortedProjetos.map((project, idProjeto) => {
           return (
-            <div className="list-group-item" key={project._id}>
+            <div className="list-group-item" key={"teste" +project._id}>
               <div className="row mb-3 text-center">
                 <div className="col-md-4 text-end themed-grid-col">
                   <h5>{project.Nome}</h5>
@@ -211,7 +213,7 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
 
                         <div className="row mb-3 text-center" key={"NewDia" + project._id}>
                           {!verificaChange && (
-                            (project.Nome !== "Geral" ? StringListaTrabalho : StringListaTrabalhoGeral)?.split(",").map((t, i) => {
+                            (project.Nome !== "Geral" ? StringListaTrabalho : StringListaTrabalhoGeral)?.split(",").map((t) => {
   
                               const ttID = listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(",");
                               let value = "";
@@ -227,17 +229,7 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
                                   }
                                 }
                               }
-                              return (
-                                <TimePickerClock
-                                  key={`New${i}-${project._id}-${ttID}`}
-                                  name={t}
-                                  selectedTime={convertToMinutes(value)}
-                                  projectID={project._id}
-                                  ttID={ttID}
-                                  projectNome={project.Nome}
-                                  convertToInt={handleHorasChange}
-                                />
-                              )
+                              return renderTimePickerClock(`New-${project._id}-${ttID}`, project, t, ttID, value);
                             })
                           )
                           }
@@ -245,7 +237,7 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
                             <OptionsPanel options={options} handleTipoTrabalho={handleTipoTrabalho} />
                           )}
 
-                          <div key={"NewDia" + project._id}>
+                          <div key={"EditDia" + project._id}>
                             {verificaChange && values.tipoDeTrabalhoHoras?.length !== 0 && Array.isArray(arrayTipoTrabalho) &&
                               arrayTipoTrabalho.map((item, ID) => {
                                 const itemTypeArray = item.tipoTrabalho ? item.tipoTrabalho?.split(",") : [];
@@ -264,42 +256,38 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
 
                                       {(((values?.accepted === 5 || values?.accepted === 4) && project.Nome === "Geral") ?  StringListaTrabalhoCompensacaoD :  project.Nome !== "Geral" ? StringListaTrabalho : StringListaTrabalhoGeral)?.split(",").map((t, i) =>
                                         itemTypeArray.map((iT, iId) => {  
+                                          
 
                                           if ((project.Nome !== "Geral" ? ListaTrabalhoAll[i]._id : listaTrabalhoGeralAdd[i]._id) === iT) {
                                             matchFound[i] = true;
+                                            const val = valuesHorasTypeArray[iId] != null && !isNaN(valuesHorasTypeArray[iId]) ? convertToMinutes(valuesHorasTypeArray[iId]): [];
+                                            const ttID = listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(",");
+                                            const dis = (project.Nome !== "Geral" ? ListaTrabalhoAll[i].tipo : listaTrabalhoGeralAdd[i].tipo) === 6;
+                                            return renderTimePickerClock(`Edit-${i}-true`, project, t, ttID, val, dis);
 
-                                            return (
-                                              <TimePickerClock
-                                              disabled={listaTrabalhoGeralAdd[i].tipo === 6}
-                                                key={i}
-                                                name={t}
-                                                selectedTime={valuesHorasTypeArray[iId] != null && !isNaN(valuesHorasTypeArray[iId])
-                                                  ? convertToMinutes(valuesHorasTypeArray[iId])
-                                                  : []}
-                                                projectID={project._id}
-                                                ttID={listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(",")}
-                                                projectNome={project.Nome}
-                                                convertToInt={handleHorasChange}
-                                              />
-                                            );
+                                            // return (
+                                            //   <TimePickerClock
+                                            //     disabled={listaTrabalhoGeralAdd[i]?.tipo === 6}
+                                            //     key={i}
+                                            //     name={t}
+                                            //     selectedTime={valuesHorasTypeArray[iId] != null && !isNaN(valuesHorasTypeArray[iId])
+                                            //       ? convertToMinutes(valuesHorasTypeArray[iId])
+                                            //       : []}
+                                            //     projectID={project._id}
+                                            //     ttID={listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(",")}
+                                            //     projectNome={project.Nome}
+                                            //     convertToInt={handleHorasChange}
+                                            //   />
+                                            // );
                                           } else {
-
                                             if (iId === itemTypeArray?.length - 1) {
                                               if (!matchFound[i]) {
-                                                return (
-                                                  <TimePickerClock
-                                                    key={i}
-                                                    name={t}
-                                                    selectedTime={isNaN(values.tipoDeTrabalhoHoras[project._id]?.[t])}
-                                                    projectID={project._id}
-                                                    ttID={listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(",")}
-                                                    projectNome={project.Nome}
-                                                    convertToInt={handleHorasChange}
-                                                  />
-                                                );
+                                                const val = isNaN(values?.tipoDeTrabalhoHoras[project._id]?.[t]);
+                                                const ttID = listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(",");
+                                                return renderTimePickerClock(`Edit-${i}-false`, project, t, ttID, val);
                                               }
                                             }
-                                            return (<div key= {i}></div>);
+                                            // return (<div key= {"teste" + i}></div>);
                                           }
                                         }
                                         )
@@ -308,28 +296,29 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
 
                                       {project.Nome === "Geral" && StringListaTrabalhoGeralOther?.length > 0 && StringListaTrabalhoGeralOther?.split(",").map((t, i) =>
                                         itemTypeArray.map((iT, iId) => {
-
-                                          if ((project.Nome === "Geral" && ListaTrabalhoGeralOther[i]?._id) === iT) {
-  
+                          
+                                          if ((ListaTrabalhoGeralOther[i]?._id) === iT) {
+                   
                                             matchFound[i] = true;
-                                            return (
-                                              <TimePickerClock
-                                                key={i}
-                                                name={t}
-                                                selectedTime={
-                                                  valuesHorasTypeArray[iId] != null && !isNaN(valuesHorasTypeArray[iId])
-                                                    ? convertToMinutes(valuesHorasTypeArray[iId])
-                                                    : []
-                                                }
-                                                projectID={project._id}
-                                                ttID={listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(",")}
-                                                projectNome={project.Nome}
-                                                convertToInt={handleHorasChange}
-                                              />
-                                            );
-                                          } else {
-                                            return (<div key={i}></div>);
-                                          }
+                                            const ttID = listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(",");
+                                            const val =  valuesHorasTypeArray[iId] != null && !isNaN(valuesHorasTypeArray[iId])  ? convertToMinutes(valuesHorasTypeArray[iId]) : [];
+                                             return renderTimePickerClock(`Edit-Geral-${i}-true`, project, t, ttID, val);
+                                            // return (
+                                            //   <TimePickerClock
+                                            //     key={i}
+                                            //     name={t}
+                                            //     selectedTime={
+                                            //       valuesHorasTypeArray[iId] != null && !isNaN(valuesHorasTypeArray[iId])
+                                            //         ? convertToMinutes(valuesHorasTypeArray[iId])
+                                            //         : []
+                                            //     }
+                                            //     projectID={project._id}
+                                            //     ttID={listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(",")}
+                                            //     projectNome={project.Nome}
+                                            //     convertToInt={handleHorasChange}
+                                            //   />
+                                            // );
+                                          } 
                                         }
                                         )
                                       )}
@@ -353,25 +342,28 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
                                               }
                                             }
                                           }
-                                          return (
-                                            <TimePickerClock
-                                              key={i}
-                                              name={t}
-                                              selectedTime={convertToMinutes(value)}
-                                              projectID={project._id}
-                                              ttID={ttID}
-                                              projectNome={project.Nome}
-                                              convertToInt={handleHorasChange}
-                                            />
-                                          )
+                                          const val = value;
+                                          return renderTimePickerClock(`EditarDiaProjetoNotFound-${i}`, project, t, ttID, val);
+                                          // return (
+                                          //   <TimePickerClock
+                                          //     key={i}
+                                          //     name={t}
+                                          //     selectedTime={convertToMinutes(value)}
+                                          //     projectID={project._id}
+                                          //     ttID={ttID}
+                                          //     projectNome={project.Nome}
+                                          //     convertToInt={handleHorasChange}
+                                          //   />
+                                          // )
                                         }
                                         )
                                         }
                                       </div>
                                     );
-                                  } else{
-                                    return (<></>);
-                                  }
+                                  } 
+                                  // else{
+                                  //   return (<></>);
+                                  // }
                                 }
                               }
                               )
@@ -381,9 +373,8 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
                       </div>
                     </div>
 
-
                     <div className={`col-md-2  text-start ${showProjeto[project._id] ? "hidden-dropdown" : "show-dropdown"}`}>
-                      {values.tipoDeTrabalhoHoras[project._id]?.horas && values.tipoDeTrabalhoHoras[project._id]?.horas?.split(",").map((t, i) => {
+                      {values.tipoDeTrabalhoHoras[project._id]?.horas && values.tipoDeTrabalhoHoras[project._id]?.horas?.split(",").map((t) => {
                         horasP[project._id] += +t;
                         return null;
                       })}
@@ -399,8 +390,7 @@ const AddHorasDropdown = React.memo(({ sortedProjetos, verificaChange, listaTipo
       </LocalizationProvider>
     </>
   );
-});
-
+};
 
 AddHorasDropdown.propTypes = {
   sortedProjetos: PropTypes.array.isRequired,
@@ -419,5 +409,4 @@ AddHorasDropdown.propTypes = {
   setListaTrabalhoGeral : PropTypes.func.isRequired,
 }
 
-
-export default AddHorasDropdown;
+export default memo(AddHorasDropdown);

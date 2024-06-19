@@ -78,7 +78,7 @@ const ProjetoListaFolder = () => {
           type='file'
           id='fileInput'
           webkitdirectory='true'
-          directory='true'
+          // directory='true'
           style={{ display: 'none' }}
           // onChange={(event) => handleDirectoryChange(event)}
         />

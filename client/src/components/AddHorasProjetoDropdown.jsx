@@ -1,14 +1,14 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 
 
 import TimePickerClock from './TimePickerClock';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import PropTypes from 'prop-types'; 
 
-
-const AddHorasProjetoDropdown = React.memo(({ sortedProjetos,verificaChange, listaTipoTrabalho, 
-  values, handleHorasChange, convertToMinutes, arrayTipoTrabalho, matchFoundProjeto, ListaTrabalhoAll, setListaTipoTrabalho }) => {
+const AddHorasProjetoDropdown = ({ sortedProjetos,verificaChange, listaTipoTrabalho, 
+  values, handleHorasChange, convertToMinutes, arrayTipoTrabalho, matchFoundProjeto, ListaTrabalhoAll }) => {
 
     const [StringListaTrabalho, setStringListaTrabalho] = useState();
 
@@ -201,7 +201,7 @@ const AddHorasProjetoDropdown = React.memo(({ sortedProjetos,verificaChange, lis
                     <div className={`col-md-2  text-start `}>
                       {
     
-                      values.tipoDeTrabalhoHoras[sortedProjetos?.projeto?._id]?.horas && values.tipoDeTrabalhoHoras[sortedProjetos?.projeto?._id]?.horas?.split(",").map((t, i) => {
+                      values.tipoDeTrabalhoHoras[sortedProjetos?.projeto?._id]?.horas && values.tipoDeTrabalhoHoras[sortedProjetos?.projeto?._id]?.horas?.split(",").map((t) => {
                         horasP[sortedProjetos?.projeto?._id] += +Number(t);
                         return null;
                       })}
@@ -217,5 +217,22 @@ const AddHorasProjetoDropdown = React.memo(({ sortedProjetos,verificaChange, lis
       </LocalizationProvider>
     </>
   );
-});
-export default AddHorasProjetoDropdown;
+};
+
+
+
+AddHorasProjetoDropdown.propTypes = {
+  sortedProjetos: PropTypes.object.isRequired,
+  verificaChange: PropTypes.bool.isRequired,
+  listaTipoTrabalho: PropTypes.array.isRequired,
+  values: PropTypes.object.isRequired,
+  handleHorasChange: PropTypes.func.isRequired,
+  convertToMinutes: PropTypes.func.isRequired,
+  arrayTipoTrabalho: PropTypes.array.isRequired,
+  matchFoundProjeto: PropTypes.array.isRequired,
+  ListaTrabalhoAll: PropTypes.array.isRequired,
+  // setListaTipoTrabalho: PropTypes.func.isRequired,
+  
+}
+
+export default memo(AddHorasProjetoDropdown);

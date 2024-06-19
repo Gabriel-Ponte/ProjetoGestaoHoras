@@ -3,6 +3,7 @@ import Wrapper from '../assets/wrappers/FormRowListaTipoTrabalho';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import LoadingSmaller from './LoadingSmaller';
+import PropTypes from 'prop-types'; 
 
 const FormRowListaHorasExtraPagas = ({ type, value,  utilizadores, changed  }) => {
   const id = `myTextarea${type}${value}`;
@@ -56,5 +57,16 @@ const FormRowListaHorasExtraPagas = ({ type, value,  utilizadores, changed  }) =
     </Wrapper>
   );
 };
+
+FormRowListaHorasExtraPagas.propTypes = {
+  type: PropTypes.oneOfType([
+    PropTypes.bool.isRequired,
+    PropTypes.string.isRequired
+  ]).isRequired,
+  value:PropTypes.object.isRequired,
+  utilizadores: PropTypes.array.isRequired,
+  changed: PropTypes.bool.isRequired,
+}
+
 
 export default FormRowListaHorasExtraPagas;

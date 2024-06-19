@@ -3,6 +3,7 @@ import { AiOutlineArrowUp } from 'react-icons/ai';
 import { BsArrowLeftShort } from 'react-icons/bs';
 import { useState } from 'react';
 import Wrapper from '../assets/wrappers/ListaProjetosHeader';
+import PropTypes from 'prop-types'; 
 
 const FormRowListaHorasExtraPagasHeader = ({ sortValue, tipoHoras, handleChange, pagas }) => {
 
@@ -355,5 +356,12 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, tipoHoras, handleChange,
         </Wrapper>
     );
 }
+
+FormRowListaHorasExtraPagasHeader.propTypes = {
+    sortValue: PropTypes.string.isRequired,
+    tipoHoras:PropTypes.number.isRequired,
+    handleChange: PropTypes.func.isRequired,
+    pagas: PropTypes.number.isRequired,
+  }
 
 export default FormRowListaHorasExtraPagasHeader;

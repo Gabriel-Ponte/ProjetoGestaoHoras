@@ -4,8 +4,9 @@ import { useDispatch } from 'react-redux';
 import { getProjetoList } from '../features/projetos/projetosSlice';
 import { AiFillDelete } from 'react-icons/ai';
 import { getDiaID } from '../features/dias/diasSlice';
+import PropTypes from 'prop-types'; 
 
-const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, associated, horasPossiveis, listaTT, accepted, deleteDay }) => {
+const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, associated, listaTT, accepted, deleteDay }) => {
   const dispatch = useDispatch();
   const [projeto, setProjeto] = useState([]);
   const [diaAssociated, setDiaAssociated] = useState([]);
@@ -196,5 +197,20 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, associat
 
   );
 };
+
+
+// _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, associated, horasPossiveis, listaTT, accepted, deleteDay
+Dia.propTypes = {
+  _id: PropTypes.string.isRequired,
+  Data: PropTypes.string.isRequired,
+  NumeroHoras: PropTypes.number.isRequired,
+  Utilizador: PropTypes.string.isRequired,
+  tipoDeTrabalhoHoras: PropTypes.array.isRequired,
+  associated: PropTypes.string,
+  horasPossiveis: PropTypes.number.isRequired,
+  listaTT: PropTypes.array.isRequired,
+  accepted: PropTypes.number.isRequired,
+  deleteDay: PropTypes.func.isRequired,
+}
 
 export default Dia;

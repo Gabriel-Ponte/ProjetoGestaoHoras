@@ -1,7 +1,8 @@
+import { memo } from 'react';
 import Wrapper from '../assets/wrappers/FormRowSelectTipo';
 import PropTypes from 'prop-types'; 
 
-const FormRowSelectTipo =  React.memo(({ labelText, name, value, handleChange, list, className , keyGet}) => {
+const FormRowSelectTipo =  ({ labelText, name, value, handleChange, list, className , keyGet}) => {
   if(value === 1 && name === "tipo"){
     value = "Engenharia de Processos";
   }else if(value === 2 && name === "tipo"){
@@ -74,7 +75,7 @@ const FormRowSelectTipo =  React.memo(({ labelText, name, value, handleChange, l
     </div>
     </Wrapper>
   );
-});
+};
 
 FormRowSelectTipo.propTypes = {
   labelText: PropTypes.string.isRequired,
@@ -82,8 +83,9 @@ FormRowSelectTipo.propTypes = {
   value: PropTypes.number.isRequired,
   handleChange: PropTypes.func.isRequired,
   list: PropTypes.array,
+  className: PropTypes.string,
   keyGet: PropTypes.string,
 }
 
-export default FormRowSelectTipo;
+export default memo(FormRowSelectTipo);
   
