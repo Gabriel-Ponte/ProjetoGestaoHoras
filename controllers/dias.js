@@ -107,8 +107,9 @@ const sortHorasExtraTipo = async (result, sort) => {
   return result;
 }
 
-const sortHorasExtra = (result, sort) => {
+const sortHorasExtra = async (result, sort) => {
   if (sort === "-Horas") {
+    result = await result;
     result = result.sort((a, b) => {
       const horasA = parseFloat(a.NumeroHoras);
       const horasB = parseFloat(b.NumeroHoras);
@@ -122,6 +123,7 @@ const sortHorasExtra = (result, sort) => {
       return 0;
     });
   } else if (sort === "Horas") {
+    result = await result;
     result = result.sort((a, b) => {
       const horasA = parseFloat(a.NumeroHoras);
       const horasB = parseFloat(b.NumeroHoras);
