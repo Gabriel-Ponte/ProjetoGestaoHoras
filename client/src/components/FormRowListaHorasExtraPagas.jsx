@@ -30,7 +30,7 @@ const FormRowListaHorasExtraPagas = ({ type, value,  utilizadores, changed  }) =
     const mes = (value.Mes + 1)
     data =  (mes < 10 ? "0": "")  + mes + "/" + value.Ano;
     setDate(data)
-  }, [id ,initialDate,initialNameResponsavel, changed, value, utilizadores]);
+  }, [id ,initialDate,initialNameResponsavel, changed, value,value.length, utilizadores, isLoadingPagamentos]);
 
   if(isLoadingPagamentos){
     return (

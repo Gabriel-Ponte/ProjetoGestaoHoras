@@ -11,8 +11,6 @@ import { IoMdClose } from 'react-icons/io';
 import { toast } from 'react-toastify';
 import FormRowListaHorasExtraPagas from './FormRowListaHorasExtraPagas';
 import FormRowListaHorasExtraPagasHeader from './FormRowListaHorasExtraPagasHeader';
-
-
 import LoadingSmaller from './LoadingSmaller';
 
 
@@ -21,6 +19,7 @@ const GerirHorasExtra = () => {
   const dispatch = useDispatch();
 
   const [listaHorasExtra, setListaHorasExtra] = useState([]);
+  const [listaPagamentos, setListaPagamentos] = useState([]);
   const [verificaAlterado, setVerificaAlterado] = useState(0);
   const [verificaTipo, setVerificaTipo] = useState(2);
   const [loaded, setLoaded] = useState(false);
@@ -45,7 +44,7 @@ const GerirHorasExtra = () => {
     }
     handleChangeTipo(2)
 
-   
+
   }, [user?.user, navigate]);
 
   useEffect(() => {
@@ -61,7 +60,7 @@ const GerirHorasExtra = () => {
     } else if (verificaAlterado === 3) {
       listHorasExtraPagas();
     }
-   
+
   }, [callUseEffect, dispatch]);
 
 
@@ -111,8 +110,9 @@ const GerirHorasExtra = () => {
     try {
       dispatch(getAllPagamentos()).then((res) => {
         const horasExtraArray = Array.isArray(res?.payload?.pagamentosAll) ? res?.payload?.pagamentosAll : [];
-        setListaHorasExtra(horasExtraArray);
+        setListaPagamentos(horasExtraArray)
         setLoaded(true);
+
       });
     } catch (error) {
       console.error(error);
@@ -165,7 +165,7 @@ const GerirHorasExtra = () => {
 
 
     if (verificaAlterado === 3) {
-      if (isLoading) return;
+      if (isLoading || isLoadingPagamentos) return;
       dispatch(handleChangePagamentos({ name: 'sort', value: tipo }));
     } else {
       dispatch(handleChangePagamentos({ name: 'sort', value: tipo }));
@@ -176,30 +176,31 @@ const GerirHorasExtra = () => {
 
 
   const handleChangeTipo = (tipo) => {
-      dispatch(handleChangePagamentos({ name: 'tipo', value: tipo }));
-      setVerificaTipo(tipo);
-      setCallUseEffect(!callUseEffect);
+    dispatch(handleChangePagamentos({ name: 'tipo', value: tipo }));
+    setVerificaTipo(tipo);
+    setCallUseEffect(!callUseEffect);
   };
 
 
-  const handleChangeButtonClicked = (tipo) => {
-    setVerificaAlterado(tipo);
-;
+  const handleChangeButtonClicked = (async (tipo) => {
     if (tipo === 0) {
-      handleChangeTipo(2)
-      listHorasExtra()
-    }
-    else if (tipo === 1) {
-      handleChangeTipo(1)
+      handleChangeTipo(2);
+      listHorasExtra();
+      setVerificaAlterado(tipo);
+    } else if (tipo === 1) {
+      handleChangeTipo(1);
       listAcceptedHorasExtra();
+      setVerificaAlterado(tipo);
     } else if (tipo === 2) {
-          handleChangeTipo(1)
+      handleChangeTipo(1);
       listDeclinedHorasExtra();
+      setVerificaAlterado(tipo);
     } else if (tipo === 3) {
-      listHorasExtraPagas();
+      await listHorasExtraPagas();
+      setVerificaAlterado(tipo);
     }
 
-};
+  });
 
 
   return (
@@ -212,7 +213,7 @@ const GerirHorasExtra = () => {
           <div className="col-md-3">
             <button type='button'
               className={`btn btn-outline-primary ${verificaAlterado === 0 ? 'active' : ''}`}
-              disabled={isLoading}
+              disabled={isLoading || isLoadingPagamentos}
 
               onClick={() => handleChangeButtonClicked(0)}>
               Horas Extra por Aceitar
@@ -221,7 +222,7 @@ const GerirHorasExtra = () => {
           <div className="col-md-3">
             <button type='button'
               className={`btn btn-outline-primary ${verificaAlterado === 1 ? 'active' : ''}`}
-              disabled={isLoading}
+              disabled={isLoading || isLoadingPagamentos}
               onClick={() => handleChangeButtonClicked(1)}>
               Horas Extra Aceites
             </button>
@@ -229,7 +230,7 @@ const GerirHorasExtra = () => {
           <div className="col-md-3">
             <button type='button'
               className={`btn btn-outline-primary ${verificaAlterado === 2 ? 'active' : ''}`}
-              disabled={isLoading}
+              disabled={isLoading || isLoadingPagamentos}
               onClick={() => handleChangeButtonClicked(2)}>
               Horas Extra Recusadas
             </button>
@@ -238,7 +239,7 @@ const GerirHorasExtra = () => {
           <div className="col-md-3">
             <button type='button'
               className={`btn btn-outline-primary ${verificaAlterado === 3 ? 'active' : ''}`}
-              disabled={isLoading}
+              disabled={isLoading || isLoadingPagamentos}
               onClick={() => handleChangeButtonClicked(3)}>
               Horas Extra Pagas
             </button>
@@ -247,7 +248,7 @@ const GerirHorasExtra = () => {
         </div>
       </div>
       <>
-        {isLoading ? (
+        {isLoading || isLoadingPagamentos || !loaded ? (
           <div className='d-flex flex-column justify-content-center align-items-center h-500' style={{ maxHeight: '200px' }}>
             <LoadingSmaller />
           </div>
@@ -257,34 +258,34 @@ const GerirHorasExtra = () => {
               <div>
                 {(verificaAlterado !== 3) &&
                   <div className='row mt-4 mb-4'>
-                  <div className={`${verificaAlterado === 0 ? 'col-md-6' : 'col-md-4'}`}>
+                    <div className={`${verificaAlterado === 0 ? 'col-md-6' : 'col-md-4'}`}>
                       <button type='button'
                         className={`btn btn-outline-secondary ${verificaTipo === 2 ? 'active' : ''}`}
-                        disabled={isLoading}
+                        disabled={isLoading || isLoadingPagamentos}
                         onClick={() => handleChangeTipo(2)}>
                         Horas Extra
                       </button>
                     </div>
                     <div className={`${verificaAlterado === 0 ? 'col-md-6' : 'col-md-4'}`}>
-                    <button type='button'
+                      <button type='button'
                         className={`btn btn-outline-secondary ${verificaTipo === 3 ? 'active' : ''}`}
-                        disabled={isLoading}
+                        disabled={isLoading || isLoadingPagamentos}
                         onClick={() => handleChangeTipo(3)}>
                         Compensação de Horas Extra
-                        </button>
-                    </div>
-                    {(verificaAlterado !== 0) &&
-                    
-                    <div className='col-md-4'>
-                    <button type='button'
-                        className={`btn btn-outline-secondary ${verificaTipo === 1 ? 'active' : ''}`}
-                        disabled={isLoading}
-                        onClick={() => handleChangeTipo(1)}>
-                        Todos os pedidos
-
                       </button>
                     </div>
-                  }
+                    {(verificaAlterado !== 0) &&
+
+                      <div className='col-md-4'>
+                        <button type='button'
+                          className={`btn btn-outline-secondary ${verificaTipo === 1 ? 'active' : ''}`}
+                          disabled={isLoading || isLoadingPagamentos}
+                          onClick={() => handleChangeTipo(1)}>
+                          Todos os pedidos
+
+                        </button>
+                      </div>
+                    }
                   </div>
                 }
               </div>
@@ -301,63 +302,66 @@ const GerirHorasExtra = () => {
             }
 
 
-            {(listaHorasExtra && listaHorasExtra.length > 0) ? (
+            {((verificaAlterado === 3) ? (listaPagamentos && listaPagamentos.length > 0) : (listaHorasExtra && listaHorasExtra.length > 0)) ? (
               <div>
-     
-                {listaHorasExtra.map((t, i) => (
+                {verificaAlterado === 3 && listaPagamentos.map((t, i) => (
+                  <div className="row text-center" key={"p" + i}>
+                    <hr></hr>
+                    <div>
+
+                      <FormRowListaHorasExtraPagas
+                        type="textarea"
+                        readOnly={true}
+                        utilizadores={utilizadores}
+                        value={t}
+                        changed={callUseEffect}
+                      />
+                    </div>
+                  </div>
+                ))}
+                {verificaAlterado !== 3 && listaHorasExtra.map((t, i) => (
                   <div className="row text-center" key={i}>
                     <hr></hr>
-                    {verificaAlterado === 3 ? (
-                      <div>
-                        <FormRowListaHorasExtraPagas
-                          type="textarea"
-                          readOnly={true}
-                          utilizadores={utilizadores}
-                          value={t}
-                          changed={callUseEffect}
-                        />
-                      </div>
-                    ) : (
-                      <div className="row">
-                        <div className={`${verificaAlterado === 0 ? "col-md-11" : "col-md-12"} text-center tiposTrabalho`}>
-                          {
-                            <FormRowListaHorasExtra
-                              type="textarea"
-                              readOnly={true}
-                              utilizadores={utilizadores}
-                              value={t}
-                              changed={callUseEffect}
-                              tipoHoras={verificaTipo}
-                            />
-                          }
-                        </div>
-
-                        {verificaAlterado === 0 && !isLoading &&
-                          <div className="col-md-1 text-center mt-4">
-                            <div className="row text-center">
-                              <div className='col-md-6 '>
-                                <button type='button'
-                                  className="btn btn btn-outline-success"
-                                  disabled={isLoading}
-                                  onClick={() => acceptDiaHorasExtra(t._id)}>
-                                  <FcCheckmark />
-                                </button>
-                              </div>
-                              <div className='col-md-6'>
-                                <button
-                                  type='button'
-                                  disabled={isLoading}
-                                  className="btn  btn-outline-danger"
-                                  onClick={() => declineDiaHorasExtra(t)}
-                                >
-                                  <IoMdClose />
-                                </button>
-                              </div>
-                            </div>
-                          </div>
+                    <div className="row">
+                      <div className={`${verificaAlterado === 0 ? "col-md-11" : "col-md-12"} text-center tiposTrabalho`}>
+                        {
+                          <FormRowListaHorasExtra
+                            type="textarea"
+                            readOnly={true}
+                            utilizadores={utilizadores}
+                            value={t}
+                            changed={callUseEffect}
+                            tipoHoras={verificaTipo}
+                          />
                         }
                       </div>
-                    )}
+
+                      {verificaAlterado === 0 && !isLoading && !isLoadingPagamentos &&
+                        <div className="col-md-1 text-center mt-4">
+                          <div className="row text-center">
+                            <div className='col-md-6 '>
+                              <button type='button'
+                                className="btn btn btn-outline-success"
+                                disabled={isLoading || isLoadingPagamentos}
+                                onClick={() => acceptDiaHorasExtra(t._id)}>
+                                <FcCheckmark />
+                              </button>
+                            </div>
+                            <div className='col-md-6'>
+                              <button
+                                type='button'
+                                disabled={isLoading || isLoadingPagamentos}
+                                className="btn  btn-outline-danger"
+                                onClick={() => declineDiaHorasExtra(t)}
+                              >
+                                <IoMdClose />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      }
+                    </div>
+
                   </div>
 
                 )
@@ -369,40 +373,40 @@ const GerirHorasExtra = () => {
                   <div className="mt-4 col-md-12  text-center ">
                     {verificaAlterado === 0 ? (
                       <div>
-                      {(verificaTipo === 1)  ?(
-                         <h1>Sem Pedidos de Horas Extra</h1>
-                       ):(verificaTipo === 2) ? (
-                        <h1>Sem Pedidos de Horas Extra Realizadas!</h1>
-                    ) :(verificaTipo === 3)  &&
+                        {(verificaTipo === 1) ? (
+                          <h1>Sem Pedidos de Horas Extra</h1>
+                        ) : (verificaTipo === 2) ? (
+                          <h1>Sem Pedidos de Horas Extra Realizadas!</h1>
+                        ) : (verificaTipo === 3) &&
                         <h1>Sem Pedidos de Compensação de Horas Extra</h1>
-                      }
+                        }
                       </div>
                     ) : verificaAlterado === 1 ? (
                       <div>
-                      {(verificaTipo === 1)  ?(
-                        <h1>Sem Pedidos de Horas Extra Aceites!</h1>
-                       ):(verificaTipo === 2) ? (
-                        <h1>Sem Pedidos de Horas Extra Realizadas Aceites!</h1>
-                    ) :(verificaTipo === 3)  &&
+                        {(verificaTipo === 1) ? (
+                          <h1>Sem Pedidos de Horas Extra Aceites!</h1>
+                        ) : (verificaTipo === 2) ? (
+                          <h1>Sem Pedidos de Horas Extra Realizadas Aceites!</h1>
+                        ) : (verificaTipo === 3) &&
                         <h1>Sem Pedidos de Compensação de Horas Extra Aceites!</h1>
-                      }
+                        }
                       </div>
                     ) : verificaAlterado === 2 ? (
                       <div>
-                      {(verificaTipo === 1)  ?(
-                        <h1>Sem Pedidos de Horas Extra Recusados!</h1>
-                       ):(verificaTipo === 2) ? (
-                        <h1>Sem Pedidos de Horas Extra Realizadas Recusados!</h1>
-                    ) :(verificaTipo === 3)  &&
+                        {(verificaTipo === 1) ? (
+                          <h1>Sem Pedidos de Horas Extra Recusados!</h1>
+                        ) : (verificaTipo === 2) ? (
+                          <h1>Sem Pedidos de Horas Extra Realizadas Recusados!</h1>
+                        ) : (verificaTipo === 3) &&
                         <h1>Sem Pedidos de Compensação de Horas Extra Recusados!</h1>
-                      }
+                        }
                       </div>
                     ) : (
                       <div>
                         <h1>Sem Horas Extra Pagas!</h1>
                       </div>
                     )}
-    
+
                   </div>
                 ) : (
                   <div className='d-flex flex-column justify-content-center align-items-center h-200' style={{ maxHeight: '100px' }}>

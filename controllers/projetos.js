@@ -5,9 +5,11 @@ const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, NotFoundError } = require("../errors");
 const { updateExcell } = require("../exportMongoDB")
 require('dotenv').config();
+const sanitizeHtml = require('sanitize-html');
 
 const exportProjetos = async (req, res) => {
-  const { userID: userID } = req.body;
+  let { userID: userID } = req.body;
+  userID = sanitizeHtml(userID);
   try {
     const user = await User.findOne({
       _id: userID,
@@ -36,7 +38,13 @@ const exportProjetos = async (req, res) => {
 }
 
 const getAllProjetos = async (req, res) => {
-  const { search, Finalizado, tipoTrabalho, sort, DataObjetivo } = req.query;
+  let { search, Finalizado, tipoTrabalho, sort, DataObjetivo } = req.query;
+  search = sanitizeHtml(search);
+  Finalizado = sanitizeHtml(Finalizado);
+  tipoTrabalho = sanitizeHtml(tipoTrabalho);
+  sort = sanitizeHtml(sort);
+  DataObjetivo = sanitizeHtml(DataObjetivo);
+
   const queryObject = {
   };
   if (search) {
@@ -82,7 +90,11 @@ const getAllProjetos = async (req, res) => {
 
 
 const getProjeto = async (req, res) => {
-  const { id: projetoId } = req.params;
+  let { id: projetoId } = req.params;
+
+  projetoId = sanitizeHtml(projetoId);
+
+
   const projeto = await Projeto.findOne({
     _id: projetoId,
   });
@@ -94,7 +106,10 @@ const getProjeto = async (req, res) => {
 
 const getProjetoTodasVersoes = async (req, res) => {
   try {
-    const { id: projetoId } = req.params;
+    let { id: projetoId } = req.params;
+
+    projetoId = sanitizeHtml(projetoId);
+
     const projeto = await ProjetosVersion.find({ id: projetoId }).sort({ createdAt: -1 });
 
 
@@ -121,7 +136,9 @@ const getClientesProjeto = async (req, res) => {
 };
 
 const getTipoTrabalhoProjeto = async (req, res) => {
-  const { tipoTrabalho: tipoTrabalho } = req.params;
+  let { tipoTrabalho: tipoTrabalho } = req.params;
+  tipoTrabalho = sanitizeHtml(tipoTrabalho);
+
   const projeto = await Projeto.find({
     _id: projetoId,
   });
@@ -133,7 +150,38 @@ const getTipoTrabalhoProjeto = async (req, res) => {
 
 
 const createProjeto = async (req, res) => {
-  const projeto = await Projeto.create({ ...req.body });
+  let {Cliente , DataInicio, DataObjetivo, DataFim, Notas, OrcamentoAprovado, Nome ,Tema , Acao, TipoTrabalho, Piloto, Links, LinkResumo} = req.body;
+
+  Cliente = sanitizeHtml(Cliente);
+  DataInicio = sanitizeHtml(DataInicio);
+  DataObjetivo = sanitizeHtml(DataObjetivo);
+  DataFim = sanitizeHtml(DataFim);
+  Notas = sanitizeHtml(Notas);
+  OrcamentoAprovado = sanitizeHtml(OrcamentoAprovado);
+  Nome = sanitizeHtml(Nome);
+  Tema = sanitizeHtml(Tema);
+  Acao = sanitizeHtml(Acao);
+  TipoTrabalho = sanitizeHtml(TipoTrabalho);
+  Piloto = sanitizeHtml(Piloto);
+  Links = sanitizeHtml(Links);
+  LinkResumo = sanitizeHtml(LinkResumo);
+
+  const projeto = await Projeto.create({
+    Cliente,
+    DataInicio,
+    DataObjetivo,
+    DataFim,
+    Notas,
+    OrcamentoAprovado, 
+    Nome,
+    Tema,
+    Acao,
+    TipoTrabalho,
+    Piloto,
+    Links,
+    LinkResumo
+  });
+  // const projeto = await Projeto.create({ ...req.body });
   res.status(StatusCodes.CREATED).json({ projeto });
 };
 

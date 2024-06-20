@@ -199,7 +199,6 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, associat
 };
 
 
-// _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, associated, horasPossiveis, listaTT, accepted, deleteDay
 Dia.propTypes = {
   _id: PropTypes.string.isRequired,
   Data: PropTypes.string.isRequired,
@@ -207,7 +206,7 @@ Dia.propTypes = {
   Utilizador: PropTypes.string.isRequired,
   tipoDeTrabalhoHoras: PropTypes.array.isRequired,
   associated: PropTypes.string,
-  horasPossiveis: PropTypes.number.isRequired,
+  horasPossiveis: PropTypes.number,
   listaTT: PropTypes.array.isRequired,
   accepted: PropTypes.number.isRequired,
   deleteDay: PropTypes.func.isRequired,

@@ -12,8 +12,6 @@ import Loading from './Loading';
 import AddHorasDomingo from './AddHorasDomingo';
 
 
-
-
 const initialState = {
   _id: '',
   Data: new Date().toISOString().slice(0, 10),
@@ -34,11 +32,11 @@ const ListaProjetos = () => {
   const [buttonClicked, setButtonClicked] = useState(false);
 
 
-  const { projetos, isLoading, } = useSelector((store) => store.allProjetos);
+  const { isLoading } = useSelector((store) => store.allProjetos);
 
+  const [projetos, setProjetos] = useState([]);
   const dispatch = useDispatch();
   const { user } = useSelector((store) => store.utilizador);
-
 
   const [sortedProjetos, seTSortedProjetos] = useState([]);
   const [filteredProjetos, setFilteredProjetos] = useState([]);
@@ -57,8 +55,9 @@ const ListaProjetos = () => {
   const [ListaTrabalhoAll, setListaTrabalhoAll] = useState([]);
   const [ListaTrabalhoGeral, setListaTrabalhoGeral] = useState([]);
   const [ListaTrabalhoGeralOther, setListaTrabalhoGeralOther] = useState([]);
-  const [horasExtra, setHorasExtra] = useState(null);
-  const [horasExtraAfter, setHorasExtraAfter] = useState(null);
+  // const [horasExtra, setHorasExtra] = useState(0);
+  const [horasExtra] = useState(0);
+  const [horasExtraAfter, setHorasExtraAfter] = useState(0);
   const [activeCompensacao, setActiveCompensacao] = useState(false);
 
   const [compensacaoID, setcompensacaoID] = useState();
@@ -69,11 +68,16 @@ const ListaProjetos = () => {
   const [constLoaded, setConstLoaded] = useState(false);
 
   const [modalBoxActive, setModalBoxActive] = useState(false);
-  
+
+
+
   useEffect(() => {
     dispatch(handleChange({ name: 'projetoFinalizado', value: "false" }));
     dispatch(handleChange({ name: 'DataObjetivoC', value: "true" }));
-    dispatch(getAllProjetos1(""))
+    dispatch(getAllProjetos1("")).then((res) => {
+      const projects = Array.isArray(res?.payload?.projetos) ? res?.payload?.projetos : [];
+      setProjetos(projects);
+    })
 
 
     dispatch(getTipoTrabalho()).then((res) => {
@@ -89,29 +93,27 @@ const ListaProjetos = () => {
       setListaTrabalhoGeral(tipoTrabalhoArray.filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 5 || item.tipo === 6)));
   
       setListaTrabalhoGeralOther(tipoTrabalhoArray.filter(item => item.tipo === 3));
+
     });
 
 
     setConstLoaded(true);
-    
-  }, [dispatch]);
 
+  }, [dispatch]);
 
   useEffect(() => {
 
-    if (constLoaded) {
+    if (constLoaded && (projetos.length > 0)) {
+     
         const dateP = values.Data ? new Date(values.Data) : new Date();
         verificaProjetos(dateP);
     }
-     
-  }, [projetos]);
-
-
+  }, [projetos.length, constLoaded]);
 
 
   useEffect(() => {
-    if (constLoaded) {
 
+    if (constLoaded && (projetos.length > 0)) {
         const timestampString = user?.user?.timestamp;
         let dateRegisterUTC = new Date()
         if (timestampString) {
@@ -125,7 +127,7 @@ const ListaProjetos = () => {
       } else {
           console.error("Timestamp string is missing or invalid.");
       }
-
+   
       dispatch(getDia(values.Data, user.user.id)).then((res) => {
         const lista = res.payload.dia
         setListaDias(lista);
@@ -136,81 +138,79 @@ const ListaProjetos = () => {
           dayStart = dateRegisterUTC;
         }
 
+        // const projetosF = getFilteredProjetos(dayStart);
+        // const projetoGeral = (projetosF.filter(item => item.Nome === "Geral"));
+        // let countHours = 0;
 
-        const projetosF = getFilteredProjetos(dayStart);
-        const projetoGeral = (projetosF.filter(item => item.Nome === "Geral"));
-        let countHours = 0;
+        // const startDay = dayStart.getDate();
+        // const startMonth = dayStart.getMonth();
+        // const startYear = dayStart.getFullYear();
 
-
-
-        const startDay = dayStart.getDate();
-        const startMonth = dayStart.getMonth();
-        const startYear = dayStart.getFullYear();
-
-        lista.filter(item => {
-          const date = new Date(item.Data)
-          const dayOfWeek = date.getDay();
-          const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-          const isFriday = dayOfWeek === 5;
+        // lista.filter(item => {
+        //   const date = new Date(item.Data)
+        //   const dayOfWeek = date.getDay();
+        //   const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+        //   const isFriday = dayOfWeek === 5;
 
 
-          const currentDay = date.getDate();
-          const currentMonth = date.getMonth();
-          const currentYear = date.getFullYear();
+        //   const currentDay = date.getDate();
+        //   const currentMonth = date.getMonth();
+        //   const currentYear = date.getFullYear();
 
-          if (
-            currentYear > startYear ||
-            currentMonth > startMonth ||
-            (
-              currentYear === startYear &&
-              currentMonth === startMonth &&
-              currentDay >= startDay)
-          ) {
+        //   if (
+        //     currentYear > startYear ||
+        //     currentMonth > startMonth ||
+        //     (
+        //       currentYear === startYear &&
+        //       currentMonth === startMonth &&
+        //       currentDay >= startDay)
+        //   ) {
 
-            let extraHours = 0;
+        //     let extraHours = 0;
 
-            for (let i = 0; i < item.tipoDeTrabalhoHoras.length; i++) {
-              const projeto = item.tipoDeTrabalhoHoras[i]
+        //     for (let i = 0; i < item.tipoDeTrabalhoHoras.length; i++) {
+        //       const projeto = item.tipoDeTrabalhoHoras[i]
               
-              if (projeto.projeto === projetoGeral[0]?._id) {
-                const tt = projeto.tipoTrabalho.split(',') || [];
-                const ttH = projeto.horas.split(',') || [];
+        //       if (projeto.projeto === projetoGeral[0]?._id) {
+        //         const tt = projeto.tipoTrabalho.split(',') || [];
+        //         const ttH = projeto.horas.split(',') || [];
 
-                for (let j = 0; j < tt.length; j++) {
-                  if (tt[j] === compensacaoID) {
-                    countHours -= parseFloat(ttH[j]);
-                  }
-                  if (tt[j] === addHorasExtraID) {
-                    countHours += parseFloat(ttH[j]);
-                    extraHours = parseFloat(ttH[j]);
-                  }
-                }
-              }
-            }
+        //         for (let j = 0; j < tt.length; j++) {
+        //           if (tt[j] === compensacaoID) {
+        //             countHours -= parseFloat(ttH[j]);
+        //           }
+        //           if (tt[j] === addHorasExtraID) {
+        //             countHours += parseFloat(ttH[j]);
+        //             extraHours = parseFloat(ttH[j]);
+        //           }
+        //         }
+        //       }
+        //     }
 
-            if (feriadosPortugal(date) && (parseFloat(item.NumeroHoras) - parseFloat(extraHours)) > 0) {
-              countHours += (parseFloat(item.NumeroHoras) - parseFloat(extraHours));
-              return true;
-            }
-            if (isWeekend && (parseFloat(item.NumeroHoras) - parseFloat(extraHours)) > 0) {
-              countHours += (parseFloat(item.NumeroHoras) - parseFloat(extraHours));
-              return true;
-            }
-            if (isFriday && (parseFloat(item.NumeroHoras) - parseFloat(extraHours)) > 6) {
-              countHours += (parseFloat(item.NumeroHoras - 6) - parseFloat(extraHours));
-              return true;
-            }
-            if (!isFriday && (parseFloat(item.NumeroHoras) - parseFloat(extraHours)) > 8.5) {
-              countHours += (parseFloat(item.NumeroHoras - 8.5) - parseFloat(extraHours));
-              return true;
-            }
-            return false;
-          }
+        //     if (feriadosPortugal(date) && (parseFloat(item.NumeroHoras) - parseFloat(extraHours)) > 0) {
+        //       countHours += (parseFloat(item.NumeroHoras) - parseFloat(extraHours));
+        //       return true;
+        //     }
+        //     if (isWeekend && (parseFloat(item.NumeroHoras) - parseFloat(extraHours)) > 0) {
+        //       countHours += (parseFloat(item.NumeroHoras) - parseFloat(extraHours));
+        //       return true;
+        //     }
+        //     if (isFriday && (parseFloat(item.NumeroHoras) - parseFloat(extraHours)) > 6) {
+        //       countHours += (parseFloat(item.NumeroHoras - 6) - parseFloat(extraHours));
+        //       return true;
+        //     }
+        //     if (!isFriday && (parseFloat(item.NumeroHoras) - parseFloat(extraHours)) > 8.5) {
+        //       countHours += (parseFloat(item.NumeroHoras - 8.5) - parseFloat(extraHours));
+        //       return true;
+        //     }
+        //     return false;
+        //   }
 
-          return false;
-        });
-        setHorasExtra(countHours);
-        setHorasExtraAfter(countHours);
+        //   return false;
+        // });
+
+        // setHorasExtra(countHours);
+        // setHorasExtraAfter(countHours);
 
         const firstDateWithLessThan8Hours = lista.reduceRight((acc, item) => {
           const itemDate = new Date(item.Data);
@@ -244,7 +244,7 @@ const ListaProjetos = () => {
         const todayDay = today.getDate();
         const todayMonth = today.getMonth();
         const todayYear = today.getFullYear();
-
+    
         for (let i = 0; i < sortedDates.length + 1; i++) {
           if (i === sortedDates.length) {
             targetDate = today;
@@ -313,7 +313,7 @@ const ListaProjetos = () => {
           }
         } 
 
-
+  
         if (firstDateWithLessThan8Hours === null || missingDate.getTime() < new Date(firstDateWithLessThan8Hours).getTime()) {
           setValues({
             ...values,
@@ -333,7 +333,7 @@ const ListaProjetos = () => {
             loaded: true,
           });
         }
-
+  
         const lastDateWithMoreThan8Hours = lista.reduceRight((acc, item) => {
           const itemDate = new Date(item.Data);
           if (
@@ -359,19 +359,17 @@ const ListaProjetos = () => {
           }
           return acc;
         }, new Date(null));
-
+     
         setLastDate(lastDateWithMoreThan8Hours);
         setDataCopy({
           DataCopy: lastDateWithMoreThan8Hours.Data,
         });
-      });
+      });   
+
+
     }
-   
-  }, [filteredProjetos]);
 
-
-
-  
+  }, [projetos.length, constLoaded]);
 
   const verificaDiaLast = useCallback((e) => {
     const { value } = e.target;
@@ -419,24 +417,29 @@ const ListaProjetos = () => {
         tipoDeTrabalhoHoras: tipoDeTrabalhoHoras,
       });
 
-      seTSortedProjetos(sSProjetos);
+
       setCopyExists(true);
       setDataCopy({
         DataCopy: copiaEscolhida?.Data,
       });
 
       setLastDate(copiaEscolhida);
+
+      seTSortedProjetos(sSProjetos);
     } else {
+
       setCopyExists(false);
     }
-   
+
   }, [DataCopy]);
 
 
   const verificaDia = useCallback((e) => {
+    if(constLoaded && (projetos.length > 0)){
     setVerificaCopiarHoras(false);
     const { name, value } = e.target;
     const data = new Date(value);
+
     const projetosF = getFilteredProjetos(data);
     const sProjetos = projetosF.slice().sort((a, b) => {
       const pilotoAArray = a?.Piloto.split(',') || [];
@@ -463,6 +466,7 @@ const ListaProjetos = () => {
 
 
     let horasExtra = 0;
+
     for (let i = 0; i < listaDias.length; i++) {
       const DataRecebida = new Date(listaDias[i].Data);
 
@@ -512,7 +516,6 @@ const ListaProjetos = () => {
       } else{
         setStartHorasT(0);
       }
-
         setValues({
           ...values,
           [name]: value,
@@ -522,11 +525,11 @@ const ListaProjetos = () => {
           tipoDeTrabalhoHoras: tipoDeTrabalhoHoras,
           accepted: listaDias[i].accepted,
         });
-        seTSortedProjetos(sSProjetos);
 
         setHorasT(listaDias[i].NumeroHoras);
         setVerificaChange(true);
         setVerificaDiaCalled(true);
+        seTSortedProjetos(sSProjetos);
         return;
       }
     }
@@ -544,18 +547,17 @@ const ListaProjetos = () => {
       accepted: 0,
       tipoDeTrabalhoHoras: [],
     });
-    seTSortedProjetos(sProjetos)
     setHorasT(0);
     setVerificaChange(false);
     setVerificaDiaCalled(false);
-    return;
 
-   
-  }, [listaDias, values.Data]);
+    seTSortedProjetos(sProjetos)
+    return;
+  }
+  }, [listaDias.length, values.Data, projetos]);
 
 
   const verificaProjetos = async (dateP) => {
-
     const currentDay = dateP.getDate();
     const currentMonth = dateP.getMonth();
     const currentYear = dateP.getFullYear();
@@ -599,15 +601,19 @@ const ListaProjetos = () => {
 
       return true;
     });
+
+
     setFilteredProjetos(filteredP);
     return;
   };
-  
-  const getFilteredProjetos = (dateP) => {
+
+
+
+
+  const getFilteredProjetos = useCallback((dateP) => {
     const currentDay = dateP.getDate();
     const currentMonth = dateP.getMonth();
     const currentYear = dateP.getFullYear();
-    
     const filteredP = projetos.filter((p) => {
 
       const dataI = new Date(p.DataInicio);
@@ -649,12 +655,13 @@ const ListaProjetos = () => {
     });
 
     return filteredP;
-  };
+  }, [projetos.length]);
 
   useEffect(() => {
-    verificaDia({ target: { name: 'Data', value: values.Data } });
-  }, [verificaDia]);
-
+    if(projetos.length > 0){
+      verificaDia({ target: { name: 'Data', value: values.Data } });       
+    }
+  }, [DataCopy]);
 
 
   const handleCloseModal = ()=>{
@@ -676,6 +683,7 @@ const ListaProjetos = () => {
 
       
    }
+
    const checkDate = (dataChoosen)=>{
     const data = new Date(dataChoosen);
       
@@ -803,8 +811,10 @@ const ListaProjetos = () => {
         window.location.reload();
       }, 500);
     }
-  };
 
+
+
+  };
 
 
   const handleHorasChange = (projectId, tipoTrabalho, projectName, e) => {
@@ -948,9 +958,11 @@ const ListaProjetos = () => {
         if(horasExtraAfter > 0){
           horasExtraValue = parseFloat(horasExtraAfter) + (parseFloat(horasNumber) - parseFloat(horasExtraBeforeValue));
         }
+
         else{
         horasExtraValue = parseFloat(horasExtra) + (parseFloat(horasNumber) - parseFloat(horasExtraBeforeValue));
         }
+
         setHorasExtraAfter(horasExtraValue);
         
       } else if (isFriday && (parseFloat(newHorasT) - parseFloat(horasExtraNumber)) > 6) {
@@ -1017,9 +1029,10 @@ const ListaProjetos = () => {
         NumeroHoras: lastDate.NumeroHoras,
         tipoDeTrabalhoHoras: tipoDeTrabalhoHoras,
       });
-      seTSortedProjetos(sSProjetos);
+
       setHorasT(lastDate.NumeroHoras);
       setVerificaChange(true);
+      seTSortedProjetos(sSProjetos);
     } else {
       setVerificaChange(false);
       setValues({
@@ -1032,6 +1045,7 @@ const ListaProjetos = () => {
     }
 
     setVerificaCopiarHoras(value);
+
   }
 
 
@@ -1070,7 +1084,7 @@ const ListaProjetos = () => {
     return timeString;
   }
 
-  if (!values.loaded) {
+  if (!values.loaded || (sortedProjetos.length === 0)) {
     return <Loading />;
   } else if (isLoading) {
     return <Loading />;
@@ -1164,6 +1178,7 @@ const ListaProjetos = () => {
                 setListaTipoTrabalho={setListaTipoTrabalho}
                 setListaTrabalhoGeral={setListaTrabalhoGeral}
                 setListaTrabalhoGeralOther={setListaTrabalhoGeralOther}
+                blocked={(values.accepted === 2 && startHorasT >= 8.5) || isLoading || buttonClicked ||  (values.accepted === 4 || values.accepted === 5)}
               />
         
             <div className="card text-center">

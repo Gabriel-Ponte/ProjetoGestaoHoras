@@ -90,7 +90,7 @@ const styleBox = {
                     <Typography className="mb-5" id="modal-modal-title" variant="h4" component="h2">
                         Exportar Horas
                     </Typography>
-                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                    <div id="modal-modal-description" >
 
                         <FormRowSelect
                             type="text"
@@ -107,7 +107,7 @@ const styleBox = {
                             multiple={false}
                             todos={user?.user?.tipo}
                         />
-                    </Typography>
+                    </div>
                     <div className='row col-md-12'>
                     <div className='col-md-6 text-center' >
                     <button  type="button" className="btn btn-outline-success" onClick={handleExportButton}>

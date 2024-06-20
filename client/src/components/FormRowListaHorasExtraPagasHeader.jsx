@@ -361,7 +361,7 @@ FormRowListaHorasExtraPagasHeader.propTypes = {
     sortValue: PropTypes.string.isRequired,
     tipoHoras:PropTypes.number.isRequired,
     handleChange: PropTypes.func.isRequired,
-    pagas: PropTypes.number.isRequired,
+    pagas: PropTypes.number,
   }
 
 export default FormRowListaHorasExtraPagasHeader;
