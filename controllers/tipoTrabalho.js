@@ -1,7 +1,7 @@
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, NotFoundError } = require("../errors");
 const TipoTrabalho = require("../models/TipoTrabalho");
-
+const sanitizeHtml = require('sanitize-html');
 
 const getAllTiposTrabalho = async (req, res) => {
     const tipoTrabalho = await TipoTrabalho.find();
@@ -11,7 +11,9 @@ const getAllTiposTrabalho = async (req, res) => {
 
   const createTipoTrabalho = async (req, res) => {
     try {
-      const tipoTrabalho = await TipoTrabalho.create(req.body);
+      let tipoTrabalho = await TipoTrabalho.create(req.body);
+      tipoTrabalho = sanitizeHtml(tipoTrabalho);
+
       res.status(StatusCodes.CREATED).json({ tipoTrabalho });
     } catch (error) {
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error });
@@ -20,7 +22,8 @@ const getAllTiposTrabalho = async (req, res) => {
 
   const createTipoTrabalhoOther = async (req, res) => {
     try {
-      const tipoTrabalho = await TipoTrabalho.create(req.body);
+      let tipoTrabalho = await TipoTrabalho.create(req.body);
+      tipoTrabalho = sanitizeHtml(tipoTrabalho);
       res.status(StatusCodes.CREATED).json({ tipoTrabalho });
     } catch (error) {
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error });
@@ -30,6 +33,7 @@ const getAllTiposTrabalho = async (req, res) => {
 
   const updateTipoTrabalho = async (req, res) => {
     const { id: TipoTrabalhoId } = req.params;
+    TipoTrabalhoId = sanitizeHtml(TipoTrabalhoId);
     try {
       const tipoTrabalho = await TipoTrabalho.findByIdAndUpdate(
         {
@@ -50,10 +54,10 @@ const getAllTiposTrabalho = async (req, res) => {
   
 
   const deleteTipoTrabalho = async (req, res) => {
-    const {
+    let {
       params: { id: TipoTrabalhoId },
     } = req;
-  
+    TipoTrabalhoId = sanitizeHtml(TipoTrabalhoId);
     const tipoTrabalho = await TipoTrabalho.findOneAndDelete({
       _id: TipoTrabalhoId,
     });

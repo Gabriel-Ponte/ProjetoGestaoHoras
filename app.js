@@ -1,15 +1,20 @@
 require("dotenv").config();
 require("express-async-errors");
 
+const https = require('https');
 const path = require("path");
 const fs = require("fs");
 
-const imagePath = path.join(__dirname, "/images", "DefaultUserImg.png");
-const imageBuffer = fs.readFileSync(imagePath);
+
+// Path to your SSL certificate and key
+const key = fs.readFileSync(path.resolve(__dirname, 'certs/private.key'));
+const cert = fs.readFileSync(path.resolve(__dirname, 'certs/certificate.crt'));
+
+// const imagePath = path.join(__dirname, "/images", "DefaultUserImg.png");
+// const imageBuffer = fs.readFileSync(imagePath);
 
 // extra security packages
 const helmet = require("helmet");
-const xssClean = require("xss-clean");
 const xss = require("xss");
 const express = require("express");
 const app = express();
@@ -40,7 +45,8 @@ app.set("trust proxy", 1);
 app.use(express.static(path.resolve(__dirname, "./client/build/")));
 app.use(express.json());
 app.use(helmet());
-app.use(xssClean());
+
+
 
 app.post('/sanitize', (req, res) => {
   const sanitizedInput = xss(req.body.input);
@@ -73,11 +79,18 @@ const port = process.env.PORT || 8080;
 
 const start = async () => {
   try {
+
     await connectDB(process.env.MONGO_URI);
-    app.listen(port, () =>
+
+    https.createServer({ key, cert }, app).listen(port, () => {
+      console.log(`Server is listening on port ${port}...`);
+    });
+
+
+    // app.listen(port, () =>
     
-      console.log(`Server is listening on port ${port}...`)
-    );
+    //   console.log(`Server is listening on port ${port}...`)
+    // );
   } catch (error) {
     console.error(error);
   }

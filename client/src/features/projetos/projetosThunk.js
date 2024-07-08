@@ -63,7 +63,7 @@ export const getProjetoAllVersoesThunk = async ( thunkAPI ,projetoId) => {
   }
 };
 
-export const getClientesThunk = async ( thunkAPI ,projetoId) => {
+export const getClientesThunk = async ( thunkAPI ) => {
   try {
     const resp = await customFetch.get(`/projetos/clientes`);
     return resp.data;

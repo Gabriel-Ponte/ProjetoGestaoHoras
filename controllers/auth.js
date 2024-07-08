@@ -4,6 +4,7 @@ const { BadRequestError, UnauthenticatedError, NotFoundError } = require("../err
 const nodemailer = require('nodemailer');
 const sgMail = require('@sendgrid/mail');
 const crypto = require('crypto');
+const sanitizeHtml = require('sanitize-html');
 
 const getAllUser = async (req, res) => {
   const UsersAll = await User.find();
@@ -16,10 +17,10 @@ const getAllUser = async (req, res) => {
 
 
 const getUser = async (req, res) => {
-  const {
+  let {
     params: { id: userID },
   } = req;
-
+  userID = sanitizeHtml(userID);
   const user = await User.findOne({
     _id: userID,
   });
@@ -32,8 +33,8 @@ const getUser = async (req, res) => {
 
 
 const postResetPassword = async (req, res) => {
-  const { email: email } = req.params;
-
+  let { email: email } = req.params;
+  email = sanitizeHtml(email);
   try {
     const user = await User.findOne({
       email: email,
@@ -105,9 +106,10 @@ const postResetPassword = async (req, res) => {
 // Express route for handling the password update request
 const updateResetedPassword = async (req, res) => {
   //const { token } = req.params;
-  const { token } = req.body;
-  const { password } = req.body;
-
+  let { token } = req.body;
+  let { password } = req.body;
+  token = sanitizeHtml(token);
+  password = sanitizeHtml(password);
   try {
     // Find the user by the reset password token and check if it has not expired
     const user = await User.findOne({
@@ -144,10 +146,12 @@ const updateResetedPassword = async (req, res) => {
 
 
 const getUserEmail = async (req, res) => {
-  const {
-    params: { Email: Email },
+  let {
+    params: { Email: Email, userID: userID },
   } = req;
 
+  Email = sanitizeHtml(Email);
+  userID = sanitizeHtml(userID);
   const user = await User.findOne({
     _id: userID,
   });
@@ -158,11 +162,27 @@ const getUserEmail = async (req, res) => {
 };
 
 const register = async (req, res) => {
-  const { login, password, codigo, email, nome, tipo } = req.body;
-  const foto = req.body.foto;
-  const buffer = Buffer.from(new Uint8Array(Object.values(foto.data))); // Convert the Uint8Array to a Buffer
+  let { login, password, codigo, email, nome, tipo } = req.body;
 
+  login = sanitizeHtml(login);
+  password = sanitizeHtml(password);
+  codigo = sanitizeHtml(codigo);
+  email = sanitizeHtml(email);
+  nome = sanitizeHtml(nome);
+  tipo = sanitizeHtml(tipo);
+
+  let foto = req.body.foto;
+
+  const sanitizedFoto = {};
+  for (const key in foto?.data) {
+    if (Object.hasOwnProperty.call(foto?.data, key)) {
+      sanitizedFoto[key] = sanitizeHtml(foto?.data[key]);
+    }
+  }
   try {
+
+    const buffer = Buffer.from(new Uint8Array(Object?.values(sanitizedFoto)));// convert the Uint8Array to a Buffer
+
     const user = await User.create({
       login,
       password,
@@ -207,7 +227,9 @@ const register = async (req, res) => {
 
 
 const login = async (req, res) => {
-  const { email, password } = req.body;
+  let { email, password } = req.body;
+  email = sanitizeHtml(email);
+  password = sanitizeHtml(password);
 
   if (!email || !password) {
     throw new BadRequestError("");
@@ -245,13 +267,35 @@ const login = async (req, res) => {
 
 const updateUser = async (req, res) => {
 
-  const { login, password, codigo, email, nome, tipo,estado, _id } = req.body;
-  const foto = req.body.foto;
-  const buffer = Buffer.from(new Uint8Array(Object.values(foto.data)));// convert the Uint8Array to a Buffer
-   // Generate a password reset token
-  const tokenP = crypto.randomBytes(20).toString('hex');
+  let { login, password, codigo, email, nome, tipo,estado, _id } = req.body;
 
+  login = sanitizeHtml(login);
+  password = sanitizeHtml(password);
+  codigo = sanitizeHtml(codigo);
+  email = sanitizeHtml(email);
+  nome = sanitizeHtml(nome);
+  tipo = sanitizeHtml(tipo);
+  if(estado !== true && estado !== false){
+    estado = sanitizeHtml(estado);
+  }
+
+  _id = sanitizeHtml(_id);
+
+
+  let foto = req.body?.foto;
+
+  const sanitizedFoto = {};
+
+  for (const key in foto?.data) {
+    if (Object.hasOwnProperty.call(foto?.data, key)) {
+      sanitizedFoto[key] = sanitizeHtml(foto?.data[key]);
+    }
+  }
   try{
+    const buffer = Buffer.from(new Uint8Array(Object?.values(sanitizedFoto)));// convert the Uint8Array to a Buffer
+    // Generate a password reset token
+    const tokenP = crypto.randomBytes(20).toString('hex');
+
    // Set the token and its expiration date in the user's document
 
   if (!login || !email || !email || !foto || !nome || !tipo) {
@@ -259,6 +303,7 @@ const updateUser = async (req, res) => {
   }
 
   const user = await User.findOne({ _id: _id });
+
   user.id = _id;
   user.login = login;
   user.password = password;
@@ -266,10 +311,14 @@ const updateUser = async (req, res) => {
   user.email = email;
   user.nome = nome;
   user.tipo = tipo;
-  user.foto = {
-    data: buffer,
-    contentType: 'image/png' // set the content type of the file to the foto.contentType property
-  };
+
+  if(buffer){
+    user.foto = {
+      data: buffer,
+      contentType: 'image/png' // set the content type of the file to the foto.contentType property
+    };
+  }
+
   user.estado = estado;
   await user.save();
 
@@ -295,7 +344,9 @@ const updateUser = async (req, res) => {
 };
 
 const updateUserType = async (req, res) => {
-  const { tipo, _id } = req.body;
+  let { tipo, _id } = req.body;
+  tipo = sanitizeHtml(tipo);
+  _id = sanitizeHtml(_id);
 
   try{
 
@@ -329,9 +380,12 @@ const updateUserType = async (req, res) => {
 
 
 const deleteUser = async (req, res) => {
-  const {
+  let {
     params: { id: utilizadorId },
   } = req;
+  
+  utilizadorId = sanitizeHtml(utilizadorId);
+
   const utilizador = await User.findOneAndDelete({
     _id: utilizadorId,
   });

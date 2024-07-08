@@ -3,10 +3,12 @@ const User = require("../models/Utilizador");
 
 const { StatusCodes } = require("http-status-codes");
 const { NotFoundError } = require("../errors");
+const sanitizeHtml = require('sanitize-html');
 
 const getAllPagamentos = async (req, res) => {
   try {
-    const { sort } = req.query;
+    let { sort } = req.query;
+    sort = sanitizeHtml(sort);
 
     let result = Pagamentos.find();
     if (sort){
@@ -113,7 +115,8 @@ const getAllPagamentos = async (req, res) => {
 
 const getAllPagamentosUtilizador = async (req, res) => {
     try {
-      const utilizador = req.params.id;
+      let utilizador = req.params.id;
+      utilizador = sanitizeHtml(utilizador);
 
       const aUtilizador = await User.findOne({
         _id: utilizador,
@@ -156,8 +159,8 @@ const getAllPagamentosUtilizador = async (req, res) => {
   const getAllPagamentosUtilizadorResponsavel = async (req, res) => {
     try {
 
-      const utilizador = req.params.id;
-
+      let utilizador = req.params.id;
+      utilizador = sanitizeHtml(utilizador);
       const aUtilizador = await User.findOne({
         _id: utilizador,
       });
@@ -205,7 +208,10 @@ const getAllPagamentosUtilizador = async (req, res) => {
   const getPagamentosUtilizadorMes = async (req, res) => {
     try {
       
-      const {selectedUserID , day} = req.body;
+      let {selectedUserID , day} = req.body;
+
+      selectedUserID = sanitizeHtml(selectedUserID);
+      day = sanitizeHtml(day);
 
       const aUtilizador = await User.findOne({
         _id: selectedUserID,
@@ -235,7 +241,14 @@ const getAllPagamentosUtilizador = async (req, res) => {
   const addPagamentosUtilizador = async (req, res) => { 
     try {
 
-      const {Utilizador,  UtilizadorResponsavel, Mes,  Ano,  Horas} = req?.body;
+      let {Utilizador,  UtilizadorResponsavel, Mes,  Ano,  Horas} = req?.body;
+
+      Utilizador = sanitizeHtml(Utilizador);
+      UtilizadorResponsavel = sanitizeHtml(UtilizadorResponsavel);
+      Mes = sanitizeHtml(Mes);
+      Ano = sanitizeHtml(Ano);
+      Horas = sanitizeHtml(Horas);
+
       const aUtilizador = await User.findOne({
         _id: Utilizador,
       });

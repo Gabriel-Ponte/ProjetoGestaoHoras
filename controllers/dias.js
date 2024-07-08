@@ -10,8 +10,7 @@ const { exportExcell } = require("../exportExcellHours");
 
 
 const { exportExcellHoursProjetos } = require("../exportExcellHoursProjetos");
-const { log, Console } = require("console");
-const { json } = require("body-parser");
+const sanitizeHtml = require('sanitize-html');
 
 const getAllDias = async (req, res) => {
   try {
@@ -220,8 +219,9 @@ function calculateEaster(year, type) {
 
   const getAllDiasHorasExtra = async (req, res) => {
     try {
-      const { sort, tipo } = req.query;
-  
+      let { sort, tipo } = req.query;
+      sort = sanitizeHtml(sort);
+      tipo = sanitizeHtml(tipo);
       // Initial query to get Dias: 1
       let result = Dias.find({ accepted: 1 });
   
@@ -366,7 +366,10 @@ function calculateEaster(year, type) {
 
 const getAllDiasHorasExtraAccepted = async (req, res) => {
   try {
-    const { sort, tipo } = req.query;
+    let { sort, tipo } = req.query;
+
+    sort = sanitizeHtml(sort);
+    tipo = sanitizeHtml(tipo);
 
     // Initial query to get Dias with accepted: 2
     let result = Dias.find({ accepted: 2 });
@@ -509,7 +512,9 @@ const getAllDiasHorasExtraAccepted = async (req, res) => {
 
 const getAllDiasHorasExtraDeclined = async (req, res) => {
   try {
-    const { sort, tipo } = req.query;
+    let { sort, tipo } = req.query;
+    sort = sanitizeHtml(sort);
+    tipo = sanitizeHtml(tipo);
 
     // Initial query to get Dias with accepted: 3 Declined
     let result = Dias.find({ accepted: 3 });
@@ -651,7 +656,9 @@ const getAllDiasHorasExtraDeclined = async (req, res) => {
 };
 
 const acceptDiasHorasExtra = async (req, res) => {
-  const { id } = req.params;
+  let { id } = req.params;
+  id = sanitizeHtml(id);
+
 
   const dia = await Dias.findByIdAndUpdate(
     id,
@@ -681,8 +688,8 @@ const acceptDiasHorasExtra = async (req, res) => {
 
 
 const declineDiasHorasExtra = async (req, res) => {
-  const { id } = req.params;
-
+  let { id } = req.params;
+  id = sanitizeHtml(id);
   const diaToDecline = await Dias.findById(id);
 
   const tipoTrabalhoHoras = diaToDecline.tipoDeTrabalhoHoras;
@@ -780,10 +787,11 @@ const declineDiasHorasExtra = async (req, res) => {
 const getAllDiasUtilizadorTipo = async (req, res) => {
   try {
 
-    const {
+    let {
       params: { utilizador },
     } = req;
 
+    utilizador = sanitizeHtml(utilizador);
 
     let users = []
 
@@ -825,9 +833,12 @@ const getAllDiasUtilizadorTipo = async (req, res) => {
 };
 
 const getAllDiasUtilizador = async (req, res) => {
-  const {
+  let {
     params: { utilizador },
   } = req;
+
+  utilizador = sanitizeHtml(utilizador);
+
   const u1 = await User.findOne({
     nome: utilizador,
   });
@@ -852,10 +863,11 @@ const getAllDiasUtilizador = async (req, res) => {
 
 
 const getAllDiasProjeto = async (req, res) => {
-  const {
+  let {
     params: { projeto },
   } = req;
 
+  projeto = sanitizeHtml(projeto);
 
   const diasAllProjeto = await Dias.find({       $nor: [
     { accepted: 3 },
@@ -870,7 +882,10 @@ const getAllDiasProjeto = async (req, res) => {
 
 
 const getDiasUtilizador = async (req, res) => {
-  req.body.createdBy = req.user.userId;
+  let userID= req.user.userId;
+  
+  userID = sanitizeHtml(userID);
+
   const diasUtilizador = await Dias.find({       
     $nor: [
     { accepted: 3 },
@@ -879,7 +894,7 @@ const getDiasUtilizador = async (req, res) => {
   let x = 0;
   const listaUtilizador = null;
   for (i == 0; i < diasUtilizador.length; i++) {
-    if (diasUtilizador[i].Utilizador === req.user.userId) {
+    if (diasUtilizador[i].Utilizador === userID) {
       listaUtilizador[x] = diasUtilizador[i];
       x++;
     }
@@ -893,9 +908,12 @@ const getDiasUtilizador = async (req, res) => {
 
 
 const getDiasProjetoUtilizador = async (req, res) => {
-  const {
+  let {
     params: { projeto, utilizador },
   } = req;
+
+  projeto = sanitizeHtml(projeto);
+  utilizador = sanitizeHtml(utilizador);
 
   const u1 = await User.findOne({
     nome: utilizador,
@@ -917,9 +935,14 @@ const getDiasProjetoUtilizador = async (req, res) => {
 
 const getDia = async (req, res) => {
   try {
-    const {
+    let {
       params: { user: login },
     } = req;
+
+
+    login = sanitizeHtml(login);
+
+
     const dia = await Dias.find({
       $nor: [
         { accepted: 3 },
@@ -941,7 +964,9 @@ const getDia = async (req, res) => {
 
 const getDiaID = async (req, res) => {
   try {
-    const { id } = req.params;
+    let { id } = req.params;
+
+    id = sanitizeHtml(id);
 
     const dia = await Dias.findById(id);
 
@@ -958,9 +983,12 @@ const getDiaID = async (req, res) => {
 
 const getDiaInf = async (req, res) => {
   try {
-    const {
+    let {
       params: { user: login },
     } = req;
+    
+    login = sanitizeHtml(login);
+
     const dia = await Dias.find({
       Utilizador: login,
       $nor: [
@@ -978,10 +1006,14 @@ const getDiaInf = async (req, res) => {
 };
 
 const createDia = async (req, res) => {
+  let idU = req.body.Utilizador;
+  idU = sanitizeHtml(idU);
+
   const aUtilizador = await User.findOne({
-    _id: req.body.Utilizador,
+    _id: idU,
   });
 
+  
   const tipoDeTrabalhoHorasArray = [];
   for (let index = 0; index < Object.keys(req.body.tipoDeTrabalhoHoras).length; index++) {
     const obj = req.body.tipoDeTrabalhoHoras[Object.keys(req.body.tipoDeTrabalhoHoras)[index]];
@@ -1032,8 +1064,10 @@ const createDia = async (req, res) => {
 
 const createDiaDomingo = async (req, res) => {
   try {
+  let idU = req.body.Utilizador;
+  idU = sanitizeHtml(idU);
   const aUtilizador = await User.findOne({
-    _id: req.body.Utilizador,
+    _id: idU,
   });
 
   const tipoDeTrabalhoHorasArray = [];
@@ -1199,7 +1233,8 @@ const createDiaDomingo = async (req, res) => {
 
 
 const updateDia = async (req, res) => {
-  const { id } = req.params;
+  let { id } = req.params;
+  id = sanitizeHtml(id);
 
   const tipoDeTrabalhoHorasArray = [];
   for (let index = 0; index < Object.keys(req.body.tipoDeTrabalhoHoras).length; index++) {
@@ -1245,8 +1280,8 @@ const updateDia = async (req, res) => {
 
 
 const deleteDia = async (req, res) => {
-  const { id } = req.params;
-
+  let { id } = req.params;
+  id = sanitizeHtml(id);
 
   try {
     const dia = await Dias.findById(id);
@@ -1316,7 +1351,10 @@ const deleteDia = async (req, res) => {
 
 const exportDias = async (req, res) => {
   try {
-    const { userID: userID, userTipo: userTipo } = req.body;
+    let { userID: userID, userTipo: userTipo } = req.body;
+    
+    userID = sanitizeHtml(userID);
+    userTipo = sanitizeHtml(userTipo);
 
     const user = await User.findOne({
       _id: userID,
