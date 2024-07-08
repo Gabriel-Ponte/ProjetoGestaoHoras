@@ -258,7 +258,7 @@ const VisualizarProjeto = () => {
         });
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line
   }, [selectedDay, selectedUser, listaDias, dispatch, setValues]);
 
 
