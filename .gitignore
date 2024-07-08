@@ -6,7 +6,7 @@
 /coverage
 
 # production
-/client/build/
+
 /certs/
 # misc
 .DS_Store
@@ -22,3 +22,4 @@ yarn-error.log*
 .env
 /node_modules/
 /node_modules
+client/build/
