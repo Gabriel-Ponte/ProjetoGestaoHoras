@@ -6,7 +6,8 @@ import { AiFillDelete } from 'react-icons/ai';
 import { getDiaID } from '../features/dias/diasSlice';
 import PropTypes from 'prop-types'; 
 
-const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, associated, listaTT, accepted, deleteDay }) => {
+const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, associated, listaTT, accepted, tipoUser, deleteDay }) => {
+
   const dispatch = useDispatch();
   const [projeto, setProjeto] = useState([]);
   const [diaAssociated, setDiaAssociated] = useState([]);
@@ -132,7 +133,7 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, associat
               <div className="col-md-3 themed-grid-col">
                 <h3>{Data ? new Date(Data).toLocaleDateString('en-CA') : ''}</h3>
               </div>
-              {accepted !== 2 && accepted !== 3 && accepted !== 5 &&
+              { (tipoUser === 7 || (accepted !== 2 && accepted !== 3 && accepted !== 5)) &&
               <div>
 
                 <button type='submit'

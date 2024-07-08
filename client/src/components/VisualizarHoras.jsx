@@ -1286,6 +1286,7 @@ const ListaHoras = () => {
                     //   }
                     // }
 
+
                     const data = new Date(dia.Data);
                     const isSameMonth = month === data.getMonth() && year === data.getFullYear();
                     const isSameDate = diaSelected === 0 || Number(diaSelected) === data.getDate();
@@ -1295,7 +1296,7 @@ const ListaHoras = () => {
                       return (
                         <div key={count + selectedUser}>
                           {/* <Dia key={dia.Data + selectedUser + count} {...dia} horasPossiveis={possibleHours} listaTT={listaTipoTrabalho} deleteDay={deleteDiaConfirm}/> */}
-                          <Dia key={dia.Data + selectedUser + count} {...dia} listaTT={listaTipoTrabalho} deleteDay={deleteDiaConfirm}/>
+                          <Dia key={dia.Data + selectedUser + count} {...dia} listaTT={listaTipoTrabalho} tipoUser={user.user.tipo} deleteDay={deleteDiaConfirm}/>
                         </div>
                       );
                     }
