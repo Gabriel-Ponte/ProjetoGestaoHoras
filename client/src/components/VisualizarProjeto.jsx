@@ -258,7 +258,8 @@ const VisualizarProjeto = () => {
         });
       }
     }
-     
+
+    // eslint-disable-next-line
   }, [selectedDay, selectedUser, listaDias, dispatch, setValues]);
 
 
