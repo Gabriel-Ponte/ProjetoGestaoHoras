@@ -4,14 +4,11 @@ import { getUserFromLocalStorage } from './localStorage';
 //import { rejectWithValue } from '@reduxjs/toolkit';
 
 const customFetch = axios.create({
-<<<<<<< HEAD:client/src/utils/axios.js
-  baseURL: 'http://localhost:8080/',
-  //baseURL: 'http://192.168.10.48:8080/',
-=======
+
   // baseURL: 'http://localhost:8080/',
   // baseURL: 'https://192.168.10.102:8080/',
   baseURL: 'http://192.168.10.48:8080/',
->>>>>>> vite-App:client/src/utils/axios.jsx
+
 });
 
 customFetch.interceptors.request.use((config) => {

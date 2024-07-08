@@ -6,9 +6,9 @@ const path = require("path");
 const fs = require("fs");
 
 
-// Path to your SSL certificate and key
-const key = fs.readFileSync(path.resolve(__dirname, 'certs/private.key'));
-const cert = fs.readFileSync(path.resolve(__dirname, 'certs/certificate.crt'));
+// Path to your SSL certificate and key https
+// const key = fs.readFileSync(path.resolve(__dirname, 'certs/private.key'));
+// const cert = fs.readFileSync(path.resolve(__dirname, 'certs/certificate.crt'));
 
 // const imagePath = path.join(__dirname, "/images", "DefaultUserImg.png");
 // const imageBuffer = fs.readFileSync(imagePath);
@@ -82,15 +82,15 @@ const start = async () => {
 
     await connectDB(process.env.MONGO_URI);
 
-    https.createServer({ key, cert }, app).listen(port, () => {
-      console.log(`Server is listening on port ${port}...`);
-    });
+    // https.createServer({ key, cert }, app).listen(port, () => {
+    //   console.log(`Server is listening on port ${port}...`);
+    // });
 
 
-    // app.listen(port, () =>
+    app.listen(port, () =>
     
-    //   console.log(`Server is listening on port ${port}...`)
-    // );
+      console.log(`Server is listening on port ${port}...`)
+    );
   } catch (error) {
     console.error(error);
   }

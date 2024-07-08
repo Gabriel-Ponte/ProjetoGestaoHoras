@@ -258,11 +258,8 @@ const VisualizarProjeto = () => {
         });
       }
     }
-<<<<<<< HEAD:client/src/components/VisualizarProjeto.js
+
     // eslint-disable-next-line
-=======
-     
->>>>>>> vite-App:client/src/components/VisualizarProjeto.jsx
   }, [selectedDay, selectedUser, listaDias, dispatch, setValues]);
 
 
