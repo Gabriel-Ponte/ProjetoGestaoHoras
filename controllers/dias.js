@@ -1222,8 +1222,7 @@ const acceptDiasHorasExtra = async (req, res) => {
         subject: 'Aplicação Gestão Horas - Horas Extra Aceites',
         html: `
           <p>Horas Extra inseridas para o dia ${dataDay}/${dataMonth}/${dataYear} foram aceites!</p>
-          <p>Se precisar de informações adicionais ou tiver dúvidas sobre este assunto, contacte os Recursos Humanos.</p>
-          <p>Agradecemos a sua compreensão e colaboração.</p>`
+          <p>Agradecemos a sua colaboração.</p>`
       };
     } else {
 
@@ -1233,8 +1232,7 @@ const acceptDiasHorasExtra = async (req, res) => {
         subject: 'Aplicação Gestão Horas - Compensação de Horas extra Aceites',
         html: `
           <p>Pedido de compensação de Horas Extra para o dia ${dataDay}/${dataMonth}/${dataYear} foi aceite!</p>
-          <p>Se precisar de informações adicionais ou tiver dúvidas sobre este assunto, contacte os Recursos Humanos.</p>
-          <p>Agradecemos a sua compreensão e colaboração.</p> `
+          <p>Agradecemos a sua colaboração.</p> `
       };
     }
     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
@@ -1347,37 +1345,37 @@ const declineDiasHorasExtra = async (req, res) => {
       await sgMail.send(mailOptions);
     }
 
-    // let mailOptions = ""
-    // if (tipo === 1) {
-    //   mailOptions = {
-    //     from: process.env.EMAIL, // Sender's email address
-    //     to: email, // Recipient's email address
-    //     subject: 'Aplicação Gestão Horas - Horas Extra Recusadas',
-    //     html: `
-    //       <p>Horas Extra inseridas para o dia ${dataDay}/${dataMonth}/${dataYear} foram recusadas!</p>
-    //       <p>Por favor, reinsira as horas relativas a este dia e certifique-se de que todos os valores correspondem á realidade.</p>
-    //       <p>Se precisar de informações adicionais ou tiver dúvidas sobre este assunto, contacte os Recursos Humanos.</p>
-    //       <p>Agradecemos a sua compreensão e colaboração.</p>`
-    //   };
-    // } else {
+    let mailOptions = ""
+    if (tipo === 1) {
+      mailOptions = {
+        from: process.env.EMAIL, // Sender's email address
+        to: email, // Recipient's email address
+        subject: 'Aplicação Gestão Horas - Horas Extra Recusadas',
+        html: `
+          <p>Horas Extra inseridas para o dia ${dataDay}/${dataMonth}/${dataYear} foram recusadas!</p>
+          <p>Por favor, reinsira as horas relativas a este dia e certifique-se de que todos os valores correspondem á realidade.</p>
+          <p>Se precisar de informações adicionais ou tiver dúvidas sobre este assunto, contacte os Recursos Humanos.</p>
+          <p>Agradecemos a sua compreensão e colaboração.</p>`
+      };
+    } else {
 
-    //   mailOptions = {
-    //     from: process.env.EMAIL, // Sender's email address
-    //     to: email, // Recipient's email address
-    //     subject: 'Aplicação Gestão Horas - Compensação de Horas extra Recusada',
-    //     html: `
-    //       <p>Pedido de compensação de Horas Extra para o dia ${dataDay}/${dataMonth}/${dataYear} foi recusado!</p>
-    //       <p>Por favor, reinsira as horas relativas a este dia.</p>
-    //       <p>Se precisar de informações adicionais ou tiver dúvidas sobre este assunto, contacte os Recursos Humanos.</p>
-    //       <p>Agradecemos a sua compreensão e colaboração.</p> `
-    //   };
-    // }
-    // sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+      mailOptions = {
+        from: process.env.EMAIL, // Sender's email address
+        to: email, // Recipient's email address
+        subject: 'Aplicação Gestão Horas - Compensação de Horas extra Recusada',
+        html: `
+          <p>Pedido de compensação de Horas Extra para o dia ${dataDay}/${dataMonth}/${dataYear} foi recusado!</p>
+          <p>Por favor, reinsira as horas relativas a este dia.</p>
+          <p>Se precisar de informações adicionais ou tiver dúvidas sobre este assunto, contacte os Recursos Humanos.</p>
+          <p>Agradecemos a sua compreensão e colaboração.</p> `
+      };
+    }
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-    // // Send the email
-    // //await transporter.sendMail(mailOptions);
+    // Send the email
+    //await transporter.sendMail(mailOptions);
 
-    // await sgMail.send(mailOptions);
+    await sgMail.send(mailOptions);
 
   } catch (error) {
     console.error("Error Sending email!")
