@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteUser, updateUserType, listaUtilizadores } from '../features/utilizadores/utilizadorSlice';
+import { deleteUser, updateUserType, listaUtilizadores, listaUsersTipo } from '../features/utilizadores/utilizadorSlice';
 import Wrapper from '../assets/wrappers/GerirUtilizador';
 import { AiFillDelete } from 'react-icons/ai';
 import FormRowSelectTipo from './FormRowSelectTipo';
@@ -38,6 +38,78 @@ const GerirUtilizadores = () => {
     });
   }, [callUseEffect ,dispatch]);
 
+  
+useEffect(() => {
+    let  name = "";
+    let value = "";
+
+    const fetchResponsaveis = async (valTipo) => {
+        try {
+            const res = await dispatch(listaUsersTipo(valTipo));
+            return Array.isArray(res?.payload?.UsersAllTipo) ? res.payload.UsersAllTipo : [];
+        } catch (error) {
+            console.error('Error fetching listaUsersTipo:', error);
+            return [];
+        }
+    };
+
+// Im here
+const updateList = async (e, id) => {
+  const newList = await Promise.all(listaDeUtilizadores.map(async (item, i) => {
+      let valTipo = 0;
+
+      let newValue = item.tipo;
+
+      switch (newValue) {
+          case 2:
+              break;
+          case 1:
+              valTipo = 5;
+              break;
+          case 3:
+              valTipo = 6;
+              break;
+          case 4:
+              valTipo = 7;
+              break;
+          case 5:
+              newValue = 5;
+              break;
+          case 6:
+              newValue = 6;
+              break;
+          case 7:
+              newValue = 7;
+              break;
+          default:
+              break;
+      }
+
+      let listaResponsaveis = [];
+      if (valTipo > 0) {
+          listaResponsaveis = await fetchResponsaveis(valTipo);
+      }
+
+      const newItem = {
+          ...item,
+          listaResponsaveis,
+          [name]: newValue,
+      };
+
+      if (newItem._id === id) {
+          const isSameAsInitial = initialState && initialState[i]._id === id && initialState[i][name] === newValue;
+          setVerificaAlterado((prevState) => ({
+              ...prevState,
+              [id]: !isSameAsInitial,
+          }));
+      }
+      return newItem;
+  }));
+  setListaUtilizadores(newList);
+};
+
+updateList();
+}, [initialState]);
 
   //let StringListaUtilizadores = listaUtilizadores.map(item => item.Utilizador).join(",");
 
@@ -73,49 +145,89 @@ const GerirUtilizadores = () => {
     }
   };
 
-  const handleChangeUtilizador = (e, id) => {
-    let { name, value } = e.target;
-    const updatedListaUtilizador = listaDeUtilizadores.map((item, i) => {
 
-      if(value === "Administrador"){
-        value = 2;
-      }else if(value === "Engenharia de Processos"){
-        value = 1;
-      }else if(value === "Laboratorio"){
-        value = 3;
-      }else if(value === "Recursos Humanos"){
-        value = 4;
-      }else if(value === "Administrador Engenharia"){
-        value = 5;
-      }else if(value === "Administrador Laboratorio"){
-        value = 6;
-      }else if(value === "Administrador Recursos Humanos"){
-        value = 7;
+
+  const fetchResponsaveis = async (valTipo) => {
+      try {
+          const res = await dispatch(listaUsersTipo(valTipo));
+          return Array.isArray(res?.payload?.UsersAllTipo) ? res.payload.UsersAllTipo : [];
+      } catch (error) {
+          console.error('Error fetching listaUsersTipo:', error);
+          return [];
+      }
+  };
+
+  const handleChangeUtilizador = async(e, id) => {
+    let { name, value } = e.target;
+
+
+
+    const updatedListaUtilizador = await Promise.all(listaDeUtilizadores.map(async (item, i) => {
+      let valTipo = 0;
+
+      if (name !== "responsavel") {
+        switch (value) {
+          case "Administrador":
+            value = 2;
+            break;
+          case "Engenharia de Processos":
+            valTipo = 5;
+            value = 1;
+            break;
+          case "Laboratorio":
+            value = 3;
+            valTipo = 6;
+            break;
+          case "Recursos Humanos":
+            value = 4;
+            valTipo = 7;
+            break;
+          case "Administrador Engenharia":
+            value = 5;
+            break;
+          case "Administrador Laboratorio":
+            value = 6;
+            break;
+          case "Administrador Recursos Humanos":
+            value = 7;
+            break;
+          case 1:
+            valTipo = 5;
+            break;
+          case 3:
+            valTipo = 6;
+            break;
+          case 4:
+            valTipo = 7;
+            break;
+          default:
+            valTipo = 0;
+            break;
+        }
       }
 
-
-
-
       if (item._id === id) {
-        if (initialState && initialState[i]._id === id && initialState[i][name] === value) {
-          setVerificaAlterado((prevState) => ({
-            ...prevState,
-            [id]: false,
-          }));
-          return { ...item, [name]: value };
-        } else {
-          setVerificaAlterado((prevState) => ({
-            ...prevState,
-            [id]: true,
-          }));
-          return { ...item, [name]: value };
+        const isInitialStateUnchanged = initialState && initialState[i]._id === id && initialState[i][name] === value;
+
+        setVerificaAlterado((prevState) => ({
+          ...prevState,
+          [id]: !isInitialStateUnchanged,
+        }));
+        if (valTipo > 0) {
+          item.listaResponsaveis = await fetchResponsaveis(valTipo);
+          item.responsavel = item?.listaResponsaveis[0]?._id ? item?.listaResponsaveis[0]?._id : "";
+          return { ...item, listaResponsaveis: await fetchResponsaveis(valTipo), [name]: value };
+        }else{
+          item.responsavel = "";
+          return { ...item,  [name]: value };
         }
       }
       return item;
-    });
-
+    }));
     setListaUtilizadores(updatedListaUtilizador);
   };
+
+
 
   if(isLoading){
     return <Loading />
@@ -152,6 +264,21 @@ const GerirUtilizadores = () => {
                     value={t.tipo}
                     list={[["Engenharia de Processos"], ["Laboratorio"] ,["Recursos Humanos"] , ["Administrador"] , ["Administrador Engenharia"] , ["Administrador Laboratorio"], ["Administrador Recursos Humanos"]]}
                   />
+
+              {t.tipo === 3 &&
+                <>
+                <FormRowSelectTipo
+                      type="text"
+                      className="form-control"
+                      id="responsavel"
+                      name ="responsavel"
+                      labelText="Responsavel"
+                      value= {t.responsavel}
+                      list = {t?.listaResponsaveis}
+                      handleChange={(e) => handleChangeUtilizador(e, t._id)}  
+                  />
+              </>
+                }
 
                 </div>
                 <div className="col-md-4 text-center">

@@ -11,7 +11,7 @@ const PaginaGerirHorasExtra = () => {
 
   useEffect(() => {
     if (user) {
-      if (user.user.tipo === 7) {
+      if (user.user.tipo === 7 || user.user.tipo === 6) {
         // Render the component
       } else if( user.user.tipo === 1 || user?.user?.tipo === 2){
         toast.error("Sem permissões para aceder a esta página!");
@@ -29,7 +29,7 @@ const PaginaGerirHorasExtra = () => {
 
   return (
     <>
-      {user && (user?.user?.tipo === 7) && <GerirHorasExtra />}
+      {user && (user?.user?.tipo === 7 || user?.user?.tipo === 6) && <GerirHorasExtra />}
     </>
   );
 };

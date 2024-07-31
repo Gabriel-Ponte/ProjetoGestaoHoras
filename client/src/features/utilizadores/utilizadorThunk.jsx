@@ -4,6 +4,17 @@ import { logoutUser } from './utilizadorSlice';
 
 
 
+export const getAllUserTipo = async (tipo, thunkAPI) => {
+  try {
+    const resp = await customFetch.get(`/utilizador/getAllUserTipo/${tipo}`);
+    return resp.data;
+  } catch (error) {
+
+    return checkForUnauthorizedResponse(error, thunkAPI);
+  }
+};
+
+
 export const showAllUtilizadores = async (_, thunkAPI) => {
     try {
       const resp = await customFetch.get('/utilizador');

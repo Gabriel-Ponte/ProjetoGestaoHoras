@@ -35,6 +35,8 @@ import AddHorasGeralDropdown from './AddHorasGeralDropdown';
 import AddHorasProjetoDropdown from './AddHorasProjetoDropdown';
 import AddHorasCopiar from './AddHorasCopiar';
 import useFeriadosPortugal from './FeriadosPortugal';
+import getFeriadosPortugalDate from './FeriadosPortugal';
+
 import ProjetoListaFolder from './ProjetoListaFolder';
 import NavLinksModalBox from './NavLinksModalBox';
 import GerirHorasExtra from './GerirHorasExtra'
@@ -57,6 +59,7 @@ export {
   AddHorasGeral,
   ProjetoListaFolder,
   useFeriadosPortugal,
+  getFeriadosPortugalDate,
   OptionsPanel,
   FormRow,
   FormRowSelect,

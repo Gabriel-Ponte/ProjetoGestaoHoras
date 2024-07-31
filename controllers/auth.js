@@ -15,6 +15,21 @@ const getAllUser = async (req, res) => {
   res.status(StatusCodes.OK).json({ UsersAll });
 };
 
+const getAllUserTipo = async (req, res) => {
+
+  let {
+    params: { tipo: tipo },
+  } = req;
+
+  const UsersAllTipo = await User.find({ tipo: tipo  , estado : true}, { _id: 1, nome: 1 });
+
+  if (!UsersAllTipo) {
+    throw new NotFoundError(`Não foi encontrado nenhum utilizador`);
+  }
+  res.status(StatusCodes.OK).json({ UsersAllTipo });
+};
+
+
 
 const getUser = async (req, res) => {
   let {
@@ -162,7 +177,8 @@ const getUserEmail = async (req, res) => {
 };
 
 const register = async (req, res) => {
-  let { login, password, codigo, email, nome, tipo } = req.body;
+
+  let { login, password, codigo, email, nome, tipo, responsavel } = req.body;
 
   login = sanitizeHtml(login);
   password = sanitizeHtml(password);
@@ -170,7 +186,7 @@ const register = async (req, res) => {
   email = sanitizeHtml(email);
   nome = sanitizeHtml(nome);
   tipo = sanitizeHtml(tipo);
-
+  responsavel = sanitizeHtml(responsavel);
   let foto = req.body.foto;
 
   const sanitizedFoto = {};
@@ -194,7 +210,8 @@ const register = async (req, res) => {
         data: buffer,
         contentType: 'image/png'
       },
-      estado: true
+      estado: true,
+      responsavel: responsavel,
     });
 
     res.status(StatusCodes.CREATED).json({
@@ -209,7 +226,8 @@ const register = async (req, res) => {
         },
         nome: user.nome,
         tipo: user.tipo,
-        estado: user.estado
+        estado: user.estado,
+        responsavel: responsavel,
       },
     });
   } catch (error) {
@@ -344,16 +362,17 @@ const updateUser = async (req, res) => {
 };
 
 const updateUserType = async (req, res) => {
-  let { tipo, _id } = req.body;
+  let { tipo, _id, responsavel } = req.body;
+  
+  responsavel = sanitizeHtml(responsavel);
   tipo = sanitizeHtml(tipo);
   _id = sanitizeHtml(_id);
 
   try{
-
   const user = await User.findOne({ _id: _id });
 
   user.tipo = tipo;
-
+  user.responsavel = responsavel;
   await user.save();
 
   const token = user.createJWT();
@@ -406,4 +425,5 @@ module.exports = {
   deleteUser,
   postResetPassword,
   updateResetedPassword,
+  getAllUserTipo,
 };

@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
-import { getAllDiasProjetoThunk, getAllDiasUtilizadorThunk ,getAllDiasThunk,getAllDiasProjetoUtilizadorThunk ,exportDiasThunk, getAllDiasUtilizadorTipoThunk, getAllDiasHorasExtraThunk, acceptDiasHorasExtraThunk, declineDiasHorasExtraThunk, getAllDiasHorasExtraDeclinedThunk, getAllDiasHorasExtraAcceptedThunk} from './allDiasThunk';
+import { getAllDiasProjetoThunk, getAllDiasUtilizadorThunk ,getAllDiasThunk,getAllDiasProjetoUtilizadorThunk ,exportDiasThunk, getAllDiasUtilizadorTipoThunk, getAllDiasHorasExtraThunk, acceptDiasHorasExtraThunk, declineDiasHorasExtraThunk, getAllDiasHorasExtraDeclinedThunk, getAllDiasHorasExtraAcceptedThunk, getAllDiasHorasExtraResponsavelThunk, getAllDiasHorasExtraAcceptedResponsavelThunk, getAllDiasHorasExtraDeclinedResponsavelThunk} from './allDiasThunk';
 
 const initialState = {
   sort:'',
@@ -8,6 +8,8 @@ const initialState = {
   dias: [],
   stats: {},
 };
+
+
 
 export const getAllDias = createAsyncThunk(
   '/dia/dias/', 
@@ -42,6 +44,28 @@ export const getAllDiasHorasExtraDeclined = createAsyncThunk(
   '/dia/getAllDiasHorasExtraDeclined', 
   async (_, thunkAPI) => {
     return getAllDiasHorasExtraDeclinedThunk(thunkAPI);
+  }
+);
+
+
+export const getAllDiasHorasExtraResponsavel = createAsyncThunk(
+  '/dia/getAllDiasHorasExtraResponsavel', 
+  async (_, thunkAPI) => {
+    return getAllDiasHorasExtraResponsavelThunk(thunkAPI);
+  }
+);
+
+export const getAllDiasHorasExtraAcceptedResponsavel = createAsyncThunk(
+  '/dia/getAllDiasHorasExtraAcceptedResponsavel', 
+  async (_, thunkAPI) => {
+    return getAllDiasHorasExtraAcceptedResponsavelThunk(thunkAPI);
+  }
+);
+
+export const getAllDiasHorasExtraDeclinedResponsavel = createAsyncThunk(
+  '/dia/getAllDiasHorasExtraDeclinedResponsavel', 
+  async (_, thunkAPI) => {
+    return getAllDiasHorasExtraDeclinedResponsavelThunk(thunkAPI);
   }
 );
 
@@ -82,6 +106,9 @@ const allDiasSlice = createSlice({
   name: 'AllDias',
   initialState,
   reducers: {
+    setDias: (state, { payload: {dias}}) => {
+      state.dias = dias;
+    },
     showLoading: (state) => {
       state.isLoading = true;
     },
@@ -226,6 +253,45 @@ const allDiasSlice = createSlice({
       state.isLoading = false;
     })
 
+
+    .addCase(getAllDiasHorasExtraResponsavel.pending, (state) => {
+      state.isLoading = true;
+    })
+    .addCase(getAllDiasHorasExtraResponsavel.fulfilled, (state , { payload }) => {
+      state.isLoading = false;
+      toast.success(payload);
+    })
+    .addCase(getAllDiasHorasExtraResponsavel.rejected, (state) => {
+      state.isLoading = false;
+    })
+
+
+
+    
+    .addCase(getAllDiasHorasExtraAcceptedResponsavel.pending, (state) => {
+      state.isLoading = true;
+    })
+    .addCase(getAllDiasHorasExtraAcceptedResponsavel.fulfilled, (state , { payload }) => {
+      state.isLoading = false;
+      toast.success(payload);
+    })
+    .addCase(getAllDiasHorasExtraAcceptedResponsavel.rejected, (state) => {
+      state.isLoading = false;
+    })
+
+    
+    .addCase(getAllDiasHorasExtraDeclinedResponsavel.pending, (state) => {
+      state.isLoading = true;
+    })
+    .addCase(getAllDiasHorasExtraDeclinedResponsavel.fulfilled, (state , { payload }) => {
+      state.isLoading = false;
+      toast.success(payload);
+    })
+    .addCase(getAllDiasHorasExtraDeclinedResponsavel.rejected, (state) => {
+      state.isLoading = false;
+    })
+
+
     .addCase(acceptDiasHorasExtra.pending, (state) => {
       state.isLoading = true;
     })
@@ -262,6 +328,7 @@ export const {
   showLoading,
   hideLoading,
   handleChange,
+  setDias,
   clearAllDiasState,
 } = allDiasSlice.actions;
 

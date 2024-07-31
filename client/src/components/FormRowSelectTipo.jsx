@@ -3,6 +3,48 @@ import Wrapper from '../assets/wrappers/FormRowSelectTipo';
 import PropTypes from 'prop-types'; 
 
 const FormRowSelectTipo =  ({ labelText, name, value, handleChange, list, className , keyGet}) => {
+  const generateUniqueId = `tt-${keyGet}`;
+
+  if(name === "responsavel"){
+
+    let selectOptions = [];
+
+    if (list?.length > 0) {
+      for (let i = 0; i < list?.length; i++) {
+        selectOptions.push(
+          <option key={i} value={list[i]._id}>
+            {list[i].nome}
+          </option>
+        );
+      }
+      return(    
+            <Wrapper>
+              <div className={className ? className : 'form-row text-center'} style={{ width: '100%' }} key={keyGet}>
+                {labelText !== " " &&
+                <label htmlFor={keyGet} className='form-label'>  {labelText || name} </label>
+                }
+                  <div className="text-center">
+                  <select
+                  name={name}
+                  id={name}
+                  value={value}
+                  onChange={handleChange}
+                  className="form-select"
+                >
+                {selectOptions}
+              </select>
+                <br></br>
+                </div>
+              </div>
+            </Wrapper>
+      );
+  } else{
+    selectOptions = [ ];
+  }
+
+    return(<></>);
+  }
+
   if(value === 1 && name === "tipo"){
     value = "Engenharia de Processos";
   }else if(value === 2 && name === "tipo"){
@@ -31,9 +73,9 @@ const FormRowSelectTipo =  ({ labelText, name, value, handleChange, list, classN
     value = "Extra";
   }else if(value === 6 && name === "tipoT"){
     value = "Compensação Domingo";
+  }else if(value === 7 && name === "tipoT"){
+    value = "Ferias";
   }
-  
-
 
   const containerStyle = {
     width: value === "Compensação" || value === "Extra" ? '100%' : '75%',
@@ -41,13 +83,12 @@ const FormRowSelectTipo =  ({ labelText, name, value, handleChange, list, classN
     marginRight: 'auto',
   };
   
-  const generateUniqueId = `tt-${keyGet}`;
+
 
   return (
     <Wrapper>
     <div className={className ? className : 'form-row text-center'} style={{ width: '100%' }} key={keyGet}>
       {labelText !== " " &&
-
       <label htmlFor={keyGet} className='form-label'>  {labelText || name} </label>
       }
       
@@ -59,7 +100,7 @@ const FormRowSelectTipo =  ({ labelText, name, value, handleChange, list, classN
         value={value}
         onChange={handleChange}
         className='form-select'
-        disabled={value === "Compensação" || value === "Extra" || value === "Compensação Domingo"}
+        disabled={value === "Compensação" || value === "Extra" || value === "Ferias" ||value === "Compensação Domingo"}
       >
         {list.map((itemValue, index) => {
           return (
@@ -80,7 +121,10 @@ const FormRowSelectTipo =  ({ labelText, name, value, handleChange, list, classN
 FormRowSelectTipo.propTypes = {
   labelText: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  value: PropTypes.number.isRequired,
+  value: PropTypes.oneOfType([
+    PropTypes.number.isRequired,
+    PropTypes.string.isRequired
+  ]).isRequired,
   handleChange: PropTypes.func.isRequired,
   list: PropTypes.array,
   className: PropTypes.string,

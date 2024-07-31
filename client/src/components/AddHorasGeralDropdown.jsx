@@ -13,18 +13,20 @@ import OptionsPanel from './OptionsPanel';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import PropTypes from 'prop-types'; 
-
+import { getFeriadosPortugalDate } from '../components/FeriadosPortugal';
 
 
 const AddHorasGeralDropdown = ({ sortedProjetos, verificaChange, listaTipoTrabalho, 
   values, handleHorasChange, convertToMinutes,
   arrayTipoTrabalho, matchFoundProjeto, ListaTrabalhoAll,
   ListaTrabalhoGeral, ListaTrabalhoGeralOther, setListaTrabalhoGeralOther,
-  setListaTipoTrabalho, setListaTrabalhoGeral }) => {
+  setListaTipoTrabalho, setListaTrabalhoGeral, change }) => {
 
     const [StringListaTrabalhoGeral, setStringListaTrabalhoGeral] = useState();
     const [StringListaTrabalhoGeralOther, setStringListaTrabalhoGeralOther] = useState();
     const [listaTrabalhoGeralAdd, setListaTrabalhoGeralAdd] = useState();
+    const [StringListaTrabalhoCompensacaoD, setStringListaTrabalhoCompensacaoD] = useState();
+    const [listaTrabalhoGeralD, setListaTrabalhoGeralD] = useState([]);
     const [options, setOptions] = useState();
 
 
@@ -44,24 +46,36 @@ const AddHorasGeralDropdown = ({ sortedProjetos, verificaChange, listaTipoTrabal
       const endDay = dayEnd.getDate();
 
       let ListaTrabalhoGeralString = [];
-
       if((dateDay >=  startDay && dateMonth === startMonth && dateYear === startYear)  || dateYear > startYear || dateMonth > startMonth){
         if((dateDay <=  endDay && dateMonth === startMonth && dateYear === startYear)){
-          setListaTrabalhoGeralAdd(ListaTrabalhoGeral.filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 5)));
-          ListaTrabalhoGeralString = listaTipoTrabalho.filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 5)).map(item => item.TipoTrabalho).join(",");
-        } else {
-          setListaTrabalhoGeralAdd(ListaTrabalhoGeral.filter(item => (item.tipo === 2 || item.tipo === 4)));
+
+          if(date && (date.getDay() === 0 || date.getDay() === 6 || getFeriadosPortugalDate(date))){
+            setListaTrabalhoGeralAdd(tipoTrabalhoArray.filter(item => (item.tipo === 2 || item.tipo === 5)));
+            ListaTrabalhoGeralString = listaTipoTrabalho.filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 5)).map(item => item.TipoTrabalho).join(",");
+          } else{
+          setListaTrabalhoGeralAdd(ListaTrabalhoGeral.filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 5  || item.tipo === 7)));
+          ListaTrabalhoGeralString = listaTipoTrabalho.filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 5 || item.tipo === 7)).map(item => item.TipoTrabalho).join(",");
+        }} else {
+          if(date && (date.getDay() === 0 || date.getDay() === 6 || getFeriadosPortugalDate(date))){
+            setListaTrabalhoGeralAdd(ListaTrabalhoGeral.filter(item => (item.tipo === 2 )));
+            ListaTrabalhoGeralString = listaTipoTrabalho
+            .filter(item => (item.tipo === 2))
+            .map(item => item.TipoTrabalho).join(",");
+          } else{
+          setListaTrabalhoGeralAdd(ListaTrabalhoGeral.filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 7)));
           ListaTrabalhoGeralString = listaTipoTrabalho
-          .filter(item => (item.tipo === 2 || item.tipo === 4))
+          .filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 7))
           .map(item => item.TipoTrabalho).join(",");
         }
+      }
       }else{
         setListaTrabalhoGeralAdd(ListaTrabalhoGeral.filter(item => (item.tipo === 2)));
         ListaTrabalhoGeralString = listaTipoTrabalho
-        .filter(item => (item.tipo === 2))
+        .filter(item => (item.tipo === 2 || item.tipo === 7))
         .map(item => item.TipoTrabalho)
         .join(",");
       }
+
 
       //const ListaTrabalho = listaTipoTrabalho.filter(item => item.tipo === 1).map(item => item.TipoTrabalho).join(",");
 
@@ -69,14 +83,17 @@ const AddHorasGeralDropdown = ({ sortedProjetos, verificaChange, listaTipoTrabal
         .filter(item => item.tipo === 3)
         .map(item => item.TipoTrabalho)
         .join(",");
-  
+        
+
+      const ListaTrabalhoGeralDomingo = listaTipoTrabalho.filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 6));
+      const strListaTrabalhoGeralDomingo = ListaTrabalhoGeralDomingo.map(item => item.TipoTrabalho).join(",");
+
+      setListaTrabalhoGeralD(ListaTrabalhoGeralDomingo);
+      setStringListaTrabalhoCompensacaoD(strListaTrabalhoGeralDomingo);
       setStringListaTrabalhoGeral(ListaTrabalhoGeralString);
-  
       setStringListaTrabalhoGeralOther(ListaTrabalhoGeralOther);
-  
       setOptions(ListaTrabalhoGeralOther?.split(","));
-     
-    }, [listaTipoTrabalho, values.Data]);
+    }, [listaTipoTrabalho, values.Data, change]);
 
 
   const dispatch = useDispatch();
@@ -167,10 +184,9 @@ const AddHorasGeralDropdown = ({ sortedProjetos, verificaChange, listaTipoTrabal
                   <div className="col-md-2  themed-grid-col"></div>
                     <div className="col-md-8 mt-5 btn-container">
                         <div className="row mb-3 text-center" key={"NewDia" + project._id}>
-                          {!verificaChange && (
-                            (StringListaTrabalhoGeral)?.split(",").map((t, i) => {
+                          {!verificaChange && (((values?.accepted === 5 || values?.accepted === 4) ? StringListaTrabalhoCompensacaoD : StringListaTrabalhoGeral)?.split(",").map((t, i) => {
                               const ttID = listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(",");
-                              let value = "";
+                              let value = 0.0;
 
                               if (values.tipoDeTrabalhoHoras[project._id]) {
                                 const valuesHorasTypeArray = values.tipoDeTrabalhoHoras[project._id].horas ? values.tipoDeTrabalhoHoras[project._id].horas?.split(",") : [];
@@ -183,6 +199,8 @@ const AddHorasGeralDropdown = ({ sortedProjetos, verificaChange, listaTipoTrabal
                                   }
                                 }
                               }
+                    
+
                               return (
                                 <TimePickerClock
                                   key={`New${i}-${project._id}-${ttID}`}
@@ -192,6 +210,7 @@ const AddHorasGeralDropdown = ({ sortedProjetos, verificaChange, listaTipoTrabal
                                   ttID={ttID}
                                   projectNome={project.Nome}
                                   convertToInt={handleHorasChange}
+                                  change={change}
                                 />
                               )
                             })
@@ -215,11 +234,12 @@ const AddHorasGeralDropdown = ({ sortedProjetos, verificaChange, listaTipoTrabal
                                   return (
                                     
                                     <div key={"EditarDia" + ID}>
-
-                                      {StringListaTrabalhoGeral?.split(",").map((t, i) =>
+                                      {((values?.accepted === 5 || values?.accepted === 4) ? StringListaTrabalhoCompensacaoD : StringListaTrabalhoGeral)?.split(",").map((t, i) => 
                                         itemTypeArray.map((iT, iId) => {  
-                                          if ((project.Nome !== "Geral" ? ListaTrabalhoAll[i]._id : listaTrabalhoGeralAdd[i]._id) === iT) {
+                                          const lTrabalho = (((values?.accepted === 5 || values?.accepted === 4) && project.Nome === "Geral") ?  listaTrabalhoGeralD :  project.Nome !== "Geral" ? ListaTrabalhoAll : listaTrabalhoGeralAdd);                           
 
+
+                                          if ((lTrabalho[i]?._id) === iT) {
                                             matchFound[i] = true;
                                             return (
                                               <TimePickerClock
@@ -232,6 +252,7 @@ const AddHorasGeralDropdown = ({ sortedProjetos, verificaChange, listaTipoTrabal
                                                 ttID={listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(",")}
                                                 projectNome={project.Nome}
                                                 convertToInt={handleHorasChange}
+                                                change={change}
                                               />
                                             );
                                           } else {
@@ -247,6 +268,7 @@ const AddHorasGeralDropdown = ({ sortedProjetos, verificaChange, listaTipoTrabal
                                                     ttID={listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(",")}
                                                     projectNome={project.Nome}
                                                     convertToInt={handleHorasChange}
+                                                    change={change}
                                                   />
                                                 );
                                               }
@@ -277,6 +299,7 @@ const AddHorasGeralDropdown = ({ sortedProjetos, verificaChange, listaTipoTrabal
                                                 ttID={listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(",")}
                                                 projectNome={project.Nome}
                                                 convertToInt={handleHorasChange}
+                                                change={change}
                                               />
                                             );
                                           }
@@ -290,7 +313,7 @@ const AddHorasGeralDropdown = ({ sortedProjetos, verificaChange, listaTipoTrabal
                                   if (!matchFoundProjeto[idProjeto] && ID === arrayTipoTrabalho?.length - 1) {
                                     return (
                                       <div key={"EditarDiaProjetoNotFound" + idProjeto}>
-                                        {StringListaTrabalhoGeral?.split(",").map((t, i) => {
+                                        {((values?.accepted === 5 || values?.accepted === 4) ? StringListaTrabalhoCompensacaoD : StringListaTrabalhoGeral)?.split(",").map((t, i) => {
                                           const ttID = (listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(","))
                                           let value = "";
 
@@ -313,6 +336,7 @@ const AddHorasGeralDropdown = ({ sortedProjetos, verificaChange, listaTipoTrabal
                                               ttID={ttID}
                                               projectNome={project.Nome}
                                               convertToInt={handleHorasChange}
+                                              change={change}
                                             />
                                           )
                                         }
@@ -366,6 +390,7 @@ AddHorasGeralDropdown.propTypes = {
     setListaTrabalhoGeralOther: PropTypes.func.isRequired,
     setListaTipoTrabalho: PropTypes.func.isRequired,
     setListaTrabalhoGeral : PropTypes.func.isRequired,
+    change : PropTypes.number.isRequired,
   }
 
 

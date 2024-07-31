@@ -210,8 +210,23 @@ const CalendarControl = ({ handleChange, inserted, feriados, ferias, compensacao
         let dias = [];
 
 
+        const filteredInserted = inserted?.filter(item => {
+            return (
+                new Date(item.Data)?.getMonth() === calendar.getMonth() &&
+                new Date(item.Data)?.getFullYear() === changedYear
+            );
+        });
+
+        const filteredVProjeto = vProjeto?.filter(item => {
+            return (
+                new Date(item.Data)?.getMonth() === calendar.getMonth() &&
+                new Date(item.Data)?.getFullYear() === changedYear
+            );
+        });
+
         if (todos && todos === true) {
-            if (inserted) {
+            
+            if (filteredInserted) {
                 const filteredDias = inserted.filter((dia) => (new Date(dia.Data).getMonth() + 1) === changedMonth && new Date(dia.Data).getFullYear() === changedYear);
 
                 let arrayDates = {};
@@ -301,12 +316,12 @@ const CalendarControl = ({ handleChange, inserted, feriados, ferias, compensacao
             }
         } else {
 
-            if (inserted) {
-                for (let i = 0; i < inserted.length; i++) {
-                    const insertedDay = new Date(inserted[i]?.Data);
+            if (filteredInserted) {
+                for (let i = 0; i < filteredInserted.length; i++) {
+                    const insertedDay = new Date(filteredInserted[i]?.Data);
                     const currentMonth = insertedDay?.getMonth() + 1;
                     const currentYear = insertedDay?.getFullYear();
-                    let numberHours = inserted[i].NumeroHoras;
+                    let numberHours = filteredInserted[i].NumeroHoras;
                     if (
                         currentYear === changedYear &&
                         currentMonth === changedMonth &&
@@ -314,8 +329,8 @@ const CalendarControl = ({ handleChange, inserted, feriados, ferias, compensacao
                         numberItems.length >= calendar.getDate()
                     ) {
 
-                        for (let h = 0; h < inserted[i].tipoDeTrabalhoHoras.length; h++) {
-                            const projeto = inserted[i].tipoDeTrabalhoHoras[h]
+                        for (let h = 0; h < filteredInserted[i].tipoDeTrabalhoHoras.length; h++) {
+                            const projeto = filteredInserted[i].tipoDeTrabalhoHoras[h]
                             const tt = projeto.tipoTrabalho.split(',') || [];
                             const ttH = projeto.horas.split(',') || [];
 
@@ -497,9 +512,9 @@ const CalendarControl = ({ handleChange, inserted, feriados, ferias, compensacao
                 }
             }
 
-            if (vProjeto) {
-                for (let i = 0; i < vProjeto.length; i++) {
-                    const insertedDay = new Date(vProjeto[i].Data);
+            if (filteredVProjeto) {
+                for (let i = 0; i < filteredVProjeto.length; i++) {
+                    const insertedDay = new Date(filteredVProjeto[i].Data);
                     const currentMonth = insertedDay?.getMonth() + 1;
                     const currentYear = insertedDay?.getFullYear();
 

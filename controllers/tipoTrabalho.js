@@ -32,7 +32,7 @@ const getAllTiposTrabalho = async (req, res) => {
 
 
   const updateTipoTrabalho = async (req, res) => {
-    const { id: TipoTrabalhoId } = req.params;
+    let { id: TipoTrabalhoId } = req.params;
     TipoTrabalhoId = sanitizeHtml(TipoTrabalhoId);
     try {
       const tipoTrabalho = await TipoTrabalho.findByIdAndUpdate(

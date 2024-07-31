@@ -4,8 +4,8 @@ import mkcert from 'vite-plugin-mkcert';
 import fs from 'fs';
 import path from 'path';
 
-const sslCert = fs.readFileSync(path.resolve(__dirname, '../certs/certificate.crt'));
-const sslKey = fs.readFileSync(path.resolve(__dirname, '../certs/private.key'));
+const sslCert = fs.readFileSync(path.resolve(__dirname, '../certs/cert.pem'));
+const sslKey = fs.readFileSync(path.resolve(__dirname, '../certs/key.pem'));
 
 // https://vitejs.dev/config/
 export default defineConfig({

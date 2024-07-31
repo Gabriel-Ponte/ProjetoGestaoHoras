@@ -1,16 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import Wrapper from '../assets/wrappers/AddUser';
-import { FormRow, FormRowSelectTipo } from '../components';
+import { FormRow, FormRowSelect, FormRowSelectTipo } from '../components';
 import { useNavigate } from 'react-router-dom';
 import ModalFoto from "./ModalFoto";
-import { registerUser } from '../features/utilizadores/utilizadorSlice';
+import { listaUsersTipo, listaUtilizadores, registerUser } from '../features/utilizadores/utilizadorSlice';
 import Loading from './Loading';
 //import DefaultUserImg from "../assets/image/DefaultUserImg.png";
-
-
-
 
 const  initialState = {
     login: '',
@@ -20,6 +17,7 @@ const  initialState = {
     nome: '',
     tipo: 1,
     estado: true,
+    responsavel: '',
   };
 
 
@@ -27,12 +25,14 @@ const AddUtilizador = () => {
     const [values, setValues] = useState(initialState);
     const { isLoading } = useSelector((store) => store.utilizador)
     const { user } = useSelector((store) => store.utilizador.user);
+    const [listaUserTipo , setListaUserTipo]  = useState([]);
+    const [listTipoUser , setListTipoUser]  = useState([]);
     //const { isLoading } = useSelector((store) => store.projetos);
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
 
-    
+
   useEffect(() => {
     if (user && (user?.tipo === 1 )) {
       toast.error("Sem permissões para aceder a esta página!");
@@ -46,53 +46,106 @@ const AddUtilizador = () => {
     if (isLoading) {
       return <Loading />;
     }
+    
 
-    let listTipoUser =  []
-    if(user.tipo === 2){
-      listTipoUser =  [["Engenharia de Processos"], ["Laboratorio"] ,["Recursos Humanos"] , ["Administrador"], ["Administrador Engenharia"] , ["Administrador Laboratorio"], ["Administrador Recursos Humanos"]];
-    }else if (user.tipo === 5){
-      listTipoUser =  [["Engenharia de Processos"], ["Administrador Engenharia"]];
-    }else if (user.tipo === 6){
-      listTipoUser =  [["Laboratorio"], ["Administrador Laboratorio"]];
-    }else if (user.tipo === 7){
-      listTipoUser =  [["Recursos Humanos"], ["Administrador Recursos Humanos"]];
-    }
+    useEffect(() => {
+      let listTipo = []
+      if(user.tipo === 2){
+        listTipo =  [["Engenharia de Processos"], ["Laboratorio"] ,["Recursos Humanos"] , ["Administrador"], ["Administrador Engenharia"] , ["Administrador Laboratorio"], ["Administrador Recursos Humanos"]];
+        setValues({ ...values, 'tipo': 1 });
+      }else if (user.tipo === 5){
+
+        dispatch(listaUsersTipo(5)).then((res) => {
+          const listaUtilizadorsTipo = Array.isArray(res?.payload?.UsersAllTipo) ? res.payload.UsersAllTipo : [];
+            setListaUserTipo(listaUtilizadorsTipo)
+            
+            const foundUser = listaUtilizadorsTipo.find(item => item._id === user.id);
+            const id0 = foundUser ? foundUser?._id : listaUtilizadorsTipo[0]?._id ? listaUtilizadorsTipo[0]?._id : '';
+
+          setValues({ ...values,  'tipo': 1, 'responsavel': id0 });
+        })
+
+        listTipo =  [["Engenharia de Processos"], ["Administrador Engenharia"]];
+
+      }else if (user.tipo === 6){
+        dispatch(listaUsersTipo(6)).then((res) => {
+          const listaUtilizadorsTipo = Array.isArray(res?.payload?.UsersAllTipo) ? res.payload.UsersAllTipo : [];
+            setListaUserTipo(listaUtilizadorsTipo)
+            
+            const foundUser = listaUtilizadorsTipo.find(item => item._id === user.id);
+            const id0 = foundUser ? foundUser?._id : listaUtilizadorsTipo[0]?._id ? listaUtilizadorsTipo[0]?._id : '';
+          setValues({ ...values,  'tipo': 3, 'responsavel': id0 });
+        })
+
+        listTipo =  [["Laboratorio"], ["Administrador Laboratorio"]];
+      }else if (user.tipo === 7){
+        listTipo =  [["Recursos Humanos"], ["Administrador Recursos Humanos"]];
+        setValues({ ...values, 'tipo': 4 });
+      }
+
+      setListTipoUser(listTipo);
+    }, []);
+
 
     const handleChangeTipo = (e)=> {
       const { name, value } = e.target;
 
+
+      let valTipo = 0;
+      let target = 0;
       if(value === "Engenharia de Processos"){
-        e.target.value = 1;
+        target = 1;
+        valTipo = 5;
         setValues({ ...values, [name]: 1 });
 
       }else if(value === "Laboratorio"){
-        e.target.value = 3;
+        target = 3;
+        valTipo = 6;
         setValues({ ...values, [name]: 3 });
 
       }else if(value === "Recursos Humanos"){
-        e.target.value = 4;
+        target = 4;
+        valTipo = 7;
         setValues({ ...values, [name]: 4 });
       }else if(value === "Administrador Engenharia"){
-        e.target.value = 5;
+        target = 5;
         setValues({ ...values, [name]: 5 });
       }
       else if(value === "Administrador Laboratorio"){
-        e.target.value = 6;
+        target = 6;
         setValues({ ...values, [name]: 6 });
       }  else if(value === "Administrador Recursos Humanos"){
-        e.target.value = 7;
+        target = 7;
         setValues({ ...values, [name]: 7 });
       }else if(value === "Administrador"){
-        e.target.value = 2;
+        target = 2;
         setValues({ ...values, [name]: 2 });
+      }
+      if(valTipo > 0){
+        dispatch(listaUsersTipo(valTipo)).then((res) => {
+          const listaUtilizadorsTipo = Array.isArray(res?.payload?.UsersAllTipo) ? res.payload.UsersAllTipo : [];
+           setListaUserTipo(listaUtilizadorsTipo)
+
+           const foundUser = listaUtilizadorsTipo.find(item => item._id === user.id);
+           const id0 = foundUser ? foundUser?._id : listaUtilizadorsTipo[0]?._id ? listaUtilizadorsTipo[0]?._id : '';
+
+          setValues({ ...values, [name]: target, 'responsavel': id0 });
+         })
+      }else{
+        setValues({ ...values, [name]: target, 'responsavel': '' });
+        setListaUserTipo([])
       }
     }
 
 
+    const handleResponsavel = (e)=> {
+      const { name, value } = e.target;
+      setValues({ ...values, [name]: value });
+
+    }
   
 
     const handleChangeFoto = (name ,file) => {
-
       setValues({ ...values, [name]:  { data: file, contentType: "image/png"} });
     };
 
@@ -121,6 +174,7 @@ const AddUtilizador = () => {
       }
   };
 
+  
   const toggleMember = () => {
     // handle form submission logic here
     setValues({ ...values });
@@ -148,6 +202,7 @@ const AddUtilizador = () => {
               handleChange={handleChange}
               feedbackMessage="Nome"
             />
+
             {/* TIPO */}
             <FormRowSelectTipo
                 type="text"
@@ -159,7 +214,20 @@ const AddUtilizador = () => {
                 list = {listTipoUser}
                 handleChange ={handleChangeTipo}            
             />
-
+    
+          {/*RESPONSAVEL*/}
+          {values.tipo === 3 &&
+            <FormRowSelectTipo
+                  type="text"
+                  className="form-control"
+                  id="responsavel"
+                  name ="responsavel"
+                  labelText="Responsavel"
+                  value= {values?.responsavel}
+                  list = {listaUserTipo}
+                  handleChange ={handleResponsavel}            
+              />
+          }
 
             <FormRow
               type="text"
@@ -195,6 +263,8 @@ const AddUtilizador = () => {
               handleChange={handleChange}
               placeholder="Email"
             />
+
+
 
             <ModalFoto 
               type="file"

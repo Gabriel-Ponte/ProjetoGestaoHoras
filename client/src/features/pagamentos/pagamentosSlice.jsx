@@ -56,7 +56,6 @@ export const getAllPagamentosUtilizadorResponsavel = createAsyncThunk(
 
 
 
-
 const pagamentosSlice = createSlice({
   name: 'pagamento',
   initialState,

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllDiasHorasExtra, acceptDiasHorasExtra, declineDiasHorasExtra, getAllDiasHorasExtraAccepted, getAllDiasHorasExtraDeclined } from '../features/allDias/allDiasSlice';
+import { getAllDiasHorasExtra, acceptDiasHorasExtra, declineDiasHorasExtra, getAllDiasHorasExtraAccepted, getAllDiasHorasExtraDeclined, getAllDiasHorasExtraDeclinedResponsavel, getAllDiasHorasExtraAcceptedResponsavel, getAllDiasHorasExtraResponsavel } from '../features/allDias/allDiasSlice';
 import Wrapper from '../assets/wrappers/GerirTipoTrabalho';
 import FormRowListaHorasExtra from './FormRowListaHorasExtra';
 import { listaUtilizadores } from '../features/utilizadores/utilizadorSlice';
@@ -32,8 +32,6 @@ const GerirHorasExtra = () => {
   const navigate = useNavigate();
 
 
-
-
   useEffect(() => {
     if (user?.user && (user?.user?.tipo === 1)) {
       toast.error("Sem permissões para aceder a esta página!");
@@ -42,25 +40,35 @@ const GerirHorasExtra = () => {
       toast.error("Sem permissões para aceder a esta página!");
       navigate('/PaginaAdicionarHoras');
     }
-    handleChangeTipo(2)
 
 
+      handleChangeTipo(2);
   }, [user?.user, navigate]);
 
   useEffect(() => {
     dispatch(listaUtilizadores());
 
-    if (verificaAlterado === 0) {
-      listHorasExtra()
+    if(user?.user?.tipo === 7){
+      if (verificaAlterado === 0) {
+        listHorasExtra()
+      }
+      else if (verificaAlterado === 1) {
+        listAcceptedHorasExtra();
+      } else if (verificaAlterado === 2) {
+        listDeclinedHorasExtra();
+      } else if (verificaAlterado === 3) {
+        listHorasExtraPagas();
+      }
+    } else{
+        if (verificaAlterado === 0) {
+          listHorasExtraResponsavel()
+        }
+        else if (verificaAlterado === 1) {
+          listAcceptedHorasExtraResponsavel();
+        } else if (verificaAlterado === 2) {
+          listDeclinedHorasExtraResponsavel();
+        }
     }
-    else if (verificaAlterado === 1) {
-      listAcceptedHorasExtra();
-    } else if (verificaAlterado === 2) {
-      listDeclinedHorasExtra();
-    } else if (verificaAlterado === 3) {
-      listHorasExtraPagas();
-    }
-
   }, [callUseEffect, dispatch]);
 
 
@@ -77,6 +85,50 @@ const GerirHorasExtra = () => {
       setLoaded(true);
     }
   };
+
+  const listHorasExtraResponsavel = async () => {
+    try {
+      dispatch(getAllDiasHorasExtraResponsavel()).then((res) => {
+        const horasExtraArray = Array.isArray(res?.payload?.diasHorasExtra) ? res.payload.diasHorasExtra : [];
+        setListaHorasExtra(horasExtraArray);
+
+        setLoaded(true);
+      });
+    } catch (error) {
+      console.error(error);
+      setLoaded(true);
+    }
+  };
+
+  const listAcceptedHorasExtraResponsavel = async () => {
+    try {
+      dispatch(getAllDiasHorasExtraAcceptedResponsavel()).then((res) => {
+        const horasExtraArray = Array.isArray(res?.payload?.diasHorasExtra) ? res.payload.diasHorasExtra : [];
+        setListaHorasExtra(horasExtraArray);
+        setLoaded(true);
+      });
+    } catch (error) {
+      console.error(error);
+      setLoaded(true);
+    }
+  };
+
+
+
+
+  const listDeclinedHorasExtraResponsavel = async () => {
+    try {
+      dispatch(getAllDiasHorasExtraDeclinedResponsavel()).then((res) => {
+        const horasExtraArray = Array.isArray(res?.payload?.diasHorasExtra) ? res.payload.diasHorasExtra : [];
+        setListaHorasExtra(horasExtraArray);
+        setLoaded(true);
+      });
+    } catch (error) {
+      console.error(error);
+      setLoaded(true);
+    }
+  };
+
 
   const listAcceptedHorasExtra = async () => {
     try {
@@ -162,8 +214,6 @@ const GerirHorasExtra = () => {
   };
 
   const handleChangeSort = (tipo) => {
-
-
     if (verificaAlterado === 3) {
       if (isLoading || isLoadingPagamentos) return;
       dispatch(handleChangePagamentos({ name: 'sort', value: tipo }));
@@ -183,23 +233,38 @@ const GerirHorasExtra = () => {
 
 
   const handleChangeButtonClicked = (async (tipo) => {
-    if (tipo === 0) {
-      handleChangeTipo(2);
-      listHorasExtra();
-      setVerificaAlterado(tipo);
-    } else if (tipo === 1) {
-      handleChangeTipo(1);
-      listAcceptedHorasExtra();
-      setVerificaAlterado(tipo);
-    } else if (tipo === 2) {
-      handleChangeTipo(1);
-      listDeclinedHorasExtra();
-      setVerificaAlterado(tipo);
-    } else if (tipo === 3) {
-      await listHorasExtraPagas();
-      setVerificaAlterado(tipo);
-    }
-
+    if(user?.user?.tipo === 6){
+      if (tipo === 0) {
+        handleChangeTipo(2);
+        listHorasExtraResponsavel();
+        setVerificaAlterado(tipo);
+      } else if (tipo === 1) {
+        handleChangeTipo(1);
+        listAcceptedHorasExtraResponsavel();
+        setVerificaAlterado(tipo);
+      } else if (tipo === 2) {
+        handleChangeTipo(3);
+        listDeclinedHorasExtraResponsavel();
+        setVerificaAlterado(tipo);
+      } 
+    } else {
+      if (tipo === 0) {
+        handleChangeTipo(2);
+        listHorasExtra();
+        setVerificaAlterado(tipo);
+      } else if (tipo === 1) {
+        handleChangeTipo(1);
+        listAcceptedHorasExtra();
+        setVerificaAlterado(tipo);
+      } else if (tipo === 2) {
+        handleChangeTipo(1);
+        listDeclinedHorasExtra();
+        setVerificaAlterado(tipo);
+      } else if (tipo === 3) {
+        await listHorasExtraPagas();
+        setVerificaAlterado(tipo);
+      }
+  }
   });
 
 
@@ -210,7 +275,7 @@ const GerirHorasExtra = () => {
       </div>
       <div className="col-md-12 mb-4 text-center ">
         <div className="row">
-          <div className="col-md-3">
+        <div className={user?.user?.tipo === 7 ? "col-md-3" : "col-md-4"}>
             <button type='button'
               className={`btn btn-outline-primary ${verificaAlterado === 0 ? 'active' : ''}`}
               disabled={isLoading || isLoadingPagamentos}
@@ -219,7 +284,7 @@ const GerirHorasExtra = () => {
               Horas Extra por Aceitar
             </button>
           </div>
-          <div className="col-md-3">
+          <div className={user?.user?.tipo === 7 ? "col-md-3" : "col-md-4"}>
             <button type='button'
               className={`btn btn-outline-primary ${verificaAlterado === 1 ? 'active' : ''}`}
               disabled={isLoading || isLoadingPagamentos}
@@ -227,7 +292,7 @@ const GerirHorasExtra = () => {
               Horas Extra Aceites
             </button>
           </div>
-          <div className="col-md-3">
+          <div className={user?.user?.tipo === 7 ? "col-md-3" : "col-md-4"}>
             <button type='button'
               className={`btn btn-outline-primary ${verificaAlterado === 2 ? 'active' : ''}`}
               disabled={isLoading || isLoadingPagamentos}
@@ -235,7 +300,7 @@ const GerirHorasExtra = () => {
               Horas Extra Recusadas
             </button>
           </div>
-
+        {user.user.tipo === 7 &&
           <div className="col-md-3">
             <button type='button'
               className={`btn btn-outline-primary ${verificaAlterado === 3 ? 'active' : ''}`}
@@ -244,7 +309,7 @@ const GerirHorasExtra = () => {
               Horas Extra Pagas
             </button>
           </div>
-
+        }
         </div>
       </div>
       <>
@@ -260,7 +325,7 @@ const GerirHorasExtra = () => {
                   <div className='row mt-4 mb-4'>
                     <div className={`${verificaAlterado === 0 ? 'col-md-6' : 'col-md-4'}`}>
                       <button type='button'
-                        className={`btn btn-outline-secondary ${verificaTipo === 2 ? 'active' : ''}`}
+                        className={`btn btn-outline-secondary ${(verificaTipo === 2 || verificaTipo === 6) ? 'active' : ''}`}
                         disabled={isLoading || isLoadingPagamentos}
                         onClick={() => handleChangeTipo(2)}>
                         Horas Extra
@@ -268,21 +333,19 @@ const GerirHorasExtra = () => {
                     </div>
                     <div className={`${verificaAlterado === 0 ? 'col-md-6' : 'col-md-4'}`}>
                       <button type='button'
-                        className={`btn btn-outline-secondary ${verificaTipo === 3 ? 'active' : ''}`}
+                        className={`btn btn-outline-secondary ${(verificaTipo === 3 || verificaTipo === 7) ? 'active' : ''}`}
                         disabled={isLoading || isLoadingPagamentos}
                         onClick={() => handleChangeTipo(3)}>
                         Compensação de Horas Extra
                       </button>
                     </div>
                     {(verificaAlterado !== 0) &&
-
                       <div className='col-md-4'>
                         <button type='button'
-                          className={`btn btn-outline-secondary ${verificaTipo === 1 ? 'active' : ''}`}
+                          className={`btn btn-outline-secondary ${(verificaTipo === 1 || verificaTipo === 5)? 'active' : ''}`}
                           disabled={isLoading || isLoadingPagamentos}
                           onClick={() => handleChangeTipo(1)}>
                           Todos os pedidos
-
                         </button>
                       </div>
                     }
@@ -343,7 +406,7 @@ const GerirHorasExtra = () => {
                               <button type='button'
                                 className="btn btn btn-outline-success"
                                 disabled={isLoading || isLoadingPagamentos}
-                                onClick={() => acceptDiaHorasExtra(t._id)}>
+                                onClick={() => acceptDiaHorasExtra(t)}>
                                 <FcCheckmark />
                               </button>
                             </div>
@@ -373,11 +436,11 @@ const GerirHorasExtra = () => {
                   <div className="mt-4 col-md-12  text-center ">
                     {verificaAlterado === 0 ? (
                       <div>
-                        {(verificaTipo === 1) ? (
+                        {(verificaTipo === 1 || verificaTipo === 5) ? (
                           <h1>Sem Pedidos de Horas Extra</h1>
-                        ) : (verificaTipo === 2) ? (
+                        ) : (verificaTipo === 2 || verificaTipo === 6) ? (
                           <h1>Sem Pedidos de Horas Extra Realizadas!</h1>
-                        ) : (verificaTipo === 3) &&
+                        ) : (verificaTipo === 3 || verificaTipo === 7) &&
                         <h1>Sem Pedidos de Compensação de Horas Extra</h1>
                         }
                       </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, memo } from 'react';
 import Wrapper from '../assets/wrappers/Dias';
 import { useDispatch } from 'react-redux';
 import { getProjetoList } from '../features/projetos/projetosSlice';
@@ -7,145 +7,105 @@ import { getDiaID } from '../features/dias/diasSlice';
 import PropTypes from 'prop-types'; 
 
 const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, associated, listaTT, accepted, tipoUser, deleteDay }) => {
-
   const dispatch = useDispatch();
   const [projeto, setProjeto] = useState([]);
-  const [diaAssociated, setDiaAssociated] = useState([]);
-  // const [horasTotal, sethorasTotal] = useState([]);
-  // const navigate = useNavigate();
-  // let horasT = 0;
+  const [diaAssociated, setDiaAssociated] = useState(null);
 
-
-
-  useEffect(() => {
-    try{
-
-      if(associated){
-
-        dispatch(getDiaID({ associated })).then((res) => {
-          const data = res?.payload?.dia?.Data; 
-          setDiaAssociated(data)
-
-        })
+  const fetchAssociatedDay = useCallback(async () => {
+    if (associated) {
+      try {
+        const res = await dispatch(getDiaID({ associated }));
+        const data = res?.payload?.dia?.Data; 
+        setDiaAssociated(data);
+      } catch (error) {
+        console.error("Error fetching associated day", error);
       }
-    const projetoList = tipoDeTrabalhoHoras.map(({ tipoTrabalho, horas, projeto }) => {
-      // horasT += Number(horas);
+    }
+  }, [associated, dispatch]);
+
+  const fetchProjetoList = useCallback(async () => {
+    const projetoListPromises = tipoDeTrabalhoHoras.map(async ({ tipoTrabalho, horas, projeto }) => {
       const horasArray = horas.split(',') || [];
       const tipoTrabalhoArray = tipoTrabalho.split(',') || [];
-  
-      for (let a = horasArray.length - 1; a >= 0; a--) {
-        if (horasArray[a] === 0) {
-          tipoTrabalhoArray.splice(a, 1);
-          horasArray.splice(a, 1);
-        }
-      }
-  
-      if (tipoTrabalhoArray.length === 0) {
+
+      const filteredHorasArray = horasArray.filter(hora => hora !== "0");
+      const filteredTipoTrabalhoArray = tipoTrabalhoArray.slice(0, filteredHorasArray.length);
+
+      if (filteredTipoTrabalhoArray.length === 0) {
         return null;
       }
-  
-      tipoTrabalho = tipoTrabalhoArray.join(",");
-      horas = horasArray.join(",");
 
-      return dispatch(getProjetoList(projeto)).then((res) => ({
-        tipoTrabalho,
-        horas,
-        projeto: res?.payload?.projeto,
-      }));
-
-    }) // Filter out any null values
-  
-    // sethorasTotal(horasT);
-  
-    Promise.all(projetoList).then((projetoArray) => {
-      const filteredProjetoArray = projetoArray.filter((projeto) => projeto !== null);
-      setProjeto(filteredProjetoArray);
+      try {
+        const res = await dispatch(getProjetoList(projeto));
+        return {
+          tipoTrabalho: filteredTipoTrabalhoArray.join(","),
+          horas: filteredHorasArray.join(","),
+          projeto: res?.payload?.projeto,
+        };
+      } catch (error) {
+        console.error("Error fetching projeto list", error);
+        return null;
+      }
     });
-  }catch{
-    console.error("Error Dias")
-  }
-  }, [tipoDeTrabalhoHoras,associated, dispatch]);
 
-  
-  const deleteDiaConfirm = async (id ,data) => {
+    const projetoArray = await Promise.all(projetoListPromises);
+    setProjeto(projetoArray.filter(item => item !== null));
+  }, [dispatch, tipoDeTrabalhoHoras]);
+
+  useEffect(() => {
+    fetchAssociatedDay();
+    fetchProjetoList();
+  }, [fetchAssociatedDay, fetchProjetoList]);
+
+  const deleteDiaConfirm = useCallback(async (id, data) => {
     try {
-
-      deleteDay(id ,data);
-    //   const dataString = (data ? new Date(data).toLocaleDateString('en-CA') : '')
-
-    //   const confirmed = window.confirm("Tem a certeza que deseja apagar o Dia: "+ dataString +"?");
-
-    //   if (confirmed) {
-    //     const result = await dispatch(deleteDia(id));
-    //     if (!result.error) {
-    //       toast.success("Dia Apagado")
-    //         setTimeout(() => {
-    //           window.location.href = '/PaginaVisualizarHoras';
-    //         }, 1000);
-    //       ;
-    //     }
-    //   }
+      await deleteDay(id, data);
     } catch (error) {
-      console.error(error);
-      return "Ocorreu um erro ao apagar o Tipo de Trabalho.";
+      console.error("Error deleting day", error);
     }
-  };
-  
-  function convertToMinutes(timeString) {
+  }, [deleteDay]);
+
+  const convertToMinutes = useCallback((timeString) => {
     if (timeString) {
       try {
         let [hours, minutes] = timeString.toString().split(".");
-
-        // Convert the hours to an integer
         const hoursInt = parseInt(hours, 10);
-        // Convert the fraction of an hour to minutes
-        minutes = parseInt(minutes) < 10 ? `${minutes}0` : minutes;
+        minutes = parseInt(minutes) < 10 ? `${minutes}0` : minutes || "00";
+        let formattedMinutes = Math.round(minutes * 60 / 100);
 
-        if (!minutes) {
-          minutes = 0;
-        }
-        let formattedMinutes = Math.round(minutes * 60) / 100;
         if (formattedMinutes === 60) {
-          formattedMinutes = 0;
-          // formattedHours += 1;
+          formattedMinutes = "00";
+        } else {
+          formattedMinutes = formattedMinutes.toString().padStart(2, '0');
         }
-        // Use String.padStart to format hours and minutes with leading zeros
+
         const formattedHours = hoursInt.toString().padStart(2, "0");
-        formattedMinutes = formattedMinutes.toString().padStart(2, '0');
-
-        const formattedTime = `${formattedHours}:${formattedMinutes}`;
-
-        return formattedTime;
+        return `${formattedHours}:${formattedMinutes}`;
       } catch (error) {
-        console.error(error)
+        console.error("Error converting to minutes", error);
         return timeString;
       }
     }
     return timeString;
-  }
+  }, []);
 
   return (
     <Wrapper>
-      <div key={_id + Utilizador}>
+       <div key={`${_id}-${Utilizador}`}>
         <div className='dias'>
-          <div className="list-group-item" >
+          <div className="list-group-item">
             <div className="row text-center">
               <div className="col-md-3 themed-grid-col">
                 <h3>{Data ? new Date(Data).toLocaleDateString('en-CA') : ''}</h3>
               </div>
-              { (tipoUser === 7 || (accepted !== 2 && accepted !== 3 && accepted !== 5)) &&
-              <div>
-
-                <button type='submit'
-                  onClick={() => deleteDiaConfirm(_id , Data)}
-                  className="btn">
-                  <AiFillDelete />
-                </button>
-
-              </div>
-              }
+              {(tipoUser === 7 || (accepted !== 2 && accepted !== 3 && accepted !== 5 && accepted !== 7)) && (
+                <div>
+                  <button type='submit' onClick={() => deleteDiaConfirm(_id, Data)} className="btn">
+                    <AiFillDelete />
+                  </button>
+                </div>
+              )}
             </div>
-
             <div className="row text-center">
               <div className="col-md-3 themed-grid-col">
                 <h4>{convertToMinutes(NumeroHoras)}</h4>
@@ -153,52 +113,41 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, associat
               <div className="col-md-9 themed-grid-col">
                 {projeto.map(({ tipoTrabalho, horas, projeto }) => (
                   <div className="row text-center" key={projeto?._id}>
-                    <hr className='hrP'></hr>
+                    <hr className='hrP' />
                     <div className="col-md-6 themed-grid-col projeto">
                       <h4>{projeto?.Nome}</h4>
                     </div>
                     <div className="col-md-6 themed-grid-col">
                       <div className="row text-center">
                         <div className="col-md-6 themed-grid-col">
-
-                        {tipoTrabalho.split(',').map((trabalho, index) => {
-                          let counter = 0;
-                          if(listaTT){
-                          for (let i = 0; i < listaTT.length; i++) {
-                            
-                            if (trabalho === listaTT[i]?._id) {
-                              counter++;
-                              return <p key={index}>{listaTT[i].TipoTrabalho.trim()} {(accepted === 5 || accepted === 4) ? diaAssociated ? new Date(diaAssociated).toLocaleDateString('en-CA') : '': ""}</p>;
-                            }
-                          }}
-                          if (counter === 0) {
-                            return <p key={index}>Tipo de Trabalho Apagado</p>;
-                          }
-                          return null;
-                        })}
+                          {tipoTrabalho.split(',').map((trabalho, index) => {
+                            const matchingTT = listaTT.find(item => item?._id === trabalho);
+                            return (
+                              <p key={index}>
+                                {matchingTT ? matchingTT.TipoTrabalho.trim() : 'Tipo de Trabalho Apagado'} 
+                                {(accepted === 5 || accepted === 4) && diaAssociated ? ` ${new Date(diaAssociated).toLocaleDateString('en-CA')}` : ''}
+                              </p>
+                            );
+                          })}
                         </div>
                         <div className="col-md-6 themed-grid-col">
-                          {horas.split(',').map((horas, index) => (
-                            <p key={index}>{convertToMinutes(horas)}</p>
+                          {horas.split(',').map((hora, index) => (
+                            <p key={index}>{convertToMinutes(hora)}</p>
                           ))}
                         </div>
-
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
-              <hr></hr>
+              <hr />
             </div>
           </div>
         </div>
       </div>
-
     </Wrapper>
-
   );
 };
-
 
 Dia.propTypes = {
   _id: PropTypes.string.isRequired,
@@ -207,10 +156,10 @@ Dia.propTypes = {
   Utilizador: PropTypes.string.isRequired,
   tipoDeTrabalhoHoras: PropTypes.array.isRequired,
   associated: PropTypes.string,
-  horasPossiveis: PropTypes.number,
   listaTT: PropTypes.array.isRequired,
   accepted: PropTypes.number.isRequired,
+  tipoUser: PropTypes.number.isRequired,
   deleteDay: PropTypes.func.isRequired,
-}
+};
 
-export default Dia;
+export default memo(Dia);

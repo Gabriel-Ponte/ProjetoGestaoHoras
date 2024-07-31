@@ -75,7 +75,16 @@ const GerirTipoTrabalho =  () => {
     }
     try {
       const result = await dispatch(editTipoTrabalho(tt));
+
       if (!result.error) {
+        const ttpos = initialState.findIndex(item => item._id === tt._id);
+        if (ttpos !== -1) {
+          const updatedState = [...initialState]; // Create a copy of the initialState array
+          updatedState[ttpos] = tt; // Update the specific element
+        
+          setInitialState(updatedState); // Set the new state
+        }
+
         setVerificaAlterado(false);
         setCallUseEffect(!callUseEffect);
       }
@@ -111,6 +120,8 @@ const GerirTipoTrabalho =  () => {
             valueTipo = 5
           }else if(value === "Compensação Domingo"){
             valueTipo = 6
+          }else if(value === "Ferias"){
+            valueTipo = 7
           }else
           {
             valueTipo = 4
@@ -148,13 +159,13 @@ const GerirTipoTrabalho =  () => {
 
     setListaTipoTrabalho(updatedListaTipoTrabalho);
   };
-
   const handleAddToList = () => {
     if (newOption.trim() !== '') {
       const lowercaseOption = newOption.trim().toLowerCase();
       const newList = [...listaTipoTrabalho, {
         _id: listaTipoTrabalho.length + 1,
         TipoTrabalho: newOption,
+        tipo: 1,
         __v: 0
       }];
 
@@ -200,7 +211,7 @@ const GerirTipoTrabalho =  () => {
                     value={t.tipo}
                     key={`sttKey-${t._id}`}
                     keyGet={`${t._id}`}
-                    list={[["Projetos"], ["Geral"], ["Outro"], ["Compensação"], ["Extra"], ["Compensação Domingo"]]}
+                    list={[["Projetos"], ["Geral"], ["Outro"], ["Compensação"], ["Extra"], ["Compensação Domingo"], ["Ferias"]]}
                 />
                 </div>
             </div>

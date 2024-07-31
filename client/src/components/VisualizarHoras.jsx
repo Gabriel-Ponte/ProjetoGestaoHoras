@@ -1,10 +1,10 @@
-import { useEffect,useMemo, useState, useLayoutEffect } from 'react';
+import { useEffect, useMemo, useState, useLayoutEffect } from 'react';
 import Wrapper from '../assets/wrappers/VisualizarHoras';
 import { useSelector, useDispatch } from 'react-redux';
 import Loading from './Loading';
 import Dia from './Dias';
 import DiaTodos from './DiasTodos';
-import { getAllDiasUtilizador, getAllDiasTodos, getAllDiasUtilizadorTipo } from '../features/allDias/allDiasSlice';
+import { getAllDiasUtilizador, getAllDiasTodos, getAllDiasUtilizadorTipo, setDias } from '../features/allDias/allDiasSlice';
 import { deleteDia } from '../features/dias/diasSlice';
 import { getAllPagamentosUtilizador } from '../features/pagamentos/pagamentosSlice';
 import { toast } from 'react-toastify';
@@ -52,6 +52,7 @@ const ListaHoras = () => {
   const [horasCompensacaoDomingo, setHorasCompensacaoDomingo] = useState([]);
   const [idCompensacao, setIDCompencacao] = useState(null)
   const [userNome, setUserNome] = useState(user?.user?.nome);
+  // const [lastEffectExecuted, setLastEffectExecuted] = useState([]);
   // const [triggerEffect, setTriggerEffect] = useState(true);
   const [change, setChange] = useState(false);
 
@@ -167,10 +168,9 @@ const ListaHoras = () => {
   }
 
 
-  
+
   const handleChangeCalendario = ((dia, mes, ano) => {
     const [selectedDia, selectedMes, selectedAno] = [dia, mes, ano];
-
     setSelectedDay({ dia: selectedDia, mes: selectedMes, ano: selectedAno });
   });
 
@@ -193,14 +193,16 @@ const ListaHoras = () => {
   });
 
   useEffect(() => {
+    // lastEffectExecuted.push("useEffect1")
+    // setLastEffectExecuted(lastEffectExecuted)
     //const day = selectedDay ? selectedDay : today;
     let pagamentosUtilizadorArray = [];
-  if (selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Outro" && selectedUser !== "Administradores") {
-    dispatch(getAllPagamentosUtilizador({ selectedUserID })).then((res) => {
-      pagamentosUtilizadorArray = Array.isArray(res?.payload?.pagamentosAllUtilizador) ? res.payload.pagamentosAllUtilizador : [];
-      setListaPagamentos(pagamentosUtilizadorArray)
-    })
-  }
+    if (selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Outro" && selectedUser !== "Administradores" && selectedUser !== "Responsavel") {
+      dispatch(getAllPagamentosUtilizador({ selectedUserID })).then((res) => {
+        pagamentosUtilizadorArray = Array.isArray(res?.payload?.pagamentosAllUtilizador) ? res.payload.pagamentosAllUtilizador : [];
+        setListaPagamentos(pagamentosUtilizadorArray)
+      })
+    }
 
     dispatch(listaUtilizadores());
     let tipoTrabalhoArray = [];
@@ -233,7 +235,7 @@ const ListaHoras = () => {
           setListaTipoTrabalho(tipoTrabalhoArray);
         });
 
-      } else if (selectedUser === "Engenharia de Processos" || selectedUser === "Laboratorio" || selectedUser === "Outro" || selectedUser === "Administradores") {
+      } else if (selectedUser === "Engenharia de Processos" || selectedUser === "Laboratorio" || selectedUser === "Outro" || selectedUser === "Administradores" || selectedUser === "Responsavel") {
         let tipo = 0;
 
         if (selectedUser === "Engenharia de Processos") {
@@ -245,6 +247,8 @@ const ListaHoras = () => {
           tipo = 3;
         } else if (selectedUser === "Outro") {
           tipo = 4;
+        }else if (selectedUser === "Responsavel") {
+          tipo = 5;
         }
 
         dispatch(getAllDiasUtilizadorTipo({ userTipo: tipo })).then((res) => {
@@ -274,7 +278,12 @@ const ListaHoras = () => {
 
         dispatch(getAllDiasUtilizador({ userNome: selectedUser })).then((res) => {
           const listaDiasA = (typeof res.payload.diasAllUtilizador !== "undefined") ? res.payload.diasAllUtilizador : [];
-          const idFerias = tipoTrabalhoArray.find((tipo) => tipo.TipoTrabalho === "Ferias")?._id;
+
+          let idFerias = tipoTrabalhoArray.find((tipo) => tipo.tipo === 7)?._id;
+          if (!idFerias) {
+            idFerias = tipoTrabalhoArray.find((tipo) => tipo.TipoTrabalho === "Ferias")?._id;
+          }
+
           const idCompensacao = tipoTrabalhoArray.find((tipo) => tipo.tipo === 4)?._id;
           const addHorasExtraID = tipoTrabalhoArray.find((tipo) => tipo.tipo === 5)?._id;
 
@@ -318,7 +327,7 @@ const ListaHoras = () => {
                   if (tt[j] === idCompensacao) {
                     countHours -= ttH[j];
 
-                  //countHoursCompencacao += parseFloat(ttH[j]);
+                    //countHoursCompencacao += parseFloat(ttH[j]);
                   }
 
                   if (tt[j] === addHorasExtraID) {
@@ -363,7 +372,7 @@ const ListaHoras = () => {
 
           if (idFerias && dias) {
             // Filter the dias array to get the matching ferias and update the state
-            const updatedFerias = dias.filter((dia) => {
+            const updatedFerias = dias?.filter((dia) => {
               for (let i = 0; i < dia.tipoDeTrabalhoHoras.length; i++) {
                 const tiposTrabalho = dia.tipoDeTrabalhoHoras[i]?.tipoTrabalho?.split(',')
                   .filter((tipo, index) => {
@@ -400,9 +409,9 @@ const ListaHoras = () => {
             }
             setListaTipoTrabalho(tipoTrabalhoArray);
           }
-          
 
-          if(idCompensacao && dias){
+
+          if (idCompensacao && dias) {
             // Filter the dias array to get the matching Compensacao and update the state
             const updatedCompensacao = dias.filter((dia) => {
               for (let i = 0; i < dia.tipoDeTrabalhoHoras.length; i++) {
@@ -447,7 +456,7 @@ const ListaHoras = () => {
           if (dias) {
             // Filter the dias array to get the matching aceitacao and update the state
             const updatedAceitacao = dias.filter((dia) => {
-              if (dia.accepted === 1 || dia.accepted === 4) {
+              if (dia.accepted === 1 || dia.accepted === 4 || dia.accepted === 8 || dia.accepted === 7) {
                 return dia;
               }
               return null;
@@ -471,40 +480,13 @@ const ListaHoras = () => {
             if (!arrayEquals(horasCompensacaoDomingo, updatedCompensacaoDomingo)) {
               setHorasCompensacaoDomingo(updatedCompensacaoDomingo);
             }
-
-            // Remove the matching aceitacao from listaDias
-            // if (listaDiasA) {
-            //   const updatedListaDias = listaDiasA.filter((dia) => {
-            //     if (dia.accepted !== 1) {
-            //       return dia;
-            //     }
-
-            //     for (let i = 0; i < dia.tipoDeTrabalhoHoras.length; i++) {
-            //       const aListaDias = dia.tipoDeTrabalhoHoras[i]?.tipoTrabalho?.split(',').filter((tipo, index) => {
-
-            //         const horasArray = dia.tipoDeTrabalhoHoras[i]?.horas?.split(',');
-            //         return horasArray && horasArray[index] > 0;
-            //       });
-
-            //       return !aListaDias.includes(idFerias);
-            //     }
-            //     return null;
-            //   })
-
-            //   // if (!arrayEquals(listaDias, updatedListaDias)) {
-            //   //   //setListaDias(updatedListaDias);
-            //   // }
-            // }
-
           }
         });
       }
     });
-   
-  }, [selectedUser, horasExtra, listaDias, listaDias.length,  aceitacao, changePagamento, dispatch]);
+  }, [selectedUser, horasExtra, dispatch]);
+  //   }, [selectedUser, horasExtra, listaDias,ferias.length, listaDias.length,  aceitacao, changePagamento, dispatch]);
 
-  //  }, [selectedUser, listaDias[0], horasExtra, listaTipoTrabalho?.length, ferias[0], aceitacao[0], changePagamento, dispatch]);
-  
   function arrayEquals(a, b) {
     if (a === b) return true;
     if (a == null || b == null) return false;
@@ -518,6 +500,8 @@ const ListaHoras = () => {
 
 
   useEffect(() => {
+    // lastEffectExecuted.push("useEffect2")
+    // setLastEffectExecuted(...lastEffectExecuted)
     const month = selectedDay ? selectedDay?.mes : today.getMonth();
     const year = selectedDay ? selectedDay?.ano : today.getFullYear();
     let possibleHoursCount = getPossibleHoursCount(month, year);
@@ -533,9 +517,12 @@ const ListaHoras = () => {
       filteredUsers = filteredUsers.filter((user) => user && (user.tipo === 3 || user.tipo === 6));
     } else if (selectedUser === "Outro") {
       filteredUsers = filteredUsers.filter((user) => user && (user.tipo === 4 || user.tipo === 7));
+    }else if (selectedUser === "Responsavel") {
+      const userID = user?.user?.id;
+      filteredUsers = filteredUsers.filter((user) => user && (user?.responsavel === userID));
     }
 
-    if (selectedUser === "Todos" || selectedUser === "Engenharia de Processos" || selectedUser === "Administradores" || selectedUser === "Laboratorio" || selectedUser === "Outro") {
+    if (selectedUser === "Todos" || selectedUser === "Engenharia de Processos" || selectedUser === "Administradores" || selectedUser === "Laboratorio" || selectedUser === "Outro"|| selectedUser === "Responsavel") {
       setPossibleHoursTodos(possibleHoursCount)
       possibleHoursCount = possibleHoursCount * (filteredUsers.length)
     }
@@ -734,14 +721,9 @@ const ListaHoras = () => {
 
       setHorasPagasMes(pagamentosMesCount);
       setHorasExtraPagasAteMes(pagamentosAteMesCount);
-
-
       setHorasExtraAteMes(extraAteMes);
       setHorasExtraMensal(extraMes);
-
-
       setHorasExtraAceitar(countHoursAccept);
-
     }
 
 
@@ -750,19 +732,27 @@ const ListaHoras = () => {
     setPossibleHours(possibleHoursCount);
     setHorasRealizadas(horasRealizadasCount);
 
-     
-  }, [listaPagamentos, listaDias, listaDias.length, selectedDay, percentagemHoras, horasRealizadas, selectedUser]);
 
+
+
+  }, [listaPagamentos, listaDias, selectedDay, selectedUser]);
+  //   }, [listaPagamentos, listaDias, selectedUser]);
 
   useLayoutEffect(() => {
+    // lastEffectExecuted.push("useLayoutEffect");
+    // setLastEffectExecuted([...lastEffectExecuted]); 
     setLoading(true);
-    setTimeout(() => {
+
+    // Set the timeout
+    const timeoutId = setTimeout(() => {
       setLoading(false);
-    }, 750);
+    }, 600);
 
-   
-  }, [selectedUser,aceitacao, ferias[0], listaDias]);
-
+    // Cleanup function to clear the timeout if the effect runs again
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [selectedUser, userNome, aceitacao,dias.length, ferias[0], ferias.length, listaDias, horasCompensacao]);
 
   const diaSelected = selectedDay ? selectedDay?.dia : 0;
   const month = selectedDay ? selectedDay.mes : today.getMonth();
@@ -778,34 +768,38 @@ const ListaHoras = () => {
     filteredUsers = filteredUsers.filter((user) => user && (user.tipo === 3 || user.tipo === 6));
   } else if (selectedUser === "Outro") {
     filteredUsers = filteredUsers.filter((user) => user && (user.tipo === 4 || user.tipo === 7));
+  }else if (selectedUser === "Responsavel") {
+    const userID = user?.user?.id;
+    filteredUsers = filteredUsers.filter((user) => user && (user?.responsavel === userID));
   }
 
 
-  
-  const deleteDiaConfirm = async (id ,data) => {
+  const deleteDiaConfirm = async (id, data) => {
     try {
       const dataString = (data ? new Date(data).toLocaleDateString('en-CA') : '')
-      const confirmed = window.confirm("Tem a certeza que deseja apagar o Dia: "+ dataString +"?");
+      const confirmed = window.confirm("Tem a certeza que deseja apagar o Dia: " + dataString + "?");
 
       if (confirmed) {
         const result = await dispatch(deleteDia(id));
         if (!result.error) {
           toast.success("Dia Apagado")
           const updatedListaDias = listaDias.filter(dia => dia._id !== id);
+          const updatedDias = dias.filter(dia => dia._id !== id);
           const updateAceitacao = aceitacao.filter(dia => dia._id !== id);
-          const updatedFerias = ferias.filter(dia => dia._id !== id);          
-          
-          
+          const updatedFerias = ferias.filter(dia => dia._id !== id);
+          const updatedCompensacao = horasCompensacao.filter(dia => dia._id !== id);
+          const updatedCompensacaoDomingo = horasCompensacaoDomingo.filter(dia => dia._id !== id);
+
+          dispatch(setDias({dias: updatedDias}));
+
+          setHorasCompensacao(updatedCompensacao);
+          setHorasCompensacaoDomingo(updatedCompensacaoDomingo);
           setFerias(updatedFerias);
           setAceitacao(updateAceitacao);
           setListaDias(updatedListaDias);
 
-
           selectedDay.dia = 0;
           setSelectedDay(selectedDay)
-            // setTimeout(() => {
-            //   window.location.href = '/PaginaVisualizarHoras';
-            // }, 1000);
         }
       }
     } catch (error) {
@@ -813,7 +807,7 @@ const ListaHoras = () => {
       return "Ocorreu um erro ao apagar o Tipo de Trabalho.";
     }
   };
-  
+
   function convertToMinutes(timeString) {
 
     if (timeString) {
@@ -861,8 +855,8 @@ const ListaHoras = () => {
   }
 
   let checkFound = false;
-  let count = 0;
- 
+  // let count = 0;
+
 
   return (
     <Wrapper>
@@ -926,25 +920,25 @@ const ListaHoras = () => {
               <div className='col-md-4 text-center'>
 
                 <div className='row'>
-                  {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro") && (
+                  {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro" && selectedUser !== "Responsavel") && (
                     <p>Horas extra até este mês: {convertToMinutes(horasExtraAteMes)}</p>
                   )}
                 </div>
 
                 <div className='row'>
-                  {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro") && (parseDurationToHours(horasExtraMensal) !== 0) && (
+                  {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro" && selectedUser !== "Responsavel") && (parseDurationToHours(horasExtraMensal) !== 0) && (
                     <p>Horas extra este mês: {convertToMinutes(horasExtraMensal)}</p>
                   )}
                 </div>
 
                 <div className='row'>
-                  {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro") && (
+                  {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro" && selectedUser !== "Responsavel") && (
                     <p>Total horas extra por dar: {horasExtra}</p>
                   )}
                 </div>
 
                 <div className='row'>
-                  {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro") && (
+                  {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro" && selectedUser !== "Responsavel") && (
                     <p>Horas extra por aceitar: {convertToMinutes(horasExtraAceitar)}</p>
                   )}
                 </div>
@@ -961,19 +955,19 @@ const ListaHoras = () => {
               <div className='col-md-4 text-center'>
 
                 <div className='row'>
-                  {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro") && (
+                  {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro" && selectedUser !== "Responsavel") && (
                     <p>Total horas pagas: {convertToMinutes(totalHorasPagas)}</p>
                   )}
                 </div>
 
                 <div className='row'>
-                  {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro") && (
+                  {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro" && selectedUser !== "Responsavel") && (
                     <p>Horas extra pagas até este mês: {convertToMinutes(horasExtraPagasAteMes)}</p>
                   )}
                 </div>
 
                 <div className='row'>
-                  {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro") && (
+                  {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro" && selectedUser !== "Responsavel") && (
                     <p>Horas Extra pagas este mês: {convertToMinutes(horasPagasMes)}</p>
                   )}
                 </div>
@@ -1004,25 +998,25 @@ const ListaHoras = () => {
                 <p className='feriados'></p>
               </div>
             </div>
-            {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro") && (
-            <div className='row'>
-              <div className='col-9 text-end'>
-                <p>Férias</p>
+            {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro" && selectedUser !== "Responsavel") && (
+              <div className='row'>
+                <div className='col-9 text-end'>
+                  <p>Férias</p>
+                </div>
+                <div className='col-3'>
+                  <p className='ferias'></p>
+                </div>
               </div>
-              <div className='col-3'>
-                <p className='ferias'></p>
-              </div>
-            </div>
             )}
-            {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro") && (
-            <div className='row'>
-              <div className='col-9 text-end'>
-                <p>Horas Compensação</p>
+            {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro" && selectedUser !== "Responsavel") && (
+              <div className='row'>
+                <div className='col-9 text-end'>
+                  <p>Horas Compensação</p>
+                </div>
+                <div className='col-3'>
+                  <p className='horasCompensacao'></p>
+                </div>
               </div>
-              <div className='col-3'>
-                <p className='horasCompensacao'></p>
-              </div>
-            </div>
             )}
             <div className='row'>
               <div className='col-9 text-end'>
@@ -1052,31 +1046,31 @@ const ListaHoras = () => {
                 <p className='menos'></p>
               </div>
             </div>
-            {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro") && (
+            {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro" && selectedUser !== "Responsavel") && (
               <>
-              <div className='row'>
-                <div className='col-9 text-end'>
-                  <p>Horas em Aceitação</p>
+                <div className='row'>
+                  <div className='col-9 text-end'>
+                    <p>Horas em Aceitação</p>
+                  </div>
+                  <div className='col-3'>
+                    <p className='filtro'></p>
+                  </div>
                 </div>
-                <div className='col-3'>
-                  <p className='filtro'></p>
-                </div>
-              </div>
 
 
-              <div className='row'>
-              <div className='col-9 text-end'>
-                <p>Compensação Domingo</p>
-              </div>
-              <div className='col-3'>
-                <p className='compensDomingo'></p>
-              </div>
-              </div>
-             
+                <div className='row'>
+                  <div className='col-9 text-end'>
+                    <p>Compensação Domingo</p>
+                  </div>
+                  <div className='col-3'>
+                    <p className='compensDomingo'></p>
+                  </div>
+                </div>
+
               </>
             )}
           </div>
-          {(user?.user?.tipo === 7) && parseDurationToHours(horasExtra) > 0 && (selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro") && 
+          {(user?.user?.tipo === 7) && parseDurationToHours(horasExtra) > 0 && (selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro" && selectedUser !== "Responsavel") &&
             <AddPagamentos
               horasExtraEsteMes={horasExtraMensal}
               horasPorDar={horasExtra}
@@ -1090,13 +1084,19 @@ const ListaHoras = () => {
         </div>
         {(listaDias && listaDias.length < 1) ? (
           <>
-            {(selectedUser === "Todos" || selectedUser === "Engenharia de Processos" || selectedUser === "Administradores" || selectedUser === "Laboratorio" || selectedUser === "Outro") ? (
+            {(selectedUser === "Todos" || selectedUser === "Engenharia de Processos" || selectedUser === "Administradores" || selectedUser === "Laboratorio" || selectedUser === "Outro" || selectedUser === "Responsavel" ) ? (
+              filteredUsers.length > 0 ? (
               <div className='projetos'>
-                <h2>Grupo não possui horas inseridas</h2>
+                <h2>Grupo não possui horas inseridas!</h2>
               </div>
+              ): (
+                <div className='projetos'>
+                <h2>Grupo não possui utilizadores!</h2>
+              </div>
+              )
             ) : (
               <div className='projetos'>
-                <h2>Utilizador não possui horas inseridas</h2>
+                <h2>Utilizador não possui horas inseridas!</h2>
               </div>
             )}
           </>
@@ -1104,7 +1104,7 @@ const ListaHoras = () => {
 
           <>
 
-            {(selectedUser === "Todos" || selectedUser === "Engenharia de Processos" || selectedUser === "Administradores" || selectedUser === "Laboratorio" || selectedUser === "Outro") ? (
+            {(selectedUser === "Todos" || selectedUser === "Engenharia de Processos" || selectedUser === "Administradores" || selectedUser === "Laboratorio" || selectedUser === "Outro" || selectedUser === "Responsavel") ? (
               <div key={"todos"}>
                 <div className='col-12' key={"divMainTodos"}>
                   <Calendar
@@ -1124,7 +1124,7 @@ const ListaHoras = () => {
 
 
 
-                <div className='text-center'  key={"text_centerTodos"}>
+                <div className='text-center' key={"text_centerTodos"}>
                   {listaDiasT.filter((dia) => {
                     const data = new Date(dia.Data);
                     const isSameMonth = month === data.getMonth() && year === data.getFullYear();
@@ -1149,9 +1149,9 @@ const ListaHoras = () => {
                       <h2>Sem Horas inseridas neste dia {diaSelected}</h2>
                     )}
 
+
                   {filteredUsers.map((user) => {
                     const filteredDias = listaDiasT.filter((dia) => dia.Utilizador === user._id);
-
                     let count = 0;
                     let dias = [];
 
@@ -1204,9 +1204,6 @@ const ListaHoras = () => {
               </div>
             ) : (
 
-
-
-
               <div key={"utilizadorSeleccionado"}>
                 <div className='col-12'>
                   <Calendar
@@ -1214,8 +1211,8 @@ const ListaHoras = () => {
                     inserted={listaDias}
                     feriados={getFeriados}
                     ferias={ferias}
-                    compensacao ={horasCompensacao}
-                    compensacaoDomingo = {horasCompensacaoDomingo}
+                    compensacao={horasCompensacao}
+                    compensacaoDomingo={horasCompensacaoDomingo}
                     aceitacao={aceitacao}
                     horasExtraID={addHorasExtraIDS}
                     selectedDate={selectedDay}
@@ -1227,10 +1224,10 @@ const ListaHoras = () => {
 
                   {
                     (() => {
-                      
+
                       let isFeriado = false;
 
-                      const selectedDay = dias.find((dia) => {
+                      const selectedDay = dias?.find((dia) => {
                         const data = new Date(dia.Data);
                         const isSameMonth = month === data.getMonth() && year === data.getFullYear();
                         const isSameDate = diaSelected === 0 || Number(diaSelected) === data.getDate();
@@ -1238,7 +1235,7 @@ const ListaHoras = () => {
                       });
 
                       if (diaSelected !== 0) {
-                        const dataCompare = new Date (year,month,diaSelected ,0 ,0 ,0)
+                        const dataCompare = new Date(year, month, diaSelected, 0, 0, 0)
                         isFeriado = getFeriadosPortugalDate(dataCompare);
                       } else {
                         isFeriado = false;
@@ -1246,10 +1243,10 @@ const ListaHoras = () => {
 
 
                       if (selectedDay) {
-                  
+
                         return (
                           <div>
-                            {isFeriado && 
+                            {isFeriado &&
                               <h4>{isFeriado}</h4>
                             }
 
@@ -1264,7 +1261,7 @@ const ListaHoras = () => {
                       } else if (diaSelected !== 0 || diaSelected !== "0") {
                         return (
                           <div>
-                            {isFeriado && 
+                            {isFeriado &&
                               <h4>{isFeriado}</h4>
                             }
                             <h2>Sem Horas inseridas neste dia {diaSelected}</h2>
@@ -1275,34 +1272,35 @@ const ListaHoras = () => {
                     })()
                   }
                 </div>
-                
+
 
                 <div>
-                  {dias.map((dia) => {
-                    // for (let a = 0; a < dia.tipoDeTrabalhoHoras.length; a++) {
-                    //   if (dia.tipoDeTrabalhoHoras[a].length > 0) {
-                    //     for (let j = 0; j < dia.tipoDeTrabalhoHoras[a].length; j++) {
-                    //     }
-                    //   }
-                    // }
-
-
-                    const data = new Date(dia.Data);
-                    const isSameMonth = month === data.getMonth() && year === data.getFullYear();
-                    const isSameDate = diaSelected === 0 || Number(diaSelected) === data.getDate();
-
-                    if (isSameMonth && isSameDate) {
-                      count++;
+                  {(() => {
+                    // Filter the dias based on the month and year
+                    const filteredDias = dias.filter(item => {
                       return (
-                        <div key={count + selectedUser}>
-                          {/* <Dia key={dia.Data + selectedUser + count} {...dia} horasPossiveis={possibleHours} listaTT={listaTipoTrabalho} deleteDay={deleteDiaConfirm}/> */}
-                          <Dia key={dia.Data + selectedUser + count} {...dia} listaTT={listaTipoTrabalho} tipoUser={user.user.tipo} deleteDay={deleteDiaConfirm}/>
-                        </div>
+                        new Date(item.Data)?.getMonth() === month &&
+                        new Date(item.Data)?.getFullYear() === year
                       );
-                    }
-                    return null;
-                  })}
+                    });
+            
+                    let count = 0;
+                    return filteredDias.map((dia) => {
+                      const data = new Date(dia.Data);
+                      const isSameMonth = month === data.getMonth() && year === data.getFullYear();
+                      const isSameDate = diaSelected === 0 || Number(diaSelected) === data.getDate();
 
+                      if (isSameMonth && isSameDate) {
+                        count++;
+                        return (
+                          <div key={count + selectedUser}>
+                            <Dia key={dia.Data + selectedUser + count} {...dia} listaTT={listaTipoTrabalho} tipoUser={user.user.tipo} deleteDay={deleteDiaConfirm} />
+                          </div>
+                        );
+                      }
+                      return null;
+                    });
+                  })()}
                 </div>
 
 

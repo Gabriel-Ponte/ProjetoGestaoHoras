@@ -16,7 +16,7 @@ export const getAllDiasHorasExtraThunk = async (thunkAPI) => {
   try {
     
     const { sort, tipo } = thunkAPI.getState().pagamentos || {}; 
-    
+  
     let url= `/dia/getAllDiasHorasExtra?sort=${sort}&tipo=${tipo}`
     const resp = await customFetch.get(url);
 
@@ -57,6 +57,55 @@ export const getAllDiasHorasExtraDeclinedThunk = async (thunkAPI) => {
   }
 };
 
+
+export const getAllDiasHorasExtraResponsavelThunk = async (thunkAPI) => {
+  try {
+    const { sort, tipo } = thunkAPI.getState().pagamentos || {}; 
+    const user = thunkAPI.getState().utilizador?.user?.user?.id || {}; 
+    let url= `/dia/getAllDiasHorasExtraResponsavel?sort=${sort}&tipo=${tipo}&user=${user}`
+    const resp = await customFetch.get(url);
+
+    return resp?.data;
+
+    // const resp = await customFetch.get(`/dia/getAllDiasHorasExtra`);
+    // return resp.data;
+  } catch (error) {
+    return checkForUnauthorizedResponse(error, thunkAPI);
+  }
+};
+
+export const getAllDiasHorasExtraAcceptedResponsavelThunk = async (thunkAPI) => {
+  try {
+    const { sort , tipo } = thunkAPI.getState().pagamentos || {}; 
+    const user = thunkAPI.getState().utilizador?.user?.user?.id || {}; 
+    let url= `/dia/getAllDiasHorasExtraAcceptedResponsavel?sort=${sort}&tipo=${tipo}&user=${user}`
+    const resp = await customFetch.get(url);
+    return resp.data;
+
+    // const resp = await customFetch.get(`/dia/getAllDiasHorasExtraAccepted`);
+    // return resp.data;
+  } catch (error) {
+    return checkForUnauthorizedResponse(error, thunkAPI);
+  }
+};
+
+export const getAllDiasHorasExtraDeclinedResponsavelThunk = async (thunkAPI) => {
+  try {
+    const { sort ,tipo } = thunkAPI.getState().pagamentos || {}; 
+    const user = thunkAPI.getState().utilizador?.user?.user?.id || {}; 
+    let url= `/dia/getAllDiasHorasExtraDeclinedResponsavel?sort=${sort}&tipo=${tipo}&user=${user}`
+    const resp = await customFetch.get(url);
+    return resp.data;
+
+    // const resp = await customFetch.get(`/dia/getAllDiasHorasExtraDeclined`);
+    // return resp.data;
+  } catch (error) {
+    return checkForUnauthorizedResponse(error, thunkAPI);
+  }
+};
+
+
+
 export const declineDiasHorasExtraThunk = async (value, thunkAPI) => {
   try {
     //const resp = await customFetch.delete(`/dia/${diaId}`);
@@ -69,9 +118,10 @@ export const declineDiasHorasExtraThunk = async (value, thunkAPI) => {
   }
 };
 
-export const acceptDiasHorasExtraThunk = async (diaId, thunkAPI) => {
+export const acceptDiasHorasExtraThunk = async (value, thunkAPI) => {
   try {
-    const resp = await customFetch.patch(`/dia/acceptDiaHorasExtra/${diaId}`);
+
+    const resp = await customFetch.patch(`/dia/acceptDiaHorasExtra/${value._id}`, value);
     //thunkAPI.dispatch(clearValues());
     return resp.data.msg;
   } catch (error) {

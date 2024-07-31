@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleSidebar, clearStore } from '../features/utilizadores/utilizadorSlice';
-import { getAllDiasHorasExtra } from '../features/allDias/allDiasSlice';
+import { getAllDiasHorasExtra, getAllDiasHorasExtraResponsavel } from '../features/allDias/allDiasSlice';
 
 // import { GiHourglass } from 'react-icons/gi';
 // import { GoDiffAdded } from 'react-icons/go';
@@ -24,16 +24,28 @@ const Navbar = () => {
     try {
       
       dispatch(handleChangePagamentos({ name: 'tipo', value: "1" }));
+      if(user?.user?.tipo === 6){
 
-      dispatch(getAllDiasHorasExtra()).then((res) => {
-        const horasExtraArray = Array.isArray(res?.payload?.diasHorasExtra) ? res.payload.diasHorasExtra : [];
-        if(horasExtraArray && horasExtraArray.length > 0){
+        dispatch(getAllDiasHorasExtraResponsavel()).then((res) => {
+          const horasExtraArray = Array.isArray(res?.payload?.diasHorasExtra) ? res.payload.diasHorasExtra : [];
+          if(horasExtraArray && horasExtraArray.length > 0){
 
-          setVerificaHorasExtra(true)
-        } else{
-          setVerificaHorasExtra(false)
-        }
-      });
+            setVerificaHorasExtra(true)
+          } else{
+            setVerificaHorasExtra(false)
+          }
+        });
+      }else if(user?.user?.tipo === 7){
+        dispatch(getAllDiasHorasExtra()).then((res) => {
+          const horasExtraArray = Array.isArray(res?.payload?.diasHorasExtra) ? res.payload.diasHorasExtra : [];
+          if(horasExtraArray && horasExtraArray.length > 0){
+
+            setVerificaHorasExtra(true)
+          } else{
+            setVerificaHorasExtra(false)
+          }
+        });
+      }
     } catch (error) {
       console.error(error);
     }
@@ -105,6 +117,13 @@ const Navbar = () => {
     navigate('/PaginaAdicionarHoras');
   };
 
+  const styleButton = {
+    fontSize: "1.5vw",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+    display: "inline-block",
+};
 
   return (
     <Wrapper>
@@ -117,17 +136,31 @@ const Navbar = () => {
         </div>
         {user?.user?.tipo === 1|| user?.user?.tipo === 2 || user?.user?.tipo === 5 ?
         <div className='col-6 middleButton' >
-          <button className='btn btn-light' style={{fontSize : "250%", maxHeight: "80px"}} type='button' onClick={returnMain}>Gestão Projetos</button>
+          <button className='btn btn-light'     
+          style={styleButton} type='button' onClick={returnMain}>Gestão Projetos</button>
         </div>
-        : user?.user?.tipo === 7 ? 
+        : (user?.user?.tipo === 7) ? 
       <div className='col-6 middleButton' >
         <div className='col-5 middleButton' >
-        <button className='btn btn-light' style={{fontSize : "200%", maxHeight: "80px"}} type='button' onClick={returnMain}>Gestão Projetos</button>
+        <button className='btn btn-light' style={styleButton} type='button' onClick={returnMain}>Gestão Projetos</button>
         </div>
         <div className='col-6 middleButton' >
-        <button className='btn btn-light' style={{fontSize : "200%", maxHeight: "80px" , backgroundColor: verificaHorasExtra ? "#A6C48A" : "" , }} type='button' onClick={navGestaoHorasExtra}>Gestão Horas Extra</button>
+        <button className='btn btn-light'     style={{
+    ...styleButton, // Spread the properties of styleButton
+    backgroundColor: verificaHorasExtra ? "#A6C48A" : "" // Add or override specific styles
+  }} type='button' onClick={navGestaoHorasExtra}>Gestão Horas Extra</button>
       </div>
       </div>:
+      (user?.user?.tipo === 6) ? 
+      <div className='col-6 middleButton' >
+        <div className='col-6 middleButton' >
+        <button
+    className='btn btn-light'
+    style={{...styleButton ,backgroundColor: verificaHorasExtra ? "#A6C48A" : ""}}
+    type='button'
+    onClick={navGestaoHorasExtra}>Gestão Horas Extra</button>
+      </div>
+      </div> :
         <div className='col-6 middleButton' >
         <h1 style={{fontSize : "250%", maxHeight: "80px" ,textTransform: 'none'}}>Gestão de Horas</h1>
       </div>
@@ -136,10 +169,18 @@ const Navbar = () => {
         <div className='col-3'>
         <div className='btn-container'>
           <div className='divButtonUtilizador'>
+            
           <button
             type='button'
             className='btn'
+            style={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
 
+              padding: "3px 10px",
+              lineHeight: "normal",
+            }}
             onClick={handleShowLogoutClick}
           >
             {user?.user.nome}
@@ -161,51 +202,90 @@ const Navbar = () => {
           <div className='divButtonUtilizador text-center'>
             <div>
           <button 
-          className=''
+          className='button-30'
           onClick={addHoras} 
-          style={{width:'auto',visibility: disableAddHoras ? 'hidden' : 'visible' }} 
+          
+          style={{   
+            fontSize: "85%",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            display: "inline-block",
+            lineHeight: "normal",
+            width:'auto',
+ 
+            visibility: disableAddHoras ? 'hidden' : 'visible' }} 
           disabled={disableAddHoras} >
                 Adicionar Horas
           </button>
           <button 
-          className=''
+          className='button-30'
           onClick={visualizarHoras} 
-          style={{width:'auto',visibility: disableAddHoras ? 'hidden' : 'visible' }} 
+          style={{            
+            fontSize: "85%",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            display: "inline-block",
+            lineHeight: "normal",
+
+            width:'auto',visibility: disableAddHoras ? 'hidden' : 'visible' }} 
           disabled={disableAddHoras} >
                 Visualizar Horas
           </button>
             { (user?.user?.tipo === 2 || user?.user?.tipo === 7) && (
           <button 
-          className=''
+          className='button-30'
           onClick={visualizarHorasProjetos} 
-          style={{width:'auto',visibility: disableAddHoras ? 'hidden' : 'visible' }} 
-          disabled={disableAddHoras} >
+          style={{        
+            width:'auto',
+            fontSize: "85%",
+              
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            display: "inline-block",
+            lineHeight: "normal",
+            visibility: disableAddHoras ? 'hidden' : 'visible' }} 
+            disabled={disableAddHoras} >
                 Horas Projetos
           </button>
           )}
           </div>
           </div>
           ) :(
-          <div className={'col-md-12'} >
+          <div className={'col-md-11'} >
 
             <div className='row drop'>
             <div className='col-md-1'></div>
-              <div className='col-md-5 text-center' style={{ backgroundColor: '#B4B4B8' }}>
+              <div className='col-md-6 text-end' >
             <button
               type='button'
-              className='dropdown-btn'
+              className='button-30'
               onClick={editarPerfil}
+              style={{        
+                width:'auto',
+                fontSize: "85%",
+                overflow: "hidden",
+                lineHeight: "normal" }} 
             >
               Editar Perfil
             </button>
             </div>
-            <div className='col-md-1'></div>
 
-            <div className='col-md-4 text-center' style={{ backgroundColor: '#B4B4B8' }}>
+
+            <div className='col-md-4 text-start' >
             <button
               type='button'
-              className='primary dropdown-btn'
+              className='button-30'
               onClick={logout}
+              style={{        
+                width:'auto',
+                fontSize: "85%",
+                overflow: "hidden",
+                backgroundColor: "#D00000",
+                padding: "10px",
+                lineHeight: "normal" }} 
             >
               Log out
             </button>

@@ -8,7 +8,6 @@ import { toast } from 'react-toastify';
 import PropTypes from 'prop-types'; 
 
 const AddHorasDomingo = ({ handleDateChoosen,handleClose, state, checkDate,dataReceived, feriadosPortugal}) => {
-
     const verificaData = (dataChoosen ,type)=>{
         const dayOfWeek = dataChoosen.getDay();
         const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;

@@ -8,12 +8,12 @@ import PropTypes from 'prop-types';
 const FormRowListaHorasExtra = ({ type, value, tipoHoras, utilizadores, changed }) => {
   const id = `myTextarea${type}${value}`;
 
-  //console.log(value)
   const [initialDate, setDate] = useState([]);
   const [initialName, setName] = useState([]);
   //const [feriados, setFeriados] = useState([]);
   const [horasExtra, setHorasExtra] = useState([]);
   const [compensacao, setCompensacao] = useState(false);
+  const [ferias, setFerias] = useState(false);
   const [associated, setAssociated] = useState([])
   const [tipo, setTipo] = useState([]);
 
@@ -101,7 +101,8 @@ const FormRowListaHorasExtra = ({ type, value, tipoHoras, utilizadores, changed 
     const dataYear = fullData.getFullYear();
 
 
-
+    let countF = 0;
+    let countC = 0;
     const dayOfWeek = fullData.getDay();
 
     const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
@@ -136,8 +137,10 @@ const FormRowListaHorasExtra = ({ type, value, tipoHoras, utilizadores, changed 
       setTipo("Semana");
 
     } else {
+
       ///////////////////////////////////////////////// Alterar para ID do tipo de Trabalho mas está a receber o Nome da Base de Dados ////////////////////////////////////////////////////////
       let count = 0;
+  
       for (let j = 0; j < value?.tipoDeTrabalhoHoras?.length; j++) {
         const tt = value.tipoDeTrabalhoHoras[j];
         const tipoT = tt.tipoTrabalho.split(',');
@@ -145,19 +148,35 @@ const FormRowListaHorasExtra = ({ type, value, tipoHoras, utilizadores, changed 
 
         for (let g = 0; g < tipoT.length; g++) {
           if (tipoT[g].trim() === "Compensação de Horas Extra") {
-            count += hours[g]
+            count += hours[g];
+            countC++;
+            setCompensacao(true);
+          } else if ( tipoT[g].trim() === "Ferias"){
+            countF++;
+            setFerias(true);
           }
         }
       }
       if (count === 0) {
         count = value?.NumeroHoras;
       }
-      setHorasExtra("-" + count);
-      setCompensacao(true);
-      setTipo("");
+      if(countF > 0){
+        setHorasExtra("");
+        setTipo("Férias");
+      } else{
+        setHorasExtra("-" + count);
+        setTipo("");
+      }
+
+
     }
 
-
+    if(countC === 0){
+      setCompensacao(false);
+    }
+    if(countF === 0){
+      setFerias(false);
+    }
 
     const substring = '"';
     const found = value?.associated?.includes(substring);
@@ -177,12 +196,13 @@ const FormRowListaHorasExtra = ({ type, value, tipoHoras, utilizadores, changed 
         }
 
 
-
         setAssociated(jsonObject);
 
       } catch (error) {
         console.error(error)
       }
+    } else{
+      setAssociated([]);
     }
 
     if (utilizadores && utilizadores.length > 0) {
@@ -208,7 +228,7 @@ const FormRowListaHorasExtra = ({ type, value, tipoHoras, utilizadores, changed 
     if (timeString) {
       try {
         let [hours, minutes] = timeString.toString().split(".");
-        const hoursInt = parseInt(hours, 10);
+        const hoursInt = parseInt(hours, 10) ? parseInt(hours, 10) : "";
         minutes = parseInt(minutes) < 10 ? `${minutes}0` : minutes;
 
         if (!minutes) {
@@ -232,8 +252,9 @@ const FormRowListaHorasExtra = ({ type, value, tipoHoras, utilizadores, changed 
         return timeString;
       }
     }
-    return timeString;
+    return " — ";
   }
+
   return (
     <Wrapper>
       <div className="row mb-3" >
@@ -247,7 +268,7 @@ const FormRowListaHorasExtra = ({ type, value, tipoHoras, utilizadores, changed 
           <p>{convertToMinutes(value?.NumeroHoras)}</p>
         </div>
         <div className="col-md-2 text-center" >
-          <p style={{ backgroundColor: compensacao ? "#E8FCCF" : "" }}>{convertToMinutes(horasExtra)}</p>
+          <p style={{ backgroundColor: compensacao ? "#E8FCCF" : ferias ? "#B7B5E4" : "" }}>{convertToMinutes(horasExtra)}</p>
         </div>
         {(tipoHoras !== 3) && (
           <div className="col-md-1 text-center" >

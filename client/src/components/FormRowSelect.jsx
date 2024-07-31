@@ -140,6 +140,9 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
         <option key="Laboratorio" value="Laboratorio">
           Laboratorio
         </option>,
+        <option key="Responsavel" value="Responsavel">
+          Responsável
+       </option>,
           <option key="separator" disabled>
           ---------------
         </option>,

@@ -17,6 +17,7 @@ import {
   getUtilizadorThunk,
   postResetPasswordThunk,
   updateResetedPasswordThunk,
+  getAllUserTipo,
 } from './utilizadorThunk';
 
 
@@ -86,12 +87,22 @@ export const updatePassword = createAsyncThunk(
 );
 
 
+
 export const listaUtilizadores = createAsyncThunk(
   'utilizador/',
   async (user, thunkAPI) => {
     return showAllUtilizadores('/auth/utilizador', user, thunkAPI);
   }
 );
+
+
+export const listaUsersTipo = createAsyncThunk(
+  'utilizador/tipo/',
+  async (tipo, thunkAPI) => {
+    return getAllUserTipo(tipo, thunkAPI);
+  }
+);
+
 
 export const clearStore = createAsyncThunk('utilizador/clearStore', clearStoreThunk);
 const userSlice = createSlice({
@@ -266,6 +277,20 @@ const userSlice = createSlice({
         toast.error('Ocorreu um erro!');
       })
 
+
+      //ListaUsersTipo
+      .addCase(listaUsersTipo.pending, (state) => {
+        state.isLoadingU = true;
+      })
+      .addCase(listaUsersTipo.fulfilled, (state, { payload }) => {
+        state.isLoadingU = false;
+        //toast.success(`Lista Utilizador obtida!`);
+      })
+      .addCase(listaUsersTipo.rejected, (state, { payload }) => {
+        state.isLoadingU = false;
+        toast.error(payload);
+      })
+      
   },
 });
 

@@ -39,7 +39,7 @@ const ListaProjetos = () => {
   const { user } = useSelector((store) => store.utilizador);
 
   const [sortedProjetos, seTSortedProjetos] = useState([]);
-  const [filteredProjetos, setFilteredProjetos] = useState([]);
+  //const [filteredProjetos, setFilteredProjetos] = useState([]);
   const [horasT, setHorasT] = useState(0);
   const [DataCopy, setDataCopy] = useState("");
   const [copyExists, setCopyExists] = useState(true);
@@ -51,7 +51,7 @@ const ListaProjetos = () => {
   const [verificaCopiarHoras, setVerificaCopiarHoras] = useState(false);
   const [lastDate, setLastDate] = useState();
   const [listaTipoTrabalho, setListaTipoTrabalho] = useState([]);
-
+  const [change, setChange] = useState(0);
   const [ListaTrabalhoAll, setListaTrabalhoAll] = useState([]);
   const [ListaTrabalhoGeral, setListaTrabalhoGeral] = useState([]);
   const [ListaTrabalhoGeralOther, setListaTrabalhoGeralOther] = useState([]);
@@ -59,8 +59,9 @@ const ListaProjetos = () => {
   const [horasExtra] = useState(0);
   const [horasExtraAfter, setHorasExtraAfter] = useState(0);
   const [activeCompensacao, setActiveCompensacao] = useState(false);
-
+  const [feriasActive, setFeriasActive] = useState(false);
   const [compensacaoID, setcompensacaoID] = useState();
+  const [feriasID, setFeriasID] = useState();
   const [addHorasExtraID, setAddHorasExtraID] = useState();
   const [horasExtraTT, setHorasExtraTT] = useState(0);
   const { feriadosPortugal } = useFeriadosPortugal();
@@ -84,14 +85,15 @@ const ListaProjetos = () => {
 
       const tipoTrabalhoArray = Array.isArray(res?.payload?.tipoTrabalho) ? res?.payload?.tipoTrabalho : [];
       setListaTipoTrabalho(tipoTrabalhoArray);
-
       const compensacao = tipoTrabalhoArray.filter(item => item.tipo === 4);
       const addHorasExtra = tipoTrabalhoArray.filter(item => item.tipo === 5);
+      const ferias = tipoTrabalhoArray.filter(item => item.tipo === 7);
+      setFeriasID(ferias[0]?._id);
       setAddHorasExtraID(addHorasExtra[0]?._id);
       setcompensacaoID(compensacao[0]?._id);
       setListaTrabalhoAll(tipoTrabalhoArray.filter(item => item.tipo === 1));
-      setListaTrabalhoGeral(tipoTrabalhoArray.filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 5 || item.tipo === 6)));
-  
+      setListaTrabalhoGeral(tipoTrabalhoArray.filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 5 || item.tipo === 6|| item.tipo === 7)));
+
       setListaTrabalhoGeralOther(tipoTrabalhoArray.filter(item => item.tipo === 3));
 
     });
@@ -112,7 +114,6 @@ const ListaProjetos = () => {
 
 
   useEffect(() => {
-
     if (constLoaded && (projetos.length > 0)) {
         const timestampString = user?.user?.timestamp;
         let dateRegisterUTC = new Date()
@@ -137,80 +138,6 @@ const ListaProjetos = () => {
         if(dateRegisterUTC > dayStart){
           dayStart = dateRegisterUTC;
         }
-
-        // const projetosF = getFilteredProjetos(dayStart);
-        // const projetoGeral = (projetosF.filter(item => item.Nome === "Geral"));
-        // let countHours = 0;
-
-        // const startDay = dayStart.getDate();
-        // const startMonth = dayStart.getMonth();
-        // const startYear = dayStart.getFullYear();
-
-        // lista.filter(item => {
-        //   const date = new Date(item.Data)
-        //   const dayOfWeek = date.getDay();
-        //   const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-        //   const isFriday = dayOfWeek === 5;
-
-
-        //   const currentDay = date.getDate();
-        //   const currentMonth = date.getMonth();
-        //   const currentYear = date.getFullYear();
-
-        //   if (
-        //     currentYear > startYear ||
-        //     currentMonth > startMonth ||
-        //     (
-        //       currentYear === startYear &&
-        //       currentMonth === startMonth &&
-        //       currentDay >= startDay)
-        //   ) {
-
-        //     let extraHours = 0;
-
-        //     for (let i = 0; i < item.tipoDeTrabalhoHoras.length; i++) {
-        //       const projeto = item.tipoDeTrabalhoHoras[i]
-              
-        //       if (projeto.projeto === projetoGeral[0]?._id) {
-        //         const tt = projeto.tipoTrabalho.split(',') || [];
-        //         const ttH = projeto.horas.split(',') || [];
-
-        //         for (let j = 0; j < tt.length; j++) {
-        //           if (tt[j] === compensacaoID) {
-        //             countHours -= parseFloat(ttH[j]);
-        //           }
-        //           if (tt[j] === addHorasExtraID) {
-        //             countHours += parseFloat(ttH[j]);
-        //             extraHours = parseFloat(ttH[j]);
-        //           }
-        //         }
-        //       }
-        //     }
-
-        //     if (feriadosPortugal(date) && (parseFloat(item.NumeroHoras) - parseFloat(extraHours)) > 0) {
-        //       countHours += (parseFloat(item.NumeroHoras) - parseFloat(extraHours));
-        //       return true;
-        //     }
-        //     if (isWeekend && (parseFloat(item.NumeroHoras) - parseFloat(extraHours)) > 0) {
-        //       countHours += (parseFloat(item.NumeroHoras) - parseFloat(extraHours));
-        //       return true;
-        //     }
-        //     if (isFriday && (parseFloat(item.NumeroHoras) - parseFloat(extraHours)) > 6) {
-        //       countHours += (parseFloat(item.NumeroHoras - 6) - parseFloat(extraHours));
-        //       return true;
-        //     }
-        //     if (!isFriday && (parseFloat(item.NumeroHoras) - parseFloat(extraHours)) > 8.5) {
-        //       countHours += (parseFloat(item.NumeroHoras - 8.5) - parseFloat(extraHours));
-        //       return true;
-        //     }
-        //     return false;
-        //   }
-
-        //   return false;
-        // });
-
-        // setHorasExtra(countHours);
-        // setHorasExtraAfter(countHours);
 
         const firstDateWithLessThan8Hours = lista.reduceRight((acc, item) => {
           const itemDate = new Date(item.Data);
@@ -603,7 +530,7 @@ const ListaProjetos = () => {
     });
 
 
-    setFilteredProjetos(filteredP);
+    //setFilteredProjetos(filteredP);
     return;
   };
 
@@ -681,7 +608,6 @@ const ListaProjetos = () => {
         window.location.reload();
       }, 1000);
 
-      
    }
 
    const checkDate = (dataChoosen)=>{
@@ -768,8 +694,18 @@ const ListaProjetos = () => {
       }
     }
 
-
-
+    //   if(feriasActive === true){
+    //     for (let key in values.tipoDeTrabalhoHoras) {
+    //       const horasTipoTrabalhoArray = values.tipoDeTrabalhoHoras[key]?.horas?.split(',') || [];
+    //       const tipoTrabalhoArray = values.tipoDeTrabalhoHoras[key]?.tipoTrabalho?.split(',') || [];
+    //       for (let a = 0; a < tipoTrabalhoArray.length; a++) {
+    //       if((tipoTrabalhoArray[a] === feriasID) && (horasTipoTrabalhoArray[a] > 0)){
+    //         toast.error('Pedido de compensação de horas extra realizado!');
+    //         count++;
+    //       }
+    //     }
+    //   }
+    // }
 
     if(count === 0 ){
       values.accepted = 0;
@@ -777,8 +713,6 @@ const ListaProjetos = () => {
       values.accepted = 1;
     } 
   }
-    
-
 
     for (let key in values.tipoDeTrabalhoHoras) {
       //const tt = values.tipoDeTrabalhoHoras[key];
@@ -812,13 +746,10 @@ const ListaProjetos = () => {
       }, 500);
     }
 
-
-
   };
 
 
   const handleHorasChange = (projectId, tipoTrabalho, projectName, e) => {
-
     let newHorasT = horasT;
     const newTipoDeTrabalhoHoras = { ...values.tipoDeTrabalhoHoras };
     const horasTipoTrabalhoArray = newTipoDeTrabalhoHoras[projectId]?.horas?.split(',') || [];
@@ -861,6 +792,7 @@ const ListaProjetos = () => {
       }
 
     } else {
+
       tipoTrabalhoArray.push(tipoTrabalho);
       horasTipoTrabalhoArray.push(horasNumber);
       newTipoDeTrabalhoHoras[projectId] = {
@@ -871,24 +803,67 @@ const ListaProjetos = () => {
       newHorasT = parseFloat(horasT) + parseFloat(horasNumber);
     }
 
-
     const dateAdd = new Date(values?.Data);
 
     const dayOfWeek = dateAdd.getDay();
     const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
     const isFriday = dayOfWeek === 5;
 
-    if (tipoTrabalho === compensacaoID) {
+    const maxHoras = dateAdd.getDay() === 5 ? 6 : 8.5;
+
+    if (tipoTrabalhoArray.find(item => item === compensacaoID)) {
       setActiveCompensacao(true);
-      if (values?.Data && ((dateAdd.getDay() === 5 && newHorasT > 6) || newHorasT > 8.5 || dateAdd.getDay() === 0 || dateAdd.getDay() === 6)) {
+      if (values?.Data && (newHorasT > maxHoras || dateAdd.getDay() === 0 || dateAdd.getDay() === 6)) {
         toast.error('Valor inserido invalido devido ao tipo de trabalho!');
-        setValues({ ...values, [horas]: "0.0" });
+
+        let tipoDeTrabalhoHoras = {};
+        tipoDeTrabalhoHoras[projectId] = {
+          horas: maxHoras.toString(),
+          tipoTrabalho: compensacaoID,
+        };
+        
+
+        const c =change+ 1;
+        setChange(c);
+        setHorasT(maxHoras);
+        setHorasExtraAfter(horasExtraBeforeValue);
+        setValues({
+          ...values,
+          Utilizador: user.user.login,
+          NumeroHoras: maxHoras,
+          horas: maxHoras,
+          tipoDeTrabalhoHoras: tipoDeTrabalhoHoras,
+        });
         return;
       }
-      
       setHorasExtraAfter(parseFloat(horasExtra) - parseFloat(horasNumber))
     }
+    if (tipoTrabalhoArray.find(item => item === feriasID)) {
+      setFeriasActive(true);
+      if (values?.Data && (newHorasT > maxHoras)) {
+        toast.error('Valor inserido invalido devido ao tipo de trabalho!');
 
+        let tipoDeTrabalhoHoras = {};
+        tipoDeTrabalhoHoras[projectId] = {
+          horas: maxHoras.toString(),
+          tipoTrabalho: feriasID,
+        };
+
+        const c =change + 1;
+        setChange(c);
+        setHorasT(maxHoras);
+        setHorasExtraAfter(horasExtraBeforeValue);
+
+        setValues({
+          ...values,
+          Utilizador: user.user.login,
+          NumeroHoras: maxHoras,
+          horas: maxHoras,
+          tipoDeTrabalhoHoras: tipoDeTrabalhoHoras,
+        });
+        return;
+      }
+    }
 
     if (tipoTrabalho === addHorasExtraID) {
       horasExtraTTCheck = true;
@@ -985,7 +960,6 @@ const ListaProjetos = () => {
       }
     }
 
-
     setValues({
       ...values,
       horas: horasNumber,
@@ -995,7 +969,6 @@ const ListaProjetos = () => {
 
     setHorasT(newHorasT);
   };
-
 
   const copiar = async (value) => {
 
@@ -1008,6 +981,7 @@ const ListaProjetos = () => {
 
       const tipoDeTrabalhoHoras = {};
       let sSProjetos = sortedProjetos;
+
       for (let j = 0; j < lastDate?.tipoDeTrabalhoHoras?.length; j++) {
         const val = lastDate.tipoDeTrabalhoHoras[j].projeto;
 
@@ -1021,8 +995,8 @@ const ListaProjetos = () => {
         });
 
         tipoDeTrabalhoHoras[val] = lastDate.tipoDeTrabalhoHoras[j];
-
       }
+
       setValues({
         ...values,
         Utilizador: user.user.login,
@@ -1043,9 +1017,7 @@ const ListaProjetos = () => {
       });
       setHorasT(0);
     }
-
     setVerificaCopiarHoras(value);
-
   }
 
 
@@ -1084,11 +1056,9 @@ const ListaProjetos = () => {
     return timeString;
   }
 
-  if (!values.loaded || (sortedProjetos.length === 0)) {
+  if (!values.loaded || (sortedProjetos.length === 0) || isLoading) {
     return <Loading />;
-  } else if (isLoading) {
-    return <Loading />;
-  } else {
+  }else {
 
     return (
       <Wrapper>
@@ -1178,6 +1148,7 @@ const ListaProjetos = () => {
                 setListaTipoTrabalho={setListaTipoTrabalho}
                 setListaTrabalhoGeral={setListaTrabalhoGeral}
                 setListaTrabalhoGeralOther={setListaTrabalhoGeralOther}
+                change={change}
                 blocked={(values.accepted === 2 && startHorasT >= 8.5) || isLoading || buttonClicked ||  (values.accepted === 4 || values.accepted === 5)}
               />
         

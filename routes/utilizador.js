@@ -4,7 +4,7 @@ const authenticateUser = require("../middleware/authentication");
 const testUser = require("../middleware/testeUser");
 
 
-const { register, updateUser, getUser, getAllUser, deleteUser, updateUserType} = require("../controllers/auth");
+const { register, updateUser, getUser, getAllUser, deleteUser, updateUserType, getAllUserTipo} = require("../controllers/auth");
 router.get("/", getAllUser);
 
 router.route("/:id")
@@ -12,7 +12,7 @@ router.route("/:id")
     .delete(deleteUser)
 
 
-
+router.route("/getAllUserTipo/:tipo").get(getAllUserTipo);
 router.post("/register", register);
 router.patch("/updateUser", authenticateUser, testUser, updateUser);
 router.patch("/updateUserType", authenticateUser, testUser, updateUserType);

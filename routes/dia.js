@@ -21,16 +21,26 @@ const {
   getAllDiasHorasExtraDeclined,
   createDiaDomingo,
   getDiaID,
+  getAllDiasHorasExtraResponsavel,
+  getAllDiasHorasExtraAcceptedResponsavel,
+  getAllDiasHorasExtraDeclinedResponsavel,
 } = require("../controllers/dias");
 
 router.route("/").post(createDia);
 router.route("/domingo").post(createDiaDomingo);
 router.route("/diasUtilizador/:utilizador").get(getAllDiasUtilizador);
 router.route("/diasUtilizadorTipo/:utilizador").get(getAllDiasUtilizadorTipo);
+
 router.route("/getAllDias").get(getAllDias);
 router.route("/getAllDiasHorasExtra").get(getAllDiasHorasExtra);
 router.route("/getAllDiasHorasExtraAccepted").get(getAllDiasHorasExtraAccepted);
 router.route("/getAllDiasHorasExtraDeclined").get(getAllDiasHorasExtraDeclined);
+
+router.route("/getAllDiasHorasExtraResponsavel").get(getAllDiasHorasExtraResponsavel);
+router.route("/getAllDiasHorasExtraAcceptedResponsavel").get(getAllDiasHorasExtraAcceptedResponsavel);
+router.route("/getAllDiasHorasExtraDeclinedResponsavel").get(getAllDiasHorasExtraDeclinedResponsavel);
+
+
 
 router.route("/dias/:projeto").get(getAllDiasProjeto);
 router.route("/diasUtilizador/:utilizador/:projeto").get(getDiasProjetoUtilizador);

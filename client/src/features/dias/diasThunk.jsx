@@ -7,7 +7,6 @@ import { clearValues } from './diasSlice';
 export const deleteDiaThunk = async (diaId, thunkAPI) => {
   thunkAPI.dispatch(showLoading());
   try {
-    //console.log(diaId)
     const resp = await customFetch.delete(`/dia/${diaId}`);
     thunkAPI.dispatch(getAllDias());
     return resp.data.msg;

@@ -61,6 +61,11 @@ const UserSchema = new mongoose.Schema({
         maxlength: 20,
         default: "2",
     },
+    responsavel: {
+        type: String,
+        trim: true,
+        default: "",
+    },
     estado: {
         type: Boolean,
         default: false,

@@ -71,7 +71,7 @@ function OptionsPanel({ options, handleTipoTrabalho}) {
 
 
   OptionsPanel.propTypes = {
-    options: PropTypes.array.isRequired, 
+    options: PropTypes.array, 
     handleTipoTrabalho: PropTypes.func.isRequired,
   }
 
