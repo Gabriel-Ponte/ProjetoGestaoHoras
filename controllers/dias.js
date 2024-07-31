@@ -1318,7 +1318,7 @@ const declineDiasHorasExtra = async (req, res) => {
       const emailResponsavel = userResponsavel?.email;
       let mailOptions = ""
       if (tipo === 1) {
-
+        // Enviar CC ???
         mailOptions = {
           from: process.env.EMAIL, // Sender's email address
           to: emailResponsavel, // Recipient's email address

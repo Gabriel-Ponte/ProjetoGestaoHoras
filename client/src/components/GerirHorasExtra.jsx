@@ -271,7 +271,8 @@ const GerirHorasExtra = () => {
   return (
     <Wrapper>
       <div className={'row mb-12 text-center tittle'}>
-        <h1>Gestão de Horas Extra</h1>
+      {user?.user?.tipo === 7 && <h1>Gestão de Horas Extra</h1>}
+      {user?.user?.tipo === 6 && <h1>Gestão de Horas Extra Responsável</h1>}
       </div>
       <div className="col-md-12 mb-4 text-center ">
         <div className="row">
