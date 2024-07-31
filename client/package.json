@@ -17,7 +17,6 @@
     "": "serve -s build -L",
     "start:trace": "node --trace-deprecation ./node_modules/serve/build/main.js  -s build"
   },
-  
   "dependencies": {
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
@@ -30,7 +29,6 @@
     "date-fns": "^3.6.0",
     "moment": "^2.29.4",
     "node-openssl-cert": "^0.1.43",
-    "openssl-nodejs": "^1.0.5",
     "prop-types": "^15.8.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -67,13 +65,11 @@
     ]
   },
   "//": [
-    "Change punycode   /client/node_modules/fast-url-parser/src/urlparser.js" ,
+    "Change punycode   /client/node_modules/fast-url-parser/src/urlparser.js",
     "Url.prototype._hostIdna = function Url$_hostIdna(hostname) {",
     "return new URL(`http://${hostname}`).hostname;",
-    "};" ] 
+    "};",
+    "OR Change punycode add a /",
+    "var punycode = require('punycode/');"
+  ]
 }
-
-
-
-
-
