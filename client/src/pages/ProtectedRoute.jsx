@@ -1,11 +1,15 @@
-import { Navigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types'; 
+import { clearStore } from '../features/utilizadores/utilizadorSlice';
+import { toast } from 'react-toastify';
 // import { PaginaAdicionarHoras, PaginaVisualizarHoras, SharedLayout } from './dashboard';
 
 const ProtectedRoute = ({ children }) => {
   const { user } = useSelector((store) => store.utilizador);
-  
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   // const TipoRoutes = () => {
   //   return (
   //     <Routes>
@@ -27,6 +31,12 @@ const ProtectedRoute = ({ children }) => {
   } else if (user?.user?.tipo === 3 || user?.user?.tipo === 4  || user?.user?.tipo === 6  || user?.user?.tipo === 7) {
     return <>{children}</>;
     //return <TipoRoutes />;
+  } else if(user?.user?.tipo === 8){
+
+    toast.error("Utilizador Inativo!")
+    dispatch(clearStore('Utilizador Inactivo!'));
+    return <Navigate to='/login' />;
+    
   } else {
     return <Navigate to='/login' />;
   }

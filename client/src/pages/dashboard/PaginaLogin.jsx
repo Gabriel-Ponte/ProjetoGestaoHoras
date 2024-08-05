@@ -41,9 +41,9 @@ function Login(){
   };
   useEffect(() => {
   if (user) {
-    setTimeout(() => {
+
       navigate('/PaginaPrincipal');
-    }, 2000);
+  
   }
 }, [user, navigate]);
 return (

@@ -715,8 +715,13 @@ const ListaProjetos = () => {
     if(count === 0 ){
       values.accepted = 0;
     } else{
-      // Laboratori Acceptance 8
+      if(user?.user?.responsavel){
+      // Laboratorio Acceptance 8
       values.accepted = 8;
+      } else{
+        values.accepted = 1;  
+      }
+
     } 
   }
     
@@ -1028,9 +1033,8 @@ const ListaProjetos = () => {
       });
       setHorasT(0);
     }
-
+    
     setVerificaCopiarHoras(value);
-
   }
 
 

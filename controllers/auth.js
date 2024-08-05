@@ -277,6 +277,7 @@ const login = async (req, res) => {
       nome: user.nome,
       tipo: user.tipo,
       estado: user.estado,
+      responsavel: user.responsavel,
       timestamp: timestamp,
       token,
     },

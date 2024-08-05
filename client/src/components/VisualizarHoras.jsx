@@ -706,6 +706,7 @@ const ListaHoras = () => {
       });
 
 
+
       let pagamentosMesCount = 0;
       listaPagamentos.filter(item => item.Mes === month && item.Ano === year)
         .forEach(item => {
@@ -1291,6 +1292,7 @@ const ListaHoras = () => {
                       const isSameDate = diaSelected === 0 || Number(diaSelected) === data.getDate();
 
                       if (isSameMonth && isSameDate) {
+
                         count++;
                         return (
                           <div key={count + selectedUser}>

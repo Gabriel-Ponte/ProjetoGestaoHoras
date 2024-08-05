@@ -278,33 +278,33 @@ const GerirHorasExtra = () => {
         <div className="row">
         <div className={user?.user?.tipo === 7 ? "col-md-3" : "col-md-4"}>
             <button type='button'
-              className={`btn btn-outline-primary ${verificaAlterado === 0 ? 'active' : ''}`}
+              className={`btn ButtonsTest ${verificaAlterado === 0 ? 'active' : ''}`}
               disabled={isLoading || isLoadingPagamentos}
 
               onClick={() => handleChangeButtonClicked(0)}>
-              Horas Extra por Aceitar
+              Horas por Aceitar
             </button>
           </div>
           <div className={user?.user?.tipo === 7 ? "col-md-3" : "col-md-4"}>
             <button type='button'
-              className={`btn btn-outline-primary ${verificaAlterado === 1 ? 'active' : ''}`}
+              className={`btn ButtonsTest ${verificaAlterado === 1 ? 'active' : ''}`}
               disabled={isLoading || isLoadingPagamentos}
               onClick={() => handleChangeButtonClicked(1)}>
-              Horas Extra Aceites
+              Horas Aceites
             </button>
           </div>
           <div className={user?.user?.tipo === 7 ? "col-md-3" : "col-md-4"}>
             <button type='button'
-              className={`btn btn-outline-primary ${verificaAlterado === 2 ? 'active' : ''}`}
+              className={`btn ButtonsTest ${verificaAlterado === 2 ? 'active' : ''}`}
               disabled={isLoading || isLoadingPagamentos}
               onClick={() => handleChangeButtonClicked(2)}>
-              Horas Extra Recusadas
+              Horas Recusadas
             </button>
           </div>
         {user.user.tipo === 7 &&
           <div className="col-md-3">
             <button type='button'
-              className={`btn btn-outline-primary ${verificaAlterado === 3 ? 'active' : ''}`}
+              className={`btn ButtonsTest ${verificaAlterado === 3 ? 'active' : ''}`}
               disabled={isLoading || isLoadingPagamentos}
               onClick={() => handleChangeButtonClicked(3)}>
               Horas Extra Pagas
@@ -324,26 +324,34 @@ const GerirHorasExtra = () => {
               <div>
                 {(verificaAlterado !== 3) &&
                   <div className='row mt-4 mb-4'>
-                    <div className={`${verificaAlterado === 0 ? 'col-md-6' : 'col-md-4'}`}>
+                    <div className={`${verificaAlterado === 0 ? 'col-md-4' : 'col-md-3'}`}>
                       <button type='button'
-                        className={`btn btn-outline-secondary ${(verificaTipo === 2 || verificaTipo === 6) ? 'active' : ''}`}
+                        className={`btn ButtonsTestSecondary ${(verificaTipo === 2 || verificaTipo === 6) ? 'activeSecondary' : ''}`}
                         disabled={isLoading || isLoadingPagamentos}
                         onClick={() => handleChangeTipo(2)}>
                         Horas Extra
                       </button>
                     </div>
-                    <div className={`${verificaAlterado === 0 ? 'col-md-6' : 'col-md-4'}`}>
+                    <div className={`${verificaAlterado === 0 ? 'col-md-4' : 'col-md-3'}`}>
                       <button type='button'
-                        className={`btn btn-outline-secondary ${(verificaTipo === 3 || verificaTipo === 7) ? 'active' : ''}`}
+                        className={`btn ButtonsTestSecondary ${(verificaTipo === 3 || verificaTipo === 7) ? 'activeSecondary' : ''}`}
                         disabled={isLoading || isLoadingPagamentos}
                         onClick={() => handleChangeTipo(3)}>
                         Compensação de Horas Extra
                       </button>
                     </div>
+                    <div className={`${verificaAlterado === 0 ? 'col-md-4' : 'col-md-3'}`}>
+                      <button type='button'
+                        className={`btn ButtonsTestSecondary ${(verificaTipo === 4 || verificaTipo === 7) ? 'activeSecondary' : ''}`}
+                        disabled={isLoading || isLoadingPagamentos}
+                        onClick={() => handleChangeTipo(4)}>
+                        Ferias
+                      </button>
+                    </div>
                     {(verificaAlterado !== 0) &&
-                      <div className='col-md-4'>
+                      <div className='col-md-3'>
                         <button type='button'
-                          className={`btn btn-outline-secondary ${(verificaTipo === 1 || verificaTipo === 5)? 'active' : ''}`}
+                          className={`btn ButtonsTestSecondary ${(verificaTipo === 1 || verificaTipo === 5)? 'activeSecondary' : ''}`}
                           disabled={isLoading || isLoadingPagamentos}
                           onClick={() => handleChangeTipo(1)}>
                           Todos os pedidos

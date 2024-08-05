@@ -84,6 +84,94 @@ const Wrapper = styled.section`
     font-size: auto;
 }
 
+
+
+
+.ButtonsTest {
+  padding: 15px 25px;
+  border: unset;
+  border-radius: 15px;
+  color: #212121;
+  z-index: 1;
+  background: #EEEEEE;
+  position: relative;
+  font-weight: 1000;
+  font-size: 17px;
+  -webkit-box-shadow: 4px 8px 19px -3px rgba(0, 0, 0, 0.27);
+  box-shadow: 4px 8px 19px -3px rgba(0, 0, 0, 0.27);
+  transition: color 250ms; /* Change to transition only color */
+  overflow: hidden;
+}
+
+.ButtonsTest::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0;
+  border-radius: 15px;
+  background-color: #D0D6B3;
+  z-index: -1;
+
+  transition: width 250ms; /* Transition only the width */
+}
+
+
+.ButtonsTest:hover::before {
+  width: 100%;
+}
+
+.active {
+  background-color: #D0D6B3;
+  
+}
+
+
+
+.ButtonsTestSecondary {
+  padding: 10px 20px;
+  border: unset;
+  border-radius: 5px;
+  color: #212121;
+  z-index: 1;
+ background-color: #FFFFFF;
+  position: relative;
+  font-weight: 1000;
+  font-size: 17px;
+  transition: color 250ms; /* Change to transition only color */
+  overflow: hidden;
+}
+
+.ButtonsTestSecondary::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0;
+  border-radius: 5px;
+  background-color: #454545;
+  z-index: -1;
+  -webkit-box-shadow: 4px 8px 19px -3px rgba(0, 0, 0, 0.27);
+  box-shadow: 4px 8px 19px -3px rgba(0, 0, 0, 0.27);
+  transition: width 250ms; /* Transition only the width */
+}
+
+.ButtonsTestSecondary:hover {
+  color: #e8e8e8;
+}
+
+.ButtonsTestSecondary:hover::before {
+  width: 100%;
+}
+
+.activeSecondary {
+  background-color: #454545;
+  color: #e8e8e8;
+}
+
+
 .Buttons {
   display: inline;
   align-items: center;

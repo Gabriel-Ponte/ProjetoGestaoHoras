@@ -10,9 +10,9 @@ import { clearStore } from '../features/utilizadores/utilizadorSlice';
 
 
 const Navbar = () => {
-  const [showLogout, setShowLogout] = useState(false);
-  const [disableAddHoras, setDisableAddHoras] = useState(false);
-  const [disableVisualizardHoras, setDisableVisualizarHoras] = useState(false);
+  const [showLogout, setShowLogout] = useState(0);
+  const [disableAddHoras, setDisableAddHoras] = useState(0);
+  const [disableVisualizardHoras, setDisableVisualizarHoras] = useState(0);
   const { user } = useSelector((store) => store.utilizador);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -24,21 +24,23 @@ const Navbar = () => {
   };
 
   const editarPerfil = () => {
+    setDisableAddHoras(2)
+    setDisableVisualizarHoras(2)
     setShowLogout(false);
     navigate('/PaginaEditarPerfil');
   };
 
   const logout = () => {
     setShowLogout(false);
-    setDisableAddHoras(false);
+    setDisableAddHoras(0);
     dispatch(clearStore('Logging out...'))
     navigate('/login');
   };
 
   const visualizarHoras = () => {
     setShowLogout(false);
-    setDisableAddHoras(false);
-    setDisableVisualizarHoras(true);
+    setDisableAddHoras(0);
+    setDisableVisualizarHoras(1);
 
     //window.location.reload(navigate('/PaginaVisualizarHoras'));
     navigate('/PaginaVisualizarHoras');
@@ -46,8 +48,8 @@ const Navbar = () => {
 
   const addHoras = () => {
     setShowLogout(false);
-    setDisableAddHoras(true);
-    setDisableVisualizarHoras(false);
+    setDisableAddHoras(1);
+    setDisableVisualizarHoras(0);
     navigate('/PaginaAdicionarHoras');
   };
 
@@ -70,10 +72,10 @@ const Navbar = () => {
                   display: "inline-block",
                   lineHeight: "normal",
                   padding: "3px 3px",
-                  backgroundColor: disableAddHoras ? "#A6C48A" : "",
+                  backgroundColor: (disableAddHoras === 1) ? "#A6C48A" : (disableVisualizardHoras !== 0) ? "" : "#A6C48A" ,
                   width: 'auto'
                 }}
-                disabled={disableAddHoras} >
+                disabled={disableAddHoras === 1} >
                 Adicionar Horas
               </button>
 
@@ -81,7 +83,7 @@ const Navbar = () => {
             </div>
             <div className='col-6 middleButton' >
               <button
-                className={`btn btn-outline-secondary ${disableVisualizardHoras ? 'active' : ''}`}
+                className={`btn btn-outline-secondary ${(disableVisualizardHoras === 1) ? 'active' : ''}`}
                 onClick={visualizarHoras}
                 style={{
                   fontSize: "1.5vw",
@@ -91,10 +93,10 @@ const Navbar = () => {
                   display: "inline-block",
                   lineHeight: "normal",
                   padding: "3px 3px",
-                  backgroundColor: disableVisualizardHoras ? "#A6C48A" : "",
+                  backgroundColor: (disableVisualizardHoras === 1) ? "#A6C48A" : "",
                   width: 'auto'
                 }}
-                disabled={disableVisualizardHoras} >
+                disabled={disableVisualizardHoras === 1} >
                 Visualizar Horas
               </button>
             </div>

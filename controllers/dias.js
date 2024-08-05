@@ -219,6 +219,12 @@ function calculateEaster(year, type) {
   const getAllDiasHorasExtra = async (req, res) => {
     try {
       let { sort, tipo } = req.query;
+
+      let checkTipoAll = (tipo === "1");
+      let checkTipo = (tipo === "3");
+      let checkTipoFalse = (tipo === "2")
+      let checkTipoFerias = (tipo === "4")
+
       sort = sanitizeHtml(sort);
       tipo = sanitizeHtml(tipo);
       // Initial query to get Dias: 1
@@ -266,18 +272,30 @@ function calculateEaster(year, type) {
                   tipoT[i] = ttFound.TipoTrabalho;
                   if (ttFound.tipo === 4) {
                     tipoTrT = 3;
+                  } else  if(ttFound.tipo === 7) {
+                    tipoTrT = 4;
                   }
                 }
               }
               projeto.tipoTrabalho = tipoT.join(",");
   
-              if ((tipo === "3" && tipoTrT !== 3) || (tipo === "2" && tipoTrT === 3)) {      
+              if ((checkTipo && tipoTrT !== 3) || (checkTipoFerias && tipoTrT !== 4) || (checkTipoFalse && tipoTrT === 3) || (checkTipoFalse && tipoTrT === 4)) {      
                 if ((indicesNotToRemove && indicesNotToRemove.includes(indexDia)) ||indicesToRemove && (indicesToRemove.includes(indexDia))) {
               } else {
                   indicesToRemove.push(indexDia);
               }
   
-              } else if((tipo === "3" && tipoTrT === 3) ){
+              } else if((checkTipo && tipoTrT === 3) ){
+                try {
+                  indicesNotToRemove.push(indexDia);
+                  
+                  if(indicesToRemove && indicesToRemove.includes(indexDia)){
+                    indicesToRemove.remove(indexDia);
+                  }
+                } catch (error) {
+                    console.error(error)
+                } 
+              }else if((checkTipoFerias && tipoTrT === 4) ){
                 try {
                   indicesNotToRemove.push(indexDia);
                   
@@ -292,7 +310,7 @@ function calculateEaster(year, type) {
           );
   
           // Handling associated days for tipo = 1
-          if (tipo === "1") {
+          if (checkTipoAll) {
             const date = new Date(dia?.Data);
             const dayOfWeek = date.getDay();
             const isSunday = dayOfWeek === 0;
@@ -356,7 +374,7 @@ function calculateEaster(year, type) {
           })
         );
       }
-  
+      
       // Sending response
       res.status(StatusCodes.OK).json({ diasHorasExtra });
     } catch (error) {
@@ -376,6 +394,10 @@ const getAllDiasHorasExtraAccepted = async (req, res) => {
     sort = sanitizeHtml(sort);
     tipo = sanitizeHtml(tipo);
 
+    let checkTipoAll = (tipo === "1");
+    let checkTipo = (tipo === "3");
+    let checkTipoFalse = (tipo === "2")
+    let checkTipoFerias = (tipo === "4")
     // Initial query to get Dias with accepted: 2
     let result = Dias.find({ accepted: 2 });
 
@@ -417,18 +439,30 @@ const getAllDiasHorasExtraAccepted = async (req, res) => {
                 tipoT[i] = ttFound.TipoTrabalho;
                 if (ttFound.tipo === 4) {
                   tipoTrT = 3;
+                } else if (ttFound.tipo === 7) {
+                  tipoTrT = 4;
                 }
               }
             }
             projeto.tipoTrabalho = tipoT.join(",");
-
-            if ((tipo === "3" && tipoTrT !== 3) || (tipo === "2" && tipoTrT === 3)) {      
+  
+            if ((checkTipo && tipoTrT !== 3) || (checkTipoFerias && tipoTrT !== 4) || (checkTipoFalse && tipoTrT === 3) || (checkTipoFalse && tipoTrT === 4)) {      
               if ((indicesNotToRemove && indicesNotToRemove.includes(indexDia)) ||indicesToRemove && (indicesToRemove.includes(indexDia))) {
             } else {
                 indicesToRemove.push(indexDia);
             }
 
-            } else if((tipo === "3" && tipoTrT === 3) ){
+            } else if((checkTipo && tipoTrT === 3) ){
+              try {
+                indicesNotToRemove.push(indexDia);
+                
+                if(indicesToRemove && indicesToRemove.includes(indexDia)){
+                  indicesToRemove.remove(indexDia);
+                }
+              } catch (error) {
+                  console.error(error)
+              } 
+            }else if((checkTipoFerias && tipoTrT === 4) ){
               try {
                 indicesNotToRemove.push(indexDia);
                 
@@ -443,7 +477,7 @@ const getAllDiasHorasExtraAccepted = async (req, res) => {
         );
 
         // Handling associated days for tipo = 1
-        if (tipo === "1") {
+        if (checkTipoAll) {
           const date = new Date(dia?.Data);
           const dayOfWeek = date.getDay();
           const isSunday = dayOfWeek === 0;
@@ -521,6 +555,13 @@ const getAllDiasHorasExtraDeclined = async (req, res) => {
     sort = sanitizeHtml(sort);
     tipo = sanitizeHtml(tipo);
 
+
+    let checkTipoAll = (tipo === "1");
+    let checkTipo = (tipo === "3");
+    let checkTipoFalse = (tipo === "2")
+    let checkTipoFerias = (tipo === "4")
+
+
     // Initial query to get Dias with accepted: 3 Declined
     let result = Dias.find({ accepted: 3 });
 
@@ -562,12 +603,15 @@ const getAllDiasHorasExtraDeclined = async (req, res) => {
                 tipoT[i] = ttFound.TipoTrabalho;
                 if (ttFound.tipo === 4) {
                   tipoTrT = 3;
+                } else if (ttFound.tipo === 7) {
+                  tipoTrT = 4;
                 }
               }
             }
             projeto.tipoTrabalho = tipoT.join(",");
 
-            if ((tipo === "3" && tipoTrT !== 3) || (tipo === "2" && tipoTrT === 3)) {      
+  
+            if ((checkTipo && tipoTrT !== 3) || (checkTipoFerias && tipoTrT !== 4) || (checkTipoFalse && tipoTrT === 3) || (checkTipoFalse && tipoTrT === 4)) {     
               if ((indicesNotToRemove && indicesNotToRemove.includes(indexDia)) ||indicesToRemove && (indicesToRemove.includes(indexDia))) {
             } else {
                 indicesToRemove.push(indexDia);
@@ -583,12 +627,22 @@ const getAllDiasHorasExtraDeclined = async (req, res) => {
               } catch (error) {
                   console.error(error)
               } 
+            }else if((checkTipoFerias && tipoTrT === 4) ){
+              try {
+                indicesNotToRemove.push(indexDia);
+                
+                if(indicesToRemove && indicesToRemove.includes(indexDia)){
+                  indicesToRemove.remove(indexDia);
+                }
+              } catch (error) {
+                  console.error(error)
+              } 
             }
           })
         );
 
         // Handling associated days for tipo = 1
-        if (tipo === "1") {
+        if (checkTipoAll) {
           const date = new Date(dia?.Data);
           const dayOfWeek = date.getDay();
           const isSunday = dayOfWeek === 0;
@@ -613,8 +667,6 @@ const getAllDiasHorasExtraDeclined = async (req, res) => {
         }
       })
     );
-
-
     
     if (indicesToRemove && indicesToRemove.length > 0) {
       indicesToRemove.sort((a, b) => a - b);
@@ -664,13 +716,17 @@ const getAllDiasHorasExtraResponsavel = async (req, res) => {
   try {
     let { sort, tipo, user } = req.query;
 
-    let checkTipoAll = (tipo === "1" || tipo === "6");
-    let checkTipo = (tipo === "3" || tipo === "7");
-    let checkTipoFalse = (tipo === "2" || tipo === "8")
+
 
     sort = sanitizeHtml(sort);
     tipo = sanitizeHtml(tipo);
     user = sanitizeHtml(user);
+
+    let checkTipoAll = (tipo === "1");
+    let checkTipo = (tipo === "3");
+    let checkTipoFalse = (tipo === "2");
+    let checkTipoFerias = (tipo === "4");
+
     let diasHorasExtra = [];
     let utilizadores = await User.find({ responsavel: user });
 
@@ -724,13 +780,14 @@ if (utilizadores && utilizadores.length > 0) {
                 tipoT[i] = ttFound.TipoTrabalho;
                 if (ttFound.tipo === 4) {
                   tipoTrT = 3;
+                } else if(ttFound.tipo === 7){
+                  tipoTrT = 4;
                 }
               }
             }
 
             projeto.tipoTrabalho = tipoT.join(",");
-
-            if ((checkTipo && tipoTrT !== 3) || (checkTipoFalse && tipoTrT === 3)) {      
+            if ((checkTipo && tipoTrT !== 3) || (checkTipoFerias && tipoTrT !== 4) || (checkTipoFalse && tipoTrT === 3) || (checkTipoFalse && tipoTrT === 4)) {     
               if ((indicesNotToRemove && indicesNotToRemove.includes(indexDia)) ||indicesToRemove && (indicesToRemove.includes(indexDia))) {
             } else {
                 indicesToRemove.push(indexDia);
@@ -744,6 +801,16 @@ if (utilizadores && utilizadores.length > 0) {
               } catch (error) {
                   console.error(error)
               }
+            }else if((checkTipoFerias && tipoTrT === 4) ){
+              try {
+                indicesNotToRemove.push(indexDia);
+                
+                if(indicesToRemove && indicesToRemove.includes(indexDia)){
+                  indicesToRemove.remove(indexDia);
+                }
+              } catch (error) {
+                  console.error(error)
+              } 
             }
           })
         );
@@ -827,13 +894,18 @@ const getAllDiasHorasExtraAcceptedResponsavel = async (req, res) => {
   try {
     let { sort, tipo, user } = req.query;
 
-    let checkTipoAll = (tipo === "1");
-    let checkTipo = (tipo === "3");
-    let checkTipoFalse = (tipo === "2")
+
 
     sort = sanitizeHtml(sort);
     tipo = sanitizeHtml(tipo);
     user = sanitizeHtml(user);
+
+        
+    let checkTipoAll = (tipo === "1");
+    let checkTipo = (tipo === "3");
+    let checkTipoFalse = (tipo === "2")
+    let checkTipoFerias = (tipo === "4")
+
     let diasHorasExtra = [];
     let utilizadores = await User.find({ responsavel: user });
 
@@ -889,18 +961,30 @@ if (utilizadores && utilizadores.length > 0) {
                 tipoT[i] = ttFound.TipoTrabalho;
                 if (ttFound.tipo === 4) {
                   tipoTrT = 3;
+                } else if (ttFound.tipo === 7) {
+                  tipoTrT = 4;
                 }
               }
             }
             projeto.tipoTrabalho = tipoT.join(",");
 
-            if ((checkTipo && tipoTrT !== 3) || (checkTipoFalse && tipoTrT === 3)) {      
+            if ((checkTipo && tipoTrT !== 3) || (checkTipoFerias && tipoTrT !== 4) || (checkTipoFalse && tipoTrT === 3) || (checkTipoFalse && tipoTrT === 4)) {     
               if ((indicesNotToRemove && indicesNotToRemove.includes(indexDia)) ||indicesToRemove && (indicesToRemove.includes(indexDia))) {
             } else {
                 indicesToRemove.push(indexDia);
             }
 
             } else if((tipo === "3" && tipoTrT === 3) ){
+              try {
+                indicesNotToRemove.push(indexDia);
+                
+                if(indicesToRemove && indicesToRemove.includes(indexDia)){
+                  indicesToRemove.remove(indexDia);
+                }
+              } catch (error) {
+                  console.error(error)
+              } 
+            } else if((checkTipoFerias && tipoTrT === 4) ){
               try {
                 indicesNotToRemove.push(indexDia);
                 
@@ -991,15 +1075,18 @@ const getAllDiasHorasExtraDeclinedResponsavel = async (req, res) => {
   try {
       let { sort, tipo, user } = req.query;
   
-      let checkTipoAll = (tipo === "1");
-      let checkTipo = (tipo === "3");
-      let checkTipoFalse = (tipo === "2")
-  
+
       
 
       sort = sanitizeHtml(sort);
       tipo = sanitizeHtml(tipo);
       user = sanitizeHtml(user);
+
+      let checkTipoAll = (tipo === "1");
+      let checkTipo = (tipo === "3");
+      let checkTipoFalse = (tipo === "2");
+      let checkTipoFerias = (tipo === "4");
+
       let diasHorasExtra = [];
       let utilizadores = await User.find({ responsavel: user });
   
@@ -1053,18 +1140,30 @@ const getAllDiasHorasExtraDeclinedResponsavel = async (req, res) => {
                 tipoT[i] = ttFound.TipoTrabalho;
                 if (ttFound.tipo === 4) {
                   tipoTrT = 3;
+                }else if (ttFound.tipo === 7) {
+                  tipoTrT = 4;
                 }
               }
             }
             projeto.tipoTrabalho = tipoT.join(",");
 
-            if ((checkTipo && tipoTrT !== 3) || (checkTipoFalse && tipoTrT === 3)) {      
+            if ((checkTipo && tipoTrT !== 3) || (checkTipoFerias && tipoTrT !== 4) || (checkTipoFalse && tipoTrT === 3) || (checkTipoFalse && tipoTrT === 4)) {   
               if ((indicesNotToRemove && indicesNotToRemove.includes(indexDia)) ||indicesToRemove && (indicesToRemove.includes(indexDia))) {
             } else {
                 indicesToRemove.push(indexDia);
             }
 
             } else if((checkTipo && tipoTrT === 3) ){
+              try {
+                indicesNotToRemove.push(indexDia);
+                
+                if(indicesToRemove && indicesToRemove.includes(indexDia)){
+                  indicesToRemove.remove(indexDia);
+                }
+              } catch (error) {
+                  console.error(error)
+              } 
+            } else if((checkTipoFerias && tipoTrT === 4) ){
               try {
                 indicesNotToRemove.push(indexDia);
                 
@@ -1202,6 +1301,8 @@ const acceptDiasHorasExtra = async (req, res) => {
         const tipoT = await TipoTrabalho?.findOne({ _id: ttID });
         if (tipoT.tipo === 4) {
           tipo = 2;
+        } else if(tipoT.tipo === 7){
+          tipo = 3;
         }
       }
     }
@@ -1213,6 +1314,7 @@ const acceptDiasHorasExtra = async (req, res) => {
     const dataDay = data.getDate();
     const dataMonth = data.getMonth() + 1;
     const dataYear = data.getFullYear();
+
     // Configure the email details
     let mailOptions = ""
     if (tipo === 1) {
@@ -1224,7 +1326,7 @@ const acceptDiasHorasExtra = async (req, res) => {
           <p>Horas Extra inseridas para o dia ${dataDay}/${dataMonth}/${dataYear} foram aceites!</p>
           <p>Agradecemos a sua colaboração.</p>`
       };
-    } else {
+    } else if(tipo === 2){
 
       mailOptions = {
         from: process.env.EMAIL, // Sender's email address
@@ -1232,6 +1334,15 @@ const acceptDiasHorasExtra = async (req, res) => {
         subject: 'Aplicação Gestão Horas - Compensação de Horas extra Aceites',
         html: `
           <p>Pedido de compensação de Horas Extra para o dia ${dataDay}/${dataMonth}/${dataYear} foi aceite!</p>
+          <p>Agradecemos a sua colaboração.</p> `
+      };
+    } else {
+      mailOptions = {
+        from: process.env.EMAIL, // Sender's email address
+        to: email, // Recipient's email address
+        subject: 'Aplicação Gestão Horas - Férias Aceites',
+        html: `
+          <p>Pedido de Férias para o dia ${dataDay}/${dataMonth}/${dataYear} foi aceite!</p>
           <p>Agradecemos a sua colaboração.</p> `
       };
     }
@@ -1273,6 +1384,8 @@ const declineDiasHorasExtra = async (req, res) => {
       const tipoT = await TipoTrabalho?.findOne({ _id: ttID });
       if (tipoT.tipo === 4) {
         tipo = 2;
+      } else if(tipoT.tipo === 7){
+        tipo = 3;
       }
     }
   }
@@ -1316,7 +1429,7 @@ const declineDiasHorasExtra = async (req, res) => {
 
       const userResponsavel = await User.findOne({ _id: responsavel });
       const emailResponsavel = userResponsavel?.email;
-      let mailOptions = ""
+      let mailOptions = "";
       if (tipo === 1) {
         // Enviar CC ???
         mailOptions = {
@@ -1328,13 +1441,23 @@ const declineDiasHorasExtra = async (req, res) => {
             <p>Se precisar de informações adicionais ou tiver dúvidas sobre este assunto, contacte os Recursos Humanos.</p>
             <p>Agradecemos a sua compreensão e colaboração.</p>`
         };
-      } else {
+      } else if (tipo === 2) {
         mailOptions = {
           from: process.env.EMAIL, // Sender's email address
           to: emailResponsavel, // Recipient's email address
           subject: 'Aplicação Gestão Horas - (Responsável) Compensação de Horas extra Recusada',
           html: `
             <p>Pedido de compensação de Horas Extra realizado por ${utilizador} para o dia ${dataDay}/${dataMonth}/${dataYear} foi recusado!</p>
+            <p>Se precisar de informações adicionais ou tiver dúvidas sobre este assunto, contacte os Recursos Humanos.</p>
+            <p>Agradecemos a sua compreensão e colaboração.</p> `
+        };
+      } else{
+        mailOptions = {
+          from: process.env.EMAIL, // Sender's email address
+          to: emailResponsavel, // Recipient's email address
+          subject: 'Aplicação Gestão Horas - (Responsável) Férias Recusada',
+          html: `
+            <p>Pedido de Férias realizado por ${utilizador} para o dia ${dataDay}/${dataMonth}/${dataYear} foi recusado!</p>
             <p>Se precisar de informações adicionais ou tiver dúvidas sobre este assunto, contacte os Recursos Humanos.</p>
             <p>Agradecemos a sua compreensão e colaboração.</p> `
         };
@@ -1345,7 +1468,7 @@ const declineDiasHorasExtra = async (req, res) => {
       await sgMail.send(mailOptions);
     }
 
-    let mailOptions = ""
+    let mailOptions = "";
     if (tipo === 1) {
       mailOptions = {
         from: process.env.EMAIL, // Sender's email address
@@ -1357,7 +1480,7 @@ const declineDiasHorasExtra = async (req, res) => {
           <p>Se precisar de informações adicionais ou tiver dúvidas sobre este assunto, contacte os Recursos Humanos.</p>
           <p>Agradecemos a sua compreensão e colaboração.</p>`
       };
-    } else {
+    } else if(tipo === 2) {
 
       mailOptions = {
         from: process.env.EMAIL, // Sender's email address
@@ -1365,6 +1488,17 @@ const declineDiasHorasExtra = async (req, res) => {
         subject: 'Aplicação Gestão Horas - Compensação de Horas extra Recusada',
         html: `
           <p>Pedido de compensação de Horas Extra para o dia ${dataDay}/${dataMonth}/${dataYear} foi recusado!</p>
+          <p>Por favor, reinsira as horas relativas a este dia.</p>
+          <p>Se precisar de informações adicionais ou tiver dúvidas sobre este assunto, contacte os Recursos Humanos.</p>
+          <p>Agradecemos a sua compreensão e colaboração.</p> `
+      };
+    } else{
+      mailOptions = {
+        from: process.env.EMAIL, // Sender's email address
+        to: email, // Recipient's email address
+        subject: 'Aplicação Gestão Horas - Férias Recusadas',
+        html: `
+          <p>Pedido de Férias para o dia ${dataDay}/${dataMonth}/${dataYear} foi recusado!</p>
           <p>Por favor, reinsira as horas relativas a este dia.</p>
           <p>Se precisar de informações adicionais ou tiver dúvidas sobre este assunto, contacte os Recursos Humanos.</p>
           <p>Agradecemos a sua compreensão e colaboração.</p> `

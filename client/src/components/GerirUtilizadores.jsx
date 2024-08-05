@@ -191,6 +191,9 @@ updateList();
           case "Administrador Recursos Humanos":
             value = 7;
             break;
+          case "Inativo":
+              value = 8;
+              break;
           case 1:
             valTipo = 5;
             break;
@@ -262,7 +265,7 @@ updateList();
                     handleChange={(e) => handleChangeUtilizador(e, t._id)}
                     placeholder="Escolha um tipo"
                     value={t.tipo}
-                    list={[["Engenharia de Processos"], ["Laboratorio"] ,["Recursos Humanos"] , ["Administrador"] , ["Administrador Engenharia"] , ["Administrador Laboratorio"], ["Administrador Recursos Humanos"]]}
+                    list={[["Engenharia de Processos"], ["Laboratorio"] ,["Recursos Humanos"] , ["Administrador"] , ["Administrador Engenharia"] , ["Administrador Laboratorio"], ["Administrador Recursos Humanos"], ["Inativo"]]}
                   />
 
               {t.tipo === 3 &&
