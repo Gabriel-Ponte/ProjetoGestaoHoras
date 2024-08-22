@@ -694,18 +694,19 @@ const ListaProjetos = () => {
       }
     }
 
-    //   if(feriasActive === true){
-    //     for (let key in values.tipoDeTrabalhoHoras) {
-    //       const horasTipoTrabalhoArray = values.tipoDeTrabalhoHoras[key]?.horas?.split(',') || [];
-    //       const tipoTrabalhoArray = values.tipoDeTrabalhoHoras[key]?.tipoTrabalho?.split(',') || [];
-    //       for (let a = 0; a < tipoTrabalhoArray.length; a++) {
-    //       if((tipoTrabalhoArray[a] === feriasID) && (horasTipoTrabalhoArray[a] > 0)){
-    //         toast.error('Pedido de compensação de horas extra realizado!');
-    //         count++;
-    //       }
-    //     }
-    //   }
-    // }
+
+    if(feriasActive === true){
+        for (let key in values.tipoDeTrabalhoHoras) {
+          const horasTipoTrabalhoArray = values.tipoDeTrabalhoHoras[key]?.horas?.split(',') || [];
+          const tipoTrabalhoArray = values.tipoDeTrabalhoHoras[key]?.tipoTrabalho?.split(',') || [];
+          for (let a = 0; a < tipoTrabalhoArray.length; a++) {
+          if((tipoTrabalhoArray[a] === feriasID) && (horasTipoTrabalhoArray[a] > 0)){
+            toast.error('Pedido de Férias realizado!');
+            count++;
+          }
+        }
+      }
+    }
 
     if(count === 0 ){
       values.accepted = 0;

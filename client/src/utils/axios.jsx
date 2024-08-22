@@ -6,8 +6,8 @@ import { getUserFromLocalStorage } from './localStorage';
 const customFetch = axios.create({
 
   // baseURL: 'http://localhost:8080/',
-  // baseURL: 'https://192.168.10.102:8080/',
-  baseURL: 'https://192.168.10.48:8080/',
+  baseURL: 'https://192.168.10.102:8080/',
+  // baseURL: 'https://192.168.10.48:8080/',
 
 });
 

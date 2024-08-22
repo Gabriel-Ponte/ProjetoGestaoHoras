@@ -296,12 +296,12 @@ const allDiasSlice = createSlice({
       state.isLoading = true;
     })
     .addCase(acceptDiasHorasExtra.fulfilled, (state) => {
-      toast.success("Horas Extra aceites!");
+      toast.success("Horas aceites!");
       state.isLoading = false;
     })
     
     .addCase(acceptDiasHorasExtra.rejected, (state) => {
-      toast.error("Ocorreu um Erro ao aceitar as Horas Extra!");
+      toast.error("Ocorreu um Erro ao aceitar as Horas!");
       state.isLoading = false;
     })
 
@@ -309,11 +309,11 @@ const allDiasSlice = createSlice({
       state.isLoading = true;
     })
     .addCase(declineDiasHorasExtra.fulfilled, (state) => {
-      toast.success("Horas Extra recusadas!");
+      toast.success("Horas recusadas!");
       state.isLoading = false;
     })
     .addCase(declineDiasHorasExtra.rejected, (state) => {
-      toast.error("Ocorreu um Erro ao aceitar as Horas Extra!");
+      toast.error("Ocorreu um Erro ao recusar as Horas!");
       state.isLoading = false;
 
     })
