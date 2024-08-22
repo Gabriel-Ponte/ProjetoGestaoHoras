@@ -246,8 +246,8 @@ function calculateEaster(year, type) {
       }
   
       let diasHorasExtra = await result;
-      const indicesToRemove = [];
-      const indicesNotToRemove = [];
+      let indicesToRemove = [];
+      let indicesNotToRemove = [];
       // Process tipoDeTrabalhoHoras
       await Promise.all(
         diasHorasExtra.map(async (dia) => {
@@ -288,12 +288,16 @@ function calculateEaster(year, type) {
               } else if((checkTipo && tipoTrT === 3) ){
                 try {
                   indicesNotToRemove.push(indexDia);
-                  
                   if(indicesToRemove && indicesToRemove.includes(indexDia)){
-                    indicesToRemove.remove(indexDia);
+                    if(indicesToRemove.length === 1){
+                      indicesToRemove = []
+                    }else{
+                      indicesToRemove.remove(indexDia);
+                    }
+ 
                   }
                 } catch (error) {
-                    console.error(error)
+                    console.error("Error 298" , error)
                 } 
               }else if((checkTipoFerias && tipoTrT === 4) ){
                 try {
