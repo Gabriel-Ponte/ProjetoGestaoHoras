@@ -290,7 +290,6 @@ function calculateEaster(year, type) {
               } else if((checkTipo && tipoTrT === 3) ){
                 try {
                   indicesNotToRemove.push(indexDia);
-                  
                   if(indicesToRemove && indicesToRemove.includes(indexDia)){
                     if(indicesToRemove.length === 1){
                       indicesToRemove = []
@@ -300,7 +299,7 @@ function calculateEaster(year, type) {
    
                   }
                 } catch (error) {
-                    console.error(error)
+                    console.error("Error 298" , error)
                 } 
               }else if((checkTipoFerias && tipoTrT === 4) ){
                 try {
