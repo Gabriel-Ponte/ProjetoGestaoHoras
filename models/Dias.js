@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const Counter = require("./idCounter");
 
 
+
 // Define schema for tipoTrabalhoHoras
 const TipoTrabalhoHorasSchema = new mongoose.Schema({
     projeto: {
@@ -54,6 +55,10 @@ const DiasSchema = new mongoose.Schema(
           type: String,
           required: false,
         },
+        _id_Group: {
+          type: Number,
+          default: 0,
+      },
     },
     { timestamps: true }
 );
@@ -69,10 +74,28 @@ DiasSchema.pre('save', async function(next) {
     next();
 });
 
+async function upgradeGroup() {
+  try {
+    const sequence = await Counter.findOneAndUpdate(
+      { _id_Group: '_id_Group' },
+      { $inc: { sequence_valueD: 1 } },
+      { returnOriginal: false, upsert: true }
+    );
+
+    const groupId = sequence.sequence_valueD;
+
+
+
+    return groupId; // Return the groupId for use by the caller
+  } catch (error) {
+    next(error); // Pass the error to the next error-handling middleware
+  }
+}
 
 
 
 module.exports = {
     TipoTrabalhoHoras: mongoose.model("TipoTrabalhoHoras", TipoTrabalhoHorasSchema),
     Dias: mongoose.model("Dias", DiasSchema),
+    upgradeGroup,
   };

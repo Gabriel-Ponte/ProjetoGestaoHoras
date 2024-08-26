@@ -1,5 +1,5 @@
 import Wrapper from '../assets/wrappers/FormRowListaTipoTrabalho';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types'; 
 
 //import { useSelector, useDispatch } from 'react-redux';
@@ -7,8 +7,7 @@ import PropTypes from 'prop-types';
 
 const FormRowListaHorasExtra = ({ type, value, tipoHoras, utilizadores, changed }) => {
   const id = `myTextarea${type}${value}`;
-
-  const [initialDate, setDate] = useState([]);
+  const [initialDate, setInitialDate] = useState([]);
   const [initialName, setName] = useState([]);
   //const [feriados, setFeriados] = useState([]);
   const [horasExtra, setHorasExtra] = useState([]);
@@ -90,12 +89,117 @@ const FormRowListaHorasExtra = ({ type, value, tipoHoras, utilizadores, changed 
     return new Date(ano, domingoPascoa.getMonth(), domingoPascoa.getDate() + 60);
   }
 
+  const toLocalDate = (dateStr) => {
+    const date = new Date(dateStr);
+    // Reset the time to midnight and set to local timezone
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  };
+
+
+  const verificaListaDias = useCallback((datesReceived) => {
+    datesReceived.sort((a, b) => new Date(a.Data) - new Date(b.Data));
+    const startDate = new Date(datesReceived[0].Data);
+    const endDate = new Date(datesReceived[datesReceived.length -1].Data);
+
+    const dates = [];
+
+    // Create a date instance for iterating
+    let currentDate = new Date(startDate);
+    let count = 0;
+    while (toLocalDate(currentDate) <= toLocalDate(endDate)) {
+      // Check if the current day is a weekday (not Saturday or Sunday)
+      const dayOfWeek = currentDate.getDay();
+
+      if(!dates[count]){
+        dates[count] = [];
+      }
+      if (dayOfWeek !== 0 && dayOfWeek !== 6 && !feriadosPortugal(currentDate) && (datesReceived.some(item => (new Date (item.Data)).getDate() === currentDate.getDate())) ) {
+        // Check if the current date is already in listaDias
+        dates[count].push(new Date(currentDate));
+    } else{
+      if(dates[count]?.length > 0){
+        count++;
+      }
+
+    }
+
+  
+      // Move to the next day
+      currentDate.setDate(currentDate.getDate() + 1);
+   }
+    return dates;
+  }, []);
 
 
   //let data = new Date()
 
   useEffect(() => {
-    const fullData = new Date(value.Data)
+
+    if(value?.length > 0){
+      const dates = verificaListaDias(value);
+      setHorasExtra(value.length);
+      setTipo("Férias");
+      setFerias(true);
+
+      if (utilizadores && utilizadores.length > 0) {
+        utilizadores.filter((user) => {
+          if (user._id === value[0]?.Utilizador) {
+            setName(user?.nome);
+          }
+          return false;
+        })
+      }
+
+        let data = "";
+        try {
+  
+        if(dates.length > 0){
+          for(let i = 0; i< dates.length; i++){
+            const startDate = new Date(dates[i][0]);
+            const endDate = new Date(dates[i][dates[i].length - 1]);
+
+
+            const dataDay = startDate.getDate();
+            const dataMonth = startDate.getMonth() + 1;
+            const dataYear = startDate.getFullYear();
+
+            const dataDayEnd = endDate.getDate();
+            const dataMonthEnd = endDate.getMonth() + 1;
+            const dataYearEnd = endDate.getFullYear();
+
+            if(dates[i].length > 1){
+
+              data += dataDay + "/" + dataMonth + "/" + dataYear + " || " + dataDayEnd + "/" + dataMonthEnd + "/" + dataYearEnd + '<br />';
+
+            } else{
+     
+              data += dataDay + "/" + dataMonth + "/" + dataYear + '<br />' ;
+            }
+
+          }
+
+
+          
+        } else{
+          const fullData = new Date(dates[0])
+
+          const dataDay = fullData.getDate();
+          const dataMonth = fullData.getMonth() + 1;
+          const dataYear = fullData.getFullYear();
+
+          data = dataDay + "/" + dataMonth + "/" + dataYear;
+        }
+      } catch (error) {
+            console.error(error)
+      }
+
+        setInitialDate(data)
+      
+    } else{
+
+  
+
+    const fullData = new Date(value?.Data)
     const dataDay = fullData.getDate();
     const dataMonth = fullData.getMonth() + 1;
     const dataYear = fullData.getFullYear();
@@ -161,7 +265,7 @@ const FormRowListaHorasExtra = ({ type, value, tipoHoras, utilizadores, changed 
         count = value?.NumeroHoras;
       }
       if(countF > 0){
-        setHorasExtra("");
+        setHorasExtra(1);
         setTipo("Férias");
       } else{
         setHorasExtra("-" + count);
@@ -207,7 +311,7 @@ const FormRowListaHorasExtra = ({ type, value, tipoHoras, utilizadores, changed 
 
     if (utilizadores && utilizadores.length > 0) {
       utilizadores.filter((user) => {
-        if (user._id === value.Utilizador) {
+        if (user._id === value?.Utilizador) {
           setName(user?.nome);
         }
         return false;
@@ -218,8 +322,8 @@ const FormRowListaHorasExtra = ({ type, value, tipoHoras, utilizadores, changed 
 
 
     const data = dataDay + "/" + dataMonth + "/" + dataYear
-    setDate(data)
-
+    setInitialDate(data)
+  }
   }, [id, changed, horasExtra, initialName, initialDate, compensacao, tipo]);
 
 
@@ -255,27 +359,33 @@ const FormRowListaHorasExtra = ({ type, value, tipoHoras, utilizadores, changed 
     return " — ";
   }
 
+
   return (
     <Wrapper>
       <div className="row mb-3" >
         <div className={"col-md-2 text-center"}>
           <p>{initialName}</p>
         </div>
-        <div className="col-md-2 text-center">
-          <p>{initialDate}</p>
+        <div className={tipo === "Férias" ? "col-md-4 text-center" : "col-md-2 text-center"}>
+          <p dangerouslySetInnerHTML={{ __html: initialDate }} />
         </div>
         <div className="col-md-1 text-center">
-          <p>{convertToMinutes(value?.NumeroHoras)}</p>
+          <p>{tipo === "Férias"  ? " — " :convertToMinutes(value?.NumeroHoras)}</p>
         </div>
         <div className="col-md-2 text-center" >
+          {tipo === "Férias"  ? 
+          (<p style={{ backgroundColor: compensacao ? "#E8FCCF" : ferias ? "#B7B5E4" : "" }}>{horasExtra}</p>)
+           :(
           <p style={{ backgroundColor: compensacao ? "#E8FCCF" : ferias ? "#B7B5E4" : "" }}>{convertToMinutes(horasExtra)}</p>
+        )}
         </div>
         {(tipoHoras !== 3) && (
           <div className="col-md-1 text-center" >
             <p>{tipo}</p>
           </div>
         )}
-        <div className={tipoHoras !== 3 ? "col-md-4 text-center" : "col-md-5 text-center"}>
+        {tipo !== "Férias" && 
+        <div className={tipoHoras !== 3 ?  "col-md-4 text-center" : "col-md-5 text-center"}>
           {value?.tipoDeTrabalhoHoras?.map((t, index) => {
             const project = t.projeto;
             const tipoT = t.tipoTrabalho.split(',');
@@ -295,17 +405,12 @@ const FormRowListaHorasExtra = ({ type, value, tipoHoras, utilizadores, changed 
                     </div>
                   </div>
                 ))}
-
               </div>
             );
           })}
         </div>
+        }
       </div>
-
-
-
-
-
 
       {associated && associated.length > 0 && associated.map((diaAss, i) => (
         <div key={diaAss + "_" + i}>
@@ -333,7 +438,10 @@ const FormRowListaHorasExtra = ({ type, value, tipoHoras, utilizadores, changed 
 
 FormRowListaHorasExtra.propTypes = {
   type: PropTypes.string.isRequired,
-  value: PropTypes.object.isRequired,
+  value: PropTypes.oneOfType([
+    PropTypes.object.isRequired,
+    PropTypes.array.isRequired
+  ]).isRequired,
   tipoHoras: PropTypes.number.isRequired,
   handleChange: PropTypes.func,
   utilizadores: PropTypes.array.isRequired,

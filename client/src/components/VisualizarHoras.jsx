@@ -5,7 +5,7 @@ import Loading from './Loading';
 import Dia from './Dias';
 import DiaTodos from './DiasTodos';
 import { getAllDiasUtilizador, getAllDiasTodos, getAllDiasUtilizadorTipo, setDias } from '../features/allDias/allDiasSlice';
-import { deleteDia } from '../features/dias/diasSlice';
+import { deleteDia, deleteDiaGroup } from '../features/dias/diasSlice';
 import { getAllPagamentosUtilizador } from '../features/pagamentos/pagamentosSlice';
 import { toast } from 'react-toastify';
 import { listaUtilizadores } from '../features/utilizadores/utilizadorSlice';
@@ -42,6 +42,7 @@ const ListaHoras = () => {
   const [horasExtraAteMes, setHorasExtraAteMes] = useState(null);
   const [horasExtraAceitar, setHorasExtraAceitar] = useState(null);
 
+  const [buttonConfirmed, setButtonConfirmed] = useState(false);
 
   const [totalHorasPagas, setTotalHorasPagas] = useState(null);
   const [horasExtraPagasAteMes, setHorasExtraPagasAteMes] = useState(null);
@@ -809,6 +810,42 @@ const ListaHoras = () => {
     }
   };
 
+
+  const deleteDiaGroupConfirm = async (id, data, _id_Group) => {
+    try {
+
+      const confirmed = window.confirm("Tem a certeza que deseja o pedido de Férias?");
+
+      if (confirmed) {
+        setButtonConfirmed(true)
+        const result = await dispatch(deleteDiaGroup(id));
+        if (!result.error) {
+          toast.success("Pedido de Férias Apagado");
+          setButtonConfirmed(false)
+          const updatedListaDias = listaDias.filter(dia => dia._id_Group !== _id_Group);
+          const updatedDias = dias.filter(dia => dia._id_Group !== _id_Group);
+          const updateAceitacao = aceitacao.filter(dia => dia._id_Group !== _id_Group);
+          const updatedFerias = ferias.filter(dia => dia._id_Group !== _id_Group);
+          const updatedCompensacao = horasCompensacao.filter(dia => dia._id_Group !== _id_Group);
+          const updatedCompensacaoDomingo = horasCompensacaoDomingo.filter(dia => dia._id_Group !== _id_Group);
+
+          dispatch(setDias({dias: updatedDias}));
+
+          setHorasCompensacao(updatedCompensacao);
+          setHorasCompensacaoDomingo(updatedCompensacaoDomingo);
+          setFerias(updatedFerias);
+          setAceitacao(updateAceitacao);
+          setListaDias(updatedListaDias);
+
+          selectedDay.dia = 0;
+          setSelectedDay(selectedDay)
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      return "Ocorreu um erro ao apagar o Tipo de Trabalho.";
+    }
+  };
   function convertToMinutes(timeString) {
 
     if (timeString) {
@@ -1296,7 +1333,7 @@ const ListaHoras = () => {
                         count++;
                         return (
                           <div key={count + selectedUser}>
-                            <Dia key={dia.Data + selectedUser + count} {...dia} listaTT={listaTipoTrabalho} tipoUser={user.user.tipo} deleteDay={deleteDiaConfirm} />
+                            <Dia key={dia.Data + selectedUser + count} {...dia} listaTT={listaTipoTrabalho} tipoUser={user.user.tipo} deleteDay={deleteDiaConfirm} deleteDayGroup={deleteDiaGroupConfirm} buttonConfirmed={buttonConfirmed} />
                           </div>
                         );
                       }

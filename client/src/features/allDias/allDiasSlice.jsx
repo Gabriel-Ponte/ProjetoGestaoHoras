@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
-import { getAllDiasProjetoThunk, getAllDiasUtilizadorThunk ,getAllDiasThunk,getAllDiasProjetoUtilizadorThunk ,exportDiasThunk, getAllDiasUtilizadorTipoThunk, getAllDiasHorasExtraThunk, acceptDiasHorasExtraThunk, declineDiasHorasExtraThunk, getAllDiasHorasExtraDeclinedThunk, getAllDiasHorasExtraAcceptedThunk, getAllDiasHorasExtraResponsavelThunk, getAllDiasHorasExtraAcceptedResponsavelThunk, getAllDiasHorasExtraDeclinedResponsavelThunk} from './allDiasThunk';
+import { getAllDiasProjetoThunk, getAllDiasUtilizadorThunk ,getAllDiasThunk,getAllDiasProjetoUtilizadorThunk ,exportDiasThunk, getAllDiasUtilizadorTipoThunk, getAllDiasHorasExtraThunk, acceptDiasHorasExtraThunk, declineDiasHorasExtraThunk, getAllDiasHorasExtraDeclinedThunk, getAllDiasHorasExtraAcceptedThunk, getAllDiasHorasExtraResponsavelThunk, getAllDiasHorasExtraAcceptedResponsavelThunk, getAllDiasHorasExtraDeclinedResponsavelThunk, declineMultipleDiasHorasExtraThunk, acceptMultipleDiasHorasExtraThunk} from './allDiasThunk';
 
 const initialState = {
   sort:'',
@@ -94,6 +94,9 @@ export const getAllDiasUtilizador = createAsyncThunk(
 
   export const declineDiasHorasExtra = createAsyncThunk('dias/declineDiasHorasExtra', declineDiasHorasExtraThunk);
 
+  export const acceptMultipleDiasHorasExtra = createAsyncThunk('dias/acceptMultipleDiasHorasExtra', acceptMultipleDiasHorasExtraThunk);
+
+  export const declineMultipleDiasHorasExtra = createAsyncThunk('dias/declineMultipleDiasHorasExtra', declineMultipleDiasHorasExtraThunk);
 
   export const exportDia = createAsyncThunk(
     'dia/exportDias/',
@@ -318,7 +321,31 @@ const allDiasSlice = createSlice({
 
     })
 
+    .addCase(acceptMultipleDiasHorasExtra.pending, (state) => {
+      state.isLoading = true;
+    })
+    .addCase(acceptMultipleDiasHorasExtra.fulfilled, (state) => {
+      toast.success("Horas aceites!");
+      state.isLoading = false;
+    })
+    
+    .addCase(acceptMultipleDiasHorasExtra.rejected, (state) => {
+      toast.error("Ocorreu um Erro ao aceitar as Horas!");
+      state.isLoading = false;
+    })
 
+    .addCase(declineMultipleDiasHorasExtra.pending, (state) => {
+      state.isLoading = true;
+    })
+    .addCase(declineMultipleDiasHorasExtra.fulfilled, (state) => {
+      toast.success("Horas recusadas!");
+      state.isLoading = false;
+    })
+    .addCase(declineMultipleDiasHorasExtra.rejected, (state) => {
+      toast.error("Ocorreu um Erro ao recusar as Horas!");
+      state.isLoading = false;
+
+    })
 
 
   },

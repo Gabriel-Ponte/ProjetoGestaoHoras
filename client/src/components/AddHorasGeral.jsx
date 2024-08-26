@@ -10,6 +10,8 @@ import { AddHorasCopiar, AddHorasDropdown, AddHorasGeralDropdown, FormRow, useFe
 
 import Loading from './Loading';
 import AddHorasDomingo from './AddHorasDomingo';
+import AddFerias from './AddFerias';
+
 
 
 const initialState = {
@@ -70,6 +72,7 @@ const ListaProjetos = () => {
   const [constLoaded, setConstLoaded] = useState(false);
 
   const [modalBoxActive, setModalBoxActive] = useState(false);
+  const [addFerias, setAddFerias] = useState(false);
 
 
 
@@ -1078,6 +1081,7 @@ const ListaProjetos = () => {
   if (!values.loaded || (sortedProjetos.length === 0) || isLoading) {
     return <Loading />;
   } else {
+    if(!addFerias){
 
     return (
       <Wrapper>
@@ -1095,10 +1099,26 @@ const ListaProjetos = () => {
 
           <div>
             <div className='row'>
-              <div className='col-6'>
+              <div className='col-4'>
                 <h3>{verificaDiaCalled ? 'Editar Dia' : 'Adicionar Dia'}</h3>
               </div>
-              <div className='col-6 text-end'>
+                            
+              {!verificaDiaCalled &&
+
+                <div className='col-4'>
+                  <button
+                    type="submit"
+                    disabled={(values.accepted === 2 && startHorasT >= 8.5) || isLoading || buttonClicked ||  (values.accepted === 4 || values.accepted === 5)}
+
+                    onClick={(e) => { setAddFerias(true) }}
+                    className="w-100 btn btn-lg btn-primary"
+                  >
+                    Adicionar Férias
+                </button>
+
+                </div>
+                }
+              <div className='col-4 text-end'>
                 <h4>{horasExtraAfter ? 'Horas extra  ' + convertToMinutes(horasExtraAfter) : ''}</h4>
               </div>
             </div>
@@ -1199,7 +1219,30 @@ const ListaProjetos = () => {
             }
       </Wrapper>
     );
-  }
+  }else{
+    let acc = 8
+    if(user?.user?.responsavel){
+      // Laboratorio Acceptance 8
+      acc = 8;
+      } else{
+        acc = 1;  
+      }
+      
+      return (
+      <Wrapper>
+          <AddFerias
+              setAddFerias ={setAddFerias}
+              verificaDia={verificaDia}
+              Data={values?.Data}
+              listaDias={listaDias}
+              projetos={projetos}
+              accepted={acc}
+          />
+    </Wrapper>
+      )
+} 
+
+}
 }
 
 export default ListaProjetos;

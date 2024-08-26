@@ -5,8 +5,8 @@ import { getProjetoList } from '../features/projetos/projetosSlice';
 import { AiFillDelete } from 'react-icons/ai';
 import { getDiaID } from '../features/dias/diasSlice';
 import PropTypes from 'prop-types'; 
-
-const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, associated, listaTT, accepted, tipoUser, deleteDay }) => {
+import LoadingSmaller from './LoadingSmaller';
+const Dia = ({ _id, Data, NumeroHoras, _id_Group, Utilizador, tipoDeTrabalhoHoras, associated, listaTT, accepted, tipoUser, deleteDay , deleteDayGroup, buttonConfirmed}) => {
   const dispatch = useDispatch();
   const [projeto, setProjeto] = useState([]);
   const [diaAssociated, setDiaAssociated] = useState(null);
@@ -65,6 +65,14 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, associat
     }
   }, [deleteDay]);
 
+
+  const deleteDiaGroupConfirm = useCallback(async (id, data, _id_Group) => {
+    try {
+      await deleteDayGroup(id, data, _id_Group);
+    } catch (error) {
+      console.error("Error deleting férias", error);
+    }
+  }, [deleteDayGroup]);
   const convertToMinutes = useCallback((timeString) => {
     if (timeString) {
       try {
@@ -99,11 +107,28 @@ const Dia = ({ _id, Data, NumeroHoras, Utilizador, tipoDeTrabalhoHoras, associat
                 <h3>{Data ? new Date(Data).toLocaleDateString('en-CA') : ''}</h3>
               </div>
               {(tipoUser === 7 || (accepted !== 2 && accepted !== 3 && accepted !== 5 && accepted !== 7)) && (
-                <div>
-                  <button type='submit' onClick={() => deleteDiaConfirm(_id, Data)} className="btn">
+                <div className='row'>
+                <div className='col-md-6 text-end'>
+                  <button type='submit' onClick={() => deleteDiaConfirm(_id, Data)} disabled={buttonConfirmed} className="btn">
                     <AiFillDelete />
                   </button>
                 </div>
+
+              {(accepted !== 2 && accepted !== 3 && accepted !== 5 && accepted !== 7 && _id_Group && _id_Group !== 0 ) ?
+                <div className='col-md-6'>
+                  {buttonConfirmed ? (
+                  <div class="spinner-border text-danger" role="status">
+                    <span class="sr-only"></span>
+                  </div>
+                  ): (
+                  <button type='submit' onClick={() => deleteDiaGroupConfirm(_id, Data, _id_Group)} disabled={buttonConfirmed} className="btn btn-danger">
+                    Apagar Pedido
+                  </button>
+                  )}
+                </div>
+                :<div className='col-md-6'> </div>
+              }
+              </div>
               )}
             </div>
             <div className="row text-center">
@@ -160,6 +185,8 @@ Dia.propTypes = {
   accepted: PropTypes.number.isRequired,
   tipoUser: PropTypes.number.isRequired,
   deleteDay: PropTypes.func.isRequired,
+  deleteDayGroup: PropTypes.func.isRequired,
+  buttonConfirmed: PropTypes.bool.isRequired,
 };
 
 export default memo(Dia);

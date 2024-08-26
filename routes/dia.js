@@ -24,10 +24,15 @@ const {
   getAllDiasHorasExtraResponsavel,
   getAllDiasHorasExtraAcceptedResponsavel,
   getAllDiasHorasExtraDeclinedResponsavel,
+  adicionarFerias,
+  declineMultipleDiasHorasExtra,
+  acceptMultipleDiasHorasExtra,
+  deleteDiaGroup,
 } = require("../controllers/dias");
 
 router.route("/").post(createDia);
 router.route("/domingo").post(createDiaDomingo);
+router.route("/addFerias").post(adicionarFerias);
 router.route("/diasUtilizador/:utilizador").get(getAllDiasUtilizador);
 router.route("/diasUtilizadorTipo/:utilizador").get(getAllDiasUtilizadorTipo);
 
@@ -51,8 +56,15 @@ router.route("/getDiaID/:id").get(getDiaID);
 router.route("/:user").get(getDia);
 router.route("/exportDias/").post(exportDias);
 
+
+
+router.route("/declineMultipleDiaHorasExtra/:id").patch(declineMultipleDiasHorasExtra);
+router.route("/acceptMultipleDiaHorasExtra/:id").patch(acceptMultipleDiasHorasExtra);
+
 router.route("/declineDiaHorasExtra/:id").patch(declineDiasHorasExtra);
 router.route("/acceptDiaHorasExtra/:id").patch(acceptDiasHorasExtra);
+
+router.route("/group/:id").delete(deleteDiaGroup);
 
 router.route("/:id")
 .delete(deleteDia)

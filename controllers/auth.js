@@ -97,7 +97,7 @@ const postResetPassword = async (req, res) => {
       html: `
         <p>Este email foi enviado porque você (alguem) fez um pedido para resetar a password da sua conta na aplicação Gestao de Horas.</p>
         <p>Pressione o seguinte link para resetar a sua password:</p>
-        <a href="http://${resetLink}">http://${resetLink}</a>
+        <a href="https://${resetLink}">https://${resetLink}</a>
         <p>Se não realizou este pedido por favor ignore este email!</p>
         `
     };

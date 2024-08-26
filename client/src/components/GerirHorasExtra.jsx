@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllDiasHorasExtra, acceptDiasHorasExtra, declineDiasHorasExtra, getAllDiasHorasExtraAccepted, getAllDiasHorasExtraDeclined, getAllDiasHorasExtraDeclinedResponsavel, getAllDiasHorasExtraAcceptedResponsavel, getAllDiasHorasExtraResponsavel } from '../features/allDias/allDiasSlice';
+import { getAllDiasHorasExtra, acceptDiasHorasExtra, declineDiasHorasExtra, getAllDiasHorasExtraAccepted, getAllDiasHorasExtraDeclined, getAllDiasHorasExtraDeclinedResponsavel, getAllDiasHorasExtraAcceptedResponsavel, getAllDiasHorasExtraResponsavel, acceptMultipleDiasHorasExtra, declineMultipleDiasHorasExtra } from '../features/allDias/allDiasSlice';
 import Wrapper from '../assets/wrappers/GerirTipoTrabalho';
 import FormRowListaHorasExtra from './FormRowListaHorasExtra';
 import { listaUtilizadores } from '../features/utilizadores/utilizadorSlice';
@@ -26,8 +26,9 @@ const GerirHorasExtra = () => {
   const { isLoadingPagamentos, sort } = useSelector((store) => store.pagamentos);
   const { isLoading } = useSelector((store) => store.allDias);
 
-  const [callUseEffect, setCallUseEffect] = useState();
+  const [callUseEffect, setCallUseEffect] = useState(false);
   const { user, utilizadores } = useSelector((store) => store.utilizador);
+
 
   const navigate = useNavigate();
 
@@ -74,8 +75,9 @@ const GerirHorasExtra = () => {
 
   const listHorasExtra = async () => {
     try {
-      dispatch(getAllDiasHorasExtra()).then((res) => {
+      await dispatch(getAllDiasHorasExtra()).then((res) => {
         const horasExtraArray = Array.isArray(res?.payload?.diasHorasExtra) ? res.payload.diasHorasExtra : [];
+
         setListaHorasExtra(horasExtraArray);
 
         setLoaded(true);
@@ -88,7 +90,7 @@ const GerirHorasExtra = () => {
 
   const listHorasExtraResponsavel = async () => {
     try {
-      dispatch(getAllDiasHorasExtraResponsavel()).then((res) => {
+      await dispatch(getAllDiasHorasExtraResponsavel()).then((res) => {
         const horasExtraArray = Array.isArray(res?.payload?.diasHorasExtra) ? res.payload.diasHorasExtra : [];
         setListaHorasExtra(horasExtraArray);
 
@@ -102,7 +104,7 @@ const GerirHorasExtra = () => {
 
   const listAcceptedHorasExtraResponsavel = async () => {
     try {
-      dispatch(getAllDiasHorasExtraAcceptedResponsavel()).then((res) => {
+      await dispatch(getAllDiasHorasExtraAcceptedResponsavel()).then((res) => {
         const horasExtraArray = Array.isArray(res?.payload?.diasHorasExtra) ? res.payload.diasHorasExtra : [];
         setListaHorasExtra(horasExtraArray);
         setLoaded(true);
@@ -118,7 +120,7 @@ const GerirHorasExtra = () => {
 
   const listDeclinedHorasExtraResponsavel = async () => {
     try {
-      dispatch(getAllDiasHorasExtraDeclinedResponsavel()).then((res) => {
+      await dispatch(getAllDiasHorasExtraDeclinedResponsavel()).then((res) => {
         const horasExtraArray = Array.isArray(res?.payload?.diasHorasExtra) ? res.payload.diasHorasExtra : [];
         setListaHorasExtra(horasExtraArray);
         setLoaded(true);
@@ -132,7 +134,7 @@ const GerirHorasExtra = () => {
 
   const listAcceptedHorasExtra = async () => {
     try {
-      dispatch(getAllDiasHorasExtraAccepted()).then((res) => {
+      await dispatch(getAllDiasHorasExtraAccepted()).then((res) => {
         const horasExtraArray = Array.isArray(res?.payload?.diasHorasExtra) ? res.payload.diasHorasExtra : [];
         setListaHorasExtra(horasExtraArray);
         setLoaded(true);
@@ -146,7 +148,7 @@ const GerirHorasExtra = () => {
 
   const listDeclinedHorasExtra = async () => {
     try {
-      dispatch(getAllDiasHorasExtraDeclined()).then((res) => {
+      await dispatch(getAllDiasHorasExtraDeclined()).then((res) => {
         const horasExtraArray = Array.isArray(res?.payload?.diasHorasExtra) ? res.payload.diasHorasExtra : [];
         setListaHorasExtra(horasExtraArray);
         setLoaded(true);
@@ -160,7 +162,7 @@ const GerirHorasExtra = () => {
 
   const listHorasExtraPagas = async () => {
     try {
-      dispatch(getAllPagamentos()).then((res) => {
+      await dispatch(getAllPagamentos()).then((res) => {
         const horasExtraArray = Array.isArray(res?.payload?.pagamentosAll) ? res?.payload?.pagamentosAll : [];
         setListaPagamentos(horasExtraArray)
         setLoaded(true);
@@ -174,21 +176,49 @@ const GerirHorasExtra = () => {
 
   const declineDiaHorasExtra = async (value) => {
     try {
-      const data = new Date(value?.Data);
-
-      const dia = data.getDate();
-      const mes = data.getMonth() + 1;
-      const ano = data.getFullYear();
 
       let name = "";
+      let nameCompare = value?.Utilizador ? value?.Utilizador : (value[0]?.Utilizador ? value[0]?.Utilizador : "");
+
       if (utilizadores && utilizadores.length > 0) {
         utilizadores.filter((user) => {
-          if (user?._id === value?.Utilizador) {
+          if (user?._id === nameCompare) {
             name = user?.nome;
           }
           return false;
         })
       }
+      if(value?.length > 0){
+        if(value?.length === 1){
+
+  
+        const data = new Date(value[0]?.Data);
+
+        const dia = data.getDate();
+        const mes = data.getMonth() + 1;
+        const ano = data.getFullYear();
+        const confirmed = window.confirm("Tem a certeza que deseja recusar o dia: " + dia + "/" + mes + "/" + ano + " a " + name + "?");
+        if (confirmed) {
+          const result = await dispatch(declineDiasHorasExtra(value[0]));
+          if (!result.error) {
+            setCallUseEffect(!callUseEffect);
+          }
+        }     
+      }else{
+        const confirmed = window.confirm("Tem a certeza que deseja recusar o pedido a " + name + "?");
+        if (confirmed) {
+          const result = await dispatch(declineMultipleDiasHorasExtra(value));
+          if (!result.error) {
+            setCallUseEffect(!callUseEffect);
+          }
+        }     
+      }
+    } else {
+      const data = new Date(value?.Data);
+
+      const dia = data.getDate();
+      const mes = data.getMonth() + 1;
+      const ano = data.getFullYear();
 
       const confirmed = window.confirm("Tem a certeza que deseja recusar o dia: " + dia + "/" + mes + "/" + ano + " a " + name + "?");
       if (confirmed) {
@@ -196,7 +226,9 @@ const GerirHorasExtra = () => {
         if (!result.error) {
           setCallUseEffect(!callUseEffect);
         }
-      }
+      }     
+    }
+
     } catch {
       return "Ocorreu um erro ao recusar o Dia.";
     }
@@ -204,33 +236,46 @@ const GerirHorasExtra = () => {
 
   const acceptDiaHorasExtra = async (id) => {
     try {
+      if(id?.length > 0){
+        if(id?.length === 1 ){
+          const result = await dispatch(acceptDiasHorasExtra(id[0]));
+          if (!result.error) {
+            setCallUseEffect(!callUseEffect);
+          }
+        }else{
+          const result = await dispatch(acceptMultipleDiasHorasExtra(id));
+          if (!result.error) {
+            setCallUseEffect(!callUseEffect);
+          }
+        }
+
+    } else {
       const result = await dispatch(acceptDiasHorasExtra(id));
       if (!result.error) {
         setCallUseEffect(!callUseEffect);
       }
-    } catch (error) {
+    }
+  } catch (error) {
       console.error(error);
     }
   };
 
-  const handleChangeSort = (tipo) => {
+  const handleChangeSort = async (tipo) => {
     if (verificaAlterado === 3) {
       if (isLoading || isLoadingPagamentos) return;
-      dispatch(handleChangePagamentos({ name: 'sort', value: tipo }));
+      await dispatch(handleChangePagamentos({ name: 'sort', value: tipo }));
     } else {
-      dispatch(handleChangePagamentos({ name: 'sort', value: tipo }));
+      await dispatch(handleChangePagamentos({ name: 'sort', value: tipo }));
     }
-
     setCallUseEffect(!callUseEffect);
   };
 
 
-  const handleChangeTipo = (tipo) => {
-    dispatch(handleChangePagamentos({ name: 'tipo', value: tipo }));
+  const handleChangeTipo = async (tipo) => {
+    await dispatch(handleChangePagamentos({ name: 'tipo', value: tipo }));
     setVerificaTipo(tipo);
     setCallUseEffect(!callUseEffect);
   };
-
 
   const handleChangeButtonClicked = (async (tipo) => {
     if(user?.user?.tipo === 6){
@@ -266,6 +311,58 @@ const GerirHorasExtra = () => {
       }
   }
   });
+
+
+    const handleData = useCallback((t, i) => {
+    return(
+      <div className="row text-center" key={i}>
+        <hr></hr>
+        <div className="row">
+          <div className={`${verificaAlterado === 0 ? "col-md-11" : "col-md-12"} text-center tiposTrabalho`}>
+            {
+
+              <FormRowListaHorasExtra
+                type="textarea"
+                readOnly={true}
+                utilizadores={utilizadores}
+                value={t}
+                changed={callUseEffect}
+                tipoHoras={verificaTipo}
+              />
+            }
+          </div>
+
+          {verificaAlterado === 0 && !isLoading && !isLoadingPagamentos &&
+            <div className="col-md-1 text-center mt-4">
+              <div className="row text-center">
+                <div className='col-md-6 '>
+                  <button type='button'
+                    className="btn btn btn-outline-success"
+                    disabled={isLoading || isLoadingPagamentos}
+                    onClick={() => acceptDiaHorasExtra(t)}>
+                    <FcCheckmark />
+                  </button>
+                </div>
+                <div className='col-md-6'>
+                  <button
+                    type='button'
+                    disabled={isLoading || isLoadingPagamentos}
+                    className="btn  btn-outline-danger"
+                    onClick={() => declineDiaHorasExtra(t)}
+                  >
+                    <IoMdClose />
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+
+      </div>
+      )
+  }, [utilizadores, verificaTipo, verificaAlterado, listaHorasExtra]);
+
+
 
 
   return (
@@ -364,7 +461,7 @@ const GerirHorasExtra = () => {
             }
 
 
-            <main></main>
+        
             {(listaHorasExtra && listaHorasExtra.length > 0) &&
               <FormRowListaHorasExtraPagasHeader
                 sortValue={sort}
@@ -391,53 +488,22 @@ const GerirHorasExtra = () => {
                     </div>
                   </div>
                 ))}
-                {verificaAlterado !== 3 && listaHorasExtra.map((t, i) => (
-                  <div className="row text-center" key={i}>
-                    <hr></hr>
-                    <div className="row">
-                      <div className={`${verificaAlterado === 0 ? "col-md-11" : "col-md-12"} text-center tiposTrabalho`}>
-                        {
-                          <FormRowListaHorasExtra
-                            type="textarea"
-                            readOnly={true}
-                            utilizadores={utilizadores}
-                            value={t}
-                            changed={callUseEffect}
-                            tipoHoras={verificaTipo}
-                          />
+
+                {verificaAlterado !== 3 && listaHorasExtra.map((t, i) => {
+                    if (t.length > 0) {
+                        if (t[0]._id_Group === 0) {
+                            // Process each item in the array `t`
+                            return t.map((item, index) => handleData(item, `${i} ${index}`));
+                        } else {
+                            // Handle case when `_id_Group` is not 0
+                            return handleData(t, i);
                         }
-                      </div>
+                    } else {
+                        // Handle case when `t` is an empty array or undefined
+                        return handleData(t, i);
+                    }
+                })}
 
-                      {verificaAlterado === 0 && !isLoading && !isLoadingPagamentos &&
-                        <div className="col-md-1 text-center mt-4">
-                          <div className="row text-center">
-                            <div className='col-md-6 '>
-                              <button type='button'
-                                className="btn btn btn-outline-success"
-                                disabled={isLoading || isLoadingPagamentos}
-                                onClick={() => acceptDiaHorasExtra(t)}>
-                                <FcCheckmark />
-                              </button>
-                            </div>
-                            <div className='col-md-6'>
-                              <button
-                                type='button'
-                                disabled={isLoading || isLoadingPagamentos}
-                                className="btn  btn-outline-danger"
-                                onClick={() => declineDiaHorasExtra(t)}
-                              >
-                                <IoMdClose />
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      }
-                    </div>
-
-                  </div>
-
-                )
-                )}
               </div>
             ) : (
               <>
@@ -449,8 +515,10 @@ const GerirHorasExtra = () => {
                           <h1>Sem Pedidos de Horas Extra</h1>
                         ) : (verificaTipo === 2 || verificaTipo === 6) ? (
                           <h1>Sem Pedidos de Horas Extra Realizadas!</h1>
-                        ) : (verificaTipo === 3 || verificaTipo === 7) &&
+                        ) : (verificaTipo === 3 || verificaTipo === 7) ?
                         <h1>Sem Pedidos de Compensação de Horas Extra</h1>
+                        : (verificaTipo === 4) &&
+                        <h1>Sem Pedidos de Férias</h1>
                         }
                       </div>
                     ) : verificaAlterado === 1 ? (
@@ -459,8 +527,10 @@ const GerirHorasExtra = () => {
                           <h1>Sem Pedidos de Horas Extra Aceites!</h1>
                         ) : (verificaTipo === 2) ? (
                           <h1>Sem Pedidos de Horas Extra Realizadas Aceites!</h1>
-                        ) : (verificaTipo === 3) &&
+                        ) : (verificaTipo === 3) ?
                         <h1>Sem Pedidos de Compensação de Horas Extra Aceites!</h1>
+                        : (verificaTipo === 4) &&
+                        <h1>Sem Pedidos de Férias Aceites!</h1>
                         }
                       </div>
                     ) : verificaAlterado === 2 ? (
@@ -469,8 +539,10 @@ const GerirHorasExtra = () => {
                           <h1>Sem Pedidos de Horas Extra Recusados!</h1>
                         ) : (verificaTipo === 2) ? (
                           <h1>Sem Pedidos de Horas Extra Realizadas Recusados!</h1>
-                        ) : (verificaTipo === 3) &&
+                        ) : (verificaTipo === 3) ?
                         <h1>Sem Pedidos de Compensação de Horas Extra Recusados!</h1>
+                        : (verificaTipo === 4) &&
+                        <h1>Sem Pedidos de Férias Recusados!</h1>
                         }
                       </div>
                     ) : (

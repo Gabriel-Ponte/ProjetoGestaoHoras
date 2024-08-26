@@ -15,11 +15,35 @@ export const deleteDiaThunk = async (diaId, thunkAPI) => {
     return checkForUnauthorizedResponse(error, thunkAPI);
   }
 };
+
+export const deleteDiaGroupThunk = async (diaId, thunkAPI) => {
+  thunkAPI.dispatch(showLoading());
+  try {
+    const resp = await customFetch.delete(`/dia/group/${diaId}`);
+    thunkAPI.dispatch(getAllDias());
+    return resp.data.msg;
+  } catch (error) {
+    thunkAPI.dispatch(hideLoading());
+    return checkForUnauthorizedResponse(error, thunkAPI);
+  }
+};
+
+
 export const editDiaThunk = async (dia ,thunkAPI) => {
   try {
     const resp = await customFetch.patch(`/dia/${dia._id}`, dia);
     thunkAPI.dispatch(clearValues());
     return resp.data;
+  } catch (error) {
+    return checkForUnauthorizedResponse(error, thunkAPI);
+  }
+};
+
+export const adicionarFeriasThunk = async (dia, thunkAPI) => {
+  try {
+    const resp = await customFetch.post('/dia/addFerias', dia);
+    thunkAPI.dispatch(clearValues());
+    return resp.data.msg;
   } catch (error) {
     return checkForUnauthorizedResponse(error, thunkAPI);
   }

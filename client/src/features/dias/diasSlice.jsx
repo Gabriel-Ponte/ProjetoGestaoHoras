@@ -1,12 +1,15 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 import { getUserFromLocalStorage } from '../../utils/localStorage';
-import { createDiaDomingoThunk, createDiaThunk, deleteDiaThunk, editDiaThunk ,getDiaIDThunk , getDiaThunk} from './diasThunk';
+import { adicionarFeriasThunk, createDiaDomingoThunk, createDiaThunk, deleteDiaGroupThunk, deleteDiaThunk, editDiaThunk ,getDiaIDThunk , getDiaThunk} from './diasThunk';
 
 
 const initialState = {
   isLoading: false,
 };
+
+
+export const adicionarFerias = createAsyncThunk('dias/adicionarFerias', adicionarFeriasThunk);
 
 export const createDia = createAsyncThunk('dias/createDia', createDiaThunk);
 
@@ -15,6 +18,7 @@ export const createDiaDomingo = createAsyncThunk('dias/createDiaDomingo', create
 
 
 export const deleteDia = createAsyncThunk('dias/deleteDia', deleteDiaThunk);
+export const deleteDiaGroup = createAsyncThunk('dias/deleteDiaGroup', deleteDiaGroupThunk);
 
 export const editDia = createAsyncThunk('dias/editDia', editDiaThunk);
 
@@ -80,6 +84,17 @@ const diasSlice = createSlice({
     .addCase(deleteDia.rejected, (state, { payload }) => {
       toast.error(payload);
     })
+
+    .addCase(deleteDiaGroup.pending, (state) => {
+      state.isLoading = true;
+    })
+    .addCase(deleteDiaGroup.fulfilled, (state, { payload }) => {
+      toast.success(payload);
+    })
+    .addCase(deleteDiaGroup.rejected, (state, { payload }) => {
+      toast.error(payload);
+    })
+
     .addCase(editDia.pending, (state) => {
       state.isLoading = true;
     })
@@ -102,6 +117,20 @@ const diasSlice = createSlice({
       state.isLoading = false;
       //toast.error(payload);
     })
+
+    .addCase(adicionarFerias.pending, (state) => {
+      state.isLoading = true;
+    })
+    .addCase(adicionarFerias.fulfilled, (state ) => {
+      //const dia = payload.dia;
+      state.isLoading = false;
+      toast.success('Férias inseridas!');
+    })
+    .addCase(adicionarFerias.rejected, (state) => {
+      state.isLoading = false;
+      //toast.error(payload);
+    })
+    
   },
 });
 

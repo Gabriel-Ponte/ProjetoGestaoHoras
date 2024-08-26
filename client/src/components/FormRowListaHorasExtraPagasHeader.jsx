@@ -234,7 +234,7 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, tipoHoras, handleChange,
                                                 }
                                             </button>
                                         </div>
-                                        <div className="col-md-2 themed-grid-col">
+                                        <div className={tipoHoras === 4 ? "col-md-4 themed-grid-col" : "col-md-2 themed-grid-col"}>
                                         <button
                                                 type="button"
                                                 name="VisualizarButton"
@@ -268,15 +268,32 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, tipoHoras, handleChange,
                                         </div>
 
                                         <div className="col-md-2 themed-grid-col">
-                                        <button
+
+                                        {tipoHoras === 4  ? 
+                                            (
+                                                <button
                                                 type="button"
                                                 name="VisualizarButton"
                                                 className="btn buttonHeader"
-                  
+
+                                            >
+
+                                                Numero Dias{' '}
+                                            </button>
+
+                                            )
+                                            : (
+                                                <button
+                                                type="button"
+                                                name="VisualizarButton"
+                                                className="btn buttonHeader"
+
                                             >
 
                                                 Horas Extra{' '}
                                             </button>
+                                        )}
+  
                                         </div>
 
                                         {(tipoHoras === 1) ? (
@@ -317,7 +334,17 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, tipoHoras, handleChange,
                                             >
                                                 Trabalho{' '}
                                         </button>
-                                         </div>) : (
+                                         </div>) : (tipoHoras === 4) ? (
+                                        <div className="col-md-1 themed-grid-col">
+                                        <button
+                                                type="button"
+                                                name="VisualizarButton"
+                                                className="btn buttonHeader"
+      
+                                            >
+                                                Tipo{' '}
+                                        </button>
+                                         </div>)  :(
                                             <>
                                             <div className="col-md-1 themed-grid-col">
                                             <button

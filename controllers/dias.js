@@ -1,4 +1,4 @@
-const { Dias, TipoTrabalhoHoras } = require("../models/Dias");
+const { Dias, TipoTrabalhoHoras, upgradeGroup } = require("../models/Dias");
 const TipoTrabalho = require("../models/TipoTrabalho");
 const User = require("../models/Utilizador");
 const Projeto = require("../models/Projeto");
@@ -246,8 +246,8 @@ function calculateEaster(year, type) {
       }
   
       let diasHorasExtra = await result;
-      const indicesToRemove = [];
-      const indicesNotToRemove = [];
+      let indicesToRemove = [];
+      let indicesNotToRemove = [];
       // Process tipoDeTrabalhoHoras
       await Promise.all(
         diasHorasExtra.map(async (dia) => {
@@ -277,8 +277,10 @@ function calculateEaster(year, type) {
                   }
                 }
               }
+
+
               projeto.tipoTrabalho = tipoT.join(",");
-  
+
               if ((checkTipo && tipoTrT !== 3) || (checkTipoFerias && tipoTrT !== 4) || (checkTipoFalse && tipoTrT === 3) || (checkTipoFalse && tipoTrT === 4)) {      
                 if ((indicesNotToRemove && indicesNotToRemove.includes(indexDia)) ||indicesToRemove && (indicesToRemove.includes(indexDia))) {
               } else {
@@ -290,7 +292,12 @@ function calculateEaster(year, type) {
                   indicesNotToRemove.push(indexDia);
                   
                   if(indicesToRemove && indicesToRemove.includes(indexDia)){
-                    indicesToRemove.remove(indexDia);
+                    if(indicesToRemove.length === 1){
+                      indicesToRemove = []
+                    } else{
+                      indicesToRemove.remove(indexDia);
+                    }
+   
                   }
                 } catch (error) {
                     console.error(error)
@@ -345,7 +352,8 @@ function calculateEaster(year, type) {
           diasHorasExtra.splice(index, 1);
         });
       }
-  
+
+
       // Handling associated days for tipo !== 1
       if (tipo !== "1") {
         await Promise.all(
@@ -374,6 +382,22 @@ function calculateEaster(year, type) {
           })
         );
       }
+
+      let groupedByIdGroup = []
+      if (checkTipoFerias && diasHorasExtra && diasHorasExtra.length > 0) {
+        const groupedByIdGroup = diasHorasExtra.reduce((acc, dia) => {
+            const idGroup = dia._id_Group;
+            if (!acc[idGroup]) {
+                acc[idGroup] = [];
+            }
+            acc[idGroup].push(dia);
+            return acc;
+        }, {});
+    
+        // Convert the grouped object to an array
+        diasHorasExtra = Object.values(groupedByIdGroup);
+    }
+
       
       // Sending response
       res.status(StatusCodes.OK).json({ diasHorasExtra });
@@ -1522,6 +1546,385 @@ const declineDiasHorasExtra = async (req, res) => {
 };
 
 
+  const toLocalDate = (dateStr) => {
+    const date = new Date(dateStr);
+    // Reset the time to midnight and set to local timezone
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  };
+
+
+
+  function feriadosPortugal(date) {
+
+    const feriados = [];
+
+    for (let i = date.getFullYear() - 5; i < date.getFullYear() + 5; i++) {
+      feriados.push(
+        { name: "Ano Novo", date: new Date(i, 0, 1) },
+        { name: "Dia da Liberdade", date: new Date(i, 3, 25) },
+        { name: "Dia do Trabalhador", date: new Date(i, 4, 1) },
+        { name: "Dia de Portugal", date: new Date(i, 5, 10) },
+        { name: "Assunção de Nossa Senhora", date: new Date(i, 7, 15) },
+        { name: "Ferias Coletivas", date: new Date(2024, 7, 16) },
+        { name: "Implantação da República", date: new Date(i, 9, 5) },
+        { name: "Dia de Todos os Santos", date: new Date(i, 10, 1) },
+        { name: "Restauração da Independência", date: new Date(i, 11, 1) },
+        { name: "Dia da Imaculada Conceição", date: new Date(i, 11, 8) },
+        { name: "Feriado Municipal", date: new Date(i, 2, 12) },
+        { name: "Ferias Coletivas", date: new Date(2024, 11, 24) },
+        { name: "Natal", date: new Date(i, 11, 25) },
+        { name: "Ferias Coletivas", date: new Date(2024, 11, 26) },
+        { name: "Ferias Coletivas", date: new Date(2023, 11, 26) },
+        { name: "Ferias Coletivas", date: new Date(2024, 11, 31) },
+        { name: "Carnaval", date: calculateEaster(i, "Carnaval") },
+        { name: "Sexta-feira Santa", date: calculateEaster(i, "SextaFeiraSanta") },
+        { name: "Páscoa", date: calculateEaster(i, "DomingoPascoa") },
+        { name: "Segunda-feira de Páscoa", date: new Date(2023, 3, 10) }, //{ name: "Segunda-feira de Páscoa", date: calculateEaster(i, "SegundaPascoa") },
+        { name: "Corpo de Deus", date: calculateCorpusChristi(i) },
+      );
+    }
+    //setFeriados(feriados);
+    for (const feriado of feriados) {
+      if (
+        date.getDate() === feriado.date.getDate() &&
+        date.getMonth() === feriado.date.getMonth() &&
+        date.getFullYear() === feriado.date.getFullYear()
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function calculateEaster(year, type) {
+    const a = year % 19;
+    const b = Math.floor(year / 100);
+    const c = year % 100;
+    const d = Math.floor(b / 4);
+    const e = b % 4;
+    const f = Math.floor((b + 8) / 25);
+    const g = Math.floor((b - f + 1) / 3);
+    const h = (19 * a + b - d - g + 15) % 30;
+    const i = Math.floor(c / 4);
+    const k = c % 4;
+    const l = (32 + 2 * e + 2 * i - h - k) % 7;
+    const m = Math.floor((a + 11 * h + 22 * l) / 451);
+    const month = Math.floor((h + l - 7 * m + 114) / 31) - 1;
+    const day = ((h + l - 7 * m + 114) % 31) + 1;
+    if (type === "SextaFeiraSanta") {
+      return new Date(year, month, day - 2);
+    } else if (type === "DomingoPascoa") {
+      return new Date(year, month, day);
+    } else if (type === "SegundaPascoa") {
+      return new Date(year, month, day + 1);
+    } else if (type === "Carnaval") {
+      return new Date(year, month, day - 47);
+    }
+  }
+
+  function calculateCorpusChristi(ano) {
+    const domingoPascoa = calculateEaster(ano, "DomingoPascoa");
+    return new Date(ano, domingoPascoa.getMonth(), domingoPascoa.getDate() + 60);
+  }
+
+  
+  const verificaListaDias = async (datesReceived) => {
+  datesReceived.sort((a, b) => new Date(a.Data) - new Date(b.Data));
+  const startDate = new Date(datesReceived[0].Data);
+  const endDate = new Date(datesReceived[datesReceived.length -1].Data);
+
+  const dates = [];
+
+  // Create a date instance for iterating
+  let currentDate = new Date(startDate);
+  let count = 0;
+  while (toLocalDate(currentDate) <= toLocalDate(endDate)) {
+    // Check if the current day is a weekday (not Saturday or Sunday)
+    const dayOfWeek = currentDate.getDay();
+
+    if(!dates[count]){
+      dates[count] = [];
+    }
+    if (dayOfWeek !== 0 && dayOfWeek !== 6 && !feriadosPortugal(currentDate) && (datesReceived.some(item => (new Date (item.Data)).getDate() === currentDate.getDate())) ) {
+      // Check if the current date is already in listaDias
+      dates[count].push(new Date(currentDate));
+  } else{
+    if(dates[count]?.length > 0){
+      count++;
+    }
+
+  }
+    // Move to the next day
+    currentDate.setDate(currentDate.getDate() + 1);
+ }
+  return dates;
+};
+
+const acceptMultipleDiasHorasExtra = async (req, res) => {
+  let { id } = req.params;
+  id = sanitizeHtml(id);
+
+  const idUser = req?.body?.Utilizador ? req.body.Utilizador : (req.body[0].Utilizador ? req.body[0].Utilizador : "");
+  const user = await User.findOne({ _id: idUser });
+
+  const email = user?.email;
+
+
+  if (!user || !email) {
+    throw new NotFoundError(`Utilizador não encontrado :  ${user}`);
+  }
+
+  const diaCheck = await Dias.findById(id);
+  let acceptedValue = 2;
+  let group = 0;
+  if(diaCheck){
+    if(diaCheck.accepted === 8){
+      acceptedValue = 7;
+    }else{
+      acceptedValue = 2;
+    }
+
+    if(diaCheck._id_Group){
+      group = diaCheck._id_Group;
+    }
+  }
+
+  let diasGroup = "";
+  if(group !== 0){
+    diasGroup = await Dias.find({_id_Group : group});
+  }
+
+
+    for (let i = 0; i < diasGroup.length; i++) {
+      const idDiaGroup = diasGroup[i]._id;
+
+      const dia = await Dias.findByIdAndUpdate(
+        idDiaGroup,
+        {
+          accepted: acceptedValue,
+        },
+        { new: true, runValidators: true }
+      );
+
+
+      if (!dia) {
+        throw new NotFoundError(`Não existe um dia com id ${id}`);
+      }
+    }
+
+        try {
+          if(acceptedValue === 2){
+   
+ 
+        const dates = await verificaListaDias(diasGroup)
+        let data = "";
+        if(dates.length > 0){
+          for(let i = 0; i< dates.length; i++){
+            const startDate = new Date(dates[i][0]);
+            const endDate = new Date(dates[i][dates[i].length - 1]);
+
+
+            const dataDay = startDate.getDate();
+            const dataMonth = startDate.getMonth() + 1;
+            const dataYear = startDate.getFullYear();
+
+            const dataDayEnd = endDate.getDate();
+            const dataMonthEnd = endDate.getMonth() + 1;
+            const dataYearEnd = endDate.getFullYear();
+
+            if(dates[i].length > 1){
+
+              data += dataDay + "/" + dataMonth + "/" + dataYear + " || " + dataDayEnd + "/" + dataMonthEnd + "/" + dataYearEnd + '<br />';
+
+            } else{
+     
+              data += dataDay + "/" + dataMonth + "/" + dataYear + '<br />' ;
+            }
+
+          }
+
+        } else{
+          const fullData = new Date(dates[0])
+
+          const dataDay = fullData.getDate();
+          const dataMonth = fullData.getMonth() + 1;
+          const dataYear = fullData.getFullYear();
+
+          data = dataDay + "/" + dataMonth + "/" + dataYear;
+        }
+
+        // Configure the email details
+        let mailOptions = ""
+          mailOptions = {
+            from: process.env.EMAIL, // Sender's email address
+            to: email, // Recipient's email address
+            subject: 'Aplicação Gestão Horas - Férias Aceites',
+            html: `
+              <p>Pedido de Férias para o período: <br /> ${data} correspondente a ${diasGroup?.length} dias foi aceite!</p>
+              <p>Agradecemos a sua colaboração.</p> `
+          };
+
+        sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    
+    
+    
+        await sgMail.send(mailOptions);
+      }
+      } catch (error) {
+        console.error("Error Sending email!" , error)
+      }
+      
+
+    
+
+    res.status(StatusCodes.OK).json("Ferias aceites");
+};
+
+
+
+
+const declineMultipleDiasHorasExtra = async (req, res) => {
+  let { id } = req.params;
+  id = sanitizeHtml(id);
+
+  const idUser = req?.body?.Utilizador ? req.body.Utilizador : (req.body[0].Utilizador ? req.body[0].Utilizador : "");
+
+  const user = await User.findOne({ _id: idUser });
+  const email = user?.email;
+
+
+  if (!user || !email) {
+    throw new NotFoundError(`Utilizador não encontrado :  ${user}`);
+  }
+
+
+  const diaCheck = await Dias.findById(id);
+  let acceptedValue = 2;
+  let group = 0;
+  if(diaCheck){
+    if(diaCheck.accepted === 8){
+      acceptedValue = 7;
+    }else{
+      acceptedValue = 2;
+    }
+
+    if(diaCheck._id_Group){
+      group = diaCheck._id_Group;
+    }
+  }
+
+  let diasGroup = "";
+  if(group !== 0){
+    diasGroup = await Dias.find({_id_Group : group});
+  }
+
+
+  const diaToDecline = await Dias.findById(id);
+  const accepted = diaToDecline.accepted;
+
+  for (let i = 0; i < diasGroup.length; i++) {
+    const idDiaGroup = diasGroup[i]._id;
+
+    const dia = await Dias.findByIdAndUpdate(
+
+      idDiaGroup,
+      {
+        accepted: 3,
+      },
+      { new: true, runValidators: true }
+    );
+  
+    if (!dia) {
+      throw new NotFoundError(`Não existe um dia com id ${id}`);
+    }
+  }
+
+ 
+  try {
+    let data = "";
+    const dates = await verificaListaDias(diasGroup)
+    if(dates.length > 0){
+      for(let i = 0; i< dates.length; i++){
+        const startDate = new Date(dates[i][0]);
+        const endDate = new Date(dates[i][dates[i].length - 1]);
+
+
+        const dataDay = startDate.getDate();
+        const dataMonth = startDate.getMonth() + 1;
+        const dataYear = startDate.getFullYear();
+
+        const dataDayEnd = endDate.getDate();
+        const dataMonthEnd = endDate.getMonth() + 1;
+        const dataYearEnd = endDate.getFullYear();
+
+        if(dates[i].length > 1){
+
+          data += dataDay + "/" + dataMonth + "/" + dataYear + " || " + dataDayEnd + "/" + dataMonthEnd + "/" + dataYearEnd + '<br />';
+
+        } else{
+ 
+          data += dataDay + "/" + dataMonth + "/" + dataYear + '<br />' ;
+        }
+      }
+
+    } else{
+      const fullData = new Date(dates[0])
+
+      const dataDay = fullData.getDate();
+      const dataMonth = fullData.getMonth() + 1;
+      const dataYear = fullData.getFullYear();
+
+      data = dataDay + "/" + dataMonth + "/" + dataYear;
+    }
+
+    // Configure the email details
+    if(accepted === 7 && user?.responsavel){
+      const userResponsavel = await User.findOne({ _id: responsavel });
+      const emailResponsavel = userResponsavel?.email;
+      let mailOptions = "";
+
+        mailOptions = {
+          from: process.env.EMAIL, // Sender's email address
+          to: emailResponsavel, // Recipient's email address
+          subject: 'Aplicação Gestão Horas - (Responsável) Férias Recusada',
+          html: `
+            <p>Pedido de Férias realizado por ${utilizador} para o período: <br /> ${data} correspondente a ${diasGroup?.length} dias foi recusado!</p>
+            <p>Se precisar de informações adicionais ou tiver dúvidas sobre este assunto, contacte os Recursos Humanos.</p>
+            <p>Agradecemos a sua compreensão e colaboração.</p> `
+        };
+  
+
+      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+      await sgMail.send(mailOptions);
+    }
+    let mailOptions = "";
+
+      mailOptions = {
+        from: process.env.EMAIL, // Sender's email address
+        to: email, // Recipient's email address
+        subject: 'Aplicação Gestão Horas - Férias Recusadas',
+        html: `
+          <p>Pedido de Férias para o período: <br /> ${data} correspondente a ${diasGroup?.length} dias foi recusado!</p>
+          <p>Por favor, reinsira as horas relativas a este período.</p>
+          <p>Se precisar de informações adicionais ou tiver dúvidas sobre este assunto, contacte os Recursos Humanos.</p>
+          <p>Agradecemos a sua compreensão e colaboração.</p> `
+      };
+    
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+    // Send the email
+    //await transporter.sendMail(mailOptions);
+
+    await sgMail.send(mailOptions);
+
+  } catch (error) {
+    console.error("Error decline multiple Sending email!")
+  }
+
+  res.status(StatusCodes.OK).json("Férias recusadas");
+};
+
 const getAllDiasUtilizadorTipo = async (req, res) => {
   try {
 
@@ -1807,6 +2210,155 @@ const createDia = async (req, res) => {
 };
 
 
+const adicionarFerias1 = async (req, res) => {
+  try {
+  let idU = req.body.Utilizador;
+  idU = sanitizeHtml(idU);
+  const aUtilizador = await User.findOne({
+    _id: idU,
+  });
+
+  let DiasFerias = req.body.Dias;
+  DiasFerias = DiasFerias.map(item => sanitizeHtml(item));
+  // const idFerias  = await TipoTrabalho.findOne({
+  //   tipo: 6,
+  // });
+
+  const projetoGeral =  await Projeto.findOne({ Tipo: 1 });
+
+  const idFerias  = await TipoTrabalho.findOne({
+    tipo: 7,
+  });
+
+
+  const groupID = await upgradeGroup();
+
+  for (let index = 0; index < DiasFerias.length; index++) {
+    
+    const data = new Date (DiasFerias[index]);
+    let horas = 0;
+    if(data.getDay() === 5){
+      horas = 6;
+    } else{
+      horas = 8.5
+    }
+
+    const tipoTrabalhoHoras = await TipoTrabalhoHoras.create({
+      projeto: projetoGeral._id,
+      tipoTrabalho: idFerias._id,
+      horas: horas,
+    });
+
+    const tipoDeTrabalhoHorasArray = [tipoTrabalhoHoras];
+
+
+  const findDia = await Dias.find({
+    Utilizador: aUtilizador._id,
+    Data: data,
+    $nor: [
+      { accepted: 3 },
+      { accepted: 6 }
+    ],
+  });
+
+
+  if(findDia && findDia.length > 0){
+
+    // DiasFerias.remove(DiasFerias[index]);
+  
+  } else{
+      await Dias.create({
+        Data: data,
+        NumeroHoras: horas,
+        tipoDeTrabalhoHoras: tipoDeTrabalhoHorasArray,
+        Utilizador: aUtilizador._id,
+        accepted: req?.body?.accepted,
+        _id_Group:groupID,
+      });
+  }
+}    
+
+  if (!aUtilizador) {
+    throw new NotFoundError(`Não existe um utilizador com id ${userID}`);
+  }
+
+  res.status(StatusCodes.CREATED).json("Ferias Inseridas");
+} catch (error) {
+    console.error(error)
+}
+};
+
+const adicionarFerias = async (req, res) => {
+  try {
+    const idU = sanitizeHtml(req.body.Utilizador);
+    const DiasFerias = req.body.Dias.map(item => sanitizeHtml(item));
+    const accepted = req?.body?.accepted;
+
+    // Retrieve necessary data in parallel
+    const [aUtilizador, projetoGeral, idFerias, groupID] = await Promise.all([
+      User.findOne({ _id: idU }),
+      Projeto.findOne({ Tipo: 1 }),
+      TipoTrabalho.findOne({ tipo: 7 }),
+      upgradeGroup()
+    ]);
+
+    if (!aUtilizador) {
+      throw new NotFoundError(`Não existe um utilizador com id ${idU}`);
+    }
+
+    // Batch operations
+    const tipoTrabalhoHorasArray = [];
+    const diasToCreate = [];
+
+    for (const dia of DiasFerias) {
+      const data = new Date(dia);
+      const horas = data.getDay() === 5 ? 6 : 8.5;
+
+      // Create TipoTrabalhoHoras object
+      const tipoTrabalhoHoras = {
+        projeto: projetoGeral._id,
+        tipoTrabalho: idFerias._id,
+        horas: horas,
+      };
+      tipoTrabalhoHorasArray.push(tipoTrabalhoHoras);
+
+      // Check if the day already exists
+      const findDia = await Dias.findOne({
+        Utilizador: aUtilizador._id,
+        Data: data,
+        $nor: [{ accepted: 3 }, { accepted: 6 }]
+      });
+
+      if (!findDia) {
+        diasToCreate.push({
+          Data: data,
+          NumeroHoras: horas,
+          tipoDeTrabalhoHoras: [tipoTrabalhoHoras],
+          Utilizador: aUtilizador._id,
+          accepted: accepted,
+          _id_Group: groupID,
+        });
+      }
+    }
+
+    // Perform batch creation of TipoTrabalhoHoras
+    if (tipoTrabalhoHorasArray.length > 0) {
+      await TipoTrabalhoHoras.insertMany(tipoTrabalhoHorasArray);
+    }
+
+    // Perform batch creation of Dias
+    if (diasToCreate.length > 0) {
+      await Dias.insertMany(diasToCreate);
+    }
+
+    res.status(StatusCodes.CREATED).json("Ferias Inseridas");
+  } catch (error) {
+    console.error(error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal server error' });
+  }
+};
+
+
 const createDiaDomingo = async (req, res) => {
   try {
   let idU = req.body.Utilizador;
@@ -1845,6 +2397,10 @@ const createDiaDomingo = async (req, res) => {
   const findDia = await Dias.find({
     Utilizador: aUtilizador._id,
     Data: req.body.Data,
+    $nor: [
+      { accepted: 3 },
+      { accepted: 6 }
+    ],
   });
 
 
@@ -2094,6 +2650,98 @@ const deleteDia = async (req, res) => {
   }
 };
 
+
+
+/////////////////// TESTAR ......  /////////////////////////////////////
+const deleteDiaGroup = async (req, res) => {
+
+  let { id } = req.params;
+  id = sanitizeHtml(id);
+
+  try {
+
+    const diaCheck = await Dias.findById(id);
+    let group = 0;
+    if(diaCheck){
+      if(diaCheck._id_Group){
+        group = diaCheck._id_Group;
+      }
+    }
+  
+    let diasGroup = "";
+    if(group !== 0){
+      diasGroup = await Dias.find({_id_Group : group});
+    }
+  
+    for (let i = 0; i < diasGroup.length; i++) {
+      const idDiaGroup = diasGroup[i]._id;
+  
+      const dia = await Dias.findById(idDiaGroup);
+
+      if (!dia) {
+        throw new NotFoundError(`Não existe um dia com id ${idDiaGroup}`);
+      }
+
+      const data = new Date(dia.Data);
+      const dayOfWeek = data.getDay();
+      const isSunday = dayOfWeek === 0;
+  
+      if(dia.accepted && (dia.accepted === 4 || dia.accepted === 5)){
+        const idAss = dia.associated;
+  
+        const diaAss = await Dias.findById(idAss);
+  
+        if(diaAss){
+          const tipoDeTrabalhoHorasIdsAss = diaAss.tipoDeTrabalhoHoras.map(item => item._id);
+    
+          const promises = tipoDeTrabalhoHorasIdsAss.map(async tipoDeTrabalhoHoraId => {
+            await TipoTrabalhoHoras.findOneAndDelete({ _id: tipoDeTrabalhoHoraId });
+          });
+    
+          await Promise.all(promises);
+    
+          await Dias.findOneAndDelete({ _id: diaAss._id });
+  
+        }
+  
+      } else if(isSunday){
+  
+        const associatedDay = await Dias.findOne({ associated: id });
+  
+        if(associatedDay){
+  
+  
+        const tipoDeTrabalhoHorasIdsAss = associatedDay.tipoDeTrabalhoHoras.map(item => item._id);
+  
+        const promises = tipoDeTrabalhoHorasIdsAss.map(async tipoDeTrabalhoHoraId => {
+          await TipoTrabalhoHoras.findOneAndDelete({ _id: tipoDeTrabalhoHoraId });
+        });
+  
+        await Promise.all(promises);
+  
+        await Dias.findOneAndDelete({ _id: associatedDay._id });
+      }
+      } 
+  
+      const tipoDeTrabalhoHorasIds = dia.tipoDeTrabalhoHoras.map(item => item._id);
+  
+      const promises = tipoDeTrabalhoHorasIds.map(async tipoDeTrabalhoHoraId => {
+        await TipoTrabalhoHoras.findOneAndDelete({ _id: tipoDeTrabalhoHoraId });
+      });
+  
+      await Promise.all(promises);
+  
+      await Dias.findOneAndDelete({ _id: idDiaGroup });
+    }
+
+    
+    res.status(StatusCodes.OK).send();
+  } catch (error) {
+    console.error(error);
+    res.status(StatusCodes.KO).send();
+
+  }
+};
 const exportDias = async (req, res) => {
   try {
     let { userID: userID, userTipo: userTipo } = req.body;
@@ -2170,8 +2818,11 @@ module.exports = {
   createDiaDomingo,
   updateDia,
   deleteDia,
+  deleteDiaGroup,
   acceptDiasHorasExtra,
   declineDiasHorasExtra,
+  acceptMultipleDiasHorasExtra,
+  declineMultipleDiasHorasExtra,
   getDiasProjetoUtilizador,
   getDiasUtilizador,
   exportDias,
@@ -2179,4 +2830,5 @@ module.exports = {
   getAllDiasHorasExtraDeclined,
   getAllDiasHorasExtraAcceptedResponsavel,
   getAllDiasHorasExtraDeclinedResponsavel,
+  adicionarFerias,
 };

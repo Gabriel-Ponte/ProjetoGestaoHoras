@@ -11,6 +11,8 @@ import { AddHorasCopiar, AddHorasDropdown, FormRow, useFeriadosPortugal } from '
 import Loading from './Loading';
 import AddHorasDomingo from './AddHorasDomingo';
 
+import AddFerias from './AddFerias';
+
 
 const initialState = {
   _id: '',
@@ -27,10 +29,10 @@ const initialState = {
 
 const ListaProjetos = () => {
   const [values, setValues] = useState(initialState);
-
+  
 
   const [buttonClicked, setButtonClicked] = useState(false);
-
+  const [addFerias, setAddFerias] = useState(false);
 
   const { isLoading } = useSelector((store) => store.allProjetos);
 
@@ -362,9 +364,11 @@ const ListaProjetos = () => {
 
 
   const verificaDia = useCallback((e) => {
+
     if(constLoaded && (projetos.length > 0)){
     setVerificaCopiarHoras(false);
     const { name, value } = e.target;
+
     const data = new Date(value);
 
     const projetosF = getFilteredProjetos(data);
@@ -1060,6 +1064,7 @@ const ListaProjetos = () => {
   if (!values.loaded || (sortedProjetos.length === 0) || isLoading) {
     return <Loading />;
   }else {
+    if(!addFerias){
 
     return (
       <Wrapper>
@@ -1077,10 +1082,34 @@ const ListaProjetos = () => {
 
           <div>
             <div className='row'>
-              <div className='col-6'>
+              <div className='col-4'>
                 <h3>{verificaDiaCalled ? 'Editar Dia' : 'Adicionar Dia'}</h3>
               </div>
-              <div className='col-6 text-end'>
+              
+              {!verificaDiaCalled &&
+
+              <div className='col-4 d-flex flex-column justify-content-center align-items-center'>
+                <button
+                  type="submit"
+                  className='button-30'
+                  disabled={(values.accepted === 2 && startHorasT >= 8.5) || isLoading || buttonClicked ||  (values.accepted === 4 || values.accepted === 5)}
+                  style={{   
+                    fontSize: "95%",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    display: "inline-block",
+                    lineHeight: "normal",
+                    backgroundColor: "#BBC2E2",
+                    width:'auto'} }
+                    onClick={(e) => { setAddFerias(true) }}
+                >
+                  Adicionar Férias
+              </button>
+              
+            </div>
+          }
+              <div className='col-4 text-end'>
                 <h4>{horasExtraAfter ? 'Horas extra  ' + convertToMinutes(horasExtraAfter) : ''}</h4>
               </div>
             </div>
@@ -1098,6 +1127,7 @@ const ListaProjetos = () => {
                   handleChange={verificaDia}
                 />
               </div>
+
               <div className='col-6 text-center'>
                 <AddHorasCopiar
                   copiar={copiar}
@@ -1182,6 +1212,21 @@ const ListaProjetos = () => {
             }
       </Wrapper>
     );
+  } else{
+    return (
+    <Wrapper>
+        <AddFerias
+            setAddFerias ={setAddFerias}
+            verificaDia={verificaDia}
+            Data={values?.Data}
+            listaDias={listaDias}
+            projetos={projetos}
+            accepted={1}
+        />
+  </Wrapper>
+    )
+  }
+
   }
 }
 
