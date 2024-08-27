@@ -8,6 +8,7 @@ import allDiasSlice from './features/allDias/allDiasSlice';
 import diasSlice from './features/dias/diasSlice';
 import tipoTrabalhoSlice from './features/tipoTrabalho/tipoTrabalhoSlice';
 import pagamentosSlice from './features/pagamentos/pagamentosSlice';
+import feriasSlice from './features/ferias/feriasSlice';
 
 export const Store = configureStore({
   reducer: {
@@ -18,5 +19,6 @@ export const Store = configureStore({
     allDias: allDiasSlice,
     tipoTrabalho: tipoTrabalhoSlice,
     pagamentos: pagamentosSlice,
+    ferias: feriasSlice,
   },
 });

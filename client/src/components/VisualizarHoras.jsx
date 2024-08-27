@@ -13,6 +13,7 @@ import { AddPagamentos, FormRowSelect } from '../components';
 import { getFeriadosPortugalDate } from '../components/FeriadosPortugal';
 import Calendar from './Calendar'
 import { getTipoTrabalho } from '../features/tipoTrabalho/tipoTrabalhoSlice';
+import { getFeriasUtilizador } from '../features/ferias/feriasSlice';
 
 
 
@@ -53,6 +54,8 @@ const ListaHoras = () => {
   const [horasCompensacaoDomingo, setHorasCompensacaoDomingo] = useState([]);
   const [idCompensacao, setIDCompencacao] = useState(null)
   const [userNome, setUserNome] = useState(user?.user?.nome);
+  const [feriasPossiveis, setFeriasPossiveis] = useState(0);
+  const [pedidosFerias, setPedidosFerias] = useState(0);
   // const [lastEffectExecuted, setLastEffectExecuted] = useState([]);
   // const [triggerEffect, setTriggerEffect] = useState(true);
   const [change, setChange] = useState(false);
@@ -201,7 +204,22 @@ const ListaHoras = () => {
     if (selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Outro" && selectedUser !== "Administradores" && selectedUser !== "Responsavel") {
       dispatch(getAllPagamentosUtilizador({ selectedUserID })).then((res) => {
         pagamentosUtilizadorArray = Array.isArray(res?.payload?.pagamentosAllUtilizador) ? res.payload.pagamentosAllUtilizador : [];
-        setListaPagamentos(pagamentosUtilizadorArray)
+        setListaPagamentos(pagamentosUtilizadorArray);
+      })
+
+      dispatch(getFeriasUtilizador(selectedUserID)).then((res) => {
+        const feriasArray = Array.isArray(res?.payload?.feriasArray) ? res?.payload?.feriasArray : [];
+
+        const totalNumber = feriasArray[1].reduce((acc, numberF) => {
+          const number = numberF.Numero;
+          return acc + number;
+        }, 0);
+        const feriasPorDar = totalNumber - feriasArray[0].length;
+        const pedidosPorAceitar = feriasArray[2].length;
+
+        // setFeriasArray(feriasArray);
+        setFeriasPossiveis(feriasPorDar);
+        setPedidosFerias(pedidosPorAceitar);
       })
     }
 
@@ -939,7 +957,20 @@ const ListaHoras = () => {
           <div className='col-10'>
             <h1 className='userName'>{userNome}</h1>
             <div className='row'>
+              
               <div className='col-md-4 text-center'>
+              <div className='row'>
+                  {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro" && selectedUser !== "Responsavel") && (
+                    <p>Dias de Férias por reclamar: {feriasPossiveis}</p>
+                  )}
+                </div>
+                  {pedidosFerias > 0 &&
+                <div className='row'>
+                  {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro" && selectedUser !== "Responsavel") && (
+                    <p>Dias de Férias em aceitacão: {pedidosFerias}</p>
+                  )}
+                </div>
+                }
                 <div className='row'>
                   <p>Horas Possiveis: {convertToMinutes(possibleHours)}</p>
                 </div>
@@ -951,6 +982,8 @@ const ListaHoras = () => {
                 <div className='row'>
                   {percentagemHoras >= 0 && percentagemHoras !== Infinity && <p>{percentagemHoras.toFixed(1)}%</p>}
                 </div>
+
+
               </div>
 
               {//////////////////////////////
@@ -980,9 +1013,6 @@ const ListaHoras = () => {
                     <p>Horas extra por aceitar: {convertToMinutes(horasExtraAceitar)}</p>
                   )}
                 </div>
-
-
-
 
               </div>
 
@@ -1104,7 +1134,6 @@ const ListaHoras = () => {
                     <p className='compensDomingo'></p>
                   </div>
                 </div>
-
               </>
             )}
           </div>

@@ -30,7 +30,7 @@ const projetosRouter = require("./routes/projetos");
 const diaRouter = require("./routes/dia");
 const tipoTrabalhoRouter = require("./routes/tipoTrabalho");
 const pagamentoRouter = require("./routes/pagamento");
-
+const feriasRouter = require("./routes/ferias");
 // error handler
 const notFoundMiddleware = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
@@ -61,6 +61,7 @@ app.use("/projetos",authenticateUser, projetosRouter);
 app.use("/dia", authenticateUser, diaRouter);
 app.use("/tipoTrabalho", authenticateUser, tipoTrabalhoRouter);
 app.use("/pagamento", authenticateUser, pagamentoRouter);
+app.use("/ferias", authenticateUser, feriasRouter);
 
 app.use(function(req, res, next) { 
   res.header("Access-Control-Allow-Origin", "*"); 

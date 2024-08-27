@@ -3,7 +3,7 @@ import { clearValues } from './pagamentosSlice';
 
 export const addPagamentosUtilizadorThunk = async (pagamento, thunkAPI) => {
   try {
-    const resp = await customFetch.post('/pagamento/addPagamentosUtilizador', pagamento);
+    const resp = await customFetch.post('/pagamento/addDiasDiasFeriasUtilizadorThunk', pagamento);
     thunkAPI.dispatch(clearValues());
     return resp.data.msg;
   } catch (error) {

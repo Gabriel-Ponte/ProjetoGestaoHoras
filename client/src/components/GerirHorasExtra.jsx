@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllDiasHorasExtra, acceptDiasHorasExtra, declineDiasHorasExtra, getAllDiasHorasExtraAccepted, getAllDiasHorasExtraDeclined, getAllDiasHorasExtraDeclinedResponsavel, getAllDiasHorasExtraAcceptedResponsavel, getAllDiasHorasExtraResponsavel, acceptMultipleDiasHorasExtra, declineMultipleDiasHorasExtra } from '../features/allDias/allDiasSlice';
-import Wrapper from '../assets/wrappers/GerirTipoTrabalho';
+import Wrapper from '../assets/wrappers/GerirHorasExtra';
 import FormRowListaHorasExtra from './FormRowListaHorasExtra';
 import { listaUtilizadores } from '../features/utilizadores/utilizadorSlice';
 import { getAllPagamentos, handleChangePagamentos } from '../features/pagamentos/pagamentosSlice';
@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import FormRowListaHorasExtraPagas from './FormRowListaHorasExtraPagas';
 import FormRowListaHorasExtraPagasHeader from './FormRowListaHorasExtraPagasHeader';
 import LoadingSmaller from './LoadingSmaller';
+import GerirHorasFerias from './GerirHorasFerias';
 
 
 const GerirHorasExtra = () => {
@@ -22,6 +23,7 @@ const GerirHorasExtra = () => {
   const [listaPagamentos, setListaPagamentos] = useState([]);
   const [verificaAlterado, setVerificaAlterado] = useState(0);
   const [verificaTipo, setVerificaTipo] = useState(2);
+  const [gerirFerias, setGerirFerias] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const { isLoadingPagamentos, sort } = useSelector((store) => store.pagamentos);
   const { isLoading } = useSelector((store) => store.allDias);
@@ -43,13 +45,13 @@ const GerirHorasExtra = () => {
     }
 
 
-      handleChangeTipo(2);
+    handleChangeTipo(2);
   }, [user?.user, navigate]);
 
   useEffect(() => {
     dispatch(listaUtilizadores());
 
-    if(user?.user?.tipo === 7){
+    if (user?.user?.tipo === 7) {
       if (verificaAlterado === 0) {
         listHorasExtra()
       }
@@ -60,15 +62,15 @@ const GerirHorasExtra = () => {
       } else if (verificaAlterado === 3) {
         listHorasExtraPagas();
       }
-    } else{
-        if (verificaAlterado === 0) {
-          listHorasExtraResponsavel()
-        }
-        else if (verificaAlterado === 1) {
-          listAcceptedHorasExtraResponsavel();
-        } else if (verificaAlterado === 2) {
-          listDeclinedHorasExtraResponsavel();
-        }
+    } else {
+      if (verificaAlterado === 0) {
+        listHorasExtraResponsavel()
+      }
+      else if (verificaAlterado === 1) {
+        listAcceptedHorasExtraResponsavel();
+      } else if (verificaAlterado === 2) {
+        listDeclinedHorasExtraResponsavel();
+      }
     }
   }, [callUseEffect, dispatch]);
 
@@ -188,46 +190,46 @@ const GerirHorasExtra = () => {
           return false;
         })
       }
-      if(value?.length > 0){
-        if(value?.length === 1){
+      if (value?.length > 0) {
+        if (value?.length === 1) {
 
-  
-        const data = new Date(value[0]?.Data);
+
+          const data = new Date(value[0]?.Data);
+
+          const dia = data.getDate();
+          const mes = data.getMonth() + 1;
+          const ano = data.getFullYear();
+          const confirmed = window.confirm("Tem a certeza que deseja recusar o dia: " + dia + "/" + mes + "/" + ano + " a " + name + "?");
+          if (confirmed) {
+            const result = await dispatch(declineDiasHorasExtra(value[0]));
+            if (!result.error) {
+              setCallUseEffect(!callUseEffect);
+            }
+          }
+        } else {
+          const confirmed = window.confirm("Tem a certeza que deseja recusar o pedido a " + name + "?");
+          if (confirmed) {
+            const result = await dispatch(declineMultipleDiasHorasExtra(value));
+            if (!result.error) {
+              setCallUseEffect(!callUseEffect);
+            }
+          }
+        }
+      } else {
+        const data = new Date(value?.Data);
 
         const dia = data.getDate();
         const mes = data.getMonth() + 1;
         const ano = data.getFullYear();
+
         const confirmed = window.confirm("Tem a certeza que deseja recusar o dia: " + dia + "/" + mes + "/" + ano + " a " + name + "?");
         if (confirmed) {
-          const result = await dispatch(declineDiasHorasExtra(value[0]));
+          const result = await dispatch(declineDiasHorasExtra(value));
           if (!result.error) {
             setCallUseEffect(!callUseEffect);
           }
-        }     
-      }else{
-        const confirmed = window.confirm("Tem a certeza que deseja recusar o pedido a " + name + "?");
-        if (confirmed) {
-          const result = await dispatch(declineMultipleDiasHorasExtra(value));
-          if (!result.error) {
-            setCallUseEffect(!callUseEffect);
-          }
-        }     
-      }
-    } else {
-      const data = new Date(value?.Data);
-
-      const dia = data.getDate();
-      const mes = data.getMonth() + 1;
-      const ano = data.getFullYear();
-
-      const confirmed = window.confirm("Tem a certeza que deseja recusar o dia: " + dia + "/" + mes + "/" + ano + " a " + name + "?");
-      if (confirmed) {
-        const result = await dispatch(declineDiasHorasExtra(value));
-        if (!result.error) {
-          setCallUseEffect(!callUseEffect);
         }
-      }     
-    }
+      }
 
     } catch {
       return "Ocorreu um erro ao recusar o Dia.";
@@ -236,26 +238,26 @@ const GerirHorasExtra = () => {
 
   const acceptDiaHorasExtra = async (id) => {
     try {
-      if(id?.length > 0){
-        if(id?.length === 1 ){
+      if (id?.length > 0) {
+        if (id?.length === 1) {
           const result = await dispatch(acceptDiasHorasExtra(id[0]));
           if (!result.error) {
             setCallUseEffect(!callUseEffect);
           }
-        }else{
+        } else {
           const result = await dispatch(acceptMultipleDiasHorasExtra(id));
           if (!result.error) {
             setCallUseEffect(!callUseEffect);
           }
         }
 
-    } else {
-      const result = await dispatch(acceptDiasHorasExtra(id));
-      if (!result.error) {
-        setCallUseEffect(!callUseEffect);
+      } else {
+        const result = await dispatch(acceptDiasHorasExtra(id));
+        if (!result.error) {
+          setCallUseEffect(!callUseEffect);
+        }
       }
-    }
-  } catch (error) {
+    } catch (error) {
       console.error(error);
     }
   };
@@ -278,7 +280,7 @@ const GerirHorasExtra = () => {
   };
 
   const handleChangeButtonClicked = (async (tipo) => {
-    if(user?.user?.tipo === 6){
+    if (user?.user?.tipo === 6) {
       if (tipo === 0) {
         handleChangeTipo(2);
         listHorasExtraResponsavel();
@@ -291,7 +293,7 @@ const GerirHorasExtra = () => {
         handleChangeTipo(3);
         listDeclinedHorasExtraResponsavel();
         setVerificaAlterado(tipo);
-      } 
+      }
     } else {
       if (tipo === 0) {
         handleChangeTipo(2);
@@ -309,12 +311,28 @@ const GerirHorasExtra = () => {
         await listHorasExtraPagas();
         setVerificaAlterado(tipo);
       }
-  }
+    }
   });
 
+  const styleButton = {
+    fontSize: "2.0rem", /* This is typically 40px */
+    fontWeight: "650",  /* Light font weight */
+    lineHeight: "1.2",  /* Adjusts the line height to improve readability */
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+    display: "inline-block",
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    display: 'inline-block',
+    lineHeight: 'normal',
+ 
+  };
 
-    const handleData = useCallback((t, i) => {
-    return(
+
+  const handleData = useCallback((t, i) => {
+    return (
       <div className="row text-center" key={i}>
         <hr></hr>
         <div className="row">
@@ -359,210 +377,240 @@ const GerirHorasExtra = () => {
         </div>
 
       </div>
-      )
+    )
   }, [utilizadores, verificaTipo, verificaAlterado, listaHorasExtra]);
 
 
 
 
-  return (
-    <Wrapper>
-      <div className={'row mb-12 text-center tittle'}>
-      {user?.user?.tipo === 7 && <h1>Gestão de Horas Extra</h1>}
-      {user?.user?.tipo === 6 && <h1>Gestão de Horas Extra Responsável</h1>}
-      </div>
-      <div className="col-md-12 mb-4 text-center ">
-        <div className="row">
-        <div className={user?.user?.tipo === 7 ? "col-md-3" : "col-md-4"}>
-            <button type='button'
-              className={`btn ButtonsTest ${verificaAlterado === 0 ? 'active' : ''}`}
-              disabled={isLoading || isLoadingPagamentos}
-
-              onClick={() => handleChangeButtonClicked(0)}>
-              Horas por Aceitar
-            </button>
-          </div>
-          <div className={user?.user?.tipo === 7 ? "col-md-3" : "col-md-4"}>
-            <button type='button'
-              className={`btn ButtonsTest ${verificaAlterado === 1 ? 'active' : ''}`}
-              disabled={isLoading || isLoadingPagamentos}
-              onClick={() => handleChangeButtonClicked(1)}>
-              Horas Aceites
-            </button>
-          </div>
-          <div className={user?.user?.tipo === 7 ? "col-md-3" : "col-md-4"}>
-            <button type='button'
-              className={`btn ButtonsTest ${verificaAlterado === 2 ? 'active' : ''}`}
-              disabled={isLoading || isLoadingPagamentos}
-              onClick={() => handleChangeButtonClicked(2)}>
-              Horas Recusadas
-            </button>
-          </div>
-        {user.user.tipo === 7 &&
-          <div className="col-md-3">
-            <button type='button'
-              className={`btn ButtonsTest ${verificaAlterado === 3 ? 'active' : ''}`}
-              disabled={isLoading || isLoadingPagamentos}
-              onClick={() => handleChangeButtonClicked(3)}>
-              Horas Extra Pagas
-            </button>
-          </div>
-        }
+  if (!gerirFerias) {
+    return (
+      <Wrapper>
+        <div className={'row mb-12 text-center tittle'}>
+          {user?.user?.tipo === 7 &&
+            <>
+              <div className='col-md-6'>
+              <button
+                  type="submit"
+                  style={{ ...styleButton }}
+                  className={`btn middleButton activeMainButton`}
+                  
+                >
+                    Gestão de Horas Extra
+                </button>
+          
+              </div>
+              <div className='col-md-6  d-flex flex-column justify-content-center align-items-center' >
+                <button
+                  type="submit"
+                  style={{ ...styleButton }}
+                  className={`btn middleButton `}
+                  onClick={(e) => { setGerirFerias(true) }}
+                >
+                  Gestão de Férias
+                </button>
+              </div>
+            </>}
+          {user?.user?.tipo === 6 && <h1>Gestão de Horas Extra Responsável</h1>}
         </div>
-      </div>
-      <>
-        {isLoading || isLoadingPagamentos || !loaded ? (
-          <div className='d-flex flex-column justify-content-center align-items-center h-500' style={{ maxHeight: '200px' }}>
-            <LoadingSmaller />
+        <div className="col-md-12 mb-4 text-center ">
+          <div className="row">
+            <div className={user?.user?.tipo === 7 ? "col-md-3" : "col-md-4"}>
+              <button type='button'
+                className={`btn ButtonsTest ${verificaAlterado === 0 ? 'active' : ''}`}
+                disabled={isLoading || isLoadingPagamentos}
+
+                onClick={() => handleChangeButtonClicked(0)}>
+                Horas por Aceitar
+              </button>
+            </div>
+            <div className={user?.user?.tipo === 7 ? "col-md-3" : "col-md-4"}>
+              <button type='button'
+                className={`btn ButtonsTest ${verificaAlterado === 1 ? 'active' : ''}`}
+                disabled={isLoading || isLoadingPagamentos}
+                onClick={() => handleChangeButtonClicked(1)}>
+                Horas Aceites
+              </button>
+            </div>
+            <div className={user?.user?.tipo === 7 ? "col-md-3" : "col-md-4"}>
+              <button type='button'
+                className={`btn ButtonsTest ${verificaAlterado === 2 ? 'active' : ''}`}
+                disabled={isLoading || isLoadingPagamentos}
+                onClick={() => handleChangeButtonClicked(2)}>
+                Horas Recusadas
+              </button>
+            </div>
+            {user.user.tipo === 7 &&
+              <div className="col-md-3">
+                <button type='button'
+                  className={`btn ButtonsTest ${verificaAlterado === 3 ? 'active' : ''}`}
+                  disabled={isLoading || isLoadingPagamentos}
+                  onClick={() => handleChangeButtonClicked(3)}>
+                  Horas Extra Pagas
+                </button>
+              </div>
+            }
           </div>
-        ) : (
-          <div className="listaGerirHorasExtra text-center">
-            {((listaHorasExtra && listaHorasExtra.length > 0) || verificaTipo !== 1) &&
-              <div>
-                {(verificaAlterado !== 3) &&
-                  <div className='row mt-4 mb-4'>
-                    <div className={`${verificaAlterado === 0 ? 'col-md-4' : 'col-md-3'}`}>
-                      <button type='button'
-                        className={`btn ButtonsTestSecondary ${(verificaTipo === 2 || verificaTipo === 6) ? 'activeSecondary' : ''}`}
-                        disabled={isLoading || isLoadingPagamentos}
-                        onClick={() => handleChangeTipo(2)}>
-                        Horas Extra
-                      </button>
-                    </div>
-                    <div className={`${verificaAlterado === 0 ? 'col-md-4' : 'col-md-3'}`}>
-                      <button type='button'
-                        className={`btn ButtonsTestSecondary ${(verificaTipo === 3 || verificaTipo === 7) ? 'activeSecondary' : ''}`}
-                        disabled={isLoading || isLoadingPagamentos}
-                        onClick={() => handleChangeTipo(3)}>
-                        Compensação de Horas Extra
-                      </button>
-                    </div>
-                    <div className={`${verificaAlterado === 0 ? 'col-md-4' : 'col-md-3'}`}>
-                      <button type='button'
-                        className={`btn ButtonsTestSecondary ${(verificaTipo === 4 || verificaTipo === 7) ? 'activeSecondary' : ''}`}
-                        disabled={isLoading || isLoadingPagamentos}
-                        onClick={() => handleChangeTipo(4)}>
-                        Ferias
-                      </button>
-                    </div>
-                    {(verificaAlterado !== 0) &&
-                      <div className='col-md-3'>
+        </div>
+        <>
+          {isLoading || isLoadingPagamentos || !loaded ? (
+            <div className='d-flex flex-column justify-content-center align-items-center h-500' style={{ maxHeight: '200px' }}>
+              <LoadingSmaller />
+            </div>
+          ) : (
+            <div className="listaGerirHorasExtra text-center">
+              {((listaHorasExtra && listaHorasExtra.length > 0) || verificaTipo !== 1) &&
+                <div>
+                  {(verificaAlterado !== 3) &&
+                    <div className='row mt-4 mb-4'>
+                      <div className={`${verificaAlterado === 0 ? 'col-md-4' : 'col-md-3'}`}>
                         <button type='button'
-                          className={`btn ButtonsTestSecondary ${(verificaTipo === 1 || verificaTipo === 5)? 'activeSecondary' : ''}`}
+                          className={`btn ButtonsTestSecondary ${(verificaTipo === 2 || verificaTipo === 6) ? 'activeSecondary' : ''}`}
                           disabled={isLoading || isLoadingPagamentos}
-                          onClick={() => handleChangeTipo(1)}>
-                          Todos os pedidos
+                          onClick={() => handleChangeTipo(2)}>
+                          Horas Extra
                         </button>
                       </div>
-                    }
-                  </div>
-                }
-              </div>
-            }
-
-
-        
-            {(listaHorasExtra && listaHorasExtra.length > 0) &&
-              <FormRowListaHorasExtraPagasHeader
-                sortValue={sort}
-                pagas={verificaAlterado}
-                tipoHoras={verificaTipo}
-                handleChange={handleChangeSort} />
-            }
-
-
-            {((verificaAlterado === 3) ? (listaPagamentos && listaPagamentos.length > 0) : (listaHorasExtra && listaHorasExtra.length > 0)) ? (
-              <div>
-                {verificaAlterado === 3 && listaPagamentos.map((t, i) => (
-                  <div className="row text-center" key={"p" + i}>
-                    <hr></hr>
-                    <div>
-
-                      <FormRowListaHorasExtraPagas
-                        type="textarea"
-                        readOnly={true}
-                        utilizadores={utilizadores}
-                        value={t}
-                        changed={callUseEffect}
-                      />
+                      <div className={`${verificaAlterado === 0 ? 'col-md-4' : 'col-md-3'}`}>
+                        <button type='button'
+                          className={`btn ButtonsTestSecondary ${(verificaTipo === 3 || verificaTipo === 7) ? 'activeSecondary' : ''}`}
+                          disabled={isLoading || isLoadingPagamentos}
+                          onClick={() => handleChangeTipo(3)}>
+                          Compensação de Horas Extra
+                        </button>
+                      </div>
+                      <div className={`${verificaAlterado === 0 ? 'col-md-4' : 'col-md-3'}`}>
+                        <button type='button'
+                          className={`btn ButtonsTestSecondary ${(verificaTipo === 4 || verificaTipo === 7) ? 'activeSecondary' : ''}`}
+                          disabled={isLoading || isLoadingPagamentos}
+                          onClick={() => handleChangeTipo(4)}>
+                          Ferias
+                        </button>
+                      </div>
+                      {(verificaAlterado !== 0) &&
+                        <div className='col-md-3'>
+                          <button type='button'
+                            className={`btn ButtonsTestSecondary ${(verificaTipo === 1 || verificaTipo === 5) ? 'activeSecondary' : ''}`}
+                            disabled={isLoading || isLoadingPagamentos}
+                            onClick={() => handleChangeTipo(1)}>
+                            Todos os pedidos
+                          </button>
+                        </div>
+                      }
                     </div>
-                  </div>
-                ))}
+                  }
+                </div>
+              }
 
-                {verificaAlterado !== 3 && listaHorasExtra.map((t, i) => {
+              {((verificaAlterado === 3) ? (listaPagamentos && listaPagamentos.length > 0) : (listaHorasExtra && listaHorasExtra.length > 0)) ? (
+                <div>
+
+                  <FormRowListaHorasExtraPagasHeader
+                    sortValue={sort}
+                    pagas={verificaAlterado}
+                    tipoHoras={verificaTipo}
+                    handleChange={handleChangeSort} />
+
+                  {verificaAlterado === 3 && listaPagamentos.map((t, i) => (
+                    <div className="row text-center" key={"p" + i}>
+                      <hr></hr>
+                      <div>
+                        <FormRowListaHorasExtraPagas
+                          type="textarea"
+                          readOnly={true}
+                          utilizadores={utilizadores}
+                          value={t}
+                          changed={callUseEffect}
+                        />
+                      </div>
+                    </div>
+                  ))}
+
+                  {verificaAlterado !== 3 && listaHorasExtra.map((t, i) => {
                     if (t.length > 0) {
-                        if (t[0]._id_Group === 0) {
-                            // Process each item in the array `t`
-                            return t.map((item, index) => handleData(item, `${i} ${index}`));
-                        } else {
-                            // Handle case when `_id_Group` is not 0
-                            return handleData(t, i);
-                        }
-                    } else {
-                        // Handle case when `t` is an empty array or undefined
+                      if (t[0]._id_Group === 0) {
+                        // Process each item in the array `t`
+                        return t.map((item, index) => handleData(item, `${i} ${index}`));
+                      } else {
+                        // Handle case when `_id_Group` is not 0
                         return handleData(t, i);
+                      }
+                    } else {
+                      // Handle case when `t` is an empty array or undefined
+                      return handleData(t, i);
                     }
-                })}
+                  })}
 
-              </div>
-            ) : (
-              <>
-                {!isLoading && !isLoadingPagamentos && (loaded === true) ? (
-                  <div className="mt-4 col-md-12  text-center ">
-                    {verificaAlterado === 0 ? (
-                      <div>
-                        {(verificaTipo === 1 || verificaTipo === 5) ? (
-                          <h1>Sem Pedidos de Horas Extra</h1>
-                        ) : (verificaTipo === 2 || verificaTipo === 6) ? (
-                          <h1>Sem Pedidos de Horas Extra Realizadas!</h1>
-                        ) : (verificaTipo === 3 || verificaTipo === 7) ?
-                        <h1>Sem Pedidos de Compensação de Horas Extra</h1>
-                        : (verificaTipo === 4) &&
-                        <h1>Sem Pedidos de Férias</h1>
-                        }
-                      </div>
-                    ) : verificaAlterado === 1 ? (
-                      <div>
-                        {(verificaTipo === 1) ? (
-                          <h1>Sem Pedidos de Horas Extra Aceites!</h1>
-                        ) : (verificaTipo === 2) ? (
-                          <h1>Sem Pedidos de Horas Extra Realizadas Aceites!</h1>
-                        ) : (verificaTipo === 3) ?
-                        <h1>Sem Pedidos de Compensação de Horas Extra Aceites!</h1>
-                        : (verificaTipo === 4) &&
-                        <h1>Sem Pedidos de Férias Aceites!</h1>
-                        }
-                      </div>
-                    ) : verificaAlterado === 2 ? (
-                      <div>
-                        {(verificaTipo === 1) ? (
-                          <h1>Sem Pedidos de Horas Extra Recusados!</h1>
-                        ) : (verificaTipo === 2) ? (
-                          <h1>Sem Pedidos de Horas Extra Realizadas Recusados!</h1>
-                        ) : (verificaTipo === 3) ?
-                        <h1>Sem Pedidos de Compensação de Horas Extra Recusados!</h1>
-                        : (verificaTipo === 4) &&
-                        <h1>Sem Pedidos de Férias Recusados!</h1>
-                        }
-                      </div>
-                    ) : (
-                      <div>
-                        <h1>Sem Horas Extra Pagas!</h1>
-                      </div>
-                    )}
+                </div>
+              ) : (
+                <>
+                  {!isLoading && !isLoadingPagamentos && (loaded === true) ? (
+                    <div className="mt-4 col-md-12  text-center ">
+                      {verificaAlterado === 0 ? (
+                        <div>
+                          {(verificaTipo === 1 || verificaTipo === 5) ? (
+                            <h1>Sem Pedidos de Horas Extra</h1>
+                          ) : (verificaTipo === 2 || verificaTipo === 6) ? (
+                            <h1>Sem Pedidos de Horas Extra Realizadas!</h1>
+                          ) : (verificaTipo === 3 || verificaTipo === 7) ?
+                            <h1>Sem Pedidos de Compensação de Horas Extra</h1>
+                            : (verificaTipo === 4) &&
+                            <h1>Sem Pedidos de Férias</h1>
+                          }
+                        </div>
+                      ) : verificaAlterado === 1 ? (
+                        <div>
+                          {(verificaTipo === 1) ? (
+                            <h1>Sem Pedidos de Horas Extra Aceites!</h1>
+                          ) : (verificaTipo === 2) ? (
+                            <h1>Sem Pedidos de Horas Extra Realizadas Aceites!</h1>
+                          ) : (verificaTipo === 3) ?
+                            <h1>Sem Pedidos de Compensação de Horas Extra Aceites!</h1>
+                            : (verificaTipo === 4) &&
+                            <h1>Sem Pedidos de Férias Aceites!</h1>
+                          }
+                        </div>
+                      ) : verificaAlterado === 2 ? (
+                        <div>
+                          {(verificaTipo === 1) ? (
+                            <h1>Sem Pedidos de Horas Extra Recusados!</h1>
+                          ) : (verificaTipo === 2) ? (
+                            <h1>Sem Pedidos de Horas Extra Realizadas Recusados!</h1>
+                          ) : (verificaTipo === 3) ?
+                            <h1>Sem Pedidos de Compensação de Horas Extra Recusados!</h1>
+                            : (verificaTipo === 4) &&
+                            <h1>Sem Pedidos de Férias Recusados!</h1>
+                          }
+                        </div>
+                      ) : (
+                        <div>
+                          <h1>Sem Horas Extra Pagas!</h1>
+                        </div>
+                      )}
 
-                  </div>
-                ) : (
-                  <div className='d-flex flex-column justify-content-center align-items-center h-200' style={{ maxHeight: '100px' }}>
-                    <LoadingSmaller />
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-        )} </>
-    </Wrapper>
-  );
+                    </div>
+                  ) : (
+                    <div className='d-flex flex-column justify-content-center align-items-center h-200' style={{ maxHeight: '100px' }}>
+                      <LoadingSmaller />
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          )} </>
+      </Wrapper>
+    );
+  } else {
+    return (
+      <Wrapper>
+        <GerirHorasFerias
+          setGerirFerias={setGerirFerias}
+          accepted={1}
+          styleButton={styleButton}
+        />
+      </Wrapper>
+    )
+  }
 };
 
 export default GerirHorasExtra;

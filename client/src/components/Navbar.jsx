@@ -148,7 +148,7 @@ const Navbar = () => {
         <button className='btn btn-light'     style={{
     ...styleButton, // Spread the properties of styleButton
     backgroundColor: verificaHorasExtra ? "#A6C48A" : "" // Add or override specific styles
-  }} type='button' onClick={navGestaoHorasExtra}>Gestão Horas Extra</button>
+  }} type='button' onClick={navGestaoHorasExtra}>Gestão Horas</button>
       </div>
       </div>:
       (user?.user?.tipo === 6) ? 

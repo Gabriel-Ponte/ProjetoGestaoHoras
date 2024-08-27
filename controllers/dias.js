@@ -2128,6 +2128,7 @@ const getDiaID = async (req, res) => {
   }
 };
 
+
 const getDiaInf = async (req, res) => {
   try {
     let {
@@ -2209,83 +2210,6 @@ const createDia = async (req, res) => {
 };
 
 
-const adicionarFerias1 = async (req, res) => {
-  try {
-  let idU = req.body.Utilizador;
-  idU = sanitizeHtml(idU);
-  const aUtilizador = await User.findOne({
-    _id: idU,
-  });
-
-  let DiasFerias = req.body.Dias;
-  DiasFerias = DiasFerias.map(item => sanitizeHtml(item));
-  // const idFerias  = await TipoTrabalho.findOne({
-  //   tipo: 6,
-  // });
-
-  const projetoGeral =  await Projeto.findOne({ Tipo: 1 });
-
-  const idFerias  = await TipoTrabalho.findOne({
-    tipo: 7,
-  });
-
-
-  const groupID = await upgradeGroup();
-
-  for (let index = 0; index < DiasFerias.length; index++) {
-    
-    const data = new Date (DiasFerias[index]);
-    let horas = 0;
-    if(data.getDay() === 5){
-      horas = 6;
-    } else{
-      horas = 8.5
-    }
-
-    const tipoTrabalhoHoras = await TipoTrabalhoHoras.create({
-      projeto: projetoGeral._id,
-      tipoTrabalho: idFerias._id,
-      horas: horas,
-    });
-
-    const tipoDeTrabalhoHorasArray = [tipoTrabalhoHoras];
-
-
-  const findDia = await Dias.find({
-    Utilizador: aUtilizador._id,
-    Data: data,
-    $nor: [
-      { accepted: 3 },
-      { accepted: 6 }
-    ],
-  });
-
-
-  if(findDia && findDia.length > 0){
-
-    // DiasFerias.remove(DiasFerias[index]);
-  
-  } else{
-      await Dias.create({
-        Data: data,
-        NumeroHoras: horas,
-        tipoDeTrabalhoHoras: tipoDeTrabalhoHorasArray,
-        Utilizador: aUtilizador._id,
-        accepted: req?.body?.accepted,
-        _id_Group:groupID,
-      });
-  }
-}    
-
-  if (!aUtilizador) {
-    throw new NotFoundError(`Não existe um utilizador com id ${userID}`);
-  }
-
-  res.status(StatusCodes.CREATED).json("Ferias Inseridas");
-} catch (error) {
-    console.error(error)
-}
-};
 
 const adicionarFerias = async (req, res) => {
   try {
@@ -2649,9 +2573,6 @@ const deleteDia = async (req, res) => {
   }
 };
 
-
-
-/////////////////// TESTAR ......  /////////////////////////////////////
 const deleteDiaGroup = async (req, res) => {
 
   let { id } = req.params;

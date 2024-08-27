@@ -5,22 +5,40 @@ import { toast } from 'react-toastify';
 import { } from '../components';
 import { useDispatch, useSelector } from 'react-redux';
 import { adicionarFerias } from '../features/dias/diasSlice';
+import { getFeriasUtilizador } from '../features/ferias/feriasSlice';
 
 
 
 const AddFerias = ({ setAddFerias, verificaDia, Data, listaDias, projetos, accepted }) => {
 
-
   const { feriadosPortugal } = useFeriadosPortugal();
   const [fimFerias, setFimFerias] = useState(Data);
   const [selectedDates, setSelectedDates] = useState([]);
   const [stringDates, setStringDates] = useState([]);
+  // const [feriasArray, setFeriasArray] = useState([]);
+  const [feriasPossiveis, setFeriasPossiveis] = useState(0);
+  const [pedidosFerias, setPedidosFerias] = useState(0);
   const [buttonClicked, setButtonClicked] = useState(false);
   const dispatch = useDispatch();
   const { user } = useSelector((store) => store.utilizador);
 
   useEffect(() => {
     verificaListaDias(Data, Data);
+    dispatch(getFeriasUtilizador(user?.user?.id)).then((res) => {
+      const feriasArray = Array.isArray(res?.payload?.feriasArray) ? res?.payload?.feriasArray : [];
+
+      const totalNumber = feriasArray[1].reduce((acc, numberF) => {
+        const number = numberF.Numero;
+        return acc + number;
+      }, 0);
+      
+      const feriasPorDar = totalNumber - feriasArray[0].length;
+      const pedidosPorAceitar = feriasArray[2].length;
+      // setFeriasArray(feriasArray);
+      setFeriasPossiveis(feriasPorDar);
+      setPedidosFerias(pedidosPorAceitar);
+
+    })
     
   }, []);
 
@@ -263,12 +281,31 @@ const AddFerias = ({ setAddFerias, verificaDia, Data, listaDias, projetos, accep
               whiteSpace: "nowrap",
               display: "inline-block",
               lineHeight: "normal",
-              width: 'auto'
+              width: 'auto',
+              height: 'auto',
             }}
           >
             Adicionar Dias
           </button>
         </div>
+        <div className='col-4 text-end'>
+
+              {pedidosFerias > 0 ? 
+              <>
+                      <div className='row'>
+                <h5>{feriasPossiveis ? 'Férias por reclamar: ' + feriasPossiveis : ''}</h5>
+              </div>
+              <div className='row'>
+                <h5>{pedidosFerias ? 'Férias por aceitar: ' + pedidosFerias : ''}</h5>
+              </div> 
+              </> :
+        
+                      <div className='row'>
+                      <h4>{feriasPossiveis ? 'Férias por reclamar: ' + feriasPossiveis : ''}</h4>
+                    </div>
+              }
+              </div>
+              
       </div>
 
 
