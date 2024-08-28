@@ -117,8 +117,8 @@ const Dia = ({ _id, Data, NumeroHoras, _id_Group, Utilizador, tipoDeTrabalhoHora
               {(accepted !== 2 && accepted !== 3 && accepted !== 5 && accepted !== 7 && _id_Group && _id_Group !== 0 ) ?
                 <div className='col-md-6'>
                   {buttonConfirmed ? (
-                  <div class="spinner-border text-danger" role="status">
-                    <span class="sr-only"></span>
+                  <div className="spinner-border text-danger" role="status">
+                    <span className="sr-only"></span>
                   </div>
                   ): (
                   <button type='submit' onClick={() => deleteDiaGroupConfirm(_id, Data, _id_Group)} disabled={buttonConfirmed} className="btn btn-danger">

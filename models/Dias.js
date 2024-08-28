@@ -84,8 +84,6 @@ async function upgradeGroup() {
 
     const groupId = sequence.sequence_valueD;
 
-
-
     return groupId; // Return the groupId for use by the caller
   } catch (error) {
     next(error); // Pass the error to the next error-handling middleware

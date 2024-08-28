@@ -13,4 +13,5 @@ router.route("/getAllFerias").get(getAllFerias);
 router.route("/addDiasFeriasUtilizador").post(addDiasFeriasUtilizador);
 
 router.route("/:id").get(getFeriasUtilizador).delete(deleteDiasFerias);
+
 module.exports = router;

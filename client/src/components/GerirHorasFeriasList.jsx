@@ -29,7 +29,7 @@ const GerirHorasFeriasList = ({
 
   const [arrayDataYear, setArrayDataYear] = useState({});
 
-  const [showFeriasSwitch, setShowFeriasSwitch] = useState({});
+  const [showFeriasSwitch, setShowFeriasSwitch] = useState({ keyF: false });
   
   const handleAddDias = (e) => {
     if (addDias <= 0 || !e) {
@@ -327,15 +327,17 @@ const GerirHorasFeriasList = ({
                 <label className="switch">
                   <input
                     type="checkbox"
-                    checked={showFeriasSwitch[keyF]}
+                    checked={showFeriasSwitch[keyF] || false} 
                     onChange={() => handleSwitchToggle(keyF)}
                   />
                   <span className="slider round"></span>
                 </label>
               }
-                {!showFeriasSwitch[keyF] ? (<>
-                  <div className='row' >
-
+                {!showFeriasSwitch[keyF] ? (
+                  <div key={"key" + keyF}>
+ 
+                  <div className='row'  >
+                       
                     <div className="col-md-1 themed-grid-col"></div>
 
                     <div className="col-md-3 themed-grid-col">
@@ -353,8 +355,9 @@ const GerirHorasFeriasList = ({
                   </div>
 
                   {ferias[1].map((feriasYear, index) => {
+
                     return (
-                      <div className='row' >
+                      <div className='row' key={index}>
 
                         <div className="col-md-1 themed-grid-col">
 
@@ -382,7 +385,7 @@ const GerirHorasFeriasList = ({
                   )
                   }
 
-                </>) : (<>
+                </div>) : (<>
 
                   <div className='row' >
 
@@ -407,7 +410,7 @@ const GerirHorasFeriasList = ({
                     const numero = feriasInsertedYear.numero;
                     const stringDates = feriasInsertedYear.string;
                     return (
-                      <div className='row' >
+                      <div className='row' key={keyF + Object.keys(arrayDataYear)[index]} >
                         <hr></hr>
                         <div className="col-md-1 themed-grid-col">
                         </div>
