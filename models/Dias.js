@@ -82,7 +82,13 @@ async function upgradeGroup() {
       { returnOriginal: false, upsert: true }
     );
 
+<<<<<<< HEAD
     return sequence.sequence_valueG; 
+=======
+    const groupId = sequence.sequence_valueD;
+
+    return groupId; // Return the groupId for use by the caller
+>>>>>>> 493ca391511a8fef4d9eac4d0a749b0bb864100e
   } catch (error) {
     console.error("UpgradeGroup" , error)
     throw new Error('Failed to upgrade group ID'); // Throw error to be handled by the caller

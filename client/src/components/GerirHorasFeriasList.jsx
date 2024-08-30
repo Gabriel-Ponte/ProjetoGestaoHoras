@@ -394,9 +394,15 @@ const totalNumberPossiveis = ferias[1].reduce((acc, numberF) => {
                 </label>
               }
                 {!showFeriasSwitch[keyF] ? (
+<<<<<<< HEAD
                   <div className='p-3' key={"key" + keyF}>
  
                   <div className='row '  >
+=======
+                  <div key={"key" + keyF}>
+ 
+                  <div className='row'  >
+>>>>>>> 493ca391511a8fef4d9eac4d0a749b0bb864100e
                        
                     <div className="col-md-1 themed-grid-col"></div>
 

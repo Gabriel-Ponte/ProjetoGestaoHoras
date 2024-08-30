@@ -10,12 +10,16 @@ const { ObjectId } = require('mongodb');
 
 
 const isValidObjectId = (id) => {
+<<<<<<< HEAD
   try{
     const check =  ObjectId.isValid(id) && /^[0-9a-fA-F]{24}$/.test(id);
     return check;
   } catch {
     return false;
   }
+=======
+  return ObjectId.isValid(id) && /^[0-9a-fA-F]{24}$/.test(id);
+>>>>>>> 493ca391511a8fef4d9eac4d0a749b0bb864100e
 };
 
 const getAllFerias = async (req, res) => {
@@ -113,11 +117,15 @@ const getAllFerias = async (req, res) => {
   }
 };
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 493ca391511a8fef4d9eac4d0a749b0bb864100e
 const getFeriasUtilizador = async (req, res) => {
   try {
     let { id } = req.params;
     id = sanitizeHtml(id);
+<<<<<<< HEAD
     
     if(!isValidObjectId(id)){
       throw new NotFoundError(`Não foram encontradas horas inseridas`);
@@ -130,12 +138,21 @@ const getFeriasUtilizador = async (req, res) => {
       throw new NotFoundError(`Não foi encontrado utilizador`);
     }
 
+=======
+
+    const user = await User.findOne({
+      _id: id,
+    });
+
+
+>>>>>>> 493ca391511a8fef4d9eac4d0a749b0bb864100e
     // Retrieve necessary data in parallel
     const [projetoGeral, idFerias] = await Promise.all([
       Projeto.findOne({ Tipo: 1 }),
       TipoTrabalho.findOne({ tipo: 7 }),
     ]);
 
+<<<<<<< HEAD
     if (!projetoGeral || !idFerias) {
       throw new NotFoundError(`Não foi encontrado!`);
     }
@@ -145,6 +162,13 @@ const getFeriasUtilizador = async (req, res) => {
 
 
     const userID = user?._id;
+=======
+    const feriasID = idFerias._id
+    let feriasArray = [];
+
+
+    const userID = user._id;
+>>>>>>> 493ca391511a8fef4d9eac4d0a749b0bb864100e
 
     const diasAllProjeto = await Dias.find({
       $or: [{ accepted: 0 }, { accepted: 2 }, { accepted: null }],
@@ -160,8 +184,12 @@ const getFeriasUtilizador = async (req, res) => {
       Utilizador: userID,
     });
 
+<<<<<<< HEAD
     let dias = await Ferias.find({ Utilizador: userID });
 
+=======
+    let dias = await Ferias.find({ Utilizador: userID })
+>>>>>>> 493ca391511a8fef4d9eac4d0a749b0bb864100e
     for (let d = 0; d < dias.length; d++) {
       try {
         const responsavelID = dias[d].UtilizadorResponsavel;
@@ -181,10 +209,17 @@ const getFeriasUtilizador = async (req, res) => {
 
     // Assign utilizador.Nome to dias.Utilizador
     feriasArray.push([...diasAllProjeto], [...dias], [...diasAllProjetoPorAceitar]);
+<<<<<<< HEAD
     res.status(StatusCodes.OK).json({ feriasArray });
   } catch (error) {
     console.error("getFeriasUtilizador", error);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal server error' });
+=======
+    return res.status(StatusCodes.CREATED).json({ feriasArray });
+  } catch (error) {
+    console.error("getFeriasUtilizador", error);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal server error' });
+>>>>>>> 493ca391511a8fef4d9eac4d0a749b0bb864100e
   }
 };
 
@@ -343,7 +378,11 @@ const deleteDiasFerias = async (req, res) => {
 
     await Ferias.findOneAndDelete({ _id: id });
 
+<<<<<<< HEAD
     res.status(StatusCodes.OK).send();
+=======
+    return res.status(StatusCodes.OK).send();
+>>>>>>> 493ca391511a8fef4d9eac4d0a749b0bb864100e
 
   } catch (error) {
     console.error("deleteDiasFerias", error);
