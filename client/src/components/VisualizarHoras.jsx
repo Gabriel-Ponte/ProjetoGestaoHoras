@@ -772,11 +772,8 @@ const ListaHoras = () => {
     return () => {
       clearTimeout(timeoutId);
     };
-<<<<<<< HEAD
   }, [selectedUser, userNome, aceitacao, dias?.length, ferias[0], ferias?.length, listaDias, horasCompensacao]);
-=======
-  }, [selectedUser, userNome, aceitacao, dias.length, ferias[0], ferias.length, listaDias, horasCompensacao]);
->>>>>>> 493ca391511a8fef4d9eac4d0a749b0bb864100e
+
 
   const diaSelected = selectedDay ? selectedDay?.dia : 0;
   const month = selectedDay ? selectedDay.mes : today.getMonth();
@@ -920,10 +917,6 @@ const ListaHoras = () => {
   let checkFound = false;
   // let count = 0;
 
-<<<<<<< HEAD
-=======
-  console.log(selectedUser)
->>>>>>> 493ca391511a8fef4d9eac4d0a749b0bb864100e
   return (
     <Wrapper>
       <div className='mainVisualiza'>
