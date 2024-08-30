@@ -84,10 +84,10 @@ UserSchema.pre('save', async function(next) {
     const doc = this;
     const sequence = await Counter.findOneAndUpdate(
         { codigo: 'codigo' },
-        { $inc: { sequence_value: 1 } },
+        { $inc: { sequence_valueU: 1 } },
         { returnOriginal: false, upsert: true }
     );
-    doc.codigo = sequence.sequence_value;
+    doc.codigo = sequence.sequence_valueU;
     next();
 });
 

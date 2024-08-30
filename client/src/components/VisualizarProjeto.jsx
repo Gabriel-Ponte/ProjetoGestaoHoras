@@ -227,7 +227,6 @@ const VisualizarProjeto = () => {
             NumeroHorasTipoTrabalho: arrayTTH,
           });
         } else {
-          //console.log(selectedDay)
           if(selectedDay){
             if(selectedDay?.dia !== 0){
           setValues({

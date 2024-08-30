@@ -9,8 +9,8 @@ const CounterSchema = new mongoose.Schema(
     _id_P: String, sequence_value: Number, 
     _id_D: String, sequence_valueD: Number,
     _id_Pa: String, sequence_valuePa: Number,
-    _id_F: String, sequence_valuePa: Number,
-    _id_Group: String, sequence_valuePa: Number,
+    _id_F: String, sequence_valueF: Number,
+    _id_Group: String, sequence_valueG: Number,
 });
 
 module.exports = mongoose.model("counters", CounterSchema);

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Wrapper from "../assets/wrappers/Calendar";
 import { MdKeyboardArrowLeft } from 'react-icons/md';
 import { MdKeyboardArrowRight } from 'react-icons/md';
@@ -6,21 +6,38 @@ import { toast } from 'react-toastify';
 import useFeriadosPortugal from "./FeriadosPortugal";
 import PropTypes from 'prop-types'; 
 
-const CalendarControl = ({ handleChange, inserted, feriados, ferias, compensacao, compensacaoDomingo, inicio, fim, objetivo,aceitacao, vProjeto, todos, numberUsers, horasExtraID, selectedDate }) => {
+const CalendarControl = ({ handleChange, inserted, feriados, ferias,inserting, compensacao, compensacaoDomingo, inicio, fim, objetivo,aceitacao, vProjeto, todos, numberUsers, horasExtraID, selectedDate , user}) => {
     const [calendar, setCalendar] = useState(selectedDate ? new Date(selectedDate.ano , selectedDate.mes , 1 ,0 , 0, 0) : new Date());
+
     const calWeekDays = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
     const calMonthName = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
     const { feriadosPortugal } = useFeriadosPortugal();
     const localDate = new Date();
 
-    useEffect(() => {
-        plotDates(calendar);     
-    }, []);
 
+    // useEffect(() => {
+    //     plotDates(calendar);     
+    // }, []);
+
+    // useEffect(() => {
+    //     displayMonth();
+    //     displayYear();
+    // }, [calendar, inicio, vProjeto]);
+
+    
     useEffect(() => {
-        displayMonth();
-        displayYear();
-    }, [calendar, inicio, vProjeto]);
+        initializeCalendar();
+      },  [selectedDate, ferias?.length, inicio,inserting, vProjeto, user]);
+
+
+      const initializeCalendar = useCallback(() => {
+        plotDates(calendar);   
+        const date = selectedDate ? new Date(selectedDate.ano , selectedDate.mes , 1 ,0 , 0, 0) : new Date();
+        
+        // setCalendar(date);
+        displayMonth(date.getMonth());
+        displayYear(date.getFullYear());
+    }, [selectedDate, inicio, vProjeto, inserting, user, ferias?.length]);
 
     function daysInMonth(month, year) {
         return new Date(year, month, 0).getDate();
@@ -94,14 +111,14 @@ const CalendarControl = ({ handleChange, inserted, feriados, ferias, compensacao
         setCalendar(newCalendar);
 }
 
-    function displayYear() {
+    function displayYear(ano) {
         const yearLabel = document.querySelector(".calendar .calendar-year-label");
-        yearLabel.textContent = calendar.getFullYear();
+        yearLabel.textContent = ano;
     }
 
-    function displayMonth() {
+    function displayMonth(month) {
         const monthLabel = document.querySelector(".calendar .calendar-month-label");
-        monthLabel.textContent = calMonthName[calendar.getMonth()];
+        monthLabel.textContent = calMonthName[month];
     }
 
     function selectDate(e) {
@@ -402,7 +419,24 @@ const CalendarControl = ({ handleChange, inserted, feriados, ferias, compensacao
                     }
                 }
             }
-
+            if (inserting) {
+                for (let i = 0; i < inserting.length; i++) {
+          
+                    const insertedDay = new Date(inserting[i]);
+                    const currentMonth = insertedDay?.getMonth() + 1;
+                    const currentYear = insertedDay?.getFullYear();
+                    if (
+                        currentYear === changedYear &&
+                        currentMonth === changedMonth &&
+                        numberItems !== null &&
+                        numberItems.length >= calendar.getDate()
+                    ) {
+                        dias.push(insertedDay);
+                        numberItems[insertedDay.getDate() - 1].classList.add("calendar-inserting");
+                    }
+                }
+            }
+            
 
             if(compensacao){
                 for (let i = 0; i < compensacao.length; i++) {
@@ -591,6 +625,7 @@ CalendarControl.propTypes = {
     inserted: PropTypes.array, 
     feriados: PropTypes.array.isRequired, 
     ferias: PropTypes.array, 
+    inserting: PropTypes.array,
     compensacao: PropTypes.array, 
     compensacaoDomingo: PropTypes.array, 
     inicio: PropTypes.string, 

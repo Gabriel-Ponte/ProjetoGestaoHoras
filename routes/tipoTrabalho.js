@@ -1,7 +1,7 @@
 const express = require("express");
 
 const authenticateUser = require("../middleware/authentication");
-const testUser = require("../middleware/testeUser");
+
 
 const router = express.Router();
 
@@ -12,6 +12,6 @@ router.route("/createTipoTrabalhoOther").post(createTipoTrabalhoOther),
 router
   .route("/:id")
   .delete(deleteTipoTrabalho)
-  .patch(testUser, updateTipoTrabalho);
+  .patch(updateTipoTrabalho);
 
 module.exports = router;

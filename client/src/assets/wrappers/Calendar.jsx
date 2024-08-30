@@ -219,6 +219,12 @@ const Wrapper = styled.section`
     
 }
 
+.calendar .calendar-inner .calendar-body .calendar-inserting {
+    cursor: default;
+    background: #A7C957;
+    border-radius: 4px;
+    
+}
 
 .calendar .calendar-inner .calendar-body .calendar-compensacao {
     cursor: default;

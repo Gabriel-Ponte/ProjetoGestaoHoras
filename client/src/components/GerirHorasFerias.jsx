@@ -12,6 +12,7 @@ const GerirHorasFerias = ({ setGerirFerias, styleButton }) => {
 
   const [listaFerias, setlistaFerias] = useState({});
   const { isLoadingFerias, sort } = useSelector((store) => store.ferias);
+  const [selectedYear, setSelectedYear] = useState((new Date()));
   const [update, setUpdate] = useState(false);
   useEffect(() => {
     getListaFerias();
@@ -121,10 +122,12 @@ const GerirHorasFerias = ({ setGerirFerias, styleButton }) => {
 
         <div className="container">
 
-          <div className='ferias' style={{ marginTop: "5%" }}>
+        <div className='ferias' style={{ marginTop: "5%" }}>
             <GerirHorasFeriasHeader
               sortValue={sort}
               handleChange={handleSort}
+              setSelectedYear={setSelectedYear}
+              selectedYear={selectedYear}
             />
             <div className='ferias' style={{ marginTop: "25px" }}>
               {listaFerias && Object.keys(listaFerias).length > 0 && Object.values(listaFerias).map((ferias, index) => {
@@ -137,6 +140,7 @@ const GerirHorasFerias = ({ setGerirFerias, styleButton }) => {
                 }, 0);
                 let feriasPorDar = totalNumber - ferias[0].length;
 
+    
                 return (
                   <GerirHorasFeriasList
                     key={indexKey}
@@ -147,6 +151,7 @@ const GerirHorasFerias = ({ setGerirFerias, styleButton }) => {
                     handleInsert={handleInsertFerias}
                     feriasPorDar={feriasPorDar}
                     deleteDias={deleteDiasFeriasConfirm}
+                    Ano={selectedYear.getFullYear()}
                   />
                 )
               })}

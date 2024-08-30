@@ -201,7 +201,7 @@ const AddHorasDropdown = ({ sortedProjetos, verificaChange, listaTipoTrabalho, v
   }, [arrayTipoTrabalho]);
 
   const renderTimePickerClock = useCallback((obtainKey,project, t, ttID, value, dis) => {
-    // console.log(t, " ", value)
+
 return(
     <TimePickerClock
       disabled = {dis}

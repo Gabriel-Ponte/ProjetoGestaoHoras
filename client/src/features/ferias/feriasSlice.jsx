@@ -107,7 +107,7 @@ const feriasSlice = createSlice({
     })
     .addCase(getFeriasUtilizador.rejected, (state, { payload }) => {
       state.isLoadingFerias = false;
-      toast.error(payload);
+      // toast.error(payload);
     })
     
   },

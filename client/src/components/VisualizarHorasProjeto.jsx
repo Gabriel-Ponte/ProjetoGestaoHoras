@@ -180,7 +180,6 @@ const VisualizarHorasProjeto = () => {
 
                     return matchedItem ? matchedItem.TipoTrabalho : null;
                   });
-                //console.log(filteredValues)
                 if (array !== null) {
 
                   for (let h = 0; h < array.length; h++) {

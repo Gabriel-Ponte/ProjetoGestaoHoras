@@ -1,5 +1,4 @@
 const express = require("express");
-const testUser = require("../middleware/testeUser");
 
 const router = express.Router();
 
@@ -68,6 +67,6 @@ router.route("/group/:id").delete(deleteDiaGroup);
 
 router.route("/:id")
 .delete(deleteDia)
-.patch(testUser, updateDia);
+.patch(updateDia);
 
 module.exports = router;

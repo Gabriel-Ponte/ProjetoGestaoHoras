@@ -91,7 +91,7 @@ openssl.generateRSAPrivateKey(options, (err, key) => {
         try {
           fs.writeFileSync(path.join(__dirname, 'key.pem'), key);
           fs.writeFileSync(path.join(__dirname, 'cert.pem'), crt);
-          //console.log('Certificates generated successfully');
+          //console.info('Certificates generated successfully');
         } catch (writeErr) {
           console.error('Error writing files:', writeErr);
         }

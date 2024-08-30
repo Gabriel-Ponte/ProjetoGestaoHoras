@@ -11,7 +11,7 @@ const PagamentosSchema = new mongoose.Schema(
         Mes: {
             type: Number,
             //required: [true, "Please provide a valid Date"],
-            default: "",
+            default: 0,
         },
 
         Ano: {
@@ -44,7 +44,7 @@ PagamentosSchema.pre('save', async function(next) {
     const doc = this;
     const sequence = await Counter.findOneAndUpdate(
         { _id_Pa: '_id_Pa' },
-        { $inc: { sequence_valueP: 1 } },
+        { $inc: { sequence_valuePa: 1 } },
         { returnOriginal: false, upsert: true }
     );
     doc._id_Pa = sequence.sequence_valuePa;

@@ -17,6 +17,7 @@ const GerirHorasFeriasList = ({
   totalFerias,
   feriasPorDar,
   deleteDias,
+  Ano,
 }) => {
 
   const { feriadosPortugal } = useFeriadosPortugal();
@@ -29,7 +30,7 @@ const GerirHorasFeriasList = ({
 
   const [arrayDataYear, setArrayDataYear] = useState({});
 
-  const [showFeriasSwitch, setShowFeriasSwitch] = useState({});
+  const [showFeriasSwitch, setShowFeriasSwitch] = useState({ keyF: false });
   
   const handleAddDias = (e) => {
     if (addDias <= 0 || !e) {
@@ -121,46 +122,54 @@ const GerirHorasFeriasList = ({
 
 
   const arrayListaDias = async (datesReceived) => {
+    // Sort datesReceived array by date
     datesReceived.sort((a, b) => new Date(a.Data) - new Date(b.Data));
-    const startDate = new Date(datesReceived[0].Data);
-    const endDate = new Date(datesReceived[datesReceived.length -1].Data);
-  
+    
     const dates = [];
-    // Create a date instance for iterating
-    let currentDate = new Date(startDate);
-    let count = 0;
-    while (toLocalDate(currentDate) <= toLocalDate(endDate)) {
-      // Check if the current day is a weekday (not Saturday or Sunday)
-      const dayOfWeek = currentDate.getDay();
-  
-      if(!dates[count]){
-        dates[count] = [];
-      }
-      if (dayOfWeek !== 0 && dayOfWeek !== 6 && !feriadosPortugal(currentDate) && (datesReceived.some(item => (new Date (item.Data)).getDate() === currentDate.getDate())) ) {
-        // Check if the current date is already in listaDias
-        dates[count].push(new Date(currentDate));
-    } else{
-      if(dates[count]?.length > 0){
-        count++;
-      }
+    let currentSegment = [];
+
+    for (let i = 0; i < datesReceived.length; i++) {
+        const currentDate = new Date(datesReceived[i].Data);
+        
+        // If it's the first date or it follows the previous date
+        if (i === 0 || (currentSegment.length > 0 && (currentDate.getTime() - new Date(currentSegment[currentSegment.length - 1]).getTime() === 86400000))) {
+            // Check if the current day is a weekday (not Saturday or Sunday)
+            const dayOfWeek = currentDate.getDay();
+            const isWeekday = dayOfWeek !== 0 && dayOfWeek !== 6;
+            const isHoliday = feriadosPortugal(currentDate);
+
+            if (isWeekday && !isHoliday) {
+                currentSegment.push(new Date(currentDate));
+            }
+        } else {
+            // If the segment has dates, finalize the current segment
+            if (currentSegment.length > 0) {
+                dates.push(currentSegment);
+            }
+            // Start a new segment
+            currentSegment = [];
+            
+            // Check if the current date is valid and add it to the new segment
+            const dayOfWeek = currentDate.getDay();
+            const isWeekday = dayOfWeek !== 0 && dayOfWeek !== 6;
+            const isHoliday = feriadosPortugal(currentDate);
+
+            if (isWeekday && !isHoliday) {
+                currentSegment.push(new Date(currentDate));
+            }
+        }
     }
-      // Move to the next day
-      currentDate.setDate(currentDate.getDate() + 1);
-   }  
 
+    // Add the last segment if it has dates
+    if (currentSegment.length > 0) {
+        dates.push(currentSegment);
+    }
 
+    // Convert dates array to the desired string format
+    const stringD = stringListaDias(dates);
 
-   const stringD = stringListaDias(dates);
-
-   return stringD;
-  };
-
-  const toLocalDate = (dateStr) => {
-    const date = new Date(dateStr);
-    // Reset the time to midnight and set to local timezone
-    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  };
-
+    return stringD;
+};
 
   const stringListaDias = useCallback((dates) => {
     try {
@@ -197,7 +206,7 @@ const GerirHorasFeriasList = ({
 
         data = dataDay + "/" + dataMonth + "/" + dataYear;
       }
-
+ 
 
       return data;
     }
@@ -207,41 +216,84 @@ const GerirHorasFeriasList = ({
     }
   }, []);
 
+  const totalNumber = (ferias[0].reduce((acc, numberF) => {
+    let number = 0;
+    const date = new Date(numberF.Data);
+    if(date.getFullYear() === Ano){
+      number = 1;
+    }
+    return acc + number;
+  }, 0));
 
+  const totalNumberMap = {};
+ 
+// Calculate the total number for each item in ferias[1]
+const totalNumberPossiveis = ferias[1].reduce((acc, numberF) => {
+  const dataAno = numberF.Ano;
+  let number = 0;
+  
+  // Only calculate totalNumber if the year has not been processed yet
+  if (dataAno <= Ano) {
+      number = numberF.Numero;
+      // Calculate totalNumber for the current year if not already calculated
+      if (!(dataAno in totalNumberMap)) {
+          const totalNumber = ferias[0].reduce((acc, numberF) => {
+              let numberYear = 0;
+              const date = new Date(numberF.Data);
+              
+              if (date.getFullYear() < dataAno) {
+                  numberYear = 1;
+              }
+              
+              return acc + numberYear;
+          }, 0);
+          
+          totalNumberMap[dataAno] = totalNumber; // Store the calculated totalNumber
+
+          number -= totalNumber; // Deduct totalNumber from number
+      }
+
+  }
+
+  return acc + number;
+}, 0);
+
+
+
+  const acepted = ferias[0].length;
   return (
     <>
       {/* <div className={verificaResultado === 1 ? '' : verificaResultado ? 'resultadoProjetoP' : 'resultadoProjetoN'}> */}
       <div className='resultadoProjetoP'>
         <div className="listaProjetos">
-          <div className="row ">
+          <div className="row text-center" style={{margin:"auto"}}>
 
-            <div className="col-md-2 themed-grid-col">
-              <h5>{userName}</h5>
+            <div className="col-md-2 themed-grid-col" style={{margin:"auto"}}>
+              <h5 style={{margin:"auto"}}>{userName}</h5>
             </div>
-            <div className="col-md-5 themed-grid-col">
-              <div className="row text-center">
-                <div className="col-md-4 themed-grid-col">
-                  <p>{ferias[0].length}</p>
-                </div>
-                <div className="col-md-4 themed-grid-col">
-                  <p>{totalFerias}</p>
-                </div>
-                <div className="col-md-4 themed-grid-col">
-                  <p>{feriasPorDar}</p>
-                </div>
 
+            <div className="col-md-5 themed-grid-col" style={{margin:"auto"}}>
+              <div className="row text-center">
+                <div className="col-md-4 themed-grid-col" style={{margin:"auto"}}>
+                  <p style={{margin:"auto"}}>{totalNumber}</p>
+                </div>
+                <div className="col-md-4 themed-grid-col" style={{margin:"auto"}}>
+                  <p style={{margin:"auto"}}>{totalNumberPossiveis + Number(addDias)}</p>
+                </div>
+                <div className="col-md-4 themed-grid-col" style={{margin:"auto"}}>
+                  <p style={{margin:"auto"}}>{feriasPorDar}</p>
+                </div>
               </div>
             </div>
 
 
-            <div className="col-md-1 themed-grid-col">
+            <div className="col-md-1 themed-grid-col" style={{margin:"auto"}}>
               <input
                 type="Number"
                 style={{
                   width: '100%',
                   minWidth: '40px',
                   maxWidth: '50px',
-                  margin: '2px',
                 }}
                 min="0"
                 id={"AddDias " + keyF}
@@ -251,7 +303,11 @@ const GerirHorasFeriasList = ({
                 className="form__field__date"
               />
             </div>
-            <div className="col-md-2 themed-grid-col">
+
+
+            <div className="col-md-2 themed-grid-col" style={{margin:"auto"}}>
+            {addDias > 0 ? (
+              <>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePicker
                   minDate={new Date('2015-01-01')} // Minimum year allowed
@@ -287,9 +343,32 @@ const GerirHorasFeriasList = ({
                   }
                 />
               </LocalizationProvider>
+              </>
+            ) :
+            (
+              <>
+                {ferias[1].length > 0 && (
+                  <div className="col-md-12 themed-grid-col text-end">
+                    <div className="row">
+                      <div className="col-md-10 btn-container">
+                        <button
+                          type="button"
+                          className="btn button-Dropdown"
+                          onClick={() => handleDropdownToggle(keyF)}
+                        >
+                          <FaCaretDown />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
             </div>
-            <div className='col-md-1 text-center'>
-              {addDias > 0 ? (
+
+
+            <div className='col-md-2 text-center' style={{margin:"auto"}}>
+              {addDias > 0 && (
                 <button
                   type='button'
                   className='btn btn-outline-primary buttonProjeto'
@@ -297,26 +376,7 @@ const GerirHorasFeriasList = ({
                 >
                   Adicionar
                 </button>
-              ) :
-                (
-                  <>
-                    {ferias[1].length > 0 && (
-                      <div className="col-md-8 themed-grid-col">
-                        <div className="row">
-                          <div className="col-md-10 btn-container">
-                            <button
-                              type="button"
-                              className="btn button-Dropdown"
-                              onClick={() => handleDropdownToggle(keyF)}
-                            >
-                              <FaCaretDown />
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </>
-                )}
+              )}
             </div>
             {addDias < 1 && showFerias[keyF] && (
 
@@ -327,52 +387,55 @@ const GerirHorasFeriasList = ({
                 <label className="switch">
                   <input
                     type="checkbox"
-                    checked={showFeriasSwitch[keyF]}
+                    checked={showFeriasSwitch[keyF] || false} 
                     onChange={() => handleSwitchToggle(keyF)}
                   />
                   <span className="slider round"></span>
                 </label>
               }
-                {!showFeriasSwitch[keyF] ? (<>
-                  <div className='row' >
-
+                {!showFeriasSwitch[keyF] ? (
+                  <div className='p-3' key={"key" + keyF}>
+ 
+                  <div className='row '  >
+                       
                     <div className="col-md-1 themed-grid-col"></div>
 
-                    <div className="col-md-3 themed-grid-col">
-                      <p>Responsável</p>
+                    <div className="col-md-3 themed-grid-col" style={{margin:"auto"}}>
+                      <p style={{margin:"auto"}}>Responsável</p>
                     </div>
 
-                    <div className="col-md-3 themed-grid-col">
-                      <p>Inseridos</p>
+                    <div className="col-md-3 themed-grid-col" style={{margin:"auto"}}>
+                      <p style={{margin:"auto"}}>Inseridos</p>
                     </div>
 
-                    <div className="col-md-3 themed-grid-col">
-                      Ano Correspondente
+                    <div className="col-md-3 themed-grid-col" style={{margin:"auto"}}>
+                      <p style={{margin:"auto"}}>Ano Correspondente</p>
                     </div>
                     <div className="col-md-2 themed-grid-col"></div>
                   </div>
 
                   {ferias[1].map((feriasYear, index) => {
+
                     return (
-                      <div className='row' >
+                      <div className='row' key={index}>
 
-                        <div className="col-md-1 themed-grid-col">
+                        <div className="col-md-1 themed-grid-col" style={{margin:"auto"}}>
 
                         </div>
-                        <div className="col-md-3 themed-grid-col">
-                          <p>{feriasYear.UtilizadorResponsavel}</p>
+                        <div className="col-md-3 themed-grid-col" style={{margin:"auto"}}>
+                          <p style={{margin:"auto"}}>{feriasYear.UtilizadorResponsavel}</p>
                         </div>
 
-                        <div className="col-md-3 themed-grid-col">
-                          <p>{feriasYear.Numero}</p>
+                        <div className="col-md-3 themed-grid-col" style={{margin:"auto"}}>
+                          <p style={{margin:"auto"}}>{feriasYear.Numero}</p>
                         </div>
 
-                        <div className="col-md-3 themed-grid-col">
-                          <p> {feriasYear.Ano}</p>
+                        <div className="col-md-3 themed-grid-col" style={{margin:"auto"}}>
+                          <p style={{margin:"auto"}}>{feriasYear.Ano}</p>
                         </div>
 
-                        <div className="col-md-2 themed-grid-col">
-                          <button type='submit' onClick={() => deleteDiasFerias(feriasYear._id)} className="btn">
+                        <div className="col-md-2 themed-grid-col" style={{margin:"auto"}}>
+                          <button style={{margin:"auto"}} type='submit' onClick={() => deleteDiasFerias(feriasYear._id)} className="btn">
                             <AiFillDelete />
                           </button>
                         </div>
@@ -382,9 +445,9 @@ const GerirHorasFeriasList = ({
                   )
                   }
 
-                </>) : (<>
+                </div>) : (<>
 
-                  <div className='row' >
+                  <div className='row p-3' >
 
                     <div className="col-md-1 themed-grid-col"></div>
 
@@ -407,7 +470,7 @@ const GerirHorasFeriasList = ({
                     const numero = feriasInsertedYear.numero;
                     const stringDates = feriasInsertedYear.string;
                     return (
-                      <div className='row' >
+                      <div className='row' key={keyF + Object.keys(arrayDataYear)[index]} >
                         <hr></hr>
                         <div className="col-md-1 themed-grid-col">
                         </div>

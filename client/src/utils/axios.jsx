@@ -5,8 +5,8 @@ import { getUserFromLocalStorage } from './localStorage';
 
 const customFetch = axios.create({
   // baseURL: 'http://localhost:8080/',
-  // baseURL: 'https://192.168.10.102:8080/',
-  baseURL: 'https://192.168.10.48:8080/',
+  baseURL: 'https://192.168.10.102:8080/',
+  // baseURL: 'https://192.168.10.48:8080/',
 });
 
 customFetch.interceptors.request.use((config) => {
@@ -15,6 +15,8 @@ customFetch.interceptors.request.use((config) => {
     if (utilizador && utilizador.user && utilizador.user.token) {
       config.headers['Authorization'] = `Bearer ${utilizador.user.token}`;
     }
+
+    config.headers['Content-Type'] = 'application/json; charset=utf-8';
   } catch (error) {
     console.error('Erro ao obter utilizador da Local Storage:', error);
   }

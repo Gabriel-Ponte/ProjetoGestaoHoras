@@ -9,8 +9,7 @@ import { getFeriasUtilizador } from '../features/ferias/feriasSlice';
 
 
 
-const AddFerias = ({ setAddFerias, verificaDia, Data, listaDias, projetos, accepted }) => {
-
+const AddFerias = ({ user, setAddFerias, verificaDia, Data, listaDias, accepted, getDates }) => {
   const { feriadosPortugal } = useFeriadosPortugal();
   const [fimFerias, setFimFerias] = useState(Data);
   const [selectedDates, setSelectedDates] = useState([]);
@@ -20,45 +19,58 @@ const AddFerias = ({ setAddFerias, verificaDia, Data, listaDias, projetos, accep
   const [pedidosFerias, setPedidosFerias] = useState(0);
   const [buttonClicked, setButtonClicked] = useState(false);
   const dispatch = useDispatch();
-  const { user } = useSelector((store) => store.utilizador);
+
+
 
   useEffect(() => {
-    verificaListaDias(Data, Data);
-    dispatch(getFeriasUtilizador(user?.user?.id)).then((res) => {
-      const feriasArray = Array.isArray(res?.payload?.feriasArray) ? res?.payload?.feriasArray : [];
+    initializeInputs();
+  },  [fimFerias, user]);
 
-      const totalNumber = feriasArray[1].reduce((acc, numberF) => {
+
+  const initializeInputs = useCallback(() => {
+    verificaData(Data);
+    const id = user?.user?.id ? user?.user?.id : user;
+    dispatch(getFeriasUtilizador(id)).then((res) => {
+      const feriasArray = Array.isArray(res?.payload?.feriasArray) ? res?.payload?.feriasArray : [];
+      if(feriasArray && feriasArray.length > 0){
+        const totalNumber = feriasArray[1].reduce((acc, numberF) => {
         const number = numberF.Numero;
         return acc + number;
       }, 0);
-      
+
       const feriasPorDar = totalNumber - feriasArray[0].length;
       const pedidosPorAceitar = feriasArray[2].length;
       // setFeriasArray(feriasArray);
       setFeriasPossiveis(feriasPorDar);
       setPedidosFerias(pedidosPorAceitar);
-
+    }
     })
-    
-  }, []);
+}, [Data, user]);
 
   const verificaData = useCallback((e) => {
-    const inData = new Date(e?.target?.value);
+    const data = e?.target?.value ? e?.target?.value : e;
+    const inData = new Date(data);
     const fData = new Date(fimFerias);
-    e.target.name = "Data";
+
     if (inData > fData) {
-      setFimFerias(e?.target?.value)
-      verificaListaDias(e?.target?.value, e?.target?.value);
-      verificaDia(e);
+      setFimFerias(inData)
+      verificaListaDias(inData, inData);
+      if(accepted === 0){
+        verificaDia(data);
+      }
+
 
 
     } else {
-      verificaListaDias(e?.target?.value, fimFerias);
-      verificaDia(e);
+      verificaListaDias(inData, fimFerias);
+      if(accepted === 0){
+        verificaDia(data);
+      }
+
     }
 
 
-  }, [listaDias?.length, Data, fimFerias, projetos]);
+  }, [Data, fimFerias]);
 
 
 
@@ -84,9 +96,9 @@ const AddFerias = ({ setAddFerias, verificaDia, Data, listaDias, projetos, accep
 
       if (dayOfWeek !== 0 && dayOfWeek !== 6 && !feriadosPortugal(currentDate)) {
         // Check if the current date is already in listaDias
-        const isDateInList = listaDias.some(item =>
+        const isDateInList = listaDias.length > 0 ? listaDias?.some(item =>
           toLocalDate(item.Data).toDateString() === currentDate.toDateString()
-        );
+        ) : false;
 
 
         if (!isDateInList) {
@@ -99,6 +111,9 @@ const AddFerias = ({ setAddFerias, verificaDia, Data, listaDias, projetos, accep
       // Move to the next day
       currentDate.setDate(currentDate.getDate() + 1);
     }
+    if(getDates){
+      getDates(dates);
+    }
 
     setSelectedDates(dates);
     arrayListaDias(dates);
@@ -109,8 +124,8 @@ const AddFerias = ({ setAddFerias, verificaDia, Data, listaDias, projetos, accep
   const arrayListaDias = async (datesReceived) => {
     datesReceived.sort((a, b) => new Date(a) - new Date(b));
     const startDate = new Date(datesReceived[0]);
-    const endDate = new Date(datesReceived[datesReceived.length -1]);
-  
+    const endDate = new Date(datesReceived[datesReceived.length - 1]);
+
     const dates = [];
     // Create a date instance for iterating
     let currentDate = new Date(startDate);
@@ -118,31 +133,31 @@ const AddFerias = ({ setAddFerias, verificaDia, Data, listaDias, projetos, accep
     while (toLocalDate(currentDate) <= toLocalDate(endDate)) {
       // Check if the current day is a weekday (not Saturday or Sunday)
       const dayOfWeek = currentDate.getDay();
-  
-      if(!dates[count]){
+
+      if (!dates[count]) {
         dates[count] = [];
       }
-      if (dayOfWeek !== 0 && dayOfWeek !== 6 && !feriadosPortugal(currentDate) && (datesReceived.some(item => (new Date (item)).getDate() === currentDate.getDate())) ) {
+      if (dayOfWeek !== 0 && dayOfWeek !== 6 && !feriadosPortugal(currentDate) && (datesReceived.some(item => (new Date(item)).getDate() === currentDate.getDate()))) {
         // Check if the current date is already in listaDias
         dates[count].push(new Date(currentDate));
-    } else{
-      if(dates[count]?.length > 0){
-        count++;
+      } else {
+        if (dates[count]?.length > 0) {
+          count++;
+        }
       }
-    }
       // Move to the next day
       currentDate.setDate(currentDate.getDate() + 1);
-   }
+    }
 
-   const stringD = stringListaDias(dates);
-   setStringDates(stringD);
-   return dates;
+    const stringD = stringListaDias(dates);
+    setStringDates(stringD);
+    return dates;
   };
 
   const stringListaDias = useCallback((dates) => {
     try {
       let data = "";
-      if(!dates || dates.length === 0){
+      if (!dates || dates.length === 0) {
         return data;
       }
 
@@ -185,20 +200,20 @@ const AddFerias = ({ setAddFerias, verificaDia, Data, listaDias, projetos, accep
   }, [Data]);
 
   const verificaFim = useCallback((e) => {
-    const { value } = e.target;
-    e.target.name = "Data";
+    const data = e.target.value;
+    const value = data;
     const inData = new Date(Data);
     const fData = new Date(value);
 
     if (fData < inData) {
 
-      verificaDia(e)
+      verificaDia(data)
     }
 
     setFimFerias(value)
     verificaListaDias(Data, value)
 
-    for (let i = 0; i < listaDias.length; i++) {
+    for (let i = 0; i < listaDias?.length; i++) {
       const DataRecebida = new Date(listaDias[i].Data);
 
       const itemDay = fData.getDate();
@@ -233,8 +248,7 @@ const AddFerias = ({ setAddFerias, verificaDia, Data, listaDias, projetos, accep
     }
     return;
 
-  }, [listaDias?.length, Data, fimFerias, projetos]);
-
+  }, [listaDias?.length, Data, fimFerias]);
 
   const handleInsertFerias = async (e) => {
     setButtonClicked(true);
@@ -246,10 +260,9 @@ const AddFerias = ({ setAddFerias, verificaDia, Data, listaDias, projetos, accep
       setButtonClicked(false);
       return;
     }
-
-
+    const id = user?.user?.id ? user?.user?.id : user;
     const values = {
-      Utilizador: user?.user?.id,
+      Utilizador: id,
       Dias: selectedDates,
       accepted: accepted,
     }
@@ -261,54 +274,53 @@ const AddFerias = ({ setAddFerias, verificaDia, Data, listaDias, projetos, accep
     }, 500);
   };
 
-
   return (
     <div className="container">
-      <div className='row'>
-        <div className='col-4'>
-          <h3>Adicionar Ferias</h3>
-        </div>
-        <div className='col-4  d-flex flex-column justify-content-center align-items-center'>
-          <button
-            type="submit"
-            onClick={(e) => { setAddFerias(false) }}
-            disabled={buttonClicked}
-            className='button-30'
-            style={{
-              fontSize: "95%",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-              display: "inline-block",
-              lineHeight: "normal",
-              width: 'auto',
-              height: 'auto',
-            }}
-          >
-            Adicionar Dias
-          </button>
-        </div>
-        <div className='col-4 text-end'>
 
-              {pedidosFerias > 0 ? 
+        <div className='row'>
+          <div className='col-4'>
+            <h3>Adicionar Ferias</h3>
+          </div>
+          <div className='col-4  d-flex flex-column justify-content-center align-items-center'>
+            <button
+              type="submit"
+              onClick={(e) => { setAddFerias(false) }}
+              disabled={buttonClicked}
+              className='button-30'
+              style={{
+                fontSize: "95%",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+                display: "inline-block",
+                lineHeight: "normal",
+                width: 'auto',
+                height: 'auto',
+              }}
+            >
+              Adicionar Dias
+            </button>
+          </div>
+          <div className='col-4 text-end'>
+
+            {pedidosFerias > 0 ?
               <>
-                      <div className='row'>
-                <h5>{feriasPossiveis ? 'Férias por reclamar: ' + feriasPossiveis : ''}</h5>
-              </div>
-              <div className='row'>
-                <h5>{pedidosFerias ? 'Férias por aceitar: ' + pedidosFerias : ''}</h5>
-              </div> 
+                <div className='row'>
+                  <h5>{feriasPossiveis ? 'Férias por reclamar: ' + feriasPossiveis : ''}</h5>
+                </div>
+                <div className='row'>
+                  <h5>{pedidosFerias ? 'Férias por aceitar: ' + pedidosFerias : ''}</h5>
+                </div>
               </> :
-        
-                      <div className='row'>
-                      <h4>{feriasPossiveis ? 'Férias por reclamar: ' + feriasPossiveis : ''}</h4>
-                    </div>
-              }
+
+              <div className='row'>
+                <h4>{feriasPossiveis ? 'Férias por reclamar: ' + feriasPossiveis : ''}</h4>
               </div>
-              
-      </div>
+            }
+          </div>
 
-
+        </div>
+  
       <div className='row'>
         <div className='col-6'>
           <FormRow
@@ -320,7 +332,7 @@ const AddFerias = ({ setAddFerias, verificaDia, Data, listaDias, projetos, accep
             name="Inicio"
             placeholder="Dia Adicionar Horas"
             value={Data ? new Date(Data).toLocaleDateString('en-CA') : ''}
-            handleChange={verificaData}
+            handleChange={(e) => verificaData(e)}
           />
         </div>
 
@@ -333,7 +345,7 @@ const AddFerias = ({ setAddFerias, verificaDia, Data, listaDias, projetos, accep
             id="fimFerias"
             name="Fim"
             value={fimFerias ? new Date(fimFerias).toLocaleDateString('en-CA') : ''}
-            handleChange={verificaFim}
+            handleChange={(e) => verificaFim(e)}
           />
         </div>
       </div>
@@ -342,16 +354,15 @@ const AddFerias = ({ setAddFerias, verificaDia, Data, listaDias, projetos, accep
         <div className="card-body">
           {stringDates ? (
             <>
-            <h4>{selectedDates.length === 1 ? "Dia": "Dias"}</h4>
-            <p dangerouslySetInnerHTML={{ __html: stringDates }} />
+              <h4>{selectedDates.length === 1 ? "Dia" : "Dias"}</h4>
+              <p dangerouslySetInnerHTML={{ __html: stringDates }} />
             </>
           ) : (
             <p>Dias escolhidos inválidos!</p>
           )}
 
-
         </div>
-        </div>
+      </div>
       <div className="card text-center">
         <div className="card-body">
           <h5 className="card-title">
@@ -374,7 +385,6 @@ const AddFerias = ({ setAddFerias, verificaDia, Data, listaDias, projetos, accep
   );
 };
 
-
 AddFerias.propTypes = {
   setAddFerias: PropTypes.func.isRequired,
   verificaDia: PropTypes.func.isRequired,
@@ -382,11 +392,16 @@ AddFerias.propTypes = {
     PropTypes.object.isRequired,
     PropTypes.string.isRequired
   ]).isRequired,
-  listaDias: PropTypes.array.isRequired,
-  projetos: PropTypes.array.isRequired,
+  listaDias: PropTypes.oneOfType([
+    PropTypes.object.isRequired,
+    PropTypes.array.isRequired
+  ]).isRequired,
   accepted: PropTypes.number.isRequired,
+  user: PropTypes.oneOfType([
+    PropTypes.object.isRequired,
+    PropTypes.string.isRequired
+  ]).isRequired,
 }
-
 
 
 export default memo(AddFerias);

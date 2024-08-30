@@ -146,7 +146,7 @@ const allDiasSlice = createSlice({
     })
 
     .addCase(getAllDiasUtilizador.fulfilled, (state, { payload }) => {
-      state.dias = payload.diasAllUtilizador;
+      state.dias = payload?.diasAllUtilizador ? payload?.diasAllUtilizador : [];
       state.isLoading = false;
 
     })

@@ -150,7 +150,7 @@ const getTipoTrabalhoProjeto = async (req, res) => {
 
 
 const createProjeto = async (req, res) => {
-  let {Cliente , DataInicio, DataObjetivo, DataFim, Notas, OrcamentoAprovado, Nome ,Tema , Acao, TipoTrabalho, Piloto, Links, LinkResumo} = req.body;
+  let { Cliente, DataInicio, DataObjetivo, DataFim, Notas, OrcamentoAprovado, Nome, Tema, Acao, TipoTrabalho, Piloto, Links, LinkResumo } = req.body;
 
   Cliente = sanitizeHtml(Cliente);
   DataInicio = sanitizeHtml(DataInicio);
@@ -172,7 +172,7 @@ const createProjeto = async (req, res) => {
     DataObjetivo,
     DataFim,
     Notas,
-    OrcamentoAprovado, 
+    OrcamentoAprovado,
     Nome,
     Tema,
     Acao,

@@ -21,7 +21,6 @@ export const getFeriasUtilizadorThunk = async (diasFeriasId, thunkAPI) => {
     const resp = await customFetch.get(`/ferias/${diasFeriasId}`);
     return resp.data;
   } catch (error) {
-    thunkAPI.dispatch(hideLoading());
     return checkForUnauthorizedResponse(error, thunkAPI);
   }
 };
@@ -41,7 +40,6 @@ export const deleteDiasFeriasThunk = async (diasFeriasId, thunkAPI) => {
     const resp = await customFetch.delete(`/ferias/${diasFeriasId}`);
     return resp.data.msg;
   } catch (error) {
-    thunkAPI.dispatch(hideLoading());
     return checkForUnauthorizedResponse(error, thunkAPI);
   }
 };

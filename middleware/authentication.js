@@ -1,4 +1,3 @@
-const User = require("../models/Utilizador");
 const jwt = require("jsonwebtoken");
 const { UnauthenticatedError } = require("../errors");
 
@@ -6,7 +5,9 @@ const auth = async (req, res, next) => {
   // check header
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer")) {
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
     throw new UnauthenticatedError("Autenticação invalida");
+
   }
   const token = authHeader.split(" ")[1];
 

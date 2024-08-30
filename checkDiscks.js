@@ -30,11 +30,11 @@ function findFolderByName(folderName, startPath = path.parse(process.cwd()).root
 const folderNameToFind = 'isqctag';
 const folderPath = findFolderByName(folderNameToFind);
 
-if (folderPath) {
-    // console.log(`Folder '${folderNameToFind}' found at: ${folderPath}`);
-} else {
-    // console.log(`Folder '${folderNameToFind}' not found.`);
-}
+// if (folderPath) {
+//     // console.log(`Folder '${folderNameToFind}' found at: ${folderPath}`);
+// } else {
+//     // console.log(`Folder '${folderNameToFind}' not found.`);
+// }
 
 //let win;
 // function createWindow() {
@@ -93,8 +93,8 @@ if (folderPath) {
 // // Get information about the disks
 // const disks = os.platform() === 'win32' ? os.networkInterfaces() : os.homedir();
 // const osInfo = navigator.appVersion;
-// console.log('Operating System Information:', osInfo);
-// console.log('Disks:', disks);
+// console.info('Operating System Information:', osInfo);
+// console.info('Disks:', disks);
 
 // const os = require('os');
 
@@ -104,11 +104,11 @@ if (folderPath) {
 // if (platform === 'win32') {
 //   // For Windows
 //   const drives = os.cpus().map(cpu => cpu.times);
-//   console.log('Active drives:', drives);
+//   console.info('Active drives:', drives);
 // } else if (platform === 'linux') {
 //   // For Linux
 //   const partitions = os.networkInterfaces(); // Example, you might need a different approach on Linux
 //   console.log('Active partitions:', partitions);
 // } else {
-//   console.log('Unsupported operating system');
+//   console.info('Unsupported operating system');
 // }

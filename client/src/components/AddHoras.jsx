@@ -364,7 +364,6 @@ const ListaProjetos = () => {
 
 
   const verificaDia = useCallback((e) => {
-
     if(constLoaded && (projetos.length > 0)){
     setVerificaCopiarHoras(false);
     const { name, value } = e.target;
@@ -1220,8 +1219,8 @@ const ListaProjetos = () => {
             verificaDia={verificaDia}
             Data={values?.Data}
             listaDias={listaDias}
-            projetos={projetos}
             accepted={1}
+            user={user}
         />
   </Wrapper>
     )

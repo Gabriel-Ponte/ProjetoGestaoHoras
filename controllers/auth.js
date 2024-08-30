@@ -7,50 +7,68 @@ const crypto = require('crypto');
 const sanitizeHtml = require('sanitize-html');
 
 const getAllUser = async (req, res) => {
-  const UsersAll = await User.find();
+  try {
+    const UsersAll = await User.find();
 
-  if (!UsersAll) {
-    throw new NotFoundError(`Não foi encontrado nenhum utilizador`);
+    if (!UsersAll) {
+      throw new NotFoundError(`Não foi encontrado nenhum utilizador`);
+    }
+
+
+    res.status(StatusCodes.OK).json({ UsersAll });
+  } catch (error) {
+    console.error("getAllUser ", error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Erro interno do servidor.' });
   }
-  res.status(StatusCodes.OK).json({ UsersAll });
 };
 
 const getAllUserTipo = async (req, res) => {
+  try {
+    let {
+      params: { tipo: tipo },
+    } = req;
 
-  let {
-    params: { tipo: tipo },
-  } = req;
+    const UsersAllTipo = await User.find({ tipo: tipo, estado: true }, { _id: 1, nome: 1 });
 
-  const UsersAllTipo = await User.find({ tipo: tipo  , estado : true}, { _id: 1, nome: 1 });
-
-  if (!UsersAllTipo) {
-    throw new NotFoundError(`Não foi encontrado nenhum utilizador`);
+    if (!UsersAllTipo) {
+      throw new NotFoundError(`Não foi encontrado nenhum utilizador`);
+    }
+    res.status(StatusCodes.OK).json({ UsersAllTipo });
+  } catch (error) {
+    console.error("getAllUserTipo ", error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Erro interno do servidor.' });
   }
-  res.status(StatusCodes.OK).json({ UsersAllTipo });
 };
 
 
 
 const getUser = async (req, res) => {
-  let {
-    params: { id: userID },
-  } = req;
-  userID = sanitizeHtml(userID);
-  const user = await User.findOne({
-    _id: userID,
-  });
-  if (!user) {
-    throw new NotFoundError(`Nenhum utilizador com id: ${userID}`);
+  try {
+    let {
+      params: { id: userID },
+    } = req;
+    userID = sanitizeHtml(userID);
+    const user = await User.findOne({
+      _id: userID,
+    });
+    if (!user) {
+      throw new NotFoundError(`Nenhum utilizador com id: ${userID}`);
+    }
+    res.status(StatusCodes.OK).json({ user });
+
+  } catch (error) {
+    console.error("getUser ", error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Erro interno do servidor.' });
   }
-  res.status(StatusCodes.OK).json({ user });
 };
 
 
 
+
 const postResetPassword = async (req, res) => {
-  let { email: email } = req.params;
-  email = sanitizeHtml(email);
   try {
+    let { email: email } = req.params;
+    email = sanitizeHtml(email);
     const user = await User.findOne({
       email: email,
     });
@@ -61,7 +79,7 @@ const postResetPassword = async (req, res) => {
     if (user.estado === false) {
       throw new Error('Conta encontra-se inativa!');
     }
-    
+
     // Generate a password reset token
     const token = crypto.randomBytes(20).toString('hex');
 
@@ -88,7 +106,7 @@ const postResetPassword = async (req, res) => {
 
     // Generate a password reset link
     const resetLink = `${process.env.LOCALHOSTCLIENT}/paginaResetPasswordChange/${token}`;
-    
+
     // Configure the email details
     const mailOptions = {
       from: process.env.EMAIL, // Sender's email address
@@ -110,9 +128,9 @@ const postResetPassword = async (req, res) => {
     // Send an error response
     if (error instanceof NotFoundError) {
       res.status(404).json({ error: error.message });
-      console.error(error)
+      console.error("postResetPassword ", error);
     } else {
-      console.error(error)
+      console.error("postResetPassword ", error);
       res.status(500).json({ error: 'Ocorreu um erro ao tentar resetar a senha, por favor tente novamente.' });
     }
   }
@@ -121,11 +139,12 @@ const postResetPassword = async (req, res) => {
 // Express route for handling the password update request
 const updateResetedPassword = async (req, res) => {
   //const { token } = req.params;
-  let { token } = req.body;
-  let { password } = req.body;
-  token = sanitizeHtml(token);
-  password = sanitizeHtml(password);
   try {
+    let { token } = req.body;
+    let { password } = req.body;
+    token = sanitizeHtml(token);
+    password = sanitizeHtml(password);
+
     // Find the user by the reset password token and check if it has not expired
     const user = await User.findOne({
       resetPasswordToken: token,
@@ -152,267 +171,294 @@ const updateResetedPassword = async (req, res) => {
     // Send a success response
     res.json({ message: 'Password alterada com sucesso' });
   } catch (error) {
-    console.error(error);
-    // Send an error response
-    res.status(500).json({ error: 'Ocorreu um erro ao alterar a password. Por favor tente outra vez' });
+    console.error("updateResetedPassword ", error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Erro interno do servidor.' });
   }
 };
+
 
 
 
 const getUserEmail = async (req, res) => {
-  let {
-    params: { Email: Email, userID: userID },
-  } = req;
+  try {
+    let {
+      params: { Email: Email, userID: userID },
+    } = req;
 
-  Email = sanitizeHtml(Email);
-  userID = sanitizeHtml(userID);
-  const user = await User.findOne({
-    _id: userID,
-  });
-  if (!user) {
-    throw new NotFoundError(`Nenhum utilizador com id: ${userID}`);
+    Email = sanitizeHtml(Email);
+    userID = sanitizeHtml(userID);
+    const user = await User.findOne({
+      _id: userID,
+    });
+    if (!user) {
+      throw new NotFoundError(`Nenhum utilizador com id: ${userID}`);
+    }
+    res.status(StatusCodes.OK).json({ user });
+  } catch (error) {
+    console.error("getUserEmail ", error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Erro interno do servidor.' });
   }
-  res.status(StatusCodes.OK).json({ user });
 };
 
 const register = async (req, res) => {
-
-  let { login, password, codigo, email, nome, tipo, responsavel } = req.body;
-
-  login = sanitizeHtml(login);
-  password = sanitizeHtml(password);
-  codigo = sanitizeHtml(codigo);
-  email = sanitizeHtml(email);
-  nome = sanitizeHtml(nome);
-  tipo = sanitizeHtml(tipo);
-  responsavel = sanitizeHtml(responsavel);
-  let foto = req.body.foto;
-
-  const sanitizedFoto = {};
-  for (const key in foto?.data) {
-    if (Object.hasOwnProperty.call(foto?.data, key)) {
-      sanitizedFoto[key] = sanitizeHtml(foto?.data[key]);
-    }
-  }
   try {
+    let { login, password, codigo, email, nome, tipo, responsavel } = req.body;
 
-    const buffer = Buffer.from(new Uint8Array(Object?.values(sanitizedFoto)));// convert the Uint8Array to a Buffer
+    login = sanitizeHtml(login);
+    password = sanitizeHtml(password);
+    codigo = sanitizeHtml(codigo);
+    email = sanitizeHtml(email);
+    nome = sanitizeHtml(nome);
+    tipo = sanitizeHtml(tipo);
+    responsavel = sanitizeHtml(responsavel);
+    let foto = req.body.foto;
 
-    const user = await User.create({
-      login,
-      password,
-      codigo,
-      email,
-      nome,
-      tipo,
-      foto: {
-        data: buffer,
-        contentType: 'image/png'
-      },
-      estado: true,
-      responsavel: responsavel,
-    });
+    const sanitizedFoto = {};
+    for (const key in foto?.data) {
+      if (Object.hasOwnProperty.call(foto?.data, key)) {
+        sanitizedFoto[key] = sanitizeHtml(foto?.data[key]);
+      }
+    }
+    try {
 
-    res.status(StatusCodes.CREATED).json({
-      user: {
-        login: user.login,
-        password: user.password,
-        codigo: user.codigo,
-        email: user.email,
+      const buffer = Buffer.from(new Uint8Array(Object?.values(sanitizedFoto)));// convert the Uint8Array to a Buffer
+
+      const user = await User.create({
+        login,
+        password,
+        codigo,
+        email,
+        nome,
+        tipo,
         foto: {
           data: buffer,
           contentType: 'image/png'
         },
-        nome: user.nome,
-        tipo: user.tipo,
-        estado: user.estado,
+        estado: true,
         responsavel: responsavel,
-      },
-    });
-  } catch (error) {
-    if (error.code === 11000 || error.code === 11001) {
-      // Duplicate key error (MongoDB error code)
-      const duplicateKey = Object.keys(error.keyPattern)[0];
-      res.status(StatusCodes.CONFLICT).json({ error: `Valor duplicado. O valor '${duplicateKey}' já se encontra em uso.` });
-    }else {
-      // Other errors
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Falha no Registo.' });
+      });
+
+      res.status(StatusCodes.CREATED).json({
+        user: {
+          login: user.login,
+          password: user.password,
+          codigo: user.codigo,
+          email: user.email,
+          foto: {
+            data: buffer,
+            contentType: 'image/png'
+          },
+          nome: user.nome,
+          tipo: user.tipo,
+          estado: user.estado,
+          responsavel: responsavel,
+        },
+      });
+    } catch (error) {
+      if (error.code === 11000 || error.code === 11001) {
+        // Duplicate key error (MongoDB error code)
+        const duplicateKey = Object.keys(error.keyPattern)[0];
+        res.status(StatusCodes.CONFLICT).json({ error: `Valor duplicado. O valor '${duplicateKey}' já se encontra em uso.` });
+      } else {
+        // Other errors
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Falha no Registo.' });
+      }
     }
+  } catch (error) {
+    console.error("register ", error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Erro interno do servidor.' });
   }
 };
 
 
 
 const login = async (req, res) => {
-  let { email, password } = req.body;
-  email = sanitizeHtml(email);
-  password = sanitizeHtml(password);
+  try {
+    let { email, password } = req.body;
+    email = sanitizeHtml(email);
+    password = sanitizeHtml(password);
 
-  if (!email || !password) {
-    throw new BadRequestError("");
-  }
-  const user = await User.findOne({ email });
-  if (!user) {
-    throw new UnauthenticatedError("Credenciais Invalidas");
-  } else {
-    const isPasswordCorrect = await user.comparePassword(password);
-    if (!isPasswordCorrect) {
-      throw new UnauthenticatedError("Password incorreta");
+    if (!email || !password) {
+      throw new BadRequestError("");
     }
-  }
+    const user = await User.findOne({ email });
+    if (!user) {
+      throw new UnauthenticatedError("Credenciais Invalidas");
+    } else {
+      const isPasswordCorrect = await user.comparePassword(password);
+      if (!isPasswordCorrect) {
+        throw new UnauthenticatedError("Password incorreta");
+      }
+    }
 
-  var timestamp = user?._id?.getTimestamp();
-  
-  // compare password
-  const token = user.createJWT();
-  res.status(StatusCodes.OK).json({
-    user: {
-      id: user._id,
-      login: user.login,
-      password: user.password,
-      codigo: user.codigo,
-      email: user.email,
-      foto: user.foto,
-      nome: user.nome,
-      tipo: user.tipo,
-      estado: user.estado,
-      responsavel: user.responsavel,
-      timestamp: timestamp,
-      token,
-    },
-  });
+    var timestamp = user?._id?.getTimestamp();
+
+    // compare password
+    const token = user.createJWT();
+    res.status(StatusCodes.OK).json({
+      user: {
+        id: user._id,
+        login: user.login,
+        password: user.password,
+        codigo: user.codigo,
+        email: user.email,
+        foto: user.foto,
+        nome: user.nome,
+        tipo: user.tipo,
+        estado: user.estado,
+        responsavel: user.responsavel,
+        timestamp: timestamp,
+        token,
+      },
+    });
+  } catch (error) {
+    console.error("login ", error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Erro interno do servidor.' });
+  }
 };
 
 const updateUser = async (req, res) => {
+  try {
+    let { login, password, codigo, email, nome, tipo, estado, _id } = req.body;
 
-  let { login, password, codigo, email, nome, tipo,estado, _id } = req.body;
-
-  login = sanitizeHtml(login);
-  password = sanitizeHtml(password);
-  codigo = sanitizeHtml(codigo);
-  email = sanitizeHtml(email);
-  nome = sanitizeHtml(nome);
-  tipo = sanitizeHtml(tipo);
-  if(estado !== true && estado !== false){
-    estado = sanitizeHtml(estado);
-  }
-
-  _id = sanitizeHtml(_id);
-
-
-  let foto = req.body?.foto;
-
-  const sanitizedFoto = {};
-
-  for (const key in foto?.data) {
-    if (Object.hasOwnProperty.call(foto?.data, key)) {
-      sanitizedFoto[key] = sanitizeHtml(foto?.data[key]);
+    login = sanitizeHtml(login);
+    password = sanitizeHtml(password);
+    codigo = sanitizeHtml(codigo);
+    email = sanitizeHtml(email);
+    nome = sanitizeHtml(nome);
+    tipo = sanitizeHtml(tipo);
+    if (estado !== true && estado !== false) {
+      estado = sanitizeHtml(estado);
     }
-  }
-  try{
-    const buffer = Buffer.from(new Uint8Array(Object?.values(sanitizedFoto)));// convert the Uint8Array to a Buffer
-    // Generate a password reset token
-    const tokenP = crypto.randomBytes(20).toString('hex');
 
-   // Set the token and its expiration date in the user's document
+    _id = sanitizeHtml(_id);
 
-  if (!login || !email || !email || !foto || !nome || !tipo) {
-    throw new BadRequestError("Insira todos os valores");
-  }
+    let foto = req.body?.foto;
 
-  const user = await User.findOne({ _id: _id });
+    const sanitizedFoto = {};
 
-  user.id = _id;
-  user.login = login;
-  user.password = password;
-  user.codigo = codigo;
-  user.email = email;
-  user.nome = nome;
-  user.tipo = tipo;
+    for (const key in foto?.data) {
+      if (Object.hasOwnProperty.call(foto?.data, key)) {
+        sanitizedFoto[key] = sanitizeHtml(foto?.data[key]);
+      }
+    }
+    try {
+      const buffer = Buffer.from(new Uint8Array(Object?.values(sanitizedFoto)));// convert the Uint8Array to a Buffer
+      // Generate a password reset token
+      const tokenP = crypto.randomBytes(20).toString('hex');
 
-  if(buffer){
-    user.foto = {
-      data: buffer,
-      contentType: 'image/png' // set the content type of the file to the foto.contentType property
-    };
-  }
+      // Set the token and its expiration date in the user's document
 
-  user.estado = estado;
-  await user.save();
+      if (!login || !email || !email || !foto || !nome || !tipo) {
+        throw new BadRequestError("Insira todos os valores");
+      }
 
-  const token = user.createJWT();
-  res.status(StatusCodes.OK).json({
-    user: {
-      id: user._id,
-      login: user.login,
-      password: user.password,
-      codigo: user.codigo,
-      email: user.email,
-      foto: user.foto,
-      nome: user.nome,
-      tipo: user.tipo,
-      estado: user.estado,
-      token,
-    },
-  });
-  }catch (error) {
-    console.error(error);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Falha no registo.' });
+      const user = await User.findOne({ _id: _id });
+
+      user.id = _id;
+      user.login = login;
+      user.password = password;
+      user.codigo = codigo;
+      user.email = email;
+      user.nome = nome;
+      user.tipo = tipo;
+
+      if (buffer) {
+        user.foto = {
+          data: buffer,
+          contentType: 'image/png' // set the content type of the file to the foto.contentType property
+        };
+      }
+
+      user.estado = estado;
+      await user.save();
+
+      const token = user.createJWT();
+      res.status(StatusCodes.OK).json({
+        user: {
+          id: user._id,
+          login: user.login,
+          password: user.password,
+          codigo: user.codigo,
+          email: user.email,
+          foto: user.foto,
+          nome: user.nome,
+          tipo: user.tipo,
+          estado: user.estado,
+          token,
+        },
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Falha no registo.' });
+    }
+  } catch (error) {
+    console.error("updateUser ", error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Erro interno do servidor.' });
   }
 };
+
 
 const updateUserType = async (req, res) => {
-  let { tipo, _id, responsavel } = req.body;
-  
-  responsavel = sanitizeHtml(responsavel);
-  tipo = sanitizeHtml(tipo);
-  _id = sanitizeHtml(_id);
+  try {
+    let { tipo, _id, responsavel } = req.body;
 
-  try{
-  const user = await User.findOne({ _id: _id });
+    responsavel = sanitizeHtml(responsavel);
+    tipo = sanitizeHtml(tipo);
+    _id = sanitizeHtml(_id);
 
-  user.tipo = tipo;
-  user.responsavel = responsavel;
-  await user.save();
+    try {
+      const user = await User.findOne({ _id: _id });
 
-  const token = user.createJWT();
-  res.status(StatusCodes.OK).json({
-    user: {
-      id: user._id,
-      login: user.login,
-      password: user.password,
-      codigo: user.codigo,
-      email: user.email,
-      foto: user.foto,
-      nome: user.nome,
-      tipo: user.tipo,
-      estado: user.estado,
-      token,
-    },
-  });
-  
-  }catch (error) {
-    console.error(error);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Falha no registo.' });
+      user.tipo = tipo;
+      user.responsavel = responsavel;
+      await user.save();
+
+      const token = user.createJWT();
+      res.status(StatusCodes.OK).json({
+        user: {
+          id: user._id,
+          login: user.login,
+          password: user.password,
+          codigo: user.codigo,
+          email: user.email,
+          foto: user.foto,
+          nome: user.nome,
+          tipo: user.tipo,
+          estado: user.estado,
+          token,
+        },
+      });
+
+    } catch (error) {
+      console.error(error);
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Falha no registo.' });
+    }
+  } catch (error) {
+    console.error("updateUserType ", error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Erro interno do servidor.' });
   }
 };
 
-
 const deleteUser = async (req, res) => {
-  let {
-    params: { id: utilizadorId },
-  } = req;
-  
-  utilizadorId = sanitizeHtml(utilizadorId);
+  try {
+    let {
+      params: { id: utilizadorId },
+    } = req;
 
-  const utilizador = await User.findOneAndDelete({
-    _id: utilizadorId,
-  });
-  if (!utilizador) {
-    throw new NotFoundError(`Não existe nenhum utilizador com este id ${utilizadorId}`);
+    utilizadorId = sanitizeHtml(utilizadorId);
+
+    const utilizador = await User.findOneAndDelete({
+      _id: utilizadorId,
+    });
+    if (!utilizador) {
+      throw new NotFoundError(`Não existe nenhum utilizador com este id ${utilizadorId}`);
+    }
+    res.status(StatusCodes.OK).send();
+  } catch (error) {
+    console.error("deleteUser ", error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Erro interno do servidor.' });
   }
-  res.status(StatusCodes.OK).send();
 };
 
 module.exports = {

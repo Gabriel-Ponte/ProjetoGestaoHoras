@@ -30,7 +30,7 @@ const DiasSchema = new mongoose.Schema(
         Data: {
             type: Date,
             //required: [true, "Please provide a valid Date"],
-            default: "",
+            // default: "",
         },
         NumeroHoras: {
             type: Number,
@@ -38,14 +38,13 @@ const DiasSchema = new mongoose.Schema(
         },
         tipoDeTrabalhoHoras: {
             type: [TipoTrabalhoHorasSchema],
-            required: true,
+            required: [true, "Por favor insira um tipo de Trabalho"],
         },
         Utilizador: {
             //type: mongoose.Types.ObjectId,
             //ref: "Utilizador",
             type: String,
             required: [true, "Por favor insira um utilizador"],
-            default:"",
         },
         accepted: {
           type: Number,
@@ -53,7 +52,7 @@ const DiasSchema = new mongoose.Schema(
         },
         associated: {
           type: String,
-          required: false,
+          default: "",
         },
         _id_Group: {
           type: Number,
@@ -70,6 +69,7 @@ DiasSchema.pre('save', async function(next) {
         { $inc: { sequence_valueD: 1 } },
         { returnOriginal: false, upsert: true }
     );
+
     doc._id_D = sequence.sequence_valueD;
     next();
 });
@@ -78,17 +78,14 @@ async function upgradeGroup() {
   try {
     const sequence = await Counter.findOneAndUpdate(
       { _id_Group: '_id_Group' },
-      { $inc: { sequence_valueD: 1 } },
+      { $inc: { sequence_valueG: 1 } },
       { returnOriginal: false, upsert: true }
     );
 
-    const groupId = sequence.sequence_valueD;
-
-
-
-    return groupId; // Return the groupId for use by the caller
+    return sequence.sequence_valueG; 
   } catch (error) {
-    next(error); // Pass the error to the next error-handling middleware
+    console.error("UpgradeGroup" , error)
+    throw new Error('Failed to upgrade group ID'); // Throw error to be handled by the caller
   }
 }
 

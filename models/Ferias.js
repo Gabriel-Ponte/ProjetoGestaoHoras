@@ -10,8 +10,7 @@ const FeriasSchema = new mongoose.Schema(
         },
         Ano: {
             type: Number,
-            //required: [true, "Please provide a valid Date"],
-            default: "",
+            required: [true, "Please provide a valid Number"],
         },
 
         Numero: {
@@ -22,12 +21,10 @@ const FeriasSchema = new mongoose.Schema(
         Utilizador: {
             type: String,
             required: [true, "Por favor insira um utilizador"],
-            default:"",
         },
         UtilizadorResponsavel: {
             type: String,
             required: [true, "Por favor insira um utilizador Responsavel"],
-            default:"",
         },
     },
     { timestamps: true }
@@ -38,10 +35,10 @@ FeriasSchema.pre('save', async function(next) {
     const doc = this;
     const sequence = await Counter.findOneAndUpdate(
         { _id_F: '_id_F' },
-        { $inc: { sequence_value: 1 } },
+        { $inc: { sequence_valueF: 1 } },
         { returnOriginal: false, upsert: true }
     );
-    doc._id_F = sequence.sequence_value;
+    doc._id_F = sequence.sequence_valueF;
     next();
 });
 

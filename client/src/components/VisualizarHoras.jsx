@@ -266,7 +266,7 @@ const ListaHoras = () => {
           tipo = 3;
         } else if (selectedUser === "Outro") {
           tipo = 4;
-        }else if (selectedUser === "Responsavel") {
+        } else if (selectedUser === "Responsavel") {
           tipo = 5;
         }
 
@@ -295,9 +295,9 @@ const ListaHoras = () => {
       } else {
 
 
-        dispatch(getAllDiasUtilizador({ userNome: selectedUser })).then((res) => {
+        dispatch(getAllDiasUtilizador({ userNome: selectedUserID })).then((res) => {
           const listaDiasA = (typeof res.payload.diasAllUtilizador !== "undefined") ? res.payload.diasAllUtilizador : [];
-
+  
           let idFerias = tipoTrabalhoArray.find((tipo) => tipo.tipo === 7)?._id;
           if (!idFerias) {
             idFerias = tipoTrabalhoArray.find((tipo) => tipo.TipoTrabalho === "Ferias")?._id;
@@ -536,12 +536,12 @@ const ListaHoras = () => {
       filteredUsers = filteredUsers.filter((user) => user && (user.tipo === 3 || user.tipo === 6));
     } else if (selectedUser === "Outro") {
       filteredUsers = filteredUsers.filter((user) => user && (user.tipo === 4 || user.tipo === 7));
-    }else if (selectedUser === "Responsavel") {
+    } else if (selectedUser === "Responsavel") {
       const userID = user?.user?.id;
       filteredUsers = filteredUsers.filter((user) => user && (user?.responsavel === userID));
     }
 
-    if (selectedUser === "Todos" || selectedUser === "Engenharia de Processos" || selectedUser === "Administradores" || selectedUser === "Laboratorio" || selectedUser === "Outro"|| selectedUser === "Responsavel") {
+    if (selectedUser === "Todos" || selectedUser === "Engenharia de Processos" || selectedUser === "Administradores" || selectedUser === "Laboratorio" || selectedUser === "Outro" || selectedUser === "Responsavel") {
       setPossibleHoursTodos(possibleHoursCount)
       possibleHoursCount = possibleHoursCount * (filteredUsers.length)
     }
@@ -772,7 +772,7 @@ const ListaHoras = () => {
     return () => {
       clearTimeout(timeoutId);
     };
-  }, [selectedUser, userNome, aceitacao,dias.length, ferias[0], ferias.length, listaDias, horasCompensacao]);
+  }, [selectedUser, userNome, aceitacao, dias?.length, ferias[0], ferias?.length, listaDias, horasCompensacao]);
 
   const diaSelected = selectedDay ? selectedDay?.dia : 0;
   const month = selectedDay ? selectedDay.mes : today.getMonth();
@@ -788,7 +788,7 @@ const ListaHoras = () => {
     filteredUsers = filteredUsers.filter((user) => user && (user.tipo === 3 || user.tipo === 6));
   } else if (selectedUser === "Outro") {
     filteredUsers = filteredUsers.filter((user) => user && (user.tipo === 4 || user.tipo === 7));
-  }else if (selectedUser === "Responsavel") {
+  } else if (selectedUser === "Responsavel") {
     const userID = user?.user?.id;
     filteredUsers = filteredUsers.filter((user) => user && (user?.responsavel === userID));
   }
@@ -810,7 +810,7 @@ const ListaHoras = () => {
           const updatedCompensacao = horasCompensacao.filter(dia => dia._id !== id);
           const updatedCompensacaoDomingo = horasCompensacaoDomingo.filter(dia => dia._id !== id);
 
-          dispatch(setDias({dias: updatedDias}));
+          dispatch(setDias({ dias: updatedDias }));
 
           setHorasCompensacao(updatedCompensacao);
           setHorasCompensacaoDomingo(updatedCompensacaoDomingo);
@@ -847,7 +847,7 @@ const ListaHoras = () => {
           const updatedCompensacao = horasCompensacao.filter(dia => dia._id_Group !== _id_Group);
           const updatedCompensacaoDomingo = horasCompensacaoDomingo.filter(dia => dia._id_Group !== _id_Group);
 
-          dispatch(setDias({dias: updatedDias}));
+          dispatch(setDias({ dias: updatedDias }));
 
           setHorasCompensacao(updatedCompensacao);
           setHorasCompensacaoDomingo(updatedCompensacaoDomingo);
@@ -855,7 +855,10 @@ const ListaHoras = () => {
           setAceitacao(updateAceitacao);
           setListaDias(updatedListaDias);
 
-          selectedDay.dia = 0;
+          if(selectedDay){
+            selectedDay.dia = 0;
+          }
+
           setSelectedDay(selectedDay)
         }
       }
@@ -913,7 +916,6 @@ const ListaHoras = () => {
   let checkFound = false;
   // let count = 0;
 
-
   return (
     <Wrapper>
       <div className='mainVisualiza'>
@@ -957,94 +959,182 @@ const ListaHoras = () => {
           <div className='col-10'>
             <h1 className='userName'>{userNome}</h1>
             <div className='row'>
-              
+
               <div className='col-md-4 text-center'>
-              <div className='row'>
-                  {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro" && selectedUser !== "Responsavel") && (
-                    <p>Dias de Férias por reclamar: {feriasPossiveis}</p>
-                  )}
-                </div>
-                  {pedidosFerias > 0 &&
                 <div className='row'>
-                  {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro" && selectedUser !== "Responsavel") && (
-                    <p>Dias de Férias em aceitacão: {pedidosFerias}</p>
-                  )}
-                </div>
-                }
-                <div className='row'>
-                  <p>Horas Possiveis: {convertToMinutes(possibleHours)}</p>
+
+                  <div className='col-md-8 text-end'>
+                    <p>Horas Possiveis:</p>
+                  </div>
+                  <div className='col-md-4 text-center'>
+                    <p>{convertToMinutes(possibleHours)}</p>
+                  </div>
+
+
                 </div>
 
                 <div className='row'>
-                  <p>Horas Realizadas: {convertToMinutes(horasRealizadas)}</p>
+                  <div className='col-md-8 text-end'>
+                    <p>Horas Realizadas:</p>
+                  </div>
+                  <div className='col-md-4 text-center'>
+                    <p>{convertToMinutes(horasRealizadas)}</p>
+                  </div>
                 </div>
 
                 <div className='row'>
-                  {percentagemHoras >= 0 && percentagemHoras !== Infinity && <p>{percentagemHoras.toFixed(1)}%</p>}
+                  <div className='col-md-8 text-end'>
+                    <p>Percentagem:</p>
+                  </div>
+                  <div className='col-md-4 text-center'>
+                    {percentagemHoras >= 0 && percentagemHoras !== Infinity && <p>{percentagemHoras.toFixed(1)}%</p>}
+                  </div>
                 </div>
 
+                {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro" && selectedUser !== "Responsavel") && (
+                  <>
+                    <hr></hr>
+                    <div className='row'>
+                      <div className='col-md-8 text-end'>
+                        <p>Dias de Férias por reclamar:</p>
+                      </div>
+                      <div className='col-md-4 text-center'>
+                        <p>{feriasPossiveis}</p>
+                      </div>
+                    </div>
 
+                    {pedidosFerias > 0 &&
+                      <>
+                        <div className='row'>
+                          <div className='col-md-8 text-end'>
+                            <p>Dias de Férias em aceitacão:</p>
+                          </div>
+                          <div className='col-md-4 text-center'>
+                            <p>{pedidosFerias}</p>
+                          </div>
+
+
+                        </div>
+                        <div className='row'>
+                          <div className='col-md-8 text-end'>
+                            <p>Dias de Férias total:</p>
+                          </div>
+                          <div className='col-md-4 text-center'>
+                            <p>{feriasPossiveis - pedidosFerias}</p>
+                          </div>
+
+
+                        </div>
+                      </>
+                    }
+                  </>
+                )}
               </div>
 
               {//////////////////////////////
               }
-              <div className='col-md-4 text-center'>
+              {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro" && selectedUser !== "Responsavel") && (
+                <div className='col-md-4 text-center'>
 
-                <div className='row'>
-                  {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro" && selectedUser !== "Responsavel") && (
-                    <p>Horas extra até este mês: {convertToMinutes(horasExtraAteMes)}</p>
-                  )}
+                  <div className='row'>
+
+                    <>
+                      <div className='col-md-8 text-end'>
+                        <p>Horas extra até este mês: </p>
+                      </div>
+                      <div className='col-md-4 text-center'>
+                        <p>{convertToMinutes(horasExtraAteMes)}</p>
+                      </div>
+                    </>
+                  </div>
+
+                  <div className='row'>
+                    {(parseDurationToHours(horasExtraMensal) !== 0) && (
+                      <>
+                        <div className='col-md-8 text-end'>
+                          <p>Horas extra este mês: </p>
+                        </div>
+                        <div className='col-md-4 text-center'>
+                          <p>{convertToMinutes(horasExtraMensal)}</p>
+                        </div>
+                      </>
+
+                    )}
+                  </div>
+
+                  <div className='row'>
+                    <>
+                      <div className='col-md-8 text-end'>
+                        <p>Horas extra por aceitar:</p>
+                      </div>
+                      <div className='col-md-4 text-center'>
+                        <p>{convertToMinutes(horasExtraAceitar)}</p>
+                      </div>
+                    </>
+                  </div>
+
+
+                  <div className='row'>
+                    <>
+                      <div className='col-md-8 text-end'>
+                        <p>Total horas extra por dar:</p>
+                      </div>
+                      <div className='col-md-4 text-center'>
+                        <p> {horasExtra}</p>
+                      </div>
+                    </>
+
+                  </div>
+                  <hr></hr>
                 </div>
-
-                <div className='row'>
-                  {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro" && selectedUser !== "Responsavel") && (parseDurationToHours(horasExtraMensal) !== 0) && (
-                    <p>Horas extra este mês: {convertToMinutes(horasExtraMensal)}</p>
-                  )}
-                </div>
-
-                <div className='row'>
-                  {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro" && selectedUser !== "Responsavel") && (
-                    <p>Total horas extra por dar: {horasExtra}</p>
-                  )}
-                </div>
-
-                <div className='row'>
-                  {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro" && selectedUser !== "Responsavel") && (
-                    <p>Horas extra por aceitar: {convertToMinutes(horasExtraAceitar)}</p>
-                  )}
-                </div>
-
-              </div>
-
+              )}
 
               {//////////////////////////////
               }
+              {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro" && selectedUser !== "Responsavel") && (
+                <div className='col-md-4 text-center'>
 
-              <div className='col-md-4 text-center'>
 
-                <div className='row'>
-                  {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro" && selectedUser !== "Responsavel") && (
-                    <p>Total horas pagas: {convertToMinutes(totalHorasPagas)}</p>
-                  )}
+                  <div className='row'>
+
+                    <>
+                      <div className='col-md-8 text-end'>
+                        <p>Horas extra pagas até este mês:</p>
+                      </div>
+                      <div className='col-md-4 text-center'>
+                        <p>{convertToMinutes(horasExtraPagasAteMes)}</p>
+                      </div>
+                    </>
+
+
+                  </div>
+
+                  <div className='row'>
+                    <>
+                      <div className='col-md-8 text-end'>
+                        <p>Horas Extra pagas este mês:</p>
+                      </div>
+                      <div className='col-md-4 text-center'>
+                        <p>{convertToMinutes(horasPagasMes)}</p>
+                      </div>
+                    </>
+                  </div>
+
+
+                  <div className='row'>
+                    <>
+                      <div className='col-md-8 text-end'>
+                        <p>Total horas pagas:</p>
+                      </div>
+                      <div className='col-md-4 text-center'>
+                        <p>{convertToMinutes(totalHorasPagas)}</p>
+                      </div>
+                    </>
+                  </div>
+                  <hr></hr>
                 </div>
-
-                <div className='row'>
-                  {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro" && selectedUser !== "Responsavel") && (
-                    <p>Horas extra pagas até este mês: {convertToMinutes(horasExtraPagasAteMes)}</p>
-                  )}
-                </div>
-
-                <div className='row'>
-                  {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro" && selectedUser !== "Responsavel") && (
-                    <p>Horas Extra pagas este mês: {convertToMinutes(horasPagasMes)}</p>
-                  )}
-                </div>
-
-
-              </div>
+              )}
             </div>
-
-
           </div>
 
 
@@ -1149,17 +1239,19 @@ const ListaHoras = () => {
             />
           }
         </div>
-        {(listaDias && listaDias.length < 1) ? (
+
+
+        {((listaDias && listaDias.length < 1) && (ferias && ferias.length < 1) && (horasCompensacaoDomingo && horasCompensacaoDomingo.length < 1) &&  (aceitacao && aceitacao.length < 1) &&  (horasCompensacao && horasCompensacao.length < 1) ) ? (
           <>
-            {(selectedUser === "Todos" || selectedUser === "Engenharia de Processos" || selectedUser === "Administradores" || selectedUser === "Laboratorio" || selectedUser === "Outro" || selectedUser === "Responsavel" ) ? (
+            {(selectedUser === "Todos" || selectedUser === "Engenharia de Processos" || selectedUser === "Administradores" || selectedUser === "Laboratorio" || selectedUser === "Outro" || selectedUser === "Responsavel") ? (
               filteredUsers.length > 0 ? (
-              <div className='projetos'>
-                <h2>Grupo não possui horas inseridas!</h2>
-              </div>
-              ): (
                 <div className='projetos'>
-                <h2>Grupo não possui utilizadores!</h2>
-              </div>
+                  <h2>Grupo não possui horas inseridas!</h2>
+                </div>
+              ) : (
+                <div className='projetos'>
+                  <h2>Grupo não possui utilizadores!</h2>
+                </div>
               )
             ) : (
               <div className='projetos'>
@@ -1201,7 +1293,7 @@ const ListaHoras = () => {
                     }
                     return isSameMonth && isSameDate;
                   }).length === 0 && diaSelected === 0 && (
-                      <h2>Sem Horas inseridas neste mês</h2>
+                      <h2>Sem Horas inseridas neste mês!</h2>
                     )}
 
                   {listaDiasT.filter((dia) => {
@@ -1213,7 +1305,7 @@ const ListaHoras = () => {
                     }
                     return isSameMonth && isSameDate;
                   }).length === 0 && diaSelected !== 0 && (
-                      <h2>Sem Horas inseridas neste dia {diaSelected}</h2>
+                      <h2>Sem Horas inseridas neste dia {diaSelected}!</h2>
                     )}
 
 
@@ -1322,7 +1414,7 @@ const ListaHoras = () => {
                       } else if (diaSelected === 0) {
                         return (
                           <div>
-                            <h2>Sem Horas inseridas neste mês</h2>
+                            <h2>Sem Horas inseridas neste mês!</h2>
                           </div>
                         );
                       } else if (diaSelected !== 0 || diaSelected !== "0") {
@@ -1331,7 +1423,7 @@ const ListaHoras = () => {
                             {isFeriado &&
                               <h4>{isFeriado}</h4>
                             }
-                            <h2>Sem Horas inseridas neste dia {diaSelected}</h2>
+                            <h2>Sem Horas inseridas neste dia {diaSelected}!</h2>
                           </div>
                         );
                       }
@@ -1350,7 +1442,7 @@ const ListaHoras = () => {
                         new Date(item.Data)?.getFullYear() === year
                       );
                     });
-            
+
                     let count = 0;
                     return filteredDias.map((dia) => {
                       const data = new Date(dia.Data);

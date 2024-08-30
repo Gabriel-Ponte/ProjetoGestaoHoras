@@ -1,5 +1,4 @@
 const express = require("express");
-const testUser = require("../middleware/testeUser");
 
 const router = express.Router();
 
@@ -27,6 +26,6 @@ router
   .route("/:id")
   .get(getProjeto)
   .delete(deleteProjeto)
-  .patch(testUser, updateProjeto);
+  .patch(updateProjeto);
 
 module.exports = router;
