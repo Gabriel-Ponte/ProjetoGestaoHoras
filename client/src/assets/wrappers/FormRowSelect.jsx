@@ -46,11 +46,20 @@ const Wrapper = styled.section`
     width:50%;
     margin: auto;
     overflow-y: auto;
-  }
+  
+    transition: all 0.9s ease; /* Smooth transition */
+}
 
+
+  .form-select:focus {
+      border-color: #007bff; /* Change border color */
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Add shadow effect */
+      color: #000; /* Ensure text color remains visible */
+  }
 
   .form-select::-webkit-scrollbar {
       width: 15px;
+
   }
 
   .form-select::-webkit-scrollbar-track {

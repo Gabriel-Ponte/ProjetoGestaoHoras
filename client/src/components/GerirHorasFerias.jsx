@@ -76,8 +76,12 @@ const GerirHorasFerias = ({ setGerirFerias, styleButton }) => {
   }, [utilizadores]);
 
   const filteredUsers = useMemo(() => {
-    return formattedListUtilizadores.filter((user) => user && ((user.nome !== "Admin") && user.tipo !== 8));
-
+    if(user.user.nome !== "Admin"){
+      return formattedListUtilizadores.filter((user) => user && ((user.nome !== "Admin") && user.tipo !== 8)).sort((a, b) => a.nome.localeCompare(b.nome));
+    } else{
+      return formattedListUtilizadores.filter((user) => user && (user.tipo !== 8)).sort((a, b) => a.nome.localeCompare(b.nome));
+    }
+ 
   }, [formattedListUtilizadores]);
 
   const deleteDiasFeriasConfirm = async (id) => {

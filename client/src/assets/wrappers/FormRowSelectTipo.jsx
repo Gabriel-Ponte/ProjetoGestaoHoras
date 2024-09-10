@@ -2,6 +2,7 @@ import styled from 'styled-components'
 
 const Wrapper = styled.section`
 
+
 .multiselect {
     width: 200px;
   }
@@ -71,6 +72,7 @@ const Wrapper = styled.section`
     text-align: center;
   }
   p {
+    
     margin: 0;
     margin-top: 1rem;
     text-align: center;
@@ -140,6 +142,31 @@ const Wrapper = styled.section`
     justify-content: start;
   }
 
+
+    .form-select {
+        font-size: auto;
+        text-align: center;
+        overflow: visible; /* Shows the full text on hover */
+        white-space: normal; /* Allows the text to wrap if it's long */
+        text-overflow: unset; /* Removes the ellipsis */
+    }
+
+
+    //     .form-select {
+    //     font-size: auto;
+    //     text-align: center;
+    //     overflow: hidden; /* Ensures content doesn't overflow initially */
+    //     white-space: nowrap; /* Prevents text from wrapping */
+    //     text-overflow: ellipsis; /* Adds '...' to overflowing text */
+    // }
+
+    // .form-select:hover {
+    //     font-size: auto; /* Adjust as needed */
+    //     text-align: center;
+    //     overflow: visible; /* Shows the full text on hover */
+    //     white-space: normal; /* Allows the text to wrap if it's long */
+    //     text-overflow: unset; /* Removes the ellipsis */
+    // }
 export default Wrapper
   #checkboxes {
     display: none;

@@ -67,7 +67,7 @@ const FormRowSelectTipo =  ({ labelText, name, value, handleChange, list, classN
     value = "Responsavel Qualidade";
   }
   else if(value === 10 && name === "tipo"){
-    value = "Gestor Fianceiro";
+    value = "Gestor Financeiro";
   }
   else if(value === 11 && name === "tipo"){
     value = "Comercial";

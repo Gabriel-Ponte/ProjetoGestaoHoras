@@ -52,9 +52,9 @@ const AddUtilizador = () => {
       let listTipo = []
       if(user.tipo === 2 || user.tipo === 7){
         listTipo =  [["Engenharia de Processos"], ["Laboratorio"] 
-        ,["Recursos Humanos"] , ["Administrador"], ["Administrador Engenharia"] 
-        ,["Administrador Laboratorio"], ["Administrador Recursos Humanos"]
-        ,["Responsavel Qualidade"], ["Gestor Fianceiro"], ["Comercial"] , ["Logistica"]];
+        ,["Recursos Humanos"], ["Responsavel Qualidade"], ["Gestor Financeiro"], ["Comercial"] , ["Logistica"],
+         ["Administrador"], ["Administrador Engenharia"] ,["Administrador Laboratorio"], ["Administrador Recursos Humanos"]
+        ];
         setValues({ ...values, 'tipo': 1 });
       }else if (user.tipo === 5){
 
@@ -131,7 +131,7 @@ const AddUtilizador = () => {
         setValues({ ...values, [name]: 2 });
       }
 
-      else if(value === "Gestor Fianceiro"){
+      else if(value === "Gestor Financeiro"){
         target = 10;
         setValues({ ...values, [name]: 2 });
       }

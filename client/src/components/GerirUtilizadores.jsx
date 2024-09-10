@@ -164,7 +164,7 @@ updateList();
 
     const updatedListaUtilizador = await Promise.all(listaDeUtilizadores.map(async (item, i) => {
       let valTipo = 0;
-
+      
       if (name !== "responsavel") {
         switch (value) {
           case "Administrador":
@@ -197,7 +197,7 @@ updateList();
           case "Responsavel Qualidade":
             value = 9;
             break;
-          case "Gestor Fianceiro":
+          case "Gestor Financeiro":
             value = 10;
             break;
           case "Comercial":
@@ -257,7 +257,8 @@ updateList();
           if (user.id !== t._id) {
             return (
               <div className="row text-center" key={i}>
-                <div className="col-md-8 text-center tiposUtilizador">
+                  <div className={`${(verificaAlterado[t._id] === true) ? "col-md-8" : "col-md-12"} text-center tiposUtilizador`}>
+
                   {
                     <>
                       <p>
@@ -277,7 +278,7 @@ updateList();
                     handleChange={(e) => handleChangeUtilizador(e, t._id)}
                     placeholder="Escolha um tipo"
                     value={t.tipo}
-                    list={[["Engenharia de Processos"], ["Laboratorio"] ,["Recursos Humanos"] , ["Administrador"] , ["Administrador Engenharia"] , ["Administrador Laboratorio"], ["Administrador Recursos Humanos"], ["Responsavel Qualidade"], ["Gestor Fianceiro"], ["Comercial"] , ["Logistica"], ["Inativo"]]}
+                    list={[["Engenharia de Processos"], ["Laboratorio"] ,["Recursos Humanos"] , ["Responsavel Qualidade"], ["Gestor Financeiro"], ["Comercial"] , ["Logistica"], ["Administrador"] , ["Administrador Engenharia"] , ["Administrador Laboratorio"], ["Administrador Recursos Humanos"], ["Inativo"]]}
                   />
 
               {t.tipo === 3 &&
@@ -294,24 +295,26 @@ updateList();
                   />
               </>
                 }
-
+      
                 </div>
+                
                 <div className="col-md-4 text-center">
                   <div className='Buttons'>
-                    {verificaAlterado[t._id] === true ? (
+                    {verificaAlterado[t._id] === true && (
                       <button type='submit'
                         onClick={() => alterarUtilizador(t)}
                         className="btn btn-outline-primary">
                         Alterar
                       </button>
-                    ) : (
-                      <button type='submit'
-                        onClick={() => handleConfirmDelete(t._id, t.nome)}
-                        className="btn">
-                        <AiFillDelete />
-                      </button>
+                    ) 
+                    // : user.tipo === 2 && (
+                    //   <button type='submit'
+                    //     onClick={() => handleConfirmDelete(t._id, t.nome)}
+                    //     className="btn">
+                    //     <AiFillDelete />
+                    //   </button>
 
-                    )
+                    // )
                     }
                   </div>
                 </div>

@@ -24,10 +24,13 @@ const CalendarControl = ({ handleChange, inserted, feriados, ferias,inserting, c
     //     displayYear();
     // }, [calendar, inicio, vProjeto]);
 
-    
+    // console.log("outside", (ferias?.length > 0 ? ferias.find(val => (new Date(val.Data)).getMonth() === calendar.getMonth()) : ""));
+        
     useEffect(() => {
+        // console.log(inserted?.length)
+        // console.log(user, (ferias?.length > 0 ? ferias.find(val => (new Date(val.Data)).getMonth() === calendar.getMonth()) : ""));
         initializeCalendar();
-      },  [selectedDate, ferias?.length, inicio,inserting, vProjeto, user]);
+      },  [selectedDate,inserted?.length, ferias?.length, inicio,inserting, vProjeto, user]);
 
 
       const initializeCalendar = useCallback(() => {
@@ -45,7 +48,7 @@ const CalendarControl = ({ handleChange, inserted, feriados, ferias,inserting, c
         displayMonth(date.getMonth());
         displayYear(date.getFullYear());
 
-    }, [selectedDate, inicio, vProjeto, inserting, user, ferias?.length]);
+    }, [selectedDate, inicio, vProjeto,inserted, inserting, user, ferias?.length]);
 
     function daysInMonth(month, year) {
         return new Date(year, month, 0).getDate();
