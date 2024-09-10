@@ -2,13 +2,13 @@ import { useState } from 'react';
 import Wrapper from '../assets/wrappers/Projeto';
 import { useDispatch } from 'react-redux';
 import { getProjeto, handleChange, insertProjetoLink } from '../features/projetos/projetosSlice';
-import { useNavigate  } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import FormRowListaProjetos from './FormRowListaProjetos';
 import { updateProjeto } from '../features/projetos/projetosSlice';
 import { FcCheckmark } from 'react-icons/fc';
 import { IoMdClose } from 'react-icons/io';
-import PropTypes from 'prop-types'; 
+import PropTypes from 'prop-types';
 
 
 const Projeto = ({
@@ -78,11 +78,11 @@ const Projeto = ({
     finalizado,
     handleAlterado
   });
-  
+
   //const [verificaResultado, setVerificaResultado] = useState(1);
   const [verificaAlterado, setVerificaAlterado] = useState(false);
   const [addLink, setAddLink] = useState(0);
-  
+
   const toggleEdit = async (idP) => {
     const projeto = await dispatch(getProjeto(idP));
     if (projeto.payload.projeto) {
@@ -100,33 +100,33 @@ const Projeto = ({
     const value = e.target.value;
 
     let alreadyChanged = "true";
-    if(nome === "Acao"){
-      if(values["Notas"] ===  initialState["Notas"] && values["Cliente"] ===  initialState["Cliente"] && values["Nome"] ===  initialState["Nome"]){
+    if (nome === "Acao") {
+      if (values["Notas"] === initialState["Notas"] && values["Cliente"] === initialState["Cliente"] && values["Nome"] === initialState["Nome"]) {
         alreadyChanged = "false";
       }
-    } else if(nome === "Notas"){
-      if(values["Acao"] === initialState["Acao"] && values["Cliente"] ===  initialState["Cliente"] && values["Nome"] ===  initialState["Nome"]){
+    } else if (nome === "Notas") {
+      if (values["Acao"] === initialState["Acao"] && values["Cliente"] === initialState["Cliente"] && values["Nome"] === initialState["Nome"]) {
         alreadyChanged = "false";
       }
-    }else if(nome === "Cliente"){
-      if(values["Acao"] === initialState["Acao"] && values["Notas"] ===  initialState["Notas"] && values["Nome"] ===  initialState["Nome"]){
+    } else if (nome === "Cliente") {
+      if (values["Acao"] === initialState["Acao"] && values["Notas"] === initialState["Notas"] && values["Nome"] === initialState["Nome"]) {
         alreadyChanged = "false";
       }
-    }else if(nome === "Nome"){
-      if(values["Acao"] === initialState["Acao"] && values["Cliente"] ===  initialState["Cliente"] && values["Notas"] ===  initialState["Notas"]){
+    } else if (nome === "Nome") {
+      if (values["Acao"] === initialState["Acao"] && values["Cliente"] === initialState["Cliente"] && values["Notas"] === initialState["Notas"]) {
         alreadyChanged = "false";
       }
     }
-    if(nome !== "Links" && nome !== "LinkResumo"){
-    if((initialState[nome] === value && alreadyChanged === "false")){
-      handleAlterado(false);
-      setVerificaAlterado(false);
-    }else{
-        if(verificaAlterado === false){
-        handleAlterado(true);
+    if (nome !== "Links" && nome !== "LinkResumo") {
+      if ((initialState[nome] === value && alreadyChanged === "false")) {
+        handleAlterado(false);
+        setVerificaAlterado(false);
+      } else {
+        if (verificaAlterado === false) {
+          handleAlterado(true);
         }
         setVerificaAlterado(true);
-    }       
+      }
     }
     setValues({ ...values, [nome]: value });
 
@@ -143,13 +143,13 @@ const Projeto = ({
     const day = dateObject.getUTCDate();
     const outputDateString = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
 
-    if(outputDateString === value){
+    if (outputDateString === value) {
       handleAlterado(false);
       setVerificaAlterado(false);
-    }else{
-      if(verificaAlterado === false){
+    } else {
+      if (verificaAlterado === false) {
         handleAlterado(true);
-        }
+      }
       setVerificaAlterado(true);
     }
     setValues({ ...values, [nome]: value });
@@ -175,22 +175,22 @@ const Projeto = ({
     setAddLink(2);
   };
   const toggleCloseAddLink = async () => {
-    if(addLink === 1){
+    if (addLink === 1) {
       setValues({ ...values, Links: initialState.Links });
-    } else if(addLink === 2){
+    } else if (addLink === 2) {
       setValues({ ...values, LinkResumo: initialState.LinkResumo });
     }
 
     setAddLink(0);
   };
 
-  const toggleAddLinkDB = async (e)  => {
+  const toggleAddLinkDB = async (e) => {
     setAddLink(false);
     e.preventDefault();
     if (addLink === 1 && !values.Links) {
       toast.error('Por favor, insira o Link!');
       return;
-    } else if(addLink === 2 && !values.LinkResumo){
+    } else if (addLink === 2 && !values.LinkResumo) {
       toast.error('Por favor, insira o Link!');
       return;
     }
@@ -220,9 +220,9 @@ const Projeto = ({
 
   let StringResultado;
   if (Resultado === true) {
-    StringResultado = <FcCheckmark className='reactIcon'/>;
+    StringResultado = <FcCheckmark className='reactIcon' />;
   } else (
-    StringResultado = <IoMdClose className='reactIcon'/>
+    StringResultado = <IoMdClose className='reactIcon' />
   )
 
   const handleSubmit = async (e) => {
@@ -253,7 +253,7 @@ const Projeto = ({
       return '#C75146'; // Light red
     }
   }
-  
+
   function getGreenShade(dias) {
     if (dias > 20) {
       return '#344E41'; // Dark green
@@ -279,7 +279,8 @@ const Projeto = ({
         listUpdated[a] = utilizadores[i]._id;
         break;
       }
-    }}
+    }
+  }
 
   return (
     <Wrapper>
@@ -292,33 +293,37 @@ const Projeto = ({
             <div className="col-md-3 themed-grid-col">
               <div className="row text-center">
                 <div className="col-md-6 themed-grid-col">
-                {finalizado === true ? (
-                  <div className='Cliente'>
-                  <h5>{values.Cliente}</h5>
-                  </div>
-                ):(
-                  <FormRowListaProjetos
-                    type="textarea"
-                    id={"ClienteProjeto " + _id}
-                    name="Cliente"
-                    value={values.Cliente}
-                    handleChange={handleChangeProjeto}
-                  />
-                )}
+                  {finalizado === true ? (
+                    <div className='Cliente'>
+                      <h6>{values.Cliente}</h6>
+                    </div>
+                  ) : (
+                    <FormRowListaProjetos
+                      type="textarea"
+                      id={"ClienteProjeto " + _id}
+                      name="Cliente"
+                      value={values.Cliente}
+                      handleChange={handleChangeProjeto}
+                    />
+                  )}
                 </div>
                 <div className="col-md-6 themed-grid-col">
-                {finalizado === true ? (
-                  <p>{values.Nome}</p>
-                ):(
-                <FormRowListaProjetos
-                    type="textarea"
-                    id={"NomeProjeto " + _id}
-                    name="Nome"
-                    value={values.Nome}
-                    handleChange={handleChangeProjeto}
-                  />
-                )
-                }
+                  {finalizado === true ? (
+                    <p style={{ 
+                      wordBreak: 'break-word',  // Breaks long words
+                      whiteSpace: 'normal',     // Ensures wrapping
+                      overflowWrap: 'anywhere'  // Allows breaking at any point
+                    }}>{values.Nome}</p>
+                  ) : (
+                    <FormRowListaProjetos
+                      type="textarea"
+                      id={"NomeProjeto " + _id}
+                      name="Nome"
+                      value={values.Nome}
+                      handleChange={handleChangeProjeto}
+                    />
+                  )
+                  }
                 </div>
               </div>
             </div>
@@ -327,43 +332,50 @@ const Projeto = ({
             <div className="col-md-6 themed-grid-col">
               <div className="row text-center">
                 <div className="col-md-5 themed-grid-col">
-                {finalizado === true ? (
-                  <p>{values.Acao}</p>
-                ):(
-                  <FormRowListaProjetos
-                  type="textarea"
-                  id={"AcaoProjeto " + _id}
-                  name="Acao"
-                  classNameInput="form__field"
-                  value={values.Acao}
-                  handleChange={handleChangeProjeto}
-                />
-                )
-              }
+                  {finalizado === true ? (
+                    <p>{values.Acao}</p>
+                  ) : (
+                    <FormRowListaProjetos
+                      type="textarea"
+                      id={"AcaoProjeto " + _id}
+                      name="Acao"
+                      classNameInput="form__field"
+                      value={values.Acao}
+                      handleChange={handleChangeProjeto}
+                    />
+                  )
+                  }
                 </div>
                 <div className="col-md-5 text-start themed-grid-col">
-                {
-                  <FormRowListaProjetos
-                    type="textarea"
-                    id={"NotasProjeto " + _id}
-                    name="Notas"
-                    classNameInput="form__field"
-                    value={values.Notas}
-                    handleChange={handleChangeProjeto}
-                  />
+
+                  {finalizado === true ? (
+                    <>
+                      <p>{values.Notas}</p>
+                    </>
+                  ) : (
+                    <FormRowListaProjetos
+                      type="textarea"
+                      id={"NotasProjeto " + _id}
+                      name="Notas"
+                      classNameInput="form__field"
+                      value={values.Notas}
+                      handleChange={handleChangeProjeto}
+
+                    />
+                  )
                   }
                 </div>
 
                 <div className="col-md-2 themed-grid-col">
-                {
-                  <div className='text-center piloto'>
-                    {
-                    PilotosList.map((part, index) => (
-                      <p key={index}>{part}</p>
-                    ))}
-                  </div>
-                }
-              </div>
+                  {
+                    <div className='text-center piloto'>
+                      {
+                        PilotosList.map((part, index) => (
+                          <p key={index}>{part}</p>
+                        ))}
+                    </div>
+                  }
+                </div>
               </div>
             </div>
 
@@ -381,169 +393,169 @@ const Projeto = ({
                 ) : (
                   <>
                     <div className="col-md-8 themed-grid-col">
-                    <FormRowListaProjetos
-                    type="Date"
-                    id={"DataObjetivoProjeto " + _id}
-                    name="DataObjetivo"
-                    //label="Login"
-                    classNameInput="form__field__date"
-                    value={values.DataObjetivo ? new Date(values.DataObjetivo).toLocaleDateString('en-CA') : ''}
-                    handleChange={handleChangeDateProjeto}
-                  />
-                  {
-                 //<p>{DataObjetivo ? new Date(DataObjetivo).toLocaleDateString('en-CA') : ''}</p>
-                  }
-                   </div>
-                   <div className="col-md-4 align">
-                    <div className="col-md-12 dias  " style={{ backgroundColor: dias < 0 ? getRedShade(dias) : getGreenShade(dias) }}>
-                    <p>{dias}</p>
-                  </div>
-                  </div>
+                      <FormRowListaProjetos
+                        type="Date"
+                        id={"DataObjetivoProjeto " + _id}
+                        name="DataObjetivo"
+                        //label="Login"
+                        classNameInput="form__field__date"
+                        value={values.DataObjetivo ? new Date(values.DataObjetivo).toLocaleDateString('en-CA') : ''}
+                        handleChange={handleChangeDateProjeto}
+                      />
+                      {
+                        //<p>{DataObjetivo ? new Date(DataObjetivo).toLocaleDateString('en-CA') : ''}</p>
+                      }
+                    </div>
+                    <div className="col-md-4 align">
+                      <div className="col-md-12 dias  " style={{ backgroundColor: dias < 0 ? getRedShade(dias) : getGreenShade(dias) }}>
+                        <p>{dias}</p>
+                      </div>
+                    </div>
                   </>
                 )
                 }
               </div>
             </div>
-            
+
             <div className="col-md-1 themed-grid-col " >
-            <div className="col-md-11 themed-grid-col " >
-            {
-               addLink === 1 ? (
-               <>
-               <div className='col-md-12 text-end'>
-                  <button
+              <div className="col-md-11 themed-grid-col " >
+                {
+                  addLink === 1 ? (
+                    <>
+                      <div className='col-md-12 text-end'>
+                        <button
                           type='button'
                           className='btn btn-outline-danger'
                           onClick={toggleCloseAddLink}
                         >
-                         <IoMdClose/>
-                </button>
-                </div>
-              <div className='row text-center'>
-                  <FormRowListaProjetos
-                    type="textarea"
-                    id={"LinkA3 " + _id}
-                    name="Links"
-                    classNameInput="form__field"
-                    value={values.Links}
-                    handleChange={handleChangeProjeto}
-                  />
-              </div>
-              <div className='row mb-2 text-center'>
-              <button
-                        type='button'
-                        className='btn btn-outline-primary'
-                        onClick={toggleAddLinkDB}
-                      >
-                        Inserir
-                      </button>
+                          <IoMdClose />
+                        </button>
                       </div>
-               </>
-              ) : addLink === 2 ? (
-                <>
-                <div className='col-md-12 text-end'>
-                <button
-                      type='button'
-                      className='btn btn-outline-danger'
-                      onClick={toggleCloseAddLink}
-                    >
-                        <IoMdClose/>
-                </button>
-                </div>
-                <div className='row text-center'>
-                    <FormRowListaProjetos
-                      type="textarea"
-                      id={"LinkResumo " + _id}
-                      name="LinkResumo"
-                      classNameInput="form__field"
-                      value={values.LinkResumo}
-                      handleChange={handleChangeProjeto}
-                    />
-                </div>
-                <div className='row mb-2 text-center'>
-                <button
+                      <div className='row text-center'>
+                        <FormRowListaProjetos
+                          type="textarea"
+                          id={"LinkA3 " + _id}
+                          name="Links"
+                          classNameInput="form__field"
+                          value={values.Links}
+                          handleChange={handleChangeProjeto}
+                        />
+                      </div>
+                      <div className='row mb-2 text-center'>
+                        <button
+                          type='button'
+                          className='btn btn-outline-primary'
+                          onClick={toggleAddLinkDB}
+                        >
+                          Inserir
+                        </button>
+                      </div>
+                    </>
+                  ) : addLink === 2 ? (
+                    <>
+                      <div className='col-md-12 text-end'>
+                        <button
+                          type='button'
+                          className='btn btn-outline-danger'
+                          onClick={toggleCloseAddLink}
+                        >
+                          <IoMdClose />
+                        </button>
+                      </div>
+                      <div className='row text-center'>
+                        <FormRowListaProjetos
+                          type="textarea"
+                          id={"LinkResumo " + _id}
+                          name="LinkResumo"
+                          classNameInput="form__field"
+                          value={values.LinkResumo}
+                          handleChange={handleChangeProjeto}
+                        />
+                      </div>
+                      <div className='row mb-2 text-center'>
+                        <button
                           type='button'
                           className='btn btn-outline-success'
                           onClick={toggleAddLinkDB}
                         >
                           Inserir
                         </button>
+                      </div>
+                    </>
+                  ) : (
+                    verificaAlterado === true ? (
+                      <><div className='row mb-2 text-center'>
+                      </div>
+                        <div className='row mb-2 align-items-center text-center'>
+                          <div className='col-md-12 themed-grid-col'>
+                            <button
+                              type='button'
+                              className='btn btn-outline-primary'
+                              onClick={handleSubmit}
+                            >
+                              Alterar
+                            </button>
+                          </div>
                         </div>
-                 </>
-            ) : (
-              verificaAlterado === true ? (
-                <><div className='row mb-2 text-center'>
-                  </div>
-                  <div className='row mb-2 align-items-center text-center'>
-                    <div className='col-md-12 themed-grid-col'>
-                      <button
-                        type='button'
-                        className='btn btn-outline-primary'
-                        onClick={handleSubmit}
-                      >
-                        Alterar
-                      </button>
-                    </div>
-                  </div>
-                  
-                  </>
-              ) :
-                (
-                  <>
-                      <div className='row mb-2 text-center'>
-                        <button
-                          type='button'
-                          className='btn btn-outline-primary buttonProjeto'
-                          onClick={() => toggleEdit(_id)}
-                        >
-                          Editar
-                        </button>
-                      </div>
-                      <div className='row mb-2 text-center'>
-                        <button
-                          type='button'
-                          className='btn btn-outline-secondary buttonProjeto'
-                          onClick={() => toggleVisualize(_id)}
-                        >
-                          Visualizar
-                        </button>
-                      </div>
-                      {
-                        values.Links === "" ? (
-                            <div className='row mb-2 text-center'>
-                              <button
-                                type='button'
-                                className='btn btn-outline-success buttonProjetoLinks'
-                                onClick={() => toggleAddLinkA3()}
-                              >
-                                Adicionar Link A3
-                              </button>
-                            </div>
-                        ) : (
+
+                      </>
+                    ) :
+                      (
+                        <>
                           <div className='row mb-2 text-center'>
-                            <a href={values.Links}  className='btn btn-outline-link buttonProjeto' target="_blank" rel="noreferrer" > Abrir A3</a>
+                            <button
+                              type='button'
+                              className='btn btn-outline-primary buttonProjeto'
+                              onClick={() => toggleEdit(_id)}
+                            >
+                              Editar
+                            </button>
                           </div>
-                        )
-                      }
-                      {
-                        values.LinkResumo === "" ? (
-                            <div className='row mb-2 text-center'>
-                              <button
-                                type='button'
-                                className='btn btn-outline-success buttonProjetoLinks'
-                                onClick={() => toggleAddLinkResumo()}
-                              >
-                                Adicionar Link Resumo
-                              </button>
-                            </div>
-                        ) : (
                           <div className='row mb-2 text-center'>
-                            <a href={values.LinkResumo}  className='btn btn-outline-link buttonProjeto' target="_blank" rel="noreferrer"> Abrir Resumo</a>
+                            <button
+                              type='button'
+                              className='btn btn-outline-secondary buttonProjeto'
+                              onClick={() => toggleVisualize(_id)}
+                            >
+                              Visualizar
+                            </button>
                           </div>
-                        )
-                      }
-   
-                      {/* {finalizado !== true && (
+                          {
+                            values.Links === "" ? (
+                              <div className='row mb-2 text-center'>
+                                <button
+                                  type='button'
+                                  className='btn btn-outline-success buttonProjetoLinks'
+                                  onClick={() => toggleAddLinkA3()}
+                                >
+                                  Adicionar Link A3
+                                </button>
+                              </div>
+                            ) : (
+                              <div className='row mb-2 text-center'>
+                                <a href={values.Links} className='btn btn-outline-link buttonProjeto' target="_blank" rel="noreferrer" > Abrir A3</a>
+                              </div>
+                            )
+                          }
+                          {
+                            values.LinkResumo === "" ? (
+                              <div className='row mb-2 text-center'>
+                                <button
+                                  type='button'
+                                  className='btn btn-outline-success buttonProjetoLinks'
+                                  onClick={() => toggleAddLinkResumo()}
+                                >
+                                  Adicionar Link Resumo
+                                </button>
+                              </div>
+                            ) : (
+                              <div className='row mb-2 text-center'>
+                                <a href={values.LinkResumo} className='btn btn-outline-link buttonProjeto' target="_blank" rel="noreferrer"> Abrir Resumo</a>
+                              </div>
+                            )
+                          }
+
+                          {/* {finalizado !== true && (
                       <div className='row  text-center'>
                         <button
                           type='button'
@@ -554,10 +566,10 @@ const Projeto = ({
                         </button>
                       </div>
                       )} */}
-                  </>
-                ))
-            }
-            </div>
+                        </>
+                      ))
+                }
+              </div>
             </div>
           </div>
           <hr></hr>

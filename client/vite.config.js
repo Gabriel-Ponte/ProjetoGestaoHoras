@@ -17,9 +17,14 @@ export default defineConfig({
   }),], // HTTPS
   server: {
     https: true, // Enable HTTPS
-    port: 3000, // Customize the development server port
+    port: 8080, // Customize the development server port
     open: true, // Automatically open the browser on server start
     verbose: true, // Enable verbose logging
+  },
+  preview: {
+    https: false,
+    port: 3000,
+    host: '192.168.10.102',
   },
   logLevel: 'silent', // silent
   build: {

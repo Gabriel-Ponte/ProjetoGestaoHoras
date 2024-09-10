@@ -20,6 +20,7 @@ const isValidObjectId = (id) => {
 
 const getAllFerias = async (req, res) => {
   try {
+  
     let { sort } = req.query;
     sort = sanitizeHtml(sort);
 
@@ -49,12 +50,16 @@ const getAllFerias = async (req, res) => {
             "tipoDeTrabalhoHoras.tipoTrabalho": feriasID,
             Utilizador: userID,
           });
+          let check = false;
+          let dias = [];
+          try {
 
-          let dias = await Ferias.find({ Utilizador: userID })
-          const check = (dias?.length === 0 || !(dias.filter(dia => dia.Ano === currentYear).length > 0));
-
+          dias = await Ferias.find({ Utilizador: userID })
+          check = (dias?.length === 0 || !(dias.filter(dia => dia.Ano === currentYear).length > 0));
+            } catch (error) {
+              console.error("Error Ferias UTF?" , error)
+            }
           if (check) {
-
             const date = userID.getTimestamp();
             const fullYear = date.getFullYear();
             let auto = 'Automático';
@@ -76,7 +81,7 @@ const getAllFerias = async (req, res) => {
             dias = await Ferias.find({ Utilizador: userID })
           }
           
-          for (let d = 0; d < dias.length; d++) {
+          for (let d = 0; d < dias?.length; d++) {
             try {
               const responsavelID = dias[d].UtilizadorResponsavel;
               if (isValidObjectId(responsavelID)) {

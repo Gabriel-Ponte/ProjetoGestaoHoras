@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "start": "serve -s build",
+    "start": "vite preview",
+    "startS": "serve -s build",
     "test": "vite --host",
     "startServe": "serve  --ssl-cert ../certs/cert.pem --ssl-key  ../certs/key.pem -s build -p 3001",
     "serveHelp": "serve  --help",

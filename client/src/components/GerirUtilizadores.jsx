@@ -32,7 +32,37 @@ const GerirUtilizadores = () => {
 
   useEffect(() => {
     dispatch(listaUtilizadores()).then((res) => {
-      const lista = Array.isArray(res.payload.UsersAll) ? res.payload.UsersAll : [];
+    // const lista = Array.isArray(res.payload.UsersAll) ? res.payload.UsersAll : [];
+      
+    //const lista = Array.isArray(res.payload.UsersAll) ? res.payload.UsersAll?.filter((user) => user && ((user.nome !== "Admin"))).sort((a, b) => a.nome.localeCompare(b.nome)) : [];
+    const lista = Array.isArray(res.payload.UsersAll) 
+    ? res.payload.UsersAll
+        ?.filter((user) => user && (user.nome !== "Admin"))
+        .sort((a, b) => {
+          const tipoA = a.tipo;
+          const tipoB = b.tipo;
+  
+          // Special case: if tipo is 8, it goes to the end
+          if (tipoA === 8) return 1;
+          if (tipoB === 8) return -1;
+  
+          // Compare alphabetically by user name if tipo is the same
+          if (tipoA === tipoB) {
+            return a.nome.localeCompare(b.nome);
+          }
+  
+          // Compare as numbers if both are numbers, otherwise as strings
+          if (typeof tipoA === 'number' && typeof tipoB === 'number') {
+            return tipoA - tipoB;
+          } else {
+            return String(tipoA).localeCompare(String(tipoB));
+          }
+        })
+    : [];
+  
+  
+      console.log(lista)
+
       setListaUtilizadores(lista);
       setInitialState(lista)
     });

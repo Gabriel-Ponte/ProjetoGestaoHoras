@@ -6,6 +6,8 @@
   "scripts": {
     "start": "pm2 start app.js",
     "stop": "pm2 stop app.js",
+    "startwatch": "pm2 start app.js --watch",
+    "stopwatch": "pm2 stop app --watch",
     "list": "pm2 list",
     "logs": "pm2 logs",
     "monit": "pm2 monit",

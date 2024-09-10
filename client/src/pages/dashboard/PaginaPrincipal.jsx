@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate ,Navigate} from 'react-router-dom';
 import { ListaProjetos } from '../../components';
 import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
@@ -31,8 +31,9 @@ const AllProjetos = () => {
         <ListaProjetos />
       </>
   );
-}else {
-  toast.error("Utilizador sem permissões!");
+}else if(user){
+  return <Navigate to='/PaginaAdicionarHoras' />;
+} else{
   navigate('/LoginPage');
 }
 };

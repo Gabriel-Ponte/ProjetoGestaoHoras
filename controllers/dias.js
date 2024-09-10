@@ -239,7 +239,8 @@ const getAllDiasHorasExtra = async (req, res) => {
                   if (indicesToRemove.length === 1) {
                     indicesToRemove = []
                   } else {
-                    indicesToRemove.remove(indexDia);
+                    // indicesToRemove.remove(indexDia);
+                    indicesToRemove = indicesToRemove.filter(item => item !== indexDia);
                   }
 
                 }
@@ -251,7 +252,8 @@ const getAllDiasHorasExtra = async (req, res) => {
                 indicesNotToRemove.push(indexDia);
 
                 if (indicesToRemove && indicesToRemove.includes(indexDia)) {
-                  indicesToRemove.remove(indexDia);
+                  // indicesToRemove.remove(indexDia);
+                  indicesToRemove = indicesToRemove.filter(item => item !== indexDia);
                 }
               } catch (error) {
                 console.error(error)
@@ -341,7 +343,6 @@ const getAllDiasHorasExtra = async (req, res) => {
       // Convert the grouped object to an array
       diasHorasExtra = Object.values(groupedByIdGroup);
     }
-
 
     // Sending response
     res.status(StatusCodes.OK).json({ diasHorasExtra });
