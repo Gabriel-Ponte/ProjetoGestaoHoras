@@ -154,7 +154,7 @@ const NavLinks = () => {
 
         //if((user.tipo === 6 || user.tipo === 7) && (id === 5 || id === 6 || id === 7 || id === 8 || id === 9 )){
 
-        if((user.tipo === 6) && (id === 5 || id === 6 || id === 7 || id === 8 || id === 9 )){
+        if((user.tipo === 6 || user.tipo === 9 || user.tipo === 10 || user.tipo === 11 || user.tipo === 12) && (id === 5 || id === 6 || id === 7 || id === 8 || id === 9 )){
           return null;
         }
         //if(user.tipo !== 7 && user.tipo !== 2 && id === 3){

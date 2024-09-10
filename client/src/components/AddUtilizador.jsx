@@ -50,8 +50,11 @@ const AddUtilizador = () => {
 
     useEffect(() => {
       let listTipo = []
-      if(user.tipo === 2){
-        listTipo =  [["Engenharia de Processos"], ["Laboratorio"] ,["Recursos Humanos"] , ["Administrador"], ["Administrador Engenharia"] , ["Administrador Laboratorio"], ["Administrador Recursos Humanos"]];
+      if(user.tipo === 2 || user.tipo === 7){
+        listTipo =  [["Engenharia de Processos"], ["Laboratorio"] 
+        ,["Recursos Humanos"] , ["Administrador"], ["Administrador Engenharia"] 
+        ,["Administrador Laboratorio"], ["Administrador Recursos Humanos"]
+        ,["Responsavel Qualidade"], ["Gestor Fianceiro"], ["Comercial"] , ["Logistica"]];
         setValues({ ...values, 'tipo': 1 });
       }else if (user.tipo === 5){
 
@@ -78,10 +81,11 @@ const AddUtilizador = () => {
         })
 
         listTipo =  [["Laboratorio"], ["Administrador Laboratorio"]];
-      }else if (user.tipo === 7){
-        listTipo =  [["Recursos Humanos"], ["Administrador Recursos Humanos"]];
-        setValues({ ...values, 'tipo': 4 });
       }
+      // else if (user.tipo === 7){
+      //   listTipo =  [["Recursos Humanos"], ["Administrador Recursos Humanos"]];
+      //   setValues({ ...values, 'tipo': 4 });
+      // }
 
       setListTipoUser(listTipo);
     }, []);
@@ -90,7 +94,7 @@ const AddUtilizador = () => {
     const handleChangeTipo = (e)=> {
       const { name, value } = e.target;
 
-
+      // Target 8 = Inativo
       let valTipo = 0;
       let target = 0;
       if(value === "Engenharia de Processos"){
@@ -121,6 +125,30 @@ const AddUtilizador = () => {
         target = 2;
         setValues({ ...values, [name]: 2 });
       }
+
+      else if(value === "Responsavel Qualidade"){
+        target = 9;
+        setValues({ ...values, [name]: 2 });
+      }
+
+      else if(value === "Gestor Fianceiro"){
+        target = 10;
+        setValues({ ...values, [name]: 2 });
+      }
+
+      else if(value === "Comercial"){
+        target = 11;
+        setValues({ ...values, [name]: 2 });
+      }
+
+      else if(value === "Logistica"){
+        target = 12;
+        setValues({ ...values, [name]: 2 });
+      }
+
+
+
+      // ,["Responsavel Qualidade"], ["Gestor Fianceiro"], ["Comercial"] , ["Logistica"]];
       if(valTipo > 0){
         dispatch(listaUsersTipo(valTipo)).then((res) => {
           const listaUtilizadorsTipo = Array.isArray(res?.payload?.UsersAllTipo) ? res.payload.UsersAllTipo : [];

@@ -22,9 +22,10 @@ const AddFerias = ({ user, setAddFerias, verificaDia, Data, listaDias, accepted,
 
 
 
+
   useEffect(() => {
     initializeInputs();
-  },  [fimFerias, user]);
+  },  [fimFerias, user, listaDias]);
 
 
   const initializeInputs = useCallback(() => {
@@ -52,23 +53,27 @@ const AddFerias = ({ user, setAddFerias, verificaDia, Data, listaDias, accepted,
     const inData = new Date(data);
     const fData = new Date(fimFerias);
 
+    
     if (inData > fData) {
       setFimFerias(inData)
       verificaListaDias(inData, inData);
-      if(accepted === 0){
+      if(accepted === 2){
         verificaDia(data);
+      } else if(e?.target){
+        e.target.name = "Data";
+        verificaDia(e);
       }
-
-
 
     } else {
       verificaListaDias(inData, fimFerias);
-      if(accepted === 0){
+      if(accepted === 2){
         verificaDia(data);
+      } else if(e?.target){
+        e.target.name = "Data";
+        verificaDia(e);
       }
 
     }
-
 
   }, [Data, fimFerias]);
 
@@ -276,12 +281,15 @@ const AddFerias = ({ user, setAddFerias, verificaDia, Data, listaDias, accepted,
 
   return (
     <div className="container">
-
+          {(accepted !== 2 && (
         <div className='row'>
           <div className='col-4'>
             <h3>Adicionar Ferias</h3>
           </div>
           <div className='col-4  d-flex flex-column justify-content-center align-items-center'>
+
+
+      
             <button
               type="submit"
               onClick={(e) => { setAddFerias(false) }}
@@ -300,6 +308,7 @@ const AddFerias = ({ user, setAddFerias, verificaDia, Data, listaDias, accepted,
             >
               Adicionar Dias
             </button>
+   
           </div>
           <div className='col-4 text-end'>
 
@@ -320,7 +329,7 @@ const AddFerias = ({ user, setAddFerias, verificaDia, Data, listaDias, accepted,
           </div>
 
         </div>
-  
+      ))}
       <div className='row'>
         <div className='col-6'>
           <FormRow
@@ -344,6 +353,7 @@ const AddFerias = ({ user, setAddFerias, verificaDia, Data, listaDias, accepted,
             classNameLabel="form-field-label"
             id="fimFerias"
             name="Fim"
+            placeholder="Dia Adicionar Horas"
             value={fimFerias ? new Date(fimFerias).toLocaleDateString('en-CA') : ''}
             handleChange={(e) => verificaFim(e)}
           />
@@ -369,7 +379,11 @@ const AddFerias = ({ user, setAddFerias, verificaDia, Data, listaDias, accepted,
             Total de dias: {selectedDates.length}
           </h5>
         </div>
-
+        {accepted === 2 && 
+            <div className='row'>
+              <h4>{feriasPossiveis ? 'Férias por reclamar: ' + (feriasPossiveis - selectedDates?.length) : ''}</h4>
+            </div>
+        }
         <div className="card-body">
           <button
             type="submit"

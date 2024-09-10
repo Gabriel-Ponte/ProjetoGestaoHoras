@@ -304,9 +304,9 @@ const totalNumberPossiveis = ferias[1].reduce((acc, numberF) => {
               />
             </div>
 
-
-            <div className="col-md-2 themed-grid-col" style={{margin:"auto"}}>
             {addDias > 0 ? (
+            <div className="col-md-2 themed-grid-col" style={{margin:"auto"}}>
+            
               <>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePicker
@@ -314,20 +314,35 @@ const totalNumberPossiveis = ferias[1].reduce((acc, numberF) => {
                   maxDate={new Date()} // Maximum year allowed
                   views={['year']} // Limits the picker to only allow year selection
                   value={selectedYear}
+                  formatDensity={"spacious"}
                   onChange={(newValue) => {
                     setSelectedYear(newValue); // Handle the year selection
                   }}
-
+                
+                  yearsPerRow={3}
                   slotProps={{
-                    popper: {
-                      sx: {
-                        '& .MuiPaper-root': {
-                          height: '150px',
-                          overflowY: 'auto',
+                    
 
-                        },
+                    popper: {
+                      placement:"bottom",
+                      disablePortal:false,
+
+                  
+
+                      sx: {
+                     
+                        '& .MuiPaper-root': {
+
+                          height: '300px', // Set maximum height for the popper
+                          overflowY: 'auto', // Ensure scroll for overflow
+                          margin:"auto"
+                 
+                          },
+
+
                       },
                     },
+
                     textField: {
                       size: 'small',
                       sx: {
@@ -344,9 +359,14 @@ const totalNumberPossiveis = ferias[1].reduce((acc, numberF) => {
                 />
               </LocalizationProvider>
               </>
+              </div>
             ) :
-            (
+            (       
               <>
+              <div className="col-md-1 themed-grid-col" style={{margin:"auto"}}>
+                </div>
+            <div className="col-md-3 themed-grid-col" style={{margin:"auto"}}>
+     
                 {ferias[1].length > 0 && (
                   <div className="col-md-12 themed-grid-col text-end">
                     <div className="row">
@@ -362,9 +382,11 @@ const totalNumberPossiveis = ferias[1].reduce((acc, numberF) => {
                     </div>
                   </div>
                 )}
-              </>
+                 </div>          
+                 
+                 </>
             )}
-            </div>
+         
 
 
             <div className='col-md-2 text-center' style={{margin:"auto"}}>

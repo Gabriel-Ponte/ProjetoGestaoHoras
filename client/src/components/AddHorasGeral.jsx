@@ -28,6 +28,7 @@ const initialState = {
 
 
 const ListaProjetos = () => {
+
   const [values, setValues] = useState(initialState);
 
 
@@ -369,9 +370,11 @@ const ListaProjetos = () => {
 
 
   const verificaDia = useCallback((e) => {
+
     if(constLoaded && (projetos.length > 0)){
     setVerificaCopiarHoras(false);
     const { name, value } = e.target;
+
     const data = new Date(value);
 
     const projetosF = getFilteredProjetos(data);
@@ -1235,8 +1238,8 @@ const ListaProjetos = () => {
               verificaDia={verificaDia}
               Data={values?.Data}
               listaDias={listaDias}
-              projetos={projetos}
               accepted={acc}
+              user={user}
           />
     </Wrapper>
       )

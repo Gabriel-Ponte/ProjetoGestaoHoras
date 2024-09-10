@@ -6,7 +6,8 @@ import Wrapper from '../../assets/wrappers/SharedLayout';
 const SharedLayout = () => {
   const { user } = useSelector((store) => store.utilizador);
 
-  if(user.user.tipo === 3 || user.user.tipo === 4){
+  if(user.user.tipo === 3 || user.user.tipo === 4 || user.user.tipo === 9 || user.user.tipo === 10 || user.user.tipo === 11 || user.user.tipo === 12){
+
     return (
       <Wrapper>
       <Header />

@@ -12,7 +12,7 @@ const PaginaAdicionarHoras = () => {
       <AddHoras />
     </>
   );
-  }else if(user.user.tipo === 3 || user.user.tipo === 4 || user.user.tipo === 6){
+  }else if(user.user.tipo === 3 || user.user.tipo === 4 || user.user.tipo === 6 || user.user.tipo === 9 || user.user.tipo === 10 || user.user.tipo === 11 || user.user.tipo === 12){
     return (
       <>
         <AddHorasGeral />

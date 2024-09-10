@@ -13,7 +13,7 @@ const CalendarControl = ({ handleChange, inserted, feriados, ferias,inserting, c
     const calMonthName = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
     const { feriadosPortugal } = useFeriadosPortugal();
     const localDate = new Date();
-
+    
 
     // useEffect(() => {
     //     plotDates(calendar);     
@@ -31,12 +31,20 @@ const CalendarControl = ({ handleChange, inserted, feriados, ferias,inserting, c
 
 
       const initializeCalendar = useCallback(() => {
-        plotDates(calendar);   
+        if(selectedDate && ((selectedDate.mes !== calendar.getMonth()) || (selectedDate.ano !== calendar.getFullYear()))) {
+            const date = selectedDate ? new Date(selectedDate.ano , selectedDate.mes , 1 ,0 , 0, 0) : new Date();
+            setCalendar(date);
+            plotDates(date);
+        } else{
+            plotDates(calendar);
+        }
+
         const date = selectedDate ? new Date(selectedDate.ano , selectedDate.mes , 1 ,0 , 0, 0) : new Date();
         
         // setCalendar(date);
         displayMonth(date.getMonth());
         displayYear(date.getFullYear());
+
     }, [selectedDate, inicio, vProjeto, inserting, user, ferias?.length]);
 
     function daysInMonth(month, year) {
@@ -64,39 +72,37 @@ const CalendarControl = ({ handleChange, inserted, feriados, ferias,inserting, c
         return new Date(calendar.getFullYear(), calendar.getMonth(), 0).getDate();
     }
 
-    function navigateToPreviousMonth() {
-        setCalendar((prevCalendar) => {
-            let newCalendar;
-            if (prevCalendar.getMonth() === 0) {
-                // Handle December (month number 11)
-                handleChange(0, 11, prevCalendar.getFullYear() - 1);
-                newCalendar = new Date(prevCalendar.getFullYear() - 1, 11, 1);
-            } else {
-                handleChange(0, prevCalendar.getMonth() - 1, prevCalendar.getFullYear());
-                newCalendar = new Date(prevCalendar.getFullYear(), prevCalendar.getMonth() - 1, 1);
-            }
+    async function navigateToPreviousMonth() {
 
+            let newCalendar;
+            if (calendar.getMonth() === 0) {
+                // Handle December (month number 11)
+                newCalendar = new Date(calendar.getFullYear() - 1, 11, 1);
+            } else {
+                newCalendar = new Date(calendar.getFullYear(), calendar.getMonth() - 1, 1);
+            }
+    
+            handleChange(0, newCalendar.getMonth(), newCalendar.getFullYear());
+    
+            // Plot the new dates
             plotDates(newCalendar);
-            return newCalendar;
-        });
+    
+            setCalendar(newCalendar);
     }
 
     function navigateToNextMonth() {
-        setCalendar((prevCalendar) => {
             let newCalendar;
-            
-            if (prevCalendar.getMonth() === 11) {
+            if (calendar.getMonth() === 11) {
                 // Handle December (month number 11)
-                handleChange(0, 0, prevCalendar.getFullYear() + 1);
-                newCalendar = new Date(prevCalendar.getFullYear() + 1, 0, 1);
+                handleChange(0, 0, calendar.getFullYear() + 1);
+                newCalendar = new Date(calendar.getFullYear() + 1, 0, 1);
             } else {
-                handleChange(0, prevCalendar.getMonth() + 1, prevCalendar.getFullYear());
-                newCalendar = new Date(prevCalendar.getFullYear(), prevCalendar.getMonth() + 1, 1);
+                handleChange(0, calendar.getMonth() + 1, calendar.getFullYear());
+                newCalendar = new Date(calendar.getFullYear(), calendar.getMonth() + 1, 1);
             }
     
             plotDates(newCalendar);
-            return newCalendar;
-        });
+            setCalendar(newCalendar);
     }
 
     function navigateToCurrentMonth() {
@@ -595,7 +601,7 @@ const CalendarControl = ({ handleChange, inserted, feriados, ferias,inserting, c
                 <div className="calendar-inner">
                     <div className="calendar-controls">
                         <div className="calendar-prev text-end">
-                            <button className=".calendar .calendar-prev" onClick={navigateToPreviousMonth}>
+                            <button className=".calendar .calendar-prev"  onClick={() => navigateToPreviousMonth()}>
                                 <MdKeyboardArrowLeft width="128" height="128" />
                             </button>
                         </div>

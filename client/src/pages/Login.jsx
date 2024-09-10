@@ -32,7 +32,7 @@ function Login() {
     }
     const result = await dispatch(loginUser({ email, password }));
     if (result?.payload?.user) {
-        if(result.payload.user.tipo === 3 || result.payload.user.tipo === 4 || result.payload.user.tipo === 6){
+        if(result.payload.user.tipo === 3 || result.payload.user.tipo === 4 || result.payload.user.tipo === 6 || result.payload.user.tipo === 9  || result.payload.user.tipo === 10 || result.payload.user.tipo === 11 || result.payload.user.tipo === 12  ){
           setTimeout(() => {
             window.location.reload(navigate('/PaginaAdicionarHoras'));
             }, 2000);
@@ -44,13 +44,21 @@ function Login() {
         return;
       }
     } else {
+      toast.error('Valores inseridos incorretos!');
       return;
     }
   };
 
   useEffect(() => {
+
     if (user) {
+      if(user.user.tipo === 3 || user.user.tipo === 4 || user.user.tipo === 6 || user.user.tipo === 9  || user.user.tipo === 10 || user.user.tipo === 11 || user.user.tipo === 12  ){
+          navigate('/PaginaAdicionarHoras');
+          return;
+      }else{
         navigate('/PaginaPrincipal');
+      return;
+    }
     }
   }, [user, navigate]);
 
@@ -86,6 +94,7 @@ const handleForget =()=>{
           classNameInput='col-md-9'
           type='password' 
           name='password' 
+          autocomp='off'
           labelText='Password:' 
           value={values.password} 
           handleChange={handleChange} 
