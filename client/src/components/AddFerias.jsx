@@ -2,14 +2,13 @@ import { memo, useState, useEffect, useCallback } from 'react';
 import { FormRow, useFeriadosPortugal } from '../components';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
-import { } from '../components';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { adicionarFerias } from '../features/dias/diasSlice';
 import { getFeriasUtilizador } from '../features/ferias/feriasSlice';
 
 
 
-const AddFerias = ({ user, setAddFerias, verificaDia, Data, listaDias, accepted, getDates }) => {
+const AddFerias = ({ user, setAddFerias, verificaDia, Data, listaDias, accepted, getDates ,updateCalendar}) => {
   const { feriadosPortugal } = useFeriadosPortugal();
   const [fimFerias, setFimFerias] = useState(Data);
   const [selectedDates, setSelectedDates] = useState([]);
@@ -272,11 +271,21 @@ const AddFerias = ({ user, setAddFerias, verificaDia, Data, listaDias, accepted,
       accepted: accepted,
     }
 
-    await dispatch(adicionarFerias(values));
+    const result = await dispatch(adicionarFerias(values));
+    setButtonClicked(false);
+    if (!result.error) {
+    if(accepted === 2){
+      setFimFerias(Data)
+      updateCalendar();
+    } else{
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+    }
+  } else {
+    toast.error("Erro ao adicionar Ferias!")
+  }
 
-    setTimeout(() => {
-      window.location.reload();
-    }, 500);
   };
 
   return (

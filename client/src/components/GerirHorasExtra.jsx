@@ -317,15 +317,10 @@ const GerirHorasExtra = () => {
   const styleButton = {
     fontSize: "2.0rem", /* This is typically 40px */
     fontWeight: "650",  /* Light font weight */
-    lineHeight: "1.2",  /* Adjusts the line height to improve readability */
     overflow: "hidden",
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
     display: "inline-block",
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-    display: 'inline-block',
     lineHeight: 'normal',
  
   };
@@ -396,7 +391,7 @@ const GerirHorasExtra = () => {
                   className={`btn middleButton activeMainButton`}
                   
                 >
-                    Gestão de Horas Extra
+                    Gestão de Pedidos
                 </button>
           
               </div>
@@ -421,7 +416,7 @@ const GerirHorasExtra = () => {
                 disabled={isLoading || isLoadingPagamentos}
 
                 onClick={() => handleChangeButtonClicked(0)}>
-                Horas por Aceitar
+                Pedidos por Aceitar
               </button>
             </div>
             <div className={user?.user?.tipo === 7 ? "col-md-3" : "col-md-4"}>
@@ -429,7 +424,7 @@ const GerirHorasExtra = () => {
                 className={`btn ButtonsTest ${verificaAlterado === 1 ? 'active' : ''}`}
                 disabled={isLoading || isLoadingPagamentos}
                 onClick={() => handleChangeButtonClicked(1)}>
-                Horas Aceites
+                Pedidos Aceites
               </button>
             </div>
             <div className={user?.user?.tipo === 7 ? "col-md-3" : "col-md-4"}>
@@ -437,7 +432,7 @@ const GerirHorasExtra = () => {
                 className={`btn ButtonsTest ${verificaAlterado === 2 ? 'active' : ''}`}
                 disabled={isLoading || isLoadingPagamentos}
                 onClick={() => handleChangeButtonClicked(2)}>
-                Horas Recusadas
+                Pedidos Recusados
               </button>
             </div>
             {user.user.tipo === 7 &&

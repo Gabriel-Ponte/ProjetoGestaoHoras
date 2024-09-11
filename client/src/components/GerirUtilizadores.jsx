@@ -60,9 +60,6 @@ const GerirUtilizadores = () => {
         })
     : [];
   
-  
-      console.log(lista)
-
       setListaUtilizadores(lista);
       setInitialState(lista)
     });

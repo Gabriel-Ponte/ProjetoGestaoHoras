@@ -4,7 +4,9 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "pm2 start app.js",
+    "startFork": "pm2 start app.js --name GestaoHoras",
+    "start": "pm2 start app.js -i 2 --name GestaoHoras",
+    "startTest": "pm2 start app.js && cd ./client && vite preview",
     "stop": "pm2 stop app.js",
     "startwatch": "pm2 start app.js --watch",
     "stopwatch": "pm2 stop app --watch",

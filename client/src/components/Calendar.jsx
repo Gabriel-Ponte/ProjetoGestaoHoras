@@ -132,14 +132,32 @@ const CalendarControl = ({ handleChange, inserted, feriados, ferias,inserting, c
 
     function selectDate(e) {
         let newCalendar;
-        setCalendar((calendar) => {
-            handleChange(e.target.textContent, calendar.getMonth(), calendar.getFullYear());
-            newCalendar = new Date(calendar.getFullYear(), calendar.getMonth());
-            plotDates(newCalendar);
-            return newCalendar;
-        });
+
+        handleChange(e.target.textContent, calendar.getMonth(), calendar.getFullYear());
+        newCalendar = new Date(calendar.getFullYear(), calendar.getMonth());
+        plotDates(newCalendar);
+
+        setCalendar(newCalendar);
         //handleChange(e.target.textContent, calendar.getMonth(), calendar.getFullYear());
     }
+
+    async function navigateToPreviousMonth() {
+
+        let newCalendar;
+        if (calendar.getMonth() === 0) {
+            // Handle December (month number 11)
+            newCalendar = new Date(calendar.getFullYear() - 1, 11, 1);
+        } else {
+            newCalendar = new Date(calendar.getFullYear(), calendar.getMonth() - 1, 1);
+        }
+
+        handleChange(0, newCalendar.getMonth(), newCalendar.getFullYear());
+
+        // Plot the new dates
+        plotDates(newCalendar);
+
+        setCalendar(newCalendar);
+}
 
     function plotDayNames() {
         const calendarBody = document.querySelector(".calendar .calendar-body");

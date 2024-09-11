@@ -5,18 +5,14 @@
   "type": "module",
   "scripts": {
     "start": "vite preview",
-    "startS": "serve -s build",
     "test": "vite --host",
-    "startServe": "serve  --ssl-cert ../certs/cert.pem --ssl-key  ../certs/key.pem -s build -p 3001",
-    "serveHelp": "serve  --help",
     "viteHelp": "vite build --help",
     "viteOptimize": "vite optimize --help",
     "dev": "vite",
     "build": "vite build --minify esbuild",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0 --fix",
     "preview": "vite preview",
-    "": "serve -s build -L",
-    "start:trace": "node --trace-deprecation ./node_modules/serve/build/main.js  -s build"
+    "start:trace": "node --trace-deprecation ./node_modules/http-server/bin/http-server ./build -s -p 5000 --log-ip"
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
@@ -40,6 +36,7 @@
     "react-widgets": "^5.8.4",
     "styled-components": "^6.1.13",
     "web-vitals": "^4.2.3"
+
   },
   "devDependencies": {
     "@types/react": "^18.3.5",
@@ -49,8 +46,7 @@
     "fs-extra": "^11.2.0",
     "globals": "^15.9.0",
     "prop-types": "15.8.1",
-    "serve": "^14.2.3",
-    "vite": "^5.4.3",
+    "vite": "^5.4.4",
     "vite-plugin-mkcert": "^1.17.6"
   },
   "browserslist": {
@@ -74,3 +70,4 @@
     "var punycode = require('punycode/');"
   ]
 }
+

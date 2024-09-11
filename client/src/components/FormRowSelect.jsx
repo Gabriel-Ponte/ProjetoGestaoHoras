@@ -3,7 +3,7 @@ import Wrapper from '../assets/wrappers/FormRowSelect';
 import PropTypes from 'prop-types'; 
 
 
-const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, handleLista, className, classNameLabel, classNameInput, classNameResult, todos }) => {
+const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, handleLista, className, classNameLabel, classNameInput, classNameResult, todos , blocked}) => {
   if (multiple === null) {
     multiple = true;
   }
@@ -256,6 +256,7 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
             <select
               name={name}
               id={name}
+              disabled={blocked} 
               value={selectedOption[0]}
               onChange={handleSingleChange}
               className="form-select"
@@ -321,6 +322,7 @@ FormRowSelect.propTypes = {
   classNameInput: PropTypes.string, 
   classNameResult: PropTypes.string,
   todos: PropTypes.number,
+  blocked: PropTypes.bool,
 
 }
 

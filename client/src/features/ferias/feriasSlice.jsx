@@ -103,11 +103,11 @@ const feriasSlice = createSlice({
     })
     .addCase(getFeriasUtilizador.fulfilled, (state) => {
       state.isLoadingFerias = false;
-      //toast.success('Pagamento adicionado!');
+      // toast.success('Ferias Obtidas!');
     })
     .addCase(getFeriasUtilizador.rejected, (state, { payload }) => {
       state.isLoadingFerias = false;
-      // toast.error(payload);
+      toast.error(payload);
     })
     
   },

@@ -16,6 +16,8 @@ const FormRowListaHorasExtra = ({ type, value, tipoHoras, utilizadores, changed 
   const [associated, setAssociated] = useState([])
   const [tipo, setTipo] = useState([]);
 
+
+
   function feriadosPortugal(date) {
 
     const feriados = [];
@@ -139,6 +141,7 @@ const FormRowListaHorasExtra = ({ type, value, tipoHoras, utilizadores, changed 
       const dates = verificaListaDias(value);
       setHorasExtra(value.length);
       setTipo("Férias");
+      setCompensacao(false);
       setFerias(true);
 
       if (utilizadores && utilizadores.length > 0) {
@@ -251,12 +254,16 @@ const FormRowListaHorasExtra = ({ type, value, tipoHoras, utilizadores, changed 
         const hours = tt.horas.split(',');
 
         for (let g = 0; g < tipoT.length; g++) {
+
           if (tipoT[g].trim() === "Compensação de Horas Extra") {
             count += hours[g];
             countC++;
+            
+            setFerias(false);
             setCompensacao(true);
           } else if ( tipoT[g].trim() === "Ferias"){
             countF++;
+            setCompensacao(false);
             setFerias(true);
           }
         }

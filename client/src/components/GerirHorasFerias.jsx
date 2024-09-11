@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { addDiasFeriasUtilizador, deleteDiasFerias, getAllFerias, getFeriasUtilizador, handleChangeFerias } from '../features/ferias/feriasSlice';
@@ -32,7 +32,13 @@ const GerirHorasFerias = ({ setGerirFerias, styleButton }) => {
   const [change, setChange] = useState(false);
 
 
+  const memoizedIsLoading = useMemo(() => {
+    return isLoadingFerias;
+  }, [isLoadingFerias]);
+
+
   useEffect(() => {
+
     getListaFerias();
     feriadosPortugal();
     dispatch(getAllDiasUtilizador({ userNome: selectedUserID })).then((res) => {
@@ -54,10 +60,10 @@ const GerirHorasFerias = ({ setGerirFerias, styleButton }) => {
       console.error('Error Lista Ferias', error);
     }
   };
+
   const getListaFeriasUser = async () => {
     try {
       const res = await dispatch(getFeriasUtilizador(selectedUserID));
-
       const horasExtraArray = (res?.payload?.feriasArray) ? res?.payload?.feriasArray : [];
 
       setlistaFeriasUser(horasExtraArray[0]);
@@ -68,8 +74,8 @@ const GerirHorasFerias = ({ setGerirFerias, styleButton }) => {
   const handleSort = (tipo) => {
     if (isLoadingFerias) return;
     dispatch(handleChangeFerias({ name: 'sort', value: tipo }));
-
   };
+
 
   const formattedListUtilizadores = useMemo(() => {
     return Array.isArray(utilizadores) ? utilizadores : [];
@@ -112,6 +118,7 @@ const GerirHorasFerias = ({ setGerirFerias, styleButton }) => {
       console.error(error)
     }
   }
+
   const handleChangeCalendario = useCallback ((dia, mes, ano) => {
     const [selectedDia, selectedMes, selectedAno] = [dia, mes, ano];
     setSelectedDayCalendar({ dia: selectedDia, mes: selectedMes, ano: selectedAno });
@@ -122,11 +129,17 @@ const GerirHorasFerias = ({ setGerirFerias, styleButton }) => {
     const [selectedDia, selectedMes, selectedAno] = [selectedData.getDate(), selectedData.getMonth(), selectedData.getFullYear()];
     setSelectedDay({ dia: selectedDia, mes: selectedMes, ano: selectedAno });
     setSelectedDayCalendar({ dia: selectedDia, mes: selectedMes, ano: selectedAno });
-
   });
+
   const getDates = ((dates) => {
     setSelectedDates(dates)
   });
+
+
+  const updateCalendar = (() => {
+    setUpdate(!update);
+  });
+
   
   const handleChangeUtilizador = ((e) => {
     const selectedID = e.target.options[e.target.selectedIndex].getAttribute('data-key');
@@ -200,11 +213,9 @@ const GerirHorasFerias = ({ setGerirFerias, styleButton }) => {
     const domingoPascoa = calculateEaster(ano, "DomingoPascoa");
     return new Date(ano, domingoPascoa.getMonth(), domingoPascoa.getDate() + 60);
   }
+
+
   const renderCalendar = useCallback(() => {
-  
-
-
-
     const today = new Date();
     const diaSelected = selectedDay ? (selectedDay?.dia !== 0 ? selectedDay?.dia : 1) : today.getDate();
     const month = selectedDay ? selectedDay?.mes : today.getMonth();
@@ -222,7 +233,7 @@ const GerirHorasFerias = ({ setGerirFerias, styleButton }) => {
             className={`btn middleButton `}
             onClick={() => setGerirFerias(false)}
           >
-            Gestão de Horas Extra
+            Gestão de Pedidos
           </button>
         </div>
         <div className="col-md-6">
@@ -261,6 +272,7 @@ const GerirHorasFerias = ({ setGerirFerias, styleButton }) => {
           list={filteredUsers}
           handleChange={handleChangeUtilizador}
           multiple={false}
+          blocked={memoizedIsLoading}
           todos={0}
         />
         <Calendar
@@ -283,11 +295,14 @@ const GerirHorasFerias = ({ setGerirFerias, styleButton }) => {
           Data={date}
           listaDias={listaDias}
           accepted={2}
-          user={selectedUserID} />
+          user={selectedUserID}
+          updateCalendar={updateCalendar} />
+  
       </div>
+      
       </div>
     );
-  }, [selectedUser,selectedUserID,listaFeriasUser?.length, listaFeriasUser?.length > 0 ? listaFeriasUser[0]?._id : "" , selectedDates, selectedDayCalendar]);
+  }, [selectedUser,selectedUserID,listaFeriasUser?.length, listaFeriasUser?.length > 0 ? listaFeriasUser[0]?._id : "" , selectedDates, selectedDayCalendar, memoizedIsLoading ,update]);
 
 
 
@@ -308,7 +323,7 @@ const GerirHorasFerias = ({ setGerirFerias, styleButton }) => {
               style={{ ...styleButton }}
               className={`btn middleButton `}
             >
-              Gestão de Horas Extra
+              Gestão de Pedidos
             </button>
           </div>
           <div className="col-md-6">
@@ -337,7 +352,7 @@ const GerirHorasFerias = ({ setGerirFerias, styleButton }) => {
               className={`btn middleButton `}
               onClick={() => setGerirFerias(false)}
             >
-              Gestão de Horas Extra
+              Gestão de Pedidos
             </button>
           </div>
           <div className="col-md-6">
