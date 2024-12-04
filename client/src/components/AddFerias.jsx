@@ -49,10 +49,14 @@ const AddFerias = ({ user, setAddFerias, verificaDia, Data, listaDias, accepted,
 
   const verificaData = useCallback((e) => {
     const data = e?.target?.value ? e?.target?.value : e;
-    const inData = new Date(data);
+    const inData = !isNaN(new Date(data).getTime()) ? new Date(data) : "";
     const fData = new Date(fimFerias);
 
     
+    if(!inData || inData.getFullYear() < 2020){
+        return;
+    }
+
     if (inData > fData) {
       setFimFerias(inData)
       verificaListaDias(inData, inData);
@@ -207,7 +211,12 @@ const AddFerias = ({ user, setAddFerias, verificaDia, Data, listaDias, accepted,
     const data = e.target.value;
     const value = data;
     const inData = new Date(Data);
-    const fData = new Date(value);
+    const fData = !isNaN(new Date(value).getTime()) ? new Date(value) : "";
+
+
+    if(!fData || fData.getFullYear() < 2020) {
+      return;
+    }
 
     if (fData < inData) {
 
