@@ -88,47 +88,47 @@ function calculateCorpusChristi(ano) {
 }
 
 function getPossibleDaysCount(month, year) {
-  try{
-  const daysInMonth = new Date(year, month + 1, 0).getDate(); 
-  let count = 0;
-  for (let day = 1; day <= daysInMonth; day++) {
-    const date = new Date(year, month, day);
-    const dayOfWeek = date.getDay(); 
-    const isHoliday = useFeriadosPortugal(date); 
-    if (dayOfWeek !== 0 && dayOfWeek !== 6 && !isHoliday) {
+  try {
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    let count = 0;
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(year, month, day);
+      const dayOfWeek = date.getDay();
+      const isHoliday = useFeriadosPortugal(date);
+      if (dayOfWeek !== 0 && dayOfWeek !== 6 && !isHoliday) {
         count += 1;
+      }
     }
+    return count;
+  } catch (error) {
+    console.error(error)
   }
-  return count;
-}catch(error){
-  console.error(error)
-}
 }
 
 function getPossibleHoursCount(month, year) {
-  try{
-  const daysInMonth = new Date(year, month + 1, 0).getDate(); 
-  let count = 0;
-  for (let day = 1; day <= daysInMonth; day++) {
-    const date = new Date(year, month, day);
-    const dayOfWeek = date.getDay(); 
-    const isHoliday = useFeriadosPortugal(date); 
-    const today = new Date();
-    if (date >= today) {
-      break;
-    }
-    if (dayOfWeek !== 0 && dayOfWeek !== 6 && !isHoliday) {
-      if (dayOfWeek === 5) {
-        count += 6;
-      } else {
-        count += 8.5;
+  try {
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    let count = 0;
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(year, month, day);
+      const dayOfWeek = date.getDay();
+      const isHoliday = useFeriadosPortugal(date);
+      const today = new Date();
+      if (date >= today) {
+        break;
+      }
+      if (dayOfWeek !== 0 && dayOfWeek !== 6 && !isHoliday) {
+        if (dayOfWeek === 5) {
+          count += 6;
+        } else {
+          count += 8.5;
+        }
       }
     }
+    return count;
+  } catch (error) {
+    console.error(error)
   }
-  return count;
-}catch(error){
-  console.error(error)
-}
 }
 
 let ret = false;
@@ -147,6 +147,7 @@ const templateFilePath = './TemplateHoras.xlsx';
 const templateFilePathHorasExtra = './TemplateHorasExtra.xlsx';
 
 const exportExcell = async (tipo) => {
+
   try {
     // Connect to MongoDB
     const url = process.env.MONGO_URI;
@@ -172,36 +173,36 @@ const exportExcell = async (tipo) => {
 
     dataU.sort((a, b) => a.tipo - b.tipo);
 
-    if(Number(tipo) === 2){
+    if (Number(tipo) === 2) {
       dataU.forEach((item, index) => {
         excelFilePath = process.env.EXTRACTION_FOLDER;
 
-        if (item.nome !== "Admin" ) {
+        if (item.nome !== "Admin") {
           nomeUsers.push(item.nome);
         }
       })
-    } else if(Number(tipo) === 5){
+    } else if (Number(tipo) === 5) {
       excelFilePath = process.env.EXTRACTION_FOLDER5;
       dataU.forEach((item, index) => {
         if (item.nome !== "Admin" && (Number(item?.tipo) === 1 || Number(item?.tipo) === 2 || Number(item?.tipo) === 5)) {
           nomeUsers.push(item.nome);
         }
       })
-    } else if(Number(tipo) === 6){
+    } else if (Number(tipo) === 6) {
       excelFilePath = process.env.EXTRACTION_FOLDER6;
       dataU.forEach((item, index) => {
         if (item.nome !== "Admin" && (Number(item?.tipo) === 3 || Number(item?.tipo) === 6)) {
           nomeUsers.push(item.nome);
         }
       })
-    } else if(Number(tipo) === 7){
+    } else if (Number(tipo) === 7) {
       excelFilePath = process.env.EXTRACTION_FOLDER7;
       dataU.forEach((item, index) => {
         if (item.nome !== "Admin" && (Number(item?.tipo) === 4 || Number(item?.tipo) === 7)) {
           nomeUsers.push(item.nome);
         }
       })
-    } else if(Number(tipo) === 8){
+    } else if (Number(tipo) === 8) {
       excelFilePath = process.env.EXTRACTION_FOLDER8;
       dataU.forEach((item, index) => {
         if (item.nome !== "Admin" && (Number(item?.tipo) === 2 || Number(item?.tipo) === 5 || Number(item?.tipo) === 6 || Number(item?.tipo) === 7)) {
@@ -224,6 +225,7 @@ const exportExcell = async (tipo) => {
           }
         }
       })
+
 
 
       for (let i = 0; i < item?.tipoDeTrabalhoHoras?.length; i++) {
@@ -292,7 +294,7 @@ const exportExcell = async (tipo) => {
 
     const monthNames = ["JAN", "FEB", "MAR", "ABR", "MAI", "JUN", "JUL", "AGO", "SET", "OUT", "NOV", "DEZ"];
     const monthNamesComplete = ["JANEIRO", "FEVEREIRO", "MARÇO", "ABRIL", "MAIO", "JUNHO", "JULHO", "AGOSTO", "SETEMBRO", "OUTUBRO", "NOVEMBRO", "DEZEMBRO"];
-    
+
 
     nomeUsers.sort();
 
@@ -330,21 +332,20 @@ const exportExcell = async (tipo) => {
       const currentYear = date.getFullYear();
 
       if ((
-            currentYear > startYear ||
-            currentMonth > startMonth ||
-            (
-              currentYear === startYear &&
-              currentMonth === startMonth &&
-              currentDay >= startDay)
-          ) && nomeUsers.includes(itemDay?.Utilizador)) {
-          let extraHours = 0;
+        currentYear > startYear ||
+        currentMonth > startMonth ||
+        (
+          currentYear === startYear &&
+          currentMonth === startMonth &&
+          currentDay >= startDay)
+      ) && nomeUsers.includes(itemDay?.Utilizador)) {
+        let extraHours = 0;
 
-          const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-          const isFriday = dayOfWeek === 5;
-      
+        const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+        const isFriday = dayOfWeek === 5;
+
         for (let i = 0; i < itemDay.tipoDeTrabalhoHoras.length; i++) {
           const projeto = itemDay.tipoDeTrabalhoHoras[i];
-
           if (projeto.projeto === projetoGeral[0]?.Nome) {
             const tt = projeto.tipoTrabalho.split(',') || [];
             const ttH = projeto.horas.split(',') || [];
@@ -376,7 +377,7 @@ const exportExcell = async (tipo) => {
     });
 
 
-    
+
     let worksheet;
     const worksheetTemplateHorasExtra = workbookTemplateHorasExtra.getWorksheet();
     if (!worksheetTemplateHorasExtra) {
@@ -405,7 +406,7 @@ const exportExcell = async (tipo) => {
       // Add more merged cell ranges as needed
     ];
 
-          
+
     mergedCellRanges.forEach((range, index) => {
       worksheet.mergeCells(range.from.row, range.from.col, range.to.row, range.to.col);
       if (index === 0) {
@@ -440,7 +441,7 @@ const exportExcell = async (tipo) => {
         column.width = column.header.length < 10 ? 10 : column.header.length;
       }
     });
-    
+
     const userKeys = Object.keys(countExtra);
 
     for (let i = 0; i < userKeys.length; i++) {
@@ -448,15 +449,15 @@ const exportExcell = async (tipo) => {
       let row = worksheet.getRow(i + 4);
       const cellUser = row.getCell(2);
       const cellHorasExtra = row.getCell(3);
-    
+
       cellUser.value = user;
       cellHorasExtra.value = countExtra[user];
     }
-  
+
 
     for (let year = 2023; year <= dataWorksheet.getFullYear(); year++) {
       let monthCheck = dataWorksheet.getMonth();
-      
+
       let month = 0
 
       if (year === dateStart.getFullYear()) {
@@ -531,88 +532,120 @@ const exportExcell = async (tipo) => {
         headerRow.font = { bold: true };
         headerRow.alignment = { horizontal: 'center' };
         headers.forEach((header, index) => {
-          worksheet.getCell(5, startColumn + index).value = header;
+          const cell = worksheet.getCell(5, startColumn + index)
+          cell.value = header;
+
+          cell.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: 'fff2f2f2' },
+          };
+
+          cell.font = {
+            bold: true,
+            size: 9,
+          };
+
+          // Set alignment to center (horizontal and vertical)
+          cell.alignment = {
+            horizontal: 'start',
+            vertical: 'top',
+            wrapText: true,
+          };
+
+          // Apply filter to the entire header row
+          worksheet.autoFilter = {
+            from: {
+              row: 5,
+              column: startColumn + 1,
+            },
+            to: {
+              row: 5,
+              column: startColumn + headers.length - 1,
+            },
+          };
         });
+
         // Write data rows
         const startRow = 6;
         let rowCount = 0;
 
 
-
         const arrayTT = [];
         reorderedData?.forEach((item, index) => {
-          if (tipo === 2 || tipo === 5 || tipo === 8 || item.Nome === "Geral") {
-          if (!item?.Finalizado || (item.DataFim && item?.DataFim?.getMonth() >= month) && (item?.DataInicio && item?.DataInicio?.getMonth() <= month)) {
-            arrayTT[index] = [];
+          if (tipo?.toString() === "2" || tipo?.toString() === "5" || tipo?.toString() === "8" || item.Nome === "Geral") {
+            if (!item?.Finalizado || (item.DataFim && item?.DataFim?.getMonth() >= month) && (item?.DataInicio && item?.DataInicio?.getMonth() <= month)) {
+              arrayTT[index] = [];
 
-            let row = worksheet?.getRow(startRow + rowCount);
+              let row = worksheet?.getRow(startRow + rowCount);
 
-            headers?.forEach((header, columnIndex) => {
-              let value = item[header] || '';
+              headers?.forEach((header, columnIndex) => {
+                let value = item[header] || '';
 
-              // Modify the values based on the header
-              if (['DataInicio', 'DataFim'].includes(header)) {
-                value = new Date(value)?.toLocaleDateString();
-                if (value === "Invalid Date") {
-                  value = ''
+                // Modify the values based on the header
+                if (['DataInicio', 'DataFim'].includes(header)) {
+                  value = new Date(value)?.toLocaleDateString();
+                  if (value === "Invalid Date") {
+                    value = ''
+                  }
                 }
-              }
-              if (columnIndex < 6) {
-                row.getCell(columnIndex + 1).value = value;
-              }
-              // Consider adding comments for context and explanations
-              let count = rowCount;
-              if (['tipo'].includes(header)) {
-                dataD?.forEach((itemDay, indexDay) => {
-                  if (itemDay?.Data?.getMonth() === month && itemDay?.Data?.getFullYear() === year && nomeUsers.includes(itemDay?.Utilizador)) {
+                if (columnIndex < 6) {
+                  row.getCell(columnIndex + 1).value = value;
+                }
+                // Consider adding comments for context and explanations
+                let count = rowCount;
+                if (['tipo'].includes(header)) {
+                  dataD?.forEach((itemDay, indexDay) => {
+                    if (itemDay?.Data?.getMonth() === month && itemDay?.Data?.getFullYear() === year && nomeUsers.includes(itemDay?.Utilizador)) {
 
-                    for (let i = 0; i < itemDay?.tipoDeTrabalhoHoras?.length; i++) {
-                      if (itemDay?.tipoDeTrabalhoHoras[i]?.projeto === item?.Nome) {
-                        const tipoT = itemDay?.tipoDeTrabalhoHoras[i]?.tipoTrabalho.split(",");
-                        const splitHoras = itemDay?.tipoDeTrabalhoHoras[i]?.horas.split(",");
+                      for (let i = 0; i < itemDay?.tipoDeTrabalhoHoras?.length; i++) {
+                        if (itemDay?.tipoDeTrabalhoHoras[i]?.projeto === item?.Nome) {
+                          const tipoT = itemDay?.tipoDeTrabalhoHoras[i]?.tipoTrabalho.split(",");
+                          const splitHoras = itemDay?.tipoDeTrabalhoHoras[i]?.horas.split(",");
 
-                        for (let t = 0; t < tipoT.length; t++) {
-                          
-                          if (splitHoras[t] !== "0" && splitHoras[t] !== 0) {
-                            if (!arrayTT[index].some(item => item.value === tipoT[t])) {
-                              
-                              if ((Array.isArray(arrayTT[index]) && arrayTT[index].length > 0)) {
-                                rowCount++;
-                                count = rowCount;
-                                columnIndex++;
+                          for (let t = 0; t < tipoT.length; t++) {
 
+                            if (splitHoras[t] !== "0" && splitHoras[t] !== 0) {
+                              if (!arrayTT[index].some(item => item.value === tipoT[t])) {
+
+                                if ((Array.isArray(arrayTT[index]) && arrayTT[index].length > 0)) {
+                                  rowCount++;
+                                  count = rowCount;
+                                  columnIndex++;
+
+                                }
+
+                                arrayTT[index].push({ value: tipoT[t], rowCount: rowCount });
+
+                              } else {
+
+                                const existingItem = arrayTT[index].find(item => item.value === tipoT[t]);
+
+                                if (existingItem) {
+                                  count = existingItem.rowCount;
+                                }
                               }
-                              
-                              arrayTT[index].push({ value: tipoT[t], rowCount: rowCount });
-  
-                            } else {
 
-                              const existingItem = arrayTT[index].find(item => item.value === tipoT[t]);
 
-                              if (existingItem) {
-                                count = existingItem.rowCount;
-                              }
+                              row = worksheet.getRow(startRow + count);
+                              setCellValue(row, '_id_P', item._id_P);
+                              setCellValue(row, 'Cliente', item.Cliente);
+                              setCellValue(row, 'Nome', item.Nome);
+                              setCellValue(row, 'DataInicio', formatDateString(item.DataInicio));
+                              setCellValue(row, 'DataFim', formatDateString(item.DataFim));
+                              setCellValue(row, 'tipo', tipoT[t]);
+                              updateCellUser(row, headers, itemDay, tipoT[t], splitHoras[t]);
                             }
-
-                            row = worksheet.getRow(startRow + count);
-                            setCellValue(row, '_id_P', item._id_P);
-                            setCellValue(row, 'Cliente', item.Cliente);
-                            setCellValue(row, 'Nome', item.Nome);
-                            setCellValue(row, 'DataInicio', formatDateString(item.DataInicio));
-                            setCellValue(row, 'DataFim', formatDateString(item.DataFim));
-                            setCellValue(row, 'tipo', tipoT[t]);
-                            updateCellUser(row, headers, itemDay, tipoT[t], splitHoras[t]);
                           }
                         }
                       }
                     }
-                  }
-                });
-              }
-            });
-            rowCount++;
+                  });
+                }
+              });
+              rowCount++;
+            }
           }
-        }
         });
 
 
@@ -625,7 +658,7 @@ const exportExcell = async (tipo) => {
             rowNumber = row;
             break;
           }
-        
+
           // Break the loop if there are no more rows
           if (!cellCheck) {
             break;
@@ -651,6 +684,12 @@ const exportExcell = async (tipo) => {
         function updateCellUser(row, headers, itemDay, tipo, horas) {
           const cellIndex = headers.indexOf(itemDay?.Utilizador) + 1;
           const cellUser = row.getCell(cellIndex);
+
+          cellUser.alignment = {
+            horizontal: 'center',
+            vertical: 'middle',
+          };
+
           if (cellUser.value === null) {
             cellUser.value = Number(horas);
             return;
@@ -662,40 +701,221 @@ const exportExcell = async (tipo) => {
         headersNamesT.forEach((header, index) => {
           const indexA = 8 + index;
           const letter = getExcelColumnLetter(indexA - 1);
-          if(rowNumber > 0){
-            worksheet.getCell(rowCount + 6, indexA).value = { formula: `SUM(${letter}6:${letter}${rowCount + 5}) - ${letter}${rowNumber}` };
+          if (rowNumber > 0) {
+
+
             const possibleH = getPossibleHoursCount(month, year);
-            
-            worksheet.getCell(3, indexA).value = { formula: `=(SUM(${letter}6:${letter}${rowCount + 5}) - ${letter}${rowNumber}) / ${possibleH}` };
-            
-            worksheet.getCell(4, indexA).value = { formula: `=${possibleH} - (SUM(${letter}6:${letter}${rowCount + 5}) - ${letter}${rowNumber})` };
-            
-        }else{
 
-          worksheet.getCell(rowCount + 6, indexA).value = { formula: `=SUM(${letter}${6}: ${letter}${rowCount + 5})` };
-          const possibleH = getPossibleHoursCount(month , year);
+            const cell1 = worksheet.getCell(1, indexA);
 
-          worksheet.getCell(3, indexA).value = { formula: `=SUM(${letter}${6}: ${letter}${rowCount + 5})/${possibleH}` };
 
-          worksheet.getCell(4, indexA).value = { formula: `=+${possibleH}-SUM(${letter}${6}: ${letter}${rowCount + 5})` };
-        }
+            cell1.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: 'ffb8cce4' },
+            };
 
-          if (['Total'].includes(header)) {
-            const letter = getExcelColumnLetter(indexA - 2);
-            const letterS = getExcelColumnLetter(7);
-            worksheet.getCell(2, indexA).value = 'Total:';
-            worksheet.getCell(3, indexA).value = { formula: `=SUM(${letterS}${3}: ${letter}${3})/COUNT(${letterS}3:${letter}3)` };
-            worksheet.getCell(4, indexA).value = { formula: `=SUM(${letterS}${4}: ${letter}${4})` };
-            //"=SOMA(H3:S3)/CONTAR(H3:S3)"
+            const cell2 = worksheet.getCell(2, indexA);
+
+
+            cell2.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: 'ffb8cce4' },
+            };
+
+            const cell3 = worksheet.getCell(3, indexA)
+            cell3.value = { formula: `=(SUM(${letter}6:${letter}${rowCount + 5}) - ${letter}${rowNumber}) / ${possibleH}` };
+
+            // Format the cell as a percentage
+            cell3.numFmt = '0.00%';
+
+            cell3.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: 'ffb8cce4' },
+            };
+
+            cell3.font = {
+              bold: true,
+              size: 9,
+            };
+
+            // Set alignment to center (horizontal and vertical)
+            cell3.alignment = {
+              horizontal: 'center',
+              vertical: 'middle',
+            };
+
+
+            const cell4 = worksheet.getCell(4, indexA)
+            cell4.value = { formula: `=${possibleH} - (SUM(${letter}6:${letter}${rowCount + 5}) - ${letter}${rowNumber})` };
+
+            cell4.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: 'ffb8cce4' },
+            };
+
+            cell4.font = {
+              bold: true,
+              size: 9,
+            };
+
+            // Set alignment to center (horizontal and vertical)
+            cell4.alignment = {
+              horizontal: 'center',
+              vertical: 'middle',
+            };
+          } else {
+
+            const possibleH = getPossibleHoursCount(month, year);
+
+
+            const cell1 = worksheet.getCell(1, indexA);
+
+
+            cell1.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: 'ffb8cce4' },
+            };
+
+            const cell2 = worksheet.getCell(2, indexA);
+
+
+            cell2.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: 'ffb8cce4' },
+            };
+
+            const cell3 = worksheet.getCell(3, indexA);
+            if (header === "Total") {
+              const divisor = (possibleH * (headersNamesT.length - 1));
+              cell3.value = { formula: `SUM(${letter}${6}:${letter}${rowCount + 5})/${divisor}` };
+            } else {
+              cell3.value = { formula: `SUM(${letter}${6}:${letter}${rowCount + 5})/${possibleH}` };
+            }
+            // if (['Total'].includes(header)) {
+            //   const letter = getExcelColumnLetter(indexA - 2);
+            //   const letterS = getExcelColumnLetter(7);
+            //   worksheet.getCell(2, indexA).value = 'Total:';
+            //   worksheet.getCell(3, indexA).value = { formula: `=SUM(${letterS}${3}: ${letter}${3})/COUNT(${letterS}3:${letter}3)` };
+            //   worksheet.getCell(4, indexA).value = { formula: `=SUM(${letterS}${4}: ${letter}${4})` };
+            //   //"=SOMA(H3:S3)/CONTAR(H3:S3)"
+            // }
+
+
+            // Format the cell as a percentage
+            cell3.numFmt = '0.00%';
+
+            cell3.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: 'ffb8cce4' },
+            };
+
+            cell3.font = {
+              bold: true,
+              size: 9,
+            };
+
+            // Set alignment to center (horizontal and vertical)
+            cell3.alignment = {
+              horizontal: 'center',
+              vertical: 'middle',
+            };
+            const cell4 = worksheet.getCell(4, indexA);
+            if (header === "Total") {
+              const divisor = (possibleH * (headersNamesT.length - 1));
+              cell4.value = { formula: `=+${divisor}-SUM(${letter}${6}: ${letter}${rowCount + 5})` };
+            } else {
+              cell4.value = { formula: `=+${possibleH}-SUM(${letter}${6}: ${letter}${rowCount + 5})` };
+            }
+
+            cell4.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: 'ffb8cce4' },
+            };
+
+            cell4.font = {
+              bold: true,
+              size: 9,
+            };
+
+            // Set alignment to center (horizontal and vertical)
+            cell4.alignment = {
+              horizontal: 'center',
+              vertical: 'middle',
+            };
           }
+
+          // if (['Total'].includes(header)) {
+          //   const letter = getExcelColumnLetter(indexA - 2);
+          //   const letterS = getExcelColumnLetter(7);
+          //   worksheet.getCell(2, indexA).value = 'Total:';
+          //   worksheet.getCell(3, indexA).value = { formula: `=SUM(${letterS}${3}: ${letter}${3})/COUNT(${letterS}3:${letter}3)` };
+          //   worksheet.getCell(4, indexA).value = { formula: `=SUM(${letterS}${4}: ${letter}${4})` };
+          //   //"=SOMA(H3:S3)/CONTAR(H3:S3)"
+          // }
         });
 
 
-        const getPossibleDays = getPossibleDaysCount(month , year);
+        const getPossibleDays = getPossibleDaysCount(month, year);
         worksheet.getCell(2, 2).value = getPossibleDays;
 
 
+        const totalRow = startRow + rowCount;
+        let row = worksheet?.getRow(totalRow + 1);
+        const mergedCellRangesTotal = [
+          { from: { row: totalRow + 1, col: 2 }, to: { row: totalRow + 1, col: 7 } },
+          // Add more merged cell ranges as needed
+        ];
 
+        mergedCellRangesTotal.forEach((range, index) => {
+          worksheet.mergeCells(range.from.row, range.from.col, range.to.row, range.to.col);
+          if (index === 0) {
+            const cellM = worksheet.getCell(range.from.row, range.from.col);
+            cellM.value = `Total:`;
+            cellM.font = { size: 15 };
+            cellM.alignment = {
+              horizontal: 'right',
+              vertical: 'middle',
+            };
+
+            cellM.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: 'fff2f2f2' },
+            };
+
+            row.height = 30;
+
+          }
+        });
+        for (i = 7; i <= headers.length; i++) {
+
+          const cellT = row.getCell(i + 1);
+
+
+          if (i === headers.length) {
+
+
+          } else {
+            const letter = getExcelColumnLetter(i);
+
+            cellT.value = { formula: `=SUM(${letter}${6}:${letter}${rowCount + startRow - 1})` };
+          }
+          cellT.alignment = {
+            horizontal: 'center',
+            vertical: 'middle', // Use 'middle' instead of 'center'
+            wrapText: true
+          };
+
+
+        }
         for (i = startRow; i < rowCount + startRow; i++) {
           let row = worksheet.getRow(i);
           const cellT = row.getCell(headers.indexOf('Total') + 1);

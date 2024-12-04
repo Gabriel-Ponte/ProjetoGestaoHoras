@@ -63,6 +63,27 @@ const getUser = async (req, res) => {
 };
 
 
+const getUserTipo = async (req, res) => {
+  try {
+    let {
+      params: { id: userID },
+    } = req;
+    userID = sanitizeHtml(userID);
+    const user = await User.findOne(
+      { _id: userID },
+      'tipo'  // Projection to only include the 'Tipo' field
+    );
+    if (!user) {
+      throw new NotFoundError(`Nenhum utilizador com id: ${userID}`);
+    }
+    res.status(StatusCodes.OK).json({ tipo: user.tipo });
+
+  } catch (error) {
+    console.error("getUser ", error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Erro interno do servidor.' });
+  }
+};
+
 
 
 const postResetPassword = async (req, res) => {
@@ -274,6 +295,7 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   try {
+    console.log("LOGIN")
     let { email, password } = req.body;
     email = sanitizeHtml(email);
     password = sanitizeHtml(password);
@@ -465,6 +487,7 @@ module.exports = {
   register,
   login,
   getUser,
+  getUserTipo,
   getUserEmail,
   getAllUser,
   updateUser,

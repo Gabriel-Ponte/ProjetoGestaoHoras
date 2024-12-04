@@ -7,7 +7,7 @@ const { StatusCodes } = require("http-status-codes");
 const { NotFoundError } = require("../errors");
 const sanitizeHtml = require('sanitize-html');
 const { ObjectId } = require('mongodb');
-
+const { exportExcell } = require("../exportExcellFerias");
 
 const isValidObjectId = (id) => {
   try{
@@ -118,6 +118,106 @@ const getAllFerias = async (req, res) => {
   }
 };
 
+
+
+const getAllFeriasGroup = async (req, res) => {
+  try {
+    
+    let {
+      params: { utilizador },
+    } = req;
+
+    utilizador = sanitizeHtml(utilizador);
+
+
+    let users = []
+
+    if (Number(utilizador) === 1) {
+      users = await User.find({ tipo: { $in: [1, 5] } }, { foto: 0, email: 0, password: 0 });
+    } else if (Number(utilizador) === 2) {
+      users = await User.find({ tipo: { $in: [2, 5, 6] } }, { foto: 0, email: 0, password: 0 });
+    } else if (Number(utilizador) === 3) {
+      users = await User.find({ tipo: { $in: [3, 6] } }, { foto: 0, email: 0, password: 0 });
+    } else if (Number(utilizador) === 4) {
+      users = await User.find({ tipo: { $in: [4, 7] } }, { foto: 0, email: 0, password: 0 });
+    } else if (Number(utilizador) === 5) {
+
+
+      let userId = req?.user?.userId || null;
+
+      users = await User.find({ responsavel: { $in: userId } }, { foto: 0, email: 0, password: 0 });
+    }
+
+    if (!users.length) {
+      throw new NotFoundError(`Nenhum utilizador encontrado com o tipo ${utilizador}.`);
+    }
+
+
+    // Retrieve necessary data in parallel
+    const [projetoGeral, idFerias] = await Promise.all([
+      Projeto.findOne({ Tipo: 1 }),
+      TipoTrabalho.findOne({ tipo: 7 }),
+    ]);
+
+    const feriasID = idFerias._id
+    let feriasArray = {};
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+
+    const userIds = users.map(user => user._id);
+
+    const diasAllProjeto = await Dias.find({
+      $or: [{ accepted: 0 }, { accepted: 2 }, { accepted: null }],
+      "tipoDeTrabalhoHoras.projeto": projetoGeral._id,
+      "tipoDeTrabalhoHoras.tipoTrabalho": feriasID,
+       Utilizador: { $in: userIds }
+    });
+
+    await Promise.all(
+      users.map(async (utilizador) => {
+        const userID = utilizador?._id?.toString();;
+        const userName = utilizador.nome;
+        if (userName !== "Admin") {
+
+          const insertedFeriasUser = (diasAllProjeto.filter(dia => dia.Utilizador === userID));
+          let dias = [];
+          try {
+              dias = await Ferias.find({ Utilizador: userID })
+            } catch (error) {
+              console.error("Error Ferias UTF-8?" , error)
+            }
+          for (let d = 0; d < dias?.length; d++) {
+            try {
+              const responsavelID = dias[d].UtilizadorResponsavel;
+              if (isValidObjectId(responsavelID)) {
+                const user = await User.findOne({
+                  _id: responsavelID,
+                });
+
+                if (user) {
+                  dias[d].UtilizadorResponsavel = user.nome;
+                }
+              }
+            } catch (error) {
+              console.error("Error Ferias", error)
+            }
+          }
+          if (!feriasArray[userName + "," + userID]) {
+            feriasArray[userName + "," + userID] = [];
+          }
+          // Assign utilizador.Nome to dias.Utilizador
+          feriasArray[userName + "," + userID].push([...insertedFeriasUser], [...dias]);
+        }
+      })
+    );
+
+
+    return res.status(StatusCodes.CREATED).json({ feriasArray });
+  } catch (error) {
+    console.error("getAllFeriasGroup", error);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal server error' });
+  }
+};
 const getFeriasUtilizador = async (req, res) => {
   try {
     let { id } = req.params;
@@ -334,6 +434,145 @@ const addDiasFeriasUtilizador = async (req, res) => {
 };
 
 
+
+const getAllFeriasExcell = async (tipo , userId, projetoGeral, idFerias) => {
+  try {
+
+
+    let users = []
+    if (Number(tipo) === 0) {
+      users = await User.find({ tipo: { $in: [1,2,3,4, 5,6,7,9,10,11,12] } }, { foto: 0, email: 0, password: 0 });
+    }
+    if (Number(tipo) === 1) {
+      users = await User.find({ tipo: { $in: [1, 5] } }, { foto: 0, email: 0, password: 0 });
+    } else if (Number(tipo) === 2) {
+      users = await User.find({ tipo: { $in: [2, 5, 6, 7] } }, { foto: 0, email: 0, password: 0 });
+    } else if (Number(tipo) === 3) {
+      users = await User.find({ tipo: { $in: [3, 6] } }, { foto: 0, email: 0, password: 0 });
+    } else if (Number(tipo) === 4) {
+      users = await User.find({ tipo: { $in: [4, 7] } }, { foto: 0, email: 0, password: 0 });
+    } else if (Number(tipo) === 5) {
+
+
+      users = await User.find({ responsavel: { $in: userId } }, { foto: 0, email: 0, password: 0 });
+    }
+
+    if (!users.length) {
+      throw new NotFoundError(`Nenhum utilizador encontrado com o tipo ${utilizador}.`);
+    }
+
+
+
+    const feriasID = idFerias._id
+    let feriasArray = {};
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+
+    const userIds = users.map(user => user._id);
+
+    const diasAllProjeto = await Dias.find({
+      $or: [{ accepted: 0 }, { accepted: 2 }, { accepted: null }],
+      "tipoDeTrabalhoHoras.projeto": projetoGeral._id,
+      "tipoDeTrabalhoHoras.tipoTrabalho": feriasID,
+       Utilizador: { $in: userIds }
+    });
+
+    await Promise.all(
+      users.map(async (utilizador) => {
+        const userID = utilizador?._id?.toString();;
+        const userName = utilizador.nome;
+        if (userName !== "Admin") {
+
+          const insertedFeriasUser = (diasAllProjeto.filter(dia => dia.Utilizador === userID));
+          let dias = [];
+          try {
+              dias = await Ferias.find({ Utilizador: userID })
+            } catch (error) {
+              console.error("Error Ferias UTF-8?" , error)
+            }
+          for (let d = 0; d < dias?.length; d++) {
+            try {
+              const responsavelID = dias[d].UtilizadorResponsavel;
+              if (isValidObjectId(responsavelID)) {
+                const user = await User.findOne({
+                  _id: responsavelID,
+                });
+
+                if (user) {
+                  dias[d].UtilizadorResponsavel = user.nome;
+                }
+              }
+            } catch (error) {
+              console.error("Error Ferias", error)
+            }
+          }
+          if (!feriasArray[userName + "," + userID]) {
+            feriasArray[userName + "," + userID] = [];
+          }
+          // Assign utilizador.Nome to dias.Utilizador
+          feriasArray[userName + "," + userID].push([...insertedFeriasUser], [...dias]);
+        }
+      })
+    );
+
+
+    return feriasArray;
+  } catch (error) {
+    console.error("getAllFeriasExcell", error);
+    return [];
+  }
+};
+
+
+const exportFerias = async (req, res) => {
+  try {
+    let { userID: userID, date: date , tipo:tipo} = req.body;
+    userID = sanitizeHtml(userID);
+    date = sanitizeHtml(date);
+    tipo = sanitizeHtml(tipo);
+
+    console.log(tipo)
+    const user = await User.findOne({
+      _id: userID,
+    });
+
+
+    if (!user || user.tipo === 3 || user.tipo === 4) {
+      if (!user) {
+        throw new NotFoundError(`Não foi encontrado o utilizador com id ${userID}`);
+      } else {
+        throw new NotFoundError(`O utilizador ${user.nome} não possui permissões para exportar`);
+      }
+    }
+
+    let exp = false
+
+    let userId = req?.user?.userId || null;
+    // Retrieve necessary data in parallel
+    const [projetoGeral, idFerias] = await Promise.all([
+      Projeto.findOne({ Tipo: 1 }),
+      TipoTrabalho.findOne({ tipo: 7 }),
+    ]);
+
+    const listaFerias = await getAllFeriasExcell(tipo, userId, projetoGeral, idFerias);
+    
+    exp = await exportExcell(listaFerias ,tipo, projetoGeral, date);
+ 
+
+    if (exp) {
+      let filePath = exp;
+      //const filename = 'SeguimentoHoras.xlsx'
+      //res.download(process.env.EXTRACTION_FOLDER, filename);
+      res.status(StatusCodes.OK).json(`Ficheiro exportado para: ${filePath}`);
+    } else {
+      throw new BadRequestError(`Ocorreu um erro ao exportar o ficheiro. Verifique se este se encontra aberto!`);
+    }
+  } catch (error) {
+    console.error("exportDias ", error);
+    throw new BadRequestError(`Ocorreu um erro ao exportar o ficheiro. Verifique se este se encontra aberto!`);
+  }
+}
+
 const deleteDiasFerias = async (req, res) => {
   try {
     let { id } = req.params;
@@ -358,4 +597,6 @@ module.exports = {
   getFeriasUtilizador,
   addDiasFeriasUtilizador,
   deleteDiasFerias,
+  getAllFeriasGroup,
+  exportFerias,
 };

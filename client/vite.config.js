@@ -22,24 +22,24 @@ function requestLoggerPlugin() {
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  
+
   plugins: [
     requestLoggerPlugin(),
-    react(),    
-     mkcert({
-    cert: sslCert,
-    key: sslKey
-  }),], // HTTPS
+    react(),
+    mkcert({
+      cert: sslCert,
+      key: sslKey
+    }),], // HTTPS
   server: {
     https: false, // Enable HTTPS
     port: 8100, // Customize the development server port
     verbose: true, // Enable verbose logging
-    logLevel: 'info', 
+    logLevel: 'info',
   },
   preview: {
     https: false,
     port: 3000,
-    host: '192.168.10.102',
+    host: '192.168.10.189',
   },
 
   build: {
