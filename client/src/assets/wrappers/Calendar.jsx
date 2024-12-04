@@ -275,6 +275,38 @@ const Wrapper = styled.section`
 }
 
 
+.calendar .calendar-inner .calendar-body .calendar-rep2 {
+    cursor: default;
+    background: #DDB892;
+    border-radius: 4px;
+    
+}
+
+.calendar .calendar-inner .calendar-body .calendar-rep3 {
+cursor: default;
+background: #9D0208;
+border-radius: 4px;
+
+}
+.calendar .calendar-inner .calendar-body .calendar-rep4 {
+cursor: default;
+background: #3E5C76;
+border-radius: 4px;
+
+}
+.calendar .calendar-inner .calendar-body .calendar-rep5 {
+cursor: default;
+background: #FFBA08;
+border-radius: 4px;
+
+}
+.calendar .calendar-inner .calendar-body .calendar-rep6 {
+cursor: default;
+background: #253ab8;
+border-radius: 4px;
+
+}
+
 .calendar .calendar-inner .calendar-controls .calendar-next button,
 .calendar .calendar-inner .calendar-controls .calendar-prev button {
     color: var(--calendar-font-color);

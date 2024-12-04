@@ -31,6 +31,5 @@ const PaginaAdicionarHoras = () => {
       {user && (user.user.tipo === 1 || user.user.tipo === 2 || user.user.tipo === 5 || user.user.tipo === 7) && <AddHorasProjeto />}
     </>
   );
-
 }
 export default PaginaAdicionarHoras;

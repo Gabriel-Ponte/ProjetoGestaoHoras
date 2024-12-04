@@ -36,7 +36,7 @@ import AddHorasProjetoDropdown from './AddHorasProjetoDropdown';
 import AddHorasCopiar from './AddHorasCopiar';
 import useFeriadosPortugal from './FeriadosPortugal';
 import getFeriadosPortugalDate from './FeriadosPortugal';
-
+import VisualizarHorasFerias from './VisualizarHorasFerias'
 import ProjetoListaFolder from './ProjetoListaFolder';
 import NavLinksModalBox from './NavLinksModalBox';
 import GerirHorasExtra from './GerirHorasExtra'
@@ -86,5 +86,6 @@ export {
   ForgetPassword,
   ForgetPasswordChange,
   VisualizarHorasProjeto,
+  VisualizarHorasFerias,
   
 };

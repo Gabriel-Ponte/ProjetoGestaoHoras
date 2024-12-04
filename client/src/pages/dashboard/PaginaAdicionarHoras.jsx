@@ -1,10 +1,28 @@
 import { AddHoras, AddHorasGeral } from '../../components';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUserTipo } from '../../features/utilizadores/utilizadorSlice';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 
 
 const PaginaAdicionarHoras = () => {
   const { user } = useSelector((store) => store.utilizador);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      dispatch(getUserTipo(user?.user?.id)).then((res) => {
+        const tipo = res.payload.tipo ? res.payload.tipo : "";
+    })
+    } else {
+      // Handle the case where user is undefined (optional, depending on your use case)
+      toast.error("Utilizador não autenticado!");
+      navigate('/LoginPage');
+    }
+  }, [user, navigate]);
+
 
   if(user.user.tipo === 1 || user.user.tipo === 2 || user.user.tipo === 5 || user.user.tipo === 7){
   return (

@@ -1,0 +1,66 @@
+import styled from 'styled-components';
+
+const Wrapper = styled.section`
+
+align-items: center;
+justify-content: center;
+box-shadow: 0 1px 0px 0px rgba(0, 0, 0, 0.1);
+z-index: 9995;
+height:100%;
+width:100%;
+padding:0px;
+
+
+
+hr {
+  border: 1px solid #303030;
+  margin:0;
+}
+
+.ListaProjetosHeader {
+  width:100%;
+  background-color: #E5E5E5;
+  align-self: center;
+  vertical-align: baseline;
+  margin:0;
+}
+
+  .buttonHeader{
+    font-weight: bold;
+    align-items: center;
+    margin:0;
+    font-size: 1.2vw;
+    }
+
+  @media (min-width: 768px) {
+    position: sticky;
+    top: 85px;
+    .buttonHeader{
+      font-weight: bold;
+      align-items: center;
+      margin:0;
+      font-size: 1.2vw;
+      }
+    }
+  @media (min-width: 1500px) {
+  .buttonHeader{
+
+    font-weight: bold;
+    align-items: center;
+    margin:0;
+    font-size: 130%;
+    }
+  }
+    
+  .colored{
+    width:10px;
+    height:10px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-top:auto;
+    margin-bottom:auto;
+  }
+
+  `;
+
+export default Wrapper;

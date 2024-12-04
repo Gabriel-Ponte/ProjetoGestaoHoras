@@ -65,8 +65,18 @@ export const getUtilizadorThunk = async ( thunkAPI, utilizadorId ) => {
   }
 };
 
+export const getUtilizadorTipoThunk = async ( thunkAPI, utilizadorId ) => {
+  try {
+    const resp = await customFetch.get(`/utilizador/getTipo/${utilizadorId}`);
+    return resp.data;
+  } catch (error) {
+    return checkForUnauthorizedResponse(error, thunkAPI);
+  }
+};
+
 export const loginUserThunk = async (url, user, thunkAPI) => {
   try {
+    console.log("LOGIN", url)
     const resp = await customFetch.post(url, user);
     return resp.data;
   } catch (error) {

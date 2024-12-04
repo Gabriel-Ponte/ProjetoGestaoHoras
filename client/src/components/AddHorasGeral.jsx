@@ -73,7 +73,7 @@ const ListaProjetos = () => {
   const [constLoaded, setConstLoaded] = useState(false);
 
   const [modalBoxActive, setModalBoxActive] = useState(false);
-  const [addFerias, setAddFerias] = useState(false);
+  const [addFerias, setAddFerias] = useState(true);
 
 
 

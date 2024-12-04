@@ -146,7 +146,7 @@ const Dia = ({ _id, Data, NumeroHoras, _id_Group, Utilizador, tipoDeTrabalhoHora
                       <div className="row text-center">
                         <div className="col-md-6 themed-grid-col">
                           {tipoTrabalho.split(',').map((trabalho, index) => {
-                            const matchingTT = listaTT.find(item => item?._id === trabalho);
+                            const matchingTT = listaTT?.find(item => item?._id === trabalho);
                             return (
                               <p key={index}>
                                 {matchingTT ? matchingTT.TipoTrabalho.trim() : 'Tipo de Trabalho Apagado'} 

@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 import { getUserFromLocalStorage } from '../../utils/localStorage';
-import {addDiasFeriasUtilizadorThunk, deleteDiasFeriasThunk, getAllFeriasThunk, getFeriasUtilizadorThunk } from './feriasThunk';
+import {addDiasFeriasUtilizadorThunk, deleteDiasFeriasThunk, exportFeriasThunk, getAllFeriasGroupThunk, getAllFeriasThunk, getFeriasUtilizadorThunk } from './feriasThunk';
 
 const initialState = {
     sort: '-Utilizador',
@@ -37,6 +37,22 @@ export const getFeriasUtilizador = createAsyncThunk(
     }
   }
 );
+
+export const getAllFeriasGroup = createAsyncThunk(
+  '/dia/feriasGroup', 
+  async ({ userTipo }, thunkAPI) => {
+    return getAllFeriasGroupThunk(userTipo, thunkAPI);
+  }
+);
+
+export const exportFerias = createAsyncThunk(
+  'ferias/exportFerias/',
+  async ({ date, userID, tipo }, thunkAPI) => {
+    return exportFeriasThunk(thunkAPI, date, userID, tipo);
+  }
+  );
+
+
 
 export const addDiasFeriasUtilizador = createAsyncThunk('ferias/addDiasFeriasUtilizador', addDiasFeriasUtilizadorThunk);
 export const deleteDiasFerias = createAsyncThunk('ferias/deleteDiasFerias', deleteDiasFeriasThunk);
@@ -109,7 +125,41 @@ const feriasSlice = createSlice({
       state.isLoadingFerias = false;
       toast.error(payload);
     })
+
+    //getAllFeriasGroup
+    .addCase(getAllFeriasGroup.pending, (state) => {
+      state.isLoadingFerias = true;
+    })
+    .addCase(getAllFeriasGroup.fulfilled, (state) => {
+      state.isLoadingFerias = false;
+      // toast.success('Ferias Obtidas!');
+    })
+    .addCase(getAllFeriasGroup.rejected, (state, { payload }) => {
+      state.isLoadingFerias = false;
+      toast.error(payload);
+    })
+
     
+        //exportFerias
+        .addCase(exportFerias.pending, (state) => {
+          state.isLoadingFerias = true;
+        })
+        .addCase(exportFerias.fulfilled, (state , { payload }) => {
+          state.isLoading = false;
+          if (payload && payload.error) {
+            toast.error(payload.error);
+          }else{
+            toast.success(payload);
+          }
+        })
+        .addCase(exportFerias.rejected, (state, { payload }) => {
+          state.isLoading = false;
+          if (payload && payload.error) {
+            toast.error(payload.error);
+          }else{
+            toast.error("Erro ao exportar ficheiro. Verifique se está aberto!");
+          }
+        })
   },
 });
 

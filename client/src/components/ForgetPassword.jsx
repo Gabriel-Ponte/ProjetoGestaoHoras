@@ -34,7 +34,7 @@ const ForgetPassword = () => {
   };
 
   const handleVoltar = ()=>{
-        navigate('/PaginaVisualizarProjeto');
+        navigate('/login');
   }
   return (
     <Wrapper >

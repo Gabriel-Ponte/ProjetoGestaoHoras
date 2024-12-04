@@ -18,6 +18,7 @@ import {
   postResetPasswordThunk,
   updateResetedPasswordThunk,
   getAllUserTipo,
+  getUtilizadorTipoThunk,
 } from './utilizadorThunk';
 
 
@@ -71,6 +72,12 @@ export const getUser = createAsyncThunk(
   }
 );
 
+export const getUserTipo = createAsyncThunk(
+  'utilizador/getUserTipo',
+  async (id, thunkAPI) => {
+    return getUtilizadorTipoThunk(thunkAPI, id);
+  }
+);
 
 export const resetPassword = createAsyncThunk(
   'utilizador/resetPassword',
@@ -202,6 +209,24 @@ const userSlice = createSlice({
         state.isLoadingU = false;
       })
       .addCase(getUser.rejected, (state, { payload }) => {
+        state.isLoadingU = false;
+        toast.error(payload);
+      })
+
+      //getUserTipo
+      .addCase(getUserTipo.pending, (state) => {
+        state.isLoadingU = true;
+      })
+      .addCase(getUserTipo.fulfilled, (state ,payload) => {
+        const utilizador = getUserFromLocalStorage()
+        if(utilizador && utilizador.user.tipo !== payload?.payload?.tipo){
+            utilizador.user.tipo = payload?.payload?.tipo;
+            state.user = utilizador;
+            addUserToLocalStorage(utilizador);
+        }
+        state.isLoadingU = false;
+      })
+      .addCase(getUserTipo.rejected, (state, { payload }) => {
         state.isLoadingU = false;
         toast.error(payload);
       })

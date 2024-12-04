@@ -65,7 +65,6 @@ const Navbar = () => {
   const editarPerfil = () => {
     setShowLogout(false);
     setDisableAddHoras(false);
-    //window.location.reload(navigate('/PaginaEditarPerfil'));
     navigate('/PaginaEditarPerfil');
   };
 
@@ -81,7 +80,6 @@ const Navbar = () => {
     dispatch(handleChange({ name: 'tipoTrabalho', value: "" }));
     dispatch(toggleSidebar(false));
     navigate('/PaginaPrincipal');
-    //window.location.reload(navigate('/PaginaPrincipal'));
   };
 
   const navGestaoHorasExtra = () => {
@@ -90,7 +88,6 @@ const Navbar = () => {
     dispatch(handleChange({ name: 'tipoTrabalho', value: "" }));
     dispatch(toggleSidebar(false));
     navigate('/paginaGerirHorasExtra');
-    //window.location.reload(navigate('/PaginaPrincipal'));
   };
 
   const visualizarHoras=()=>{
@@ -101,11 +98,17 @@ const Navbar = () => {
     navigate('/PaginaVisualizarHoras');
   }
 
+  const visualizarFerias=()=>{
+    setShowLogout(false);
+    setDisableAddHoras(false);
+    dispatch(toggleSidebar(false));
+    navigate('/PaginaVisualizarFerias');
+  }
+
   const visualizarHorasProjetos=()=>{
     setShowLogout(false);
     setDisableAddHoras(false);
     dispatch(toggleSidebar(false));
-    //window.location.reload(navigate('/PaginaVisualizarHoras'));
     navigate('/PaginaVisualizarHorasProjetos');
   }
 
@@ -233,6 +236,23 @@ const Navbar = () => {
           disabled={disableAddHoras} >
                 Visualizar Horas
           </button>
+
+          <button 
+          className='button-30'
+          onClick={visualizarFerias} 
+          style={{            
+            fontSize: "85%",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            display: "inline-block",
+            lineHeight: "normal",
+
+            width:'auto',visibility: disableAddHoras ? 'hidden' : 'visible' }} 
+          disabled={disableAddHoras} >
+                Visualizar Ferias
+          </button>
+
             { (user?.user?.tipo === 2 || user?.user?.tipo === 7) && (
           <button 
           className='button-30'

@@ -1,8 +1,7 @@
 import { Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import { clearStore } from '../features/utilizadores/utilizadorSlice';
-import { toast } from 'react-toastify';
+import { clearStore, getUserTipo } from '../features/utilizadores/utilizadorSlice';
 import { useEffect } from 'react';
 
 const ProtectedRoute = ({ children }) => {
@@ -15,8 +14,13 @@ const ProtectedRoute = ({ children }) => {
   };
   
   useEffect(() => {
-    if (user?.user?.tipo === 8) {
-      handleClearStoreAndRedirect('Utilizador Inativo!');
+    if (user) {
+      dispatch(getUserTipo(user.user.id)).then((res) => {
+        const tipo = res.payload.tipo ? res.payload.tipo : "";
+      if (tipo === 8) {
+        handleClearStoreAndRedirect('Utilizador Inativo!');
+      }
+    })
     }
   }, [user, dispatch]);
 

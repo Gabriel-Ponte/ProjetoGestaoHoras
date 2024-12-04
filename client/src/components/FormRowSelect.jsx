@@ -8,7 +8,6 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
     multiple = true;
   }
 
-
   let separatedArray;
   if (Array.isArray(value)) {
     separatedArray = value.length > 0 ? value[0].split(/[,/]/) : [];

@@ -44,3 +44,23 @@ export const deleteDiasFeriasThunk = async (diasFeriasId, thunkAPI) => {
   }
 };
 
+
+export const getAllFeriasGroupThunk = async (utilizadorTipo, thunkAPI) => {
+  try {
+    const resp = await customFetch.get(`/ferias/feriasGroup/${utilizadorTipo}`);
+    return resp.data;
+  } catch (error) {
+    return checkForUnauthorizedResponse(error, thunkAPI);
+  }
+};
+
+
+export const exportFeriasThunk = async ( url, date, userID, tipo) => {
+  try {
+    const resp = await customFetch.post(`/ferias/exportFerias/` , { date , userID, tipo });
+    return resp.data;
+  } catch (error) {
+    console.error(error.response.data.msg)
+    return { error: error.response.data.msg };
+  }
+};

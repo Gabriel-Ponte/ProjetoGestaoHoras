@@ -19,6 +19,7 @@ import {
   PaginaResetPasswordChange,
   PaginaVisualizarHorasProjetos,
   PaginaGerirHorasExtra,
+  PaginaVisualizarHorasFerias,
 } from './pages/dashboard';
 
 function App() {
@@ -47,6 +48,8 @@ function App() {
           <Route path='paginaGerirTipoTrabalho' element={<PaginaGerirTipoTrabalho />} />
           <Route path='paginaGerirUtilizadores' element={<PaginaGerirUtilizadores />} />
           <Route path='paginaGerirHorasExtra' element={<PaginaGerirHorasExtra />} />
+          <Route path='paginaVisualizarFerias' element={<PaginaVisualizarHorasFerias />} />
+          
         </Route>
 
         <Route path='login' element={<Login />} />

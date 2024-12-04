@@ -125,6 +125,15 @@ const Wrapper = styled.section`
     margin-bottom:auto;
   }
 
+    .colored{
+    width:10px;
+    height:10px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-top:auto;
+    margin-bottom:auto;
+  }
+
 `;
 
 export default Wrapper;
