@@ -39,7 +39,7 @@ export default defineConfig({
   preview: {
     https: false,
     port: 3000,
-    host: '192.168.10.189',
+    host: '192.168.10.48',
   },
 
   build: {
