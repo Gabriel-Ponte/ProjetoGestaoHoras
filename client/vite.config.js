@@ -25,19 +25,21 @@ export default defineConfig({
 
   plugins: [
     requestLoggerPlugin(),
-    react(),
-    mkcert({
-      cert: sslCert,
-      key: sslKey
-    }),], // HTTPS
+    react(),], // HTTPS
   server: {
-    https: false, // Enable HTTPS
+    https: {
+      cert: sslCert,
+      key: sslKey,
+    },
     port: 8100, // Customize the development server port
     verbose: true, // Enable verbose logging
     logLevel: 'info',
   },
   preview: {
-    https: false,
+    https: {
+      cert: sslCert,
+      key: sslKey,
+    },
     port: 3000,
     host: '192.168.10.48',
   },
