@@ -4,9 +4,7 @@ import { getUserFromLocalStorage } from './localStorage';
 //import { rejectWithValue } from '@reduxjs/toolkit';
 
 const customFetch = axios.create({
-  // baseURL: 'http://localhost:8080/',
-  // baseURL: 'https://192.168.10.189:8080/',
-  baseURL: 'https://192.168.10.48:8080/',
+  baseURL: import.meta.env.VITE_AXIOS_FOLDER_URL,
 });
 
 customFetch.interceptors.request.use((config) => {
