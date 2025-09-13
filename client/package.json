@@ -22,7 +22,7 @@
     "@mui/x-date-pickers": "^8.11.1",
     "@reduxjs/toolkit": "^2.9.0",
     "@testing-library/jest-dom": "^6.8.0",
-    "axios": "^1.11.0",
+    "axios": "^1.12.1",
     "date-fns": "^4.1.0",
     "moment": "^2.29.4",
     "node-openssl-cert": "^0.1.44",
