@@ -1,10 +1,9 @@
 require("dotenv").config();
-require("express-async-errors");
 const path = require("path");
 const https = require('https');
 const fs = require("fs");
 const helmet = require("helmet");
-const xss = require("xss");
+const { xss } = require('express-xss-sanitizer');
 const express = require("express");
 const cors = require('cors');
 const compression = require('compression');
@@ -51,7 +50,7 @@ app.use(express.static(path.resolve(__dirname, "./client/build/")));
 
 // Middleware to parse JSON bodies and URL-encoded data
 app.use(express.json());
-app.use(express.urlencoded({ limit: '500mb',extended: true }));
+app.use(express.urlencoded({ limit: '500mb', extended: true }));
 
 // Route for XSS sanitization
 app.post('/sanitizedInput', (req, res) => {
@@ -71,9 +70,9 @@ app.use("/ferias", authenticateUser, feriasRouter);
 
 
 // Catch-all route for serving the client app
-app.get("*", (req, res) => {
+app.get('/*splat', async (req, res) => {
   res.sendFile(path.resolve(__dirname, "./client/public/", "index.html"));
-});
+})
 
 // Error handling middleware
 app.use(notFoundMiddleware);
@@ -87,7 +86,7 @@ const start = async () => {
     await connectDB(process.env.MONGO_URI);
 
     const server = https.createServer({ key, cert }, app);
-    
+
     server.listen(port, () => {
       console.log(`Server is listening on port ${port}...`);
     });
@@ -98,10 +97,10 @@ const start = async () => {
     //   const memoryUsage = process.memoryUsage();
     //   console.log(`Memory Usage: ${JSON.stringify(memoryUsage)}`);
     // }, 30000); // Log memory usage every 30 seconds
-    
+
 
     // app.listen(port, () =>
-    
+
     //   console.log(`Server is listening on port ${port}...`)
     // );
   } catch (error) {

@@ -10,90 +10,91 @@ import { toast } from 'react-toastify';
 import TimePickerClock from './TimePickerClock';
 import OptionsPanel from './OptionsPanel';
 
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import PropTypes from 'prop-types'; 
+import PropTypes from 'prop-types';
 import { getFeriadosPortugalDate } from '../components/FeriadosPortugal';
 
 
-const AddHorasGeralDropdown = ({ sortedProjetos, verificaChange, listaTipoTrabalho, 
+const AddHorasGeralDropdown = ({ sortedProjetos, verificaChange, listaTipoTrabalho,
   values, handleHorasChange, convertToMinutes,
   arrayTipoTrabalho, matchFoundProjeto, ListaTrabalhoAll,
   ListaTrabalhoGeral, ListaTrabalhoGeralOther, setListaTrabalhoGeralOther,
   setListaTipoTrabalho, setListaTrabalhoGeral, change }) => {
 
-    const [StringListaTrabalhoGeral, setStringListaTrabalhoGeral] = useState();
-    const [StringListaTrabalhoGeralOther, setStringListaTrabalhoGeralOther] = useState();
-    const [listaTrabalhoGeralAdd, setListaTrabalhoGeralAdd] = useState();
-    const [StringListaTrabalhoCompensacaoD, setStringListaTrabalhoCompensacaoD] = useState();
-    const [listaTrabalhoGeralD, setListaTrabalhoGeralD] = useState([]);
-    const [options, setOptions] = useState();
+  const [StringListaTrabalhoGeral, setStringListaTrabalhoGeral] = useState();
+  const [StringListaTrabalhoGeralOther, setStringListaTrabalhoGeralOther] = useState();
+  const [listaTrabalhoGeralAdd, setListaTrabalhoGeralAdd] = useState();
+  const [StringListaTrabalhoCompensacaoD, setStringListaTrabalhoCompensacaoD] = useState();
+  const [listaTrabalhoGeralD, setListaTrabalhoGeralD] = useState([]);
+  const [options, setOptions] = useState();
 
 
-    useEffect(() => {
-      const date = new Date(values.Data);
-      const dayStart = new Date(Date.UTC(2023, 11, 1, 0, 0, 0));
-      const dayEnd = new Date(Date.UTC(2023, 11, 10, 0, 0, 0));
+  useEffect(() => {
+    const date = new Date(values.Data);
+    const dayStart = new Date(Date.UTC(2023, 11, 1, 0, 0, 0));
+    const dayEnd = new Date(Date.UTC(2023, 11, 10, 0, 0, 0));
 
-      const dateDay = date.getDate();
-      const dateMonth = date.getMonth();
-      const dateYear = date.getFullYear();
+    const dateDay = date.getDate();
+    const dateMonth = date.getMonth();
+    const dateYear = date.getFullYear();
 
-      const startDay = dayStart.getDate();
-      const startMonth = dayStart.getMonth();
-      const startYear = dayStart.getFullYear();
+    const startDay = dayStart.getDate();
+    const startMonth = dayStart.getMonth();
+    const startYear = dayStart.getFullYear();
 
-      const endDay = dayEnd.getDate();
+    const endDay = dayEnd.getDate();
 
-      let ListaTrabalhoGeralString = [];
-      if((dateDay >=  startDay && dateMonth === startMonth && dateYear === startYear)  || dateYear > startYear || dateMonth > startMonth){
-        if((dateDay <=  endDay && dateMonth === startMonth && dateYear === startYear)){
+    let ListaTrabalhoGeralString = [];
+    if ((dateDay >= startDay && dateMonth === startMonth && dateYear === startYear) || dateYear > startYear || dateMonth > startMonth) {
+      if ((dateDay <= endDay && dateMonth === startMonth && dateYear === startYear)) {
 
-          if(date && (date.getDay() === 0 || date.getDay() === 6 || getFeriadosPortugalDate(date))){
-            setListaTrabalhoGeralAdd(tipoTrabalhoArray.filter(item => (item.tipo === 2 || item.tipo === 5)));
-            ListaTrabalhoGeralString = listaTipoTrabalho.filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 5)).map(item => item.TipoTrabalho).join(",");
-          } else{
-          setListaTrabalhoGeralAdd(ListaTrabalhoGeral.filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 5  || item.tipo === 7)));
+        if (date && (date.getDay() === 0 || date.getDay() === 6 || getFeriadosPortugalDate(date))) {
+          setListaTrabalhoGeralAdd(tipoTrabalhoArray.filter(item => (item.tipo === 2 || item.tipo === 5)));
+          ListaTrabalhoGeralString = listaTipoTrabalho.filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 5)).map(item => item.TipoTrabalho).join(",");
+        } else {
+          setListaTrabalhoGeralAdd(ListaTrabalhoGeral.filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 5 || item.tipo === 7)));
           ListaTrabalhoGeralString = listaTipoTrabalho.filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 5 || item.tipo === 7)).map(item => item.TipoTrabalho).join(",");
-        }} else {
-          if(date && (date.getDay() === 0 || date.getDay() === 6 || getFeriadosPortugalDate(date))){
-            setListaTrabalhoGeralAdd(ListaTrabalhoGeral.filter(item => (item.tipo === 2 )));
-            ListaTrabalhoGeralString = listaTipoTrabalho
+        }
+      } else {
+        if (date && (date.getDay() === 0 || date.getDay() === 6 || getFeriadosPortugalDate(date))) {
+          setListaTrabalhoGeralAdd(ListaTrabalhoGeral.filter(item => (item.tipo === 2)));
+          ListaTrabalhoGeralString = listaTipoTrabalho
             .filter(item => (item.tipo === 2))
             .map(item => item.TipoTrabalho).join(",");
-          } else{
+        } else {
           setListaTrabalhoGeralAdd(ListaTrabalhoGeral.filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 7)));
           ListaTrabalhoGeralString = listaTipoTrabalho
-          .filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 7))
-          .map(item => item.TipoTrabalho).join(",");
+            .filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 7))
+            .map(item => item.TipoTrabalho).join(",");
         }
       }
-      }else{
-        setListaTrabalhoGeralAdd(ListaTrabalhoGeral.filter(item => (item.tipo === 2)));
-        ListaTrabalhoGeralString = listaTipoTrabalho
+    } else {
+      setListaTrabalhoGeralAdd(ListaTrabalhoGeral.filter(item => (item.tipo === 2)));
+      ListaTrabalhoGeralString = listaTipoTrabalho
         .filter(item => (item.tipo === 2 || item.tipo === 7))
         .map(item => item.TipoTrabalho)
         .join(",");
-      }
+    }
 
 
-      //const ListaTrabalho = listaTipoTrabalho.filter(item => item.tipo === 1).map(item => item.TipoTrabalho).join(",");
+    //const ListaTrabalho = listaTipoTrabalho.filter(item => item.tipo === 1).map(item => item.TipoTrabalho).join(",");
 
-      const ListaTrabalhoGeralOther = listaTipoTrabalho
-        .filter(item => item.tipo === 3)
-        .map(item => item.TipoTrabalho)
-        .join(",");
-        
+    const ListaTrabalhoGeralOther = listaTipoTrabalho
+      .filter(item => item.tipo === 3)
+      .map(item => item.TipoTrabalho)
+      .join(",");
 
-      const ListaTrabalhoGeralDomingo = listaTipoTrabalho.filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 6));
-      const strListaTrabalhoGeralDomingo = ListaTrabalhoGeralDomingo.map(item => item.TipoTrabalho).join(",");
 
-      setListaTrabalhoGeralD(ListaTrabalhoGeralDomingo);
-      setStringListaTrabalhoCompensacaoD(strListaTrabalhoGeralDomingo);
-      setStringListaTrabalhoGeral(ListaTrabalhoGeralString);
-      setStringListaTrabalhoGeralOther(ListaTrabalhoGeralOther);
-      setOptions(ListaTrabalhoGeralOther?.split(","));
-    }, [listaTipoTrabalho, values.Data, change]);
+    const ListaTrabalhoGeralDomingo = listaTipoTrabalho.filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 6));
+    const strListaTrabalhoGeralDomingo = ListaTrabalhoGeralDomingo.map(item => item.TipoTrabalho).join(",");
+
+    setListaTrabalhoGeralD(ListaTrabalhoGeralDomingo);
+    setStringListaTrabalhoCompensacaoD(strListaTrabalhoGeralDomingo);
+    setStringListaTrabalhoGeral(ListaTrabalhoGeralString);
+    setStringListaTrabalhoGeralOther(ListaTrabalhoGeralOther);
+    setOptions(ListaTrabalhoGeralOther?.split(","));
+  }, [listaTipoTrabalho, values.Data, change]);
 
 
   const dispatch = useDispatch();
@@ -181,177 +182,177 @@ const AddHorasGeralDropdown = ({ sortedProjetos, verificaChange, listaTipoTrabal
               <div className="row mb-3 text-center">
                 <div className="col-md-12  themed-grid-col">
                   <div className='row'>
-                  <div className="col-md-2  themed-grid-col"></div>
+                    <div className="col-md-2  themed-grid-col"></div>
                     <div className="col-md-8 mt-5 btn-container">
-                        <div className="row mb-3 text-center" key={"NewDia" + project._id}>
-                          {!verificaChange && (((values?.accepted === 5 || values?.accepted === 4) ? StringListaTrabalhoCompensacaoD : StringListaTrabalhoGeral)?.split(",").map((t, i) => {
-                              const ttID = listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(",");
-                              let value = 0.0;
+                      <div className="row mb-3 text-center" key={"NewDia" + project._id}>
+                        {!verificaChange && (((values?.accepted === 5 || values?.accepted === 4) ? StringListaTrabalhoCompensacaoD : StringListaTrabalhoGeral)?.split(",").map((t, i) => {
+                          const ttID = listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(",");
+                          let value = 0.0;
 
-                              if (values.tipoDeTrabalhoHoras[project._id]) {
-                                const valuesHorasTypeArray = values.tipoDeTrabalhoHoras[project._id].horas ? values.tipoDeTrabalhoHoras[project._id].horas?.split(",") : [];
-                                const valuesTTTypeArray = values.tipoDeTrabalhoHoras[project._id].tipoTrabalho ? values.tipoDeTrabalhoHoras[project._id].tipoTrabalho?.split(",") : [];
+                          if (values.tipoDeTrabalhoHoras[project._id]) {
+                            const valuesHorasTypeArray = values.tipoDeTrabalhoHoras[project._id].horas ? values.tipoDeTrabalhoHoras[project._id].horas?.split(",") : [];
+                            const valuesTTTypeArray = values.tipoDeTrabalhoHoras[project._id].tipoTrabalho ? values.tipoDeTrabalhoHoras[project._id].tipoTrabalho?.split(",") : [];
 
 
-                                for (let h = 0; h < valuesHorasTypeArray?.length; h++) {
-                                  if (valuesTTTypeArray[h] === ttID) {
-                                    value = valuesHorasTypeArray[h];
-                                  }
-                                }
+                            for (let h = 0; h < valuesHorasTypeArray?.length; h++) {
+                              if (valuesTTTypeArray[h] === ttID) {
+                                value = valuesHorasTypeArray[h];
                               }
-                    
-
-                              return (
-                                <TimePickerClock
-                                  key={`New${i}-${project._id}-${ttID}`}
-                                  name={t}
-                                  selectedTime={convertToMinutes(value)}
-                                  projectID={project._id}
-                                  ttID={ttID}
-                                  projectNome={project.Nome}
-                                  convertToInt={handleHorasChange}
-                                  change={change}
-                                />
-                              )
-                            })
-                          )
+                            }
                           }
-                          {project.Nome === "Geral" && (
-                            <OptionsPanel options={options} handleTipoTrabalho={handleTipoTrabalho} />
-                          )}
-
-                          <div key={"NewDia" + project._id}>
-                            {verificaChange && values.tipoDeTrabalhoHoras?.length !== 0 && Array.isArray(arrayTipoTrabalho) &&
-                              arrayTipoTrabalho.map((item, ID) => {
-                                const itemTypeArray = item.tipoTrabalho ? item.tipoTrabalho?.split(",") : [];
-                                const matchFound = new Array(itemTypeArray?.length + 1).fill(false);
-
-                                if (project._id === item.projeto) {
-
-                                  const valuesHorasTypeArray = values.tipoDeTrabalhoHoras[project._id].horas ? values.tipoDeTrabalhoHoras[project._id].horas?.split(",") : [];
-
-                                  matchFoundProjeto[idProjeto] = true;
-                                  return (
-                                    
-                                    <div key={"EditarDia" + ID}>
-                                      {((values?.accepted === 5 || values?.accepted === 4) ? StringListaTrabalhoCompensacaoD : StringListaTrabalhoGeral)?.split(",").map((t, i) => 
-                                        itemTypeArray.map((iT, iId) => {  
-                                          const lTrabalho = (((values?.accepted === 5 || values?.accepted === 4) && project.Nome === "Geral") ?  listaTrabalhoGeralD :  project.Nome !== "Geral" ? ListaTrabalhoAll : listaTrabalhoGeralAdd);                           
 
 
-                                          if ((lTrabalho[i]?._id) === iT) {
-                                            matchFound[i] = true;
-                                            return (
-                                              <TimePickerClock
-                                                key={i}
-                                                name={t}
-                                                selectedTime={valuesHorasTypeArray[iId] != null && !isNaN(valuesHorasTypeArray[iId])
-                                                  ? convertToMinutes(valuesHorasTypeArray[iId])
-                                                  : []}
-                                                projectID={project._id}
-                                                ttID={listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(",")}
-                                                projectNome={project.Nome}
-                                                convertToInt={handleHorasChange}
-                                                change={change}
-                                              />
-                                            );
-                                          } else {
+                          return (
+                            <TimePickerClock
+                              key={`New${i}-${project._id}-${ttID}`}
+                              name={t}
+                              selectedTime={convertToMinutes(value)}
+                              projectID={project._id}
+                              ttID={ttID}
+                              projectNome={project.Nome}
+                              convertToInt={handleHorasChange}
+                              change={change}
+                            />
+                          )
+                        })
+                        )
+                        }
+                        {project.Nome === "Geral" && (
+                          <OptionsPanel options={options} handleTipoTrabalho={handleTipoTrabalho} />
+                        )}
 
-                                            if (iId === itemTypeArray?.length - 1) {
-                                              if (!matchFound[i]) {
-                                                return (
-                                                  <TimePickerClock
-                                                    key={i}
-                                                    name={t}
-                                                    selectedTime={isNaN(values.tipoDeTrabalhoHoras[project._id]?.[t])}
-                                                    projectID={project._id}
-                                                    ttID={listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(",")}
-                                                    projectNome={project.Nome}
-                                                    convertToInt={handleHorasChange}
-                                                    change={change}
-                                                  />
-                                                );
-                                              }
-                                            }
-                                          }
-                                          return false;
-                                        }
-                                        )
-                                      )
-                                      }
+                        <div key={"NewDia" + project._id}>
+                          {verificaChange && values.tipoDeTrabalhoHoras?.length !== 0 && Array.isArray(arrayTipoTrabalho) &&
+                            arrayTipoTrabalho.map((item, ID) => {
+                              const itemTypeArray = item.tipoTrabalho ? item.tipoTrabalho?.split(",") : [];
+                              const matchFound = new Array(itemTypeArray?.length + 1).fill(false);
 
-                                      {project.Nome === "Geral" && StringListaTrabalhoGeralOther?.length > 0 && StringListaTrabalhoGeralOther?.split(",").map((t, i) =>
-                                        itemTypeArray.map((iT, iId) => {
+                              if (project._id === item.projeto) {
 
-                                          if ((project.Nome === "Geral" && ListaTrabalhoGeralOther[i]?._id) === iT) {
-  
-                                            matchFound[i] = true;
-                                            return (
-                                              <TimePickerClock
-                                                key={i}
-                                                name={t}
-                                                selectedTime={
-                                                  valuesHorasTypeArray[iId] != null && !isNaN(valuesHorasTypeArray[iId])
-                                                    ? convertToMinutes(valuesHorasTypeArray[iId])
-                                                    : []
-                                                }
-                                                projectID={project._id}
-                                                ttID={listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(",")}
-                                                projectNome={project.Nome}
-                                                convertToInt={handleHorasChange}
-                                                change={change}
-                                              />
-                                            );
-                                          }
-                                          return false;
-                                        }
-                                        )
-                                      )}
-                                    </div>
-                                  );
-                                } else {
-                                  if (!matchFoundProjeto[idProjeto] && ID === arrayTipoTrabalho?.length - 1) {
-                                    return (
-                                      <div key={"EditarDiaProjetoNotFound" + idProjeto}>
-                                        {((values?.accepted === 5 || values?.accepted === 4) ? StringListaTrabalhoCompensacaoD : StringListaTrabalhoGeral)?.split(",").map((t, i) => {
-                                          const ttID = (listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(","))
-                                          let value = "";
+                                const valuesHorasTypeArray = values.tipoDeTrabalhoHoras[project._id].horas ? values.tipoDeTrabalhoHoras[project._id].horas?.split(",") : [];
 
-                                          if (values.tipoDeTrabalhoHoras[project._id]) {
-                                            const valuesHorasTypeArray = values.tipoDeTrabalhoHoras[project._id].horas ? values.tipoDeTrabalhoHoras[project._id].horas?.split(",") : [];
-                                            const valuesTTTypeArray = values.tipoDeTrabalhoHoras[project._id].tipoTrabalho ? values.tipoDeTrabalhoHoras[project._id].tipoTrabalho?.split(",") : [];
+                                matchFoundProjeto[idProjeto] = true;
+                                return (
 
-                                            for (let h = 0; h < valuesHorasTypeArray?.length; h++) {
-                                              if (valuesTTTypeArray[h] === ttID) {
-                                                value = valuesHorasTypeArray[h];
-                                              }
-                                            }
-                                          }
+                                  <div key={"EditarDia" + ID}>
+                                    {((values?.accepted === 5 || values?.accepted === 4) ? StringListaTrabalhoCompensacaoD : StringListaTrabalhoGeral)?.split(",").map((t, i) =>
+                                      itemTypeArray.map((iT, iId) => {
+                                        const lTrabalho = (((values?.accepted === 5 || values?.accepted === 4) && project.Nome === "Geral") ? listaTrabalhoGeralD : project.Nome !== "Geral" ? ListaTrabalhoAll : listaTrabalhoGeralAdd);
+
+
+                                        if ((lTrabalho[i]?._id) === iT) {
+                                          matchFound[i] = true;
                                           return (
                                             <TimePickerClock
                                               key={i}
                                               name={t}
-                                              selectedTime={convertToMinutes(value)}
+                                              selectedTime={valuesHorasTypeArray[iId] != null && !isNaN(valuesHorasTypeArray[iId])
+                                                ? convertToMinutes(valuesHorasTypeArray[iId])
+                                                : []}
                                               projectID={project._id}
-                                              ttID={ttID}
+                                              ttID={listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(",")}
                                               projectNome={project.Nome}
                                               convertToInt={handleHorasChange}
                                               change={change}
                                             />
-                                          )
+                                          );
+                                        } else {
+
+                                          if (iId === itemTypeArray?.length - 1) {
+                                            if (!matchFound[i]) {
+                                              return (
+                                                <TimePickerClock
+                                                  key={i}
+                                                  name={t}
+                                                  selectedTime={isNaN(values.tipoDeTrabalhoHoras[project._id]?.[t])}
+                                                  projectID={project._id}
+                                                  ttID={listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(",")}
+                                                  projectNome={project.Nome}
+                                                  convertToInt={handleHorasChange}
+                                                  change={change}
+                                                />
+                                              );
+                                            }
+                                          }
                                         }
+                                        return false;
+                                      }
+                                      )
+                                    )
+                                    }
+
+                                    {project.Nome === "Geral" && StringListaTrabalhoGeralOther?.length > 0 && StringListaTrabalhoGeralOther?.split(",").map((t, i) =>
+                                      itemTypeArray.map((iT, iId) => {
+
+                                        if ((project.Nome === "Geral" && ListaTrabalhoGeralOther[i]?._id) === iT) {
+
+                                          matchFound[i] = true;
+                                          return (
+                                            <TimePickerClock
+                                              key={i}
+                                              name={t}
+                                              selectedTime={
+                                                valuesHorasTypeArray[iId] != null && !isNaN(valuesHorasTypeArray[iId])
+                                                  ? convertToMinutes(valuesHorasTypeArray[iId])
+                                                  : []
+                                              }
+                                              projectID={project._id}
+                                              ttID={listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(",")}
+                                              projectNome={project.Nome}
+                                              convertToInt={handleHorasChange}
+                                              change={change}
+                                            />
+                                          );
+                                        }
+                                        return false;
+                                      }
+                                      )
+                                    )}
+                                  </div>
+                                );
+                              } else {
+                                if (!matchFoundProjeto[idProjeto] && ID === arrayTipoTrabalho?.length - 1) {
+                                  return (
+                                    <div key={"EditarDiaProjetoNotFound" + idProjeto}>
+                                      {((values?.accepted === 5 || values?.accepted === 4) ? StringListaTrabalhoCompensacaoD : StringListaTrabalhoGeral)?.split(",").map((t, i) => {
+                                        const ttID = (listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(","))
+                                        let value = "";
+
+                                        if (values.tipoDeTrabalhoHoras[project._id]) {
+                                          const valuesHorasTypeArray = values.tipoDeTrabalhoHoras[project._id].horas ? values.tipoDeTrabalhoHoras[project._id].horas?.split(",") : [];
+                                          const valuesTTTypeArray = values.tipoDeTrabalhoHoras[project._id].tipoTrabalho ? values.tipoDeTrabalhoHoras[project._id].tipoTrabalho?.split(",") : [];
+
+                                          for (let h = 0; h < valuesHorasTypeArray?.length; h++) {
+                                            if (valuesTTTypeArray[h] === ttID) {
+                                              value = valuesHorasTypeArray[h];
+                                            }
+                                          }
+                                        }
+                                        return (
+                                          <TimePickerClock
+                                            key={i}
+                                            name={t}
+                                            selectedTime={convertToMinutes(value)}
+                                            projectID={project._id}
+                                            ttID={ttID}
+                                            projectNome={project.Nome}
+                                            convertToInt={handleHorasChange}
+                                            change={change}
+                                          />
                                         )
-                                        }
-                                      </div>
-                                    );
-                                  }
+                                      }
+                                      )
+                                      }
+                                    </div>
+                                  );
                                 }
-                                return false;
                               }
-                              )
+                              return false;
                             }
-                          </div>
+                            )
+                          }
                         </div>
+                      </div>
 
                     </div>
 
@@ -376,22 +377,22 @@ const AddHorasGeralDropdown = ({ sortedProjetos, verificaChange, listaTipoTrabal
 };
 
 AddHorasGeralDropdown.propTypes = {
-    sortedProjetos: PropTypes.array.isRequired,
-    verificaChange: PropTypes.bool.isRequired,
-    listaTipoTrabalho: PropTypes.array.isRequired,
-    values: PropTypes.object.isRequired,
-    handleHorasChange: PropTypes.func.isRequired,
-    convertToMinutes: PropTypes.func.isRequired,
-    arrayTipoTrabalho: PropTypes.array.isRequired,
-    matchFoundProjeto: PropTypes.array.isRequired,
-    ListaTrabalhoAll: PropTypes.array.isRequired,
-    ListaTrabalhoGeral: PropTypes.array.isRequired,
-    ListaTrabalhoGeralOther: PropTypes.array.isRequired,
-    setListaTrabalhoGeralOther: PropTypes.func.isRequired,
-    setListaTipoTrabalho: PropTypes.func.isRequired,
-    setListaTrabalhoGeral : PropTypes.func.isRequired,
-    change : PropTypes.number.isRequired,
-  }
+  sortedProjetos: PropTypes.array.isRequired,
+  verificaChange: PropTypes.bool.isRequired,
+  listaTipoTrabalho: PropTypes.array.isRequired,
+  values: PropTypes.object.isRequired,
+  handleHorasChange: PropTypes.func.isRequired,
+  convertToMinutes: PropTypes.func.isRequired,
+  arrayTipoTrabalho: PropTypes.array.isRequired,
+  matchFoundProjeto: PropTypes.array.isRequired,
+  ListaTrabalhoAll: PropTypes.array.isRequired,
+  ListaTrabalhoGeral: PropTypes.array.isRequired,
+  ListaTrabalhoGeralOther: PropTypes.array.isRequired,
+  setListaTrabalhoGeralOther: PropTypes.func.isRequired,
+  setListaTipoTrabalho: PropTypes.func.isRequired,
+  setListaTrabalhoGeral: PropTypes.func.isRequired,
+  change: PropTypes.number.isRequired,
+}
 
 
 export default memo(AddHorasGeralDropdown);
