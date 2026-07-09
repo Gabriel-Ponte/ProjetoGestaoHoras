@@ -17,7 +17,7 @@ function Footer() {
             </div>
 
             <div className="col-6 text-center">
-            <p><MdOutlineEmail />  info@isqctag.pt
+            <p><MdOutlineEmail /> {import.meta.env.VITE_INFO_EMAIL} 
               </p>
             </div>
           </div>
@@ -26,14 +26,19 @@ function Footer() {
             <p className="textFooter">Versão: 1.0.0</p>
             </div>
             <div className="col-6 text-end">
-              <p >
-                <BsTelephoneFill />
-                +351 927 752 803
-              </p>
-              <p >
-                <BsTelephoneFill />
-                +351 927 752 769
-              </p>
+                {import.meta.env.VITE_PHONE_NUMBER && (
+                  <p >
+                    <BsTelephoneFill size={14} />
+                    <span>{import.meta.env.VITE_PHONE_NUMBER}</span>
+                  </p>
+                )}
+
+                {import.meta.env.VITE_PHONE_NUMBER_2 && (
+                  <p >
+                    <BsTelephoneFill size={14} />
+                    <span>{import.meta.env.VITE_PHONE_NUMBER_2}</span>
+                  </p>
+                )}
             </div>
           </div>
           </div>
