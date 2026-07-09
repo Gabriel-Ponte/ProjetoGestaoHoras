@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { FormRow, Header, Footer } from '../components';
-import Wrapper from '../assets/wrappers/LoginPage';
+import Wrapper from '@/styles/LoginPage';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../features/utilizadores/utilizadorSlice';

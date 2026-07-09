@@ -84,6 +84,7 @@ const port = process.env.PORT || 8080;
 const start = async () => {
   try {
     await connectDB(process.env.MONGO_URI);
+    console.log('MongoDB connected.');
 
     const server = https.createServer({ key, cert }, app);
 
@@ -104,7 +105,11 @@ const start = async () => {
     //   console.log(`Server is listening on port ${port}...`)
     // );
   } catch (error) {
-    console.error(error);
+    console.error('FATAL: could not connect to MongoDB — server not started.');
+    console.error(error.message || error);
+    // Exit so PM2 surfaces the failure clearly (and retries) instead of the
+    // server limping along and returning "buffering timed out" on every request.
+    process.exit(1);
   }
 };
 

@@ -1,47 +1,46 @@
-import BigSidebar from './BigSidebar';
-import AddProjectForm from './AddProjetoForm';
-import TimePickerClock from './TimePickerClock';
-import FormRow from './FormRow';
+import BigSidebar from '@/components/layout/BigSidebar';
+import AddProjectForm from '@/components/projetos/AddProjetoForm';
+import TimePickerClock from '@/components/horas/TimePickerClock';
+import FormRow from '@/components/forms/FormRow';
 
-import FormRowSelect from './FormRowSelect';
-import FormRowSelectTipo from './FormRowSelectTipo';
-import FormRowCheckbox from './FormRowCheckbox';
-import FormRowCheckboxMultiple from './FormRowCheckboxMultiple';
-import FormRowCheckboxListaClientes from './FormRowCheckboxListaClientes';
-import FormRowListaHorasExtra from './FormRowListaHorasExtra'
-import AddUtilizador from './AddUtilizador';
-import Footer from './Footer';
-import Header from './header';
-import Navbar from './Navbar';
-import NavbarGeral from './NavbarGeral';
-import SmallSidebar from './SmallSidebar';
-import ListaProjetos from './ListaProjetos';
-import Loading from './Loading';
-import EditarUtilizador from './EditarUtilizador';
-import AddHoras from './AddHoras';
-import AddHorasGeral from './AddHorasGeral';
-import AddHorasProjeto from './AddHorasProjeto'
-import VisualizarProjeto from './VisualizarProjeto';
-import EditarProjeto from './EditarProjeto';
-import VisualizarHoras from './VisualizarHoras';
-import DeleteFromDB from './DeleteFromDB';
-import GerirTipoTrabalho from './GerirTipoTrabalho';
-import GerirUtilizadores from './GerirUtilizadores';
-import ForgetPassword from './ForgetPassword';
-import ForgetPasswordChange from './ForgetPasswordChange';
-import OptionsPanel from './OptionsPanel';
-import AddHorasDropdown from './AddHorasDropdown';
-import AddHorasGeralDropdown from './AddHorasGeralDropdown';
-import AddHorasProjetoDropdown from './AddHorasProjetoDropdown';
-import AddHorasCopiar from './AddHorasCopiar';
-import useFeriadosPortugal from './FeriadosPortugal';
-import getFeriadosPortugalDate from './FeriadosPortugal';
+import FormRowSelect from '@/components/forms/FormRowSelect';
+import FormRowSelectTipo from '@/components/forms/FormRowSelectTipo';
+import FormRowCheckbox from '@/components/forms/FormRowCheckbox';
+import FormRowCheckboxMultiple from '@/components/forms/FormRowCheckboxMultiple';
+import FormRowCheckboxListaClientes from '@/components/forms/FormRowCheckboxListaClientes';
+import FormRowListaHorasExtra from '@/components/forms/FormRowListaHorasExtra'
+import AddUtilizador from '@/components/utilizadores/AddUtilizador';
+import Footer from '@/components/layout/Footer';
+import Header from '@/components/layout/Header';
+import Navbar from '@/components/layout/Navbar';
+import NavbarGeral from '@/components/layout/NavbarGeral';
+import SmallSidebar from '@/components/layout/SmallSidebar';
+import ListaProjetos from '@/components/projetos/ListaProjetos';
+import Loading from '@/components/common/Loading';
+import EditarUtilizador from '@/components/utilizadores/EditarUtilizador';
+import AddHoras from '@/components/horas/AddHoras';
+import AddHorasGeral from '@/components/horas/AddHorasGeral';
+import AddHorasProjeto from '@/components/horas/AddHorasProjeto'
+import VisualizarProjeto from '@/components/projetos/VisualizarProjeto';
+import EditarProjeto from '@/components/projetos/EditarProjeto';
+import VisualizarHoras from '@/components/horas/VisualizarHoras';
+import DeleteFromDB from '@/components/common/DeleteFromDB';
+import GerirTipoTrabalho from '@/components/tipoTrabalho/GerirTipoTrabalho';
+import GerirUtilizadores from '@/components/utilizadores/GerirUtilizadores';
+import ForgetPassword from '@/components/utilizadores/ForgetPassword';
+import ForgetPasswordChange from '@/components/utilizadores/ForgetPasswordChange';
+import OptionsPanel from '@/components/layout/OptionsPanel';
+import AddHorasDropdown from '@/components/horas/AddHorasDropdown';
+import AddHorasGeralDropdown from '@/components/horas/AddHorasGeralDropdown';
+import AddHorasProjetoDropdown from '@/components/horas/AddHorasProjetoDropdown';
+import AddHorasCopiar from '@/components/horas/AddHorasCopiar';
+import useFeriadosPortugal from '@/components/dias/FeriadosPortugal';
+import getFeriadosPortugalDate from '@/components/dias/FeriadosPortugal';
 
-import ProjetoListaFolder from './ProjetoListaFolder';
-import NavLinksModalBox from './NavLinksModalBox';
-import GerirHorasExtra from './GerirHorasExtra'
-import VisualizarHorasProjeto from './VisualizarHorasProjeto'
-import AddPagamentos from './AddPagamentos';
+import NavLinksModalBox from '@/components/layout/NavLinksModalBox';
+import GerirHorasExtra from '@/components/extra/GerirHorasExtra'
+import VisualizarHorasProjeto from '@/components/horas/VisualizarHorasProjeto'
+import AddPagamentos from '@/components/extra/AddPagamentos';
 
 export {
   ListaProjetos,
@@ -57,7 +56,6 @@ export {
   GerirHorasExtra,
   NavLinksModalBox,
   AddHorasGeral,
-  ProjetoListaFolder,
   useFeriadosPortugal,
   getFeriadosPortugalDate,
   OptionsPanel,

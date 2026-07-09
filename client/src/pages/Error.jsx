@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import Wrapper from '../assets/wrappers/ErrorPage';
+import Wrapper from '@/styles/ErrorPage';
 import { Header, Footer } from '../components';
 
 const Error = () => {

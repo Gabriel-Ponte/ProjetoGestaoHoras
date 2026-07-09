@@ -1,68 +1,223 @@
+/* =============================================================================
+   Gestão de Horas — Global design system
+   -----------------------------------------------------------------------------
+   Central design tokens + base styles. Dozens of styled-component wrappers
+   reference these custom properties (var(--primary-500), var(--white), ...)
+   but they were never defined, so backgrounds, shadows, radii, transitions
+   and brand colours simply did not render. Defining them here makes the whole
+   UI resolve consistently.
+
+   Palette is aligned with the ISQ | CTAG brand: CTAG blue as the primary
+   accent, ISQ red for error/danger states.
+
+   NOTE: Bootstrap 5.3 is loaded via CDN in index.html. This file intentionally
+   does NOT redefine Bootstrap component classes (.btn, .row, .col-*, ...) so
+   the two systems coexist. It only defines tokens and light base styles.
+============================================================================= */
+
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  /* ---- Primary (CTAG blue) ------------------------------------------------ */
+  --primary-50: #eaf1f8;
+  --primary-100: #cfe0f0;
+  --primary-200: #a6c4e2;
+  --primary-300: #74a2d0;
+  --primary-400: #4480ba;
+  --primary-500: #1e5a96; /* main brand blue */
+  --primary-600: #184a7d;
+  --primary-700: #133c66;
+  --primary-800: #0f2f50;
+  --primary-900: #0a2138;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  /* ---- Neutrals ----------------------------------------------------------- */
+  --grey-50: #f8fafc;
+  --grey-100: #f1f5f9;
+  --grey-200: #e2e8f0;
+  --grey-300: #cbd5e1;
+  --grey-400: #94a3b8;
+  --grey-500: #64748b;
+  --grey-600: #475569;
+  --grey-700: #334155;
+  --grey-800: #1e293b;
+  --grey-900: #0f172a;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --black: #222222;
+  --white: #ffffff;
+
+  /* ---- State colours ------------------------------------------------------ */
+  --red-light: #f8d7da;
+  --red-dark: #a51f2b; /* ISQ red */
+  --green-light: #d1e7dd;
+  --green-dark: #0f5132;
+  --amber-light: #fff3cd;
+  --amber-dark: #997404;
+
+  /* ---- Typography --------------------------------------------------------- */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+    'Helvetica Neue', Arial, sans-serif;
+  --font-mono: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  --small-text: 0.875rem;
+  --extra-small-text: 0.75rem;
+  --letterSpacing: 1px;
+
+  /* ---- Shape & motion ----------------------------------------------------- */
+  --borderRadius: 0.375rem;
+  --transition: 0.3s ease-in-out all;
+
+  --shadow-1: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-2: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-3: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-4: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+  /* ---- Layout ------------------------------------------------------------- */
+  --max-width: 1120px;
+  --fixed-width: 600px;
+  --fluid-width: 90vw;
+  --view-width: 90vw;
+  --nav-height: 6rem;
+
+  /* ---- Calendar (react-widgets custom calendar, intentional dark theme) --- */
+  --calendar-bg-color: #262829;
+  --calendar-font-color: #ffffff;
+  --weekdays-border-bottom-color: #404040;
+  --calendar-date-hover-color: #505050;
+  --calendar-current-date-color: #1b1f21;
+  --calendar-today-color: linear-gradient(to bottom, #03a9f4, #2196f3);
+  --calendar-today-innerborder-color: transparent;
+  --calendar-nextprev-bg-color: transparent;
+  --next-prev-arrow-color: #ffffff;
+  --calendar-border-radius: 16px;
+  --calendar-prevnext-date-color: #484848;
+
+  color-scheme: light;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+/* ---- Reset ---------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
-a:hover {
-  color: #535bf2;
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
+  padding: 0;
   min-height: 100vh;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--grey-800);
+  background-color: var(--grey-100);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+code {
+  font-family: var(--font-mono);
+}
+
+/* ---- Base typography ------------------------------------------------------ */
+h1,
+h2,
+h3,
+h4,
+h5 {
+  margin: 0 0 1rem;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--grey-900);
+  text-transform: none;
+  letter-spacing: normal;
 }
 
 h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+  font-size: 2.25rem;
+}
+h2 {
+  font-size: 1.75rem;
+}
+h3 {
+  font-size: 1.375rem;
+}
+h4 {
+  font-size: 1.125rem;
+}
+h5 {
+  font-size: 1rem;
 }
 
+p {
+  margin: 0 0 1rem;
+  color: var(--grey-600);
+}
+
+a {
+  color: var(--primary-500);
+  text-decoration: none;
+  transition: var(--transition);
+}
+a:hover {
+  color: var(--primary-700);
+}
+
+/* Bare <button> elements (those WITHOUT a Bootstrap .btn class) get sensible
+   defaults so they read as intentional controls. Bootstrap's .btn styling
+   still wins where it is applied. */
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
   cursor: pointer;
-  transition: border-color 0.25s;
 }
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--grey-200);
+  margin: 1rem 0;
+}
+
+/* ---- Small utilities referenced by the app -------------------------------- */
+.full-page {
+  min-height: 100vh;
+}
+
+/* Nicer, slimmer scrollbars for the many overflow:auto panels */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--grey-400) transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: var(--grey-400);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--grey-500);
+}
+
+/* Toast tweaks so notifications match the palette */
+.Toastify__toast {
+  border-radius: var(--borderRadius);
+  font-family: var(--font-sans);
 }

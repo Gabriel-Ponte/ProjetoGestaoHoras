@@ -1,5 +1,4 @@
 import PaginaPrincipal from './PaginaPrincipal'
-import PaginaLogin from './PaginaLogin';
 import SharedLayout from './SharedLayout';
 import PaginaAdicionarProjeto from './PaginaAdicionarProjeto';
 import PaginaAdicionarUtilizador from './PaginaAdicionarUtilizador';
@@ -17,7 +16,6 @@ import PaginaVisualizarHorasProjetos from './PaginaVisualizarHorasProjetos'
 import PaginaGerirHorasExtra from './PaginaGerirHorasExtra'
 
 export {
-    PaginaLogin,
     SharedLayout,
     PaginaPrincipal,
     PaginaAdicionarProjeto,

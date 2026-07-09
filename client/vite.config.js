@@ -74,6 +74,11 @@ export default defineConfig(({ command, mode }) => {
     },
   },
   envPrefix: 'VITE_', // Environment variables prefix
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src'), // absolute imports: @/components, @/styles, ...
+    },
+  },
   esbuild: {
     jsxInject: `import React from 'react'`, // Automatically import React in JSX files
   },
