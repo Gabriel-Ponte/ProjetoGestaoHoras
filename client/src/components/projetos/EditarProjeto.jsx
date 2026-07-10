@@ -9,6 +9,7 @@ import { getTipoTrabalho } from '@/features/tipoTrabalho/tipoTrabalhoSlice';
 import Loading from '@/components/common/Loading';
 import { listaUtilizadores, toggleSidebar } from '@/features/utilizadores/utilizadorSlice';
 import DeleteFromDB from "@/components/common/DeleteFromDB";
+import { AppButton } from '@/components/ui';
 
 function VisualizarProjeto() {
   const { projeto, isLoading } = useSelector((store) => store.projeto);
@@ -394,9 +395,9 @@ function VisualizarProjeto() {
                 </div>
               </div>
               <div id="addProjeto">
-                <button type='submit' disabled={isLoading} onClick={toggleMember} className="w-100 btn btn-lg btn-primary">
-                  {isLoading ? 'loading...' : 'submit'}
-                </button>
+                <AppButton type='submit' variant="primary" size="lg" fullWidth loading={isLoading} disabled={isLoading} onClick={toggleMember}>
+                  submit
+                </AppButton>
 
 
               </div>

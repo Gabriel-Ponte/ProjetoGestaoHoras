@@ -14,6 +14,7 @@ import { getFeriadosPortugalDate } from '@/components/dias/FeriadosPortugal';
 import Calendar from '@/components/dias/Calendar'
 import { getTipoTrabalho } from '@/features/tipoTrabalho/tipoTrabalhoSlice';
 import { getFeriasUtilizador } from '@/features/ferias/feriasSlice';
+import { EmptyState } from '@/components/ui';
 
 
 
@@ -1307,7 +1308,7 @@ const ListaHoras = () => {
                     }
                     return isSameMonth && isSameDate;
                   }).length === 0 && diaSelected === 0 && (
-                      <h2>Sem Horas inseridas neste mês!</h2>
+                      <EmptyState inline title="Sem Horas inseridas neste mês!" />
                     )}
 
                   {listaDiasT.filter((dia) => {
@@ -1319,7 +1320,7 @@ const ListaHoras = () => {
                     }
                     return isSameMonth && isSameDate;
                   }).length === 0 && diaSelected !== 0 && (
-                      <h2>Sem Horas inseridas neste dia {diaSelected}!</h2>
+                      <EmptyState inline title={`Sem Horas inseridas neste dia ${diaSelected}!`} />
                     )}
 
 
@@ -1429,7 +1430,7 @@ const ListaHoras = () => {
                       } else if (diaSelected === 0) {
                         return (
                           <div>
-                            <h2>Sem Horas inseridas neste mês!</h2>
+                            <EmptyState inline title="Sem Horas inseridas neste mês!" />
                           </div>
                         );
                       } else if (diaSelected !== 0 || diaSelected !== "0") {
@@ -1438,7 +1439,7 @@ const ListaHoras = () => {
                             {isFeriado &&
                               <h4>{isFeriado}</h4>
                             }
-                            <h2>Sem Horas inseridas neste dia {diaSelected}!</h2>
+                            <EmptyState inline title={`Sem Horas inseridas neste dia ${diaSelected}!`} />
                           </div>
                         );
                       }

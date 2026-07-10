@@ -4,10 +4,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearStore } from '@/features/utilizadores/utilizadorSlice';
-// import { GiHourglass } from 'react-icons/gi';
-// import { GoDiffAdded } from 'react-icons/go';
-//import { handleChange } from '@/features/allProjetos/allProjetosSlice';
-
+import { AppButton } from '@/components/ui';
 
 const Navbar = () => {
   const [showLogout, setShowLogout] = useState(0);
@@ -17,15 +14,13 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-
   const handleShowLogoutClick = () => {
     setShowLogout(!showLogout);
-    //setDisableAddHoras(!disableAddHoras);
   };
 
   const editarPerfil = () => {
-    setDisableAddHoras(2)
-    setDisableVisualizarHoras(2)
+    setDisableAddHoras(2);
+    setDisableVisualizarHoras(2);
     setShowLogout(false);
     navigate('/PaginaEditarPerfil');
   };
@@ -33,7 +28,7 @@ const Navbar = () => {
   const logout = () => {
     setShowLogout(false);
     setDisableAddHoras(0);
-    dispatch(clearStore('Logging out...'))
+    dispatch(clearStore('Logging out...'));
     navigate('/login');
   };
 
@@ -41,10 +36,8 @@ const Navbar = () => {
     setShowLogout(false);
     setDisableAddHoras(0);
     setDisableVisualizarHoras(1);
-
-    //window.location.reload(navigate('/PaginaVisualizarHoras'));
     navigate('/PaginaVisualizarHoras');
-  }
+  };
 
   const addHoras = () => {
     setShowLogout(false);
@@ -53,112 +46,78 @@ const Navbar = () => {
     navigate('/PaginaAdicionarHoras');
   };
 
+  // "active" highlight mirrors the previous green-background logic exactly:
+  // Adicionar Horas is highlighted when it is the active page OR nothing is selected yet.
+  const addHorasActive = disableAddHoras === 1 || disableVisualizardHoras === 0;
+  const visualizarActive = disableVisualizardHoras === 1;
+
+  const fotoUrl = user?.user?.foto
+    ? URL.createObjectURL(
+        new Blob([new Uint8Array(user.user.foto.data.data)], { type: user.user.foto.contentType })
+      )
+    : null;
 
   return (
     <Wrapper>
       <div className='subheader'>
-      <div className='col-1'></div>
-        <div className='col-8  '>
+        <div className='col-1'></div>
+        <div className='col-8'>
           <div className='row'>
             <div className='col-6 middleButton'>
-              <button
-                className='btn btn-outline-secondary'
+              <AppButton
+                variant={addHorasActive ? 'primary' : 'secondary'}
+                size='sm'
                 onClick={addHoras}
-                style={{
-                  fontSize: "0.9rem",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                  display: "inline-block",
-                  lineHeight: "normal",
-                  padding: "3px 3px",
-                  backgroundColor: (disableAddHoras === 1) ? "#A6C48A" : (disableVisualizardHoras !== 0) ? "" : "#A6C48A" ,
-                  width: 'auto'
-                }}
-                disabled={disableAddHoras === 1} >
+                disabled={disableAddHoras === 1}
+              >
                 Adicionar Horas
-              </button>
-
-
+              </AppButton>
             </div>
-            <div className='col-6 middleButton' >
-              <button
-                className={`btn btn-outline-secondary ${(disableVisualizardHoras === 1) ? 'active' : ''}`}
+            <div className='col-6 middleButton'>
+              <AppButton
+                variant={visualizarActive ? 'primary' : 'secondary'}
+                size='sm'
                 onClick={visualizarHoras}
-                style={{
-                  fontSize: "0.9rem",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                  display: "inline-block",
-                  lineHeight: "normal",
-                  padding: "3px 3px",
-                  backgroundColor: (disableVisualizardHoras === 1) ? "#A6C48A" : "",
-                  width: 'auto'
-                }}
-                disabled={disableVisualizardHoras === 1} >
+                disabled={disableVisualizardHoras === 1}
+              >
                 Visualizar Horas
-              </button>
+              </AppButton>
             </div>
           </div>
         </div>
         <div className='col-2'>
           <div className='row btn-container text-center'>
             <div className='col-12 text-center divButtonUtilizador'>
-              <button
-                type='button'
-                className='btn'
-                style={{margin: 'auto'}}
-                onClick={handleShowLogoutClick}
-              >
-                {user?.user.nome}
-                <img
-                  src={
-                    user?.user.foto
-                      ?
-                      URL.createObjectURL(new Blob([new Uint8Array(user?.user.foto.data.data)], { type: user?.user.foto.contentType }))
-                      : <FaUserCircle />
-                  }
-                  alt="Imagem Perfil Utilizador"
-                  width="20" height="20"
-                  className="rounded-circle" style={{ backgroundColor: "#D9D9D9" }}
-                />
+              <button type='button' className='btn' onClick={handleShowLogoutClick}>
+                {user?.user?.nome}
+                {fotoUrl ? (
+                  <img
+                    src={fotoUrl}
+                    alt='Foto de perfil'
+                    width='20'
+                    height='20'
+                    className='rounded-circle'
+                  />
+                ) : (
+                  <FaUserCircle size={20} />
+                )}
                 <FaCaretDown />
               </button>
             </div>
-            { (showLogout === true) && (
-            <div className=''>
-              <div className='row drop'>
-                <div className='col-md-6 text-end'>
-                  <button
-                    type='button'
-                    className='button-30'
-                    style={{ margin:'2px' }} 
-                    onClick={editarPerfil}>Editar Perfil
-                  </button>
-                </div>
-
-                <div className='col-md-6 text-start' >
-                  <button
-                    type='button'
-                    className='button-30'
-                    style={{
-                      fontSize: "110%",
-                      backgroundColor: "var(--red-dark)",
-                      color: "#fff",
-                    margin:'2px'}}
-                    onClick={logout}
-                  >Logout
-                  </button>
-                </div>
+            {showLogout === true && (
+              <div className='drop'>
+                <AppButton variant='secondary' size='sm' onClick={editarPerfil}>
+                  Editar Perfil
+                </AppButton>
+                <AppButton variant='danger' size='sm' onClick={logout}>
+                  Logout
+                </AppButton>
               </div>
-            </div>
             )}
           </div>
         </div>
         <div className='col-1'></div>
       </div>
-
     </Wrapper>
   );
 };

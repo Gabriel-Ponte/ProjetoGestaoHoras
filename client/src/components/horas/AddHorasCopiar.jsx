@@ -1,8 +1,9 @@
 import { memo, useMemo, useState, useEffect } from 'react';
 import { FormRow } from '@/components';
 import { AiOutlineClose } from 'react-icons/ai';
-import LoadingSmaller from '@/components/common/LoadingSmaller';
-import PropTypes from 'prop-types'; 
+import { AppButton } from '@/components/ui';
+import LoadingState from '@/components/ui/LoadingState';
+import PropTypes from 'prop-types';
 
 const AddHorasCopiar = ({ verificaCopiarHoras, copiar, DataCopy, verificaDiaLast, handleDia, copyExists, buttonClicked }) => {
   const [loading, setLoading] = useState(false);
@@ -41,18 +42,14 @@ const AddHorasCopiar = ({ verificaCopiarHoras, copiar, DataCopy, verificaDiaLast
 
   return (
     <>
-      {loading && 
-      
-      <div className='d-flex flex-column justify-content-center align-items-center h-100'style={{ maxHeight: '100px' }}>
-        <LoadingSmaller />
-      </div>} 
+      {loading && <LoadingState inline />}
       {!loading && (
         <>
           {!verificaCopiarHoras ? (
             <div className='d-flex flex-column justify-content-center align-items-center h-100'>
-              <button type='button' disabled={buttonClicked} className='btn btn-light' onClick={() => copiarHoras(true)}>
+              <AppButton variant='secondary' disabled={buttonClicked} onClick={() => copiarHoras(true)}>
                 Copiar Horas
-              </button>
+              </AppButton>
             </div>
           ) : (
             <div className='row'>
@@ -77,9 +74,9 @@ const AddHorasCopiar = ({ verificaCopiarHoras, copiar, DataCopy, verificaDiaLast
                   <AiOutlineClose />
                 </button>
                 <div className="col-12">
-                  <button onClick={handleDia}  disabled={buttonClicked} className="btn btn-primary">
+                  <AppButton variant='primary' onClick={handleDia} disabled={buttonClicked}>
                     Copiar
-                  </button>
+                  </AppButton>
                 </div>
               </div>
               {!copyExists && (

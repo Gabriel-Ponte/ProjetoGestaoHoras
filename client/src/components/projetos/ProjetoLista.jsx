@@ -9,6 +9,7 @@ import { updateProjeto } from '@/features/projetos/projetosSlice';
 import { FcCheckmark } from 'react-icons/fc';
 import { IoMdClose } from 'react-icons/io';
 import PropTypes from 'prop-types';
+import { AppButton } from '@/components/ui';
 
 
 const Projeto = ({
@@ -423,13 +424,13 @@ const Projeto = ({
                   addLink === 1 ? (
                     <>
                       <div className='col-md-12 text-end'>
-                        <button
-                          type='button'
-                          className='btn btn-outline-danger'
+                        <AppButton
+                          variant='danger'
+                          size='sm'
                           onClick={toggleCloseAddLink}
                         >
                           <IoMdClose />
-                        </button>
+                        </AppButton>
                       </div>
                       <div className='row text-center'>
                         <FormRowListaProjetos
@@ -442,25 +443,25 @@ const Projeto = ({
                         />
                       </div>
                       <div className='row mb-2 text-center'>
-                        <button
-                          type='button'
-                          className='btn btn-outline-primary'
+                        <AppButton
+                          variant='primary'
+                          size='sm'
                           onClick={toggleAddLinkDB}
                         >
                           Inserir
-                        </button>
+                        </AppButton>
                       </div>
                     </>
                   ) : addLink === 2 ? (
                     <>
                       <div className='col-md-12 text-end'>
-                        <button
-                          type='button'
-                          className='btn btn-outline-danger'
+                        <AppButton
+                          variant='danger'
+                          size='sm'
                           onClick={toggleCloseAddLink}
                         >
                           <IoMdClose />
-                        </button>
+                        </AppButton>
                       </div>
                       <div className='row text-center'>
                         <FormRowListaProjetos
@@ -473,13 +474,13 @@ const Projeto = ({
                         />
                       </div>
                       <div className='row mb-2 text-center'>
-                        <button
-                          type='button'
-                          className='btn btn-outline-success'
+                        <AppButton
+                          variant='success'
+                          size='sm'
                           onClick={toggleAddLinkDB}
                         >
                           Inserir
-                        </button>
+                        </AppButton>
                       </div>
                     </>
                   ) : (
@@ -488,13 +489,13 @@ const Projeto = ({
                       </div>
                         <div className='row mb-2 align-items-center text-center'>
                           <div className='col-md-12 themed-grid-col'>
-                            <button
-                              type='button'
-                              className='btn btn-outline-primary'
+                            <AppButton
+                              variant='primary'
+                              size='sm'
                               onClick={handleSubmit}
                             >
                               Alterar
-                            </button>
+                            </AppButton>
                           </div>
                         </div>
 
@@ -503,33 +504,36 @@ const Projeto = ({
                       (
                         <>
                           <div className='row mb-2 text-center'>
-                            <button
-                              type='button'
-                              className='btn btn-outline-primary buttonProjeto'
+                            <AppButton
+                              variant='primary'
+                              size='sm'
+                              fullWidth
                               onClick={() => toggleEdit(_id)}
                             >
                               Editar
-                            </button>
+                            </AppButton>
                           </div>
                           <div className='row mb-2 text-center'>
-                            <button
-                              type='button'
-                              className='btn btn-outline-secondary buttonProjeto'
+                            <AppButton
+                              variant='secondary'
+                              size='sm'
+                              fullWidth
                               onClick={() => toggleVisualize(_id)}
                             >
                               Visualizar
-                            </button>
+                            </AppButton>
                           </div>
                           {
                             values.Links === "" ? (
                               <div className='row mb-2 text-center'>
-                                <button
-                                  type='button'
-                                  className='btn btn-outline-success buttonProjetoLinks'
+                                <AppButton
+                                  variant='success'
+                                  size='sm'
+                                  fullWidth
                                   onClick={() => toggleAddLinkA3()}
                                 >
                                   Adicionar Link A3
-                                </button>
+                                </AppButton>
                               </div>
                             ) : (
                               <div className='row mb-2 text-center'>
@@ -540,13 +544,14 @@ const Projeto = ({
                           {
                             values.LinkResumo === "" ? (
                               <div className='row mb-2 text-center'>
-                                <button
-                                  type='button'
-                                  className='btn btn-outline-success buttonProjetoLinks'
+                                <AppButton
+                                  variant='success'
+                                  size='sm'
+                                  fullWidth
                                   onClick={() => toggleAddLinkResumo()}
                                 >
                                   Adicionar Link Resumo
-                                </button>
+                                </AppButton>
                               </div>
                             ) : (
                               <div className='row mb-2 text-center'>

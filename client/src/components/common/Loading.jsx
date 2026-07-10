@@ -1,14 +1,12 @@
 import PropTypes from 'prop-types';
-import Wrapper from '@/styles/Loading';
+import LoadingState from '@/components/ui/LoadingState';
 
-const Loading = () => {
-  return (
-    <Wrapper>
-    <div className="loader">
-    </div>
-    </Wrapper>
-  );
-};
+/**
+ * Loading — full-area page loader. Thin wrapper over the design-system
+ * LoadingState so every spinner in the app shares one look. Kept as its own
+ * component (and API) because ~20 screens import it directly.
+ */
+const Loading = ({ message }) => <LoadingState message={message} size={60} />;
 
 Loading.propTypes = {
   center: PropTypes.bool,

@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { adicionarFerias } from '@/features/dias/diasSlice';
 import { getFeriasUtilizador } from '@/features/ferias/feriasSlice';
+import { AppButton } from '@/components/ui';
 
 
 
@@ -403,14 +404,16 @@ const AddFerias = ({ user, setAddFerias, verificaDia, Data, listaDias, accepted,
             </div>
         }
         <div className="card-body">
-          <button
+          <AppButton
             type="submit"
+            variant="primary"
+            size="lg"
+            fullWidth
             disabled={buttonClicked}
             onClick={(e) => { handleInsertFerias(e) }}
-            className="w-100 btn btn-lg btn-primary"
           >
             {'Inserir Férias'}
-          </button>
+          </AppButton>
         </div>
       </div>
     </div>

@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { getTipoTrabalho } from '@/features/tipoTrabalho/tipoTrabalhoSlice';
 import { createDia, getDia, editDia } from '@/features/dias/diasSlice';
 import { FormRow, AddHorasProjetoDropdown } from '@/components';
+import { AppButton } from '@/components/ui';
 import Loading from '@/components/common/Loading';
 
 const initialState = {
@@ -296,14 +297,17 @@ const verificaDia = useCallback((e) => {
                             </div>
 
                             <div className="card-body">
-                                <button
+                                <AppButton
                                     type="submit"
+                                    variant="primary"
+                                    size="lg"
+                                    fullWidth
+                                    loading={isLoading}
                                     disabled={isLoading}
                                     onClick={(e) => { handleDia(e) }}
-                                    className="w-100 btn btn-lg btn-primary"
                                 >
-                                    {isLoading ? 'loading...' : verificaDiaCalled ? 'Editar Dia' : 'Adicionar Dia'}
-                                </button>
+                                    {verificaDiaCalled ? 'Editar Dia' : 'Adicionar Dia'}
+                                </AppButton>
                             </div>
                         </div>
                     </div>

@@ -7,6 +7,7 @@ import ModalFoto from "@/components/utilizadores/ModalFoto";
 import Wrapper from '@/styles/AddUser';
 import { updateUser, toggleSidebar } from '@/features/utilizadores/utilizadorSlice';
 import Loading from '@/components/common/Loading';
+import { AppButton } from '@/components/ui';
 
 const EditarUtilizador = () => {
     const { user } = useSelector((store) => store.utilizador);
@@ -169,14 +170,17 @@ const EditarUtilizador = () => {
 
             <div className="form-group">
               <div id="addUtilizador">
-                <button
+                <AppButton
                   type="submit"
+                  variant="primary"
+                  size="lg"
+                  fullWidth
+                  loading={isLoading}
                   disabled={isLoading || !alterado}
                   onClick={toggleMember}
-                  className="w-100 btn btn-lg btn-primary"
                 >
-                  {isLoading ? 'Carregar...' : 'Alterar'}
-                </button>
+                  Alterar
+                </AppButton>
               </div>
               <div style={{ color: 'red' }}>{values.errorMessage}</div>
             </div>

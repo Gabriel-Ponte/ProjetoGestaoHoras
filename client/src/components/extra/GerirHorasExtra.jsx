@@ -7,11 +7,10 @@ import { listaUtilizadores } from '@/features/utilizadores/utilizadorSlice';
 import { getAllPagamentos, handleChangePagamentos } from '@/features/pagamentos/pagamentosSlice';
 import { FcCheckmark } from 'react-icons/fc';
 import { IoMdClose } from 'react-icons/io';
-import { AppButton } from '@/components/ui';
+import { AppButton, LoadingState, EmptyState } from '@/components/ui';
 import { isHorasExtraFullManager } from '@/utils/roles';
 import FormRowListaHorasExtraPagas from '@/components/forms/FormRowListaHorasExtraPagas';
 import FormRowListaHorasExtraPagasHeader from '@/components/forms/FormRowListaHorasExtraPagasHeader';
-import LoadingSmaller from '@/components/common/LoadingSmaller';
 import GerirHorasFerias from '@/components/ferias/GerirHorasFerias';
 
 
@@ -428,9 +427,7 @@ const GerirHorasExtra = () => {
         </div>
         <>
           {isLoading || isLoadingPagamentos || !loaded ? (
-            <div className='d-flex flex-column justify-content-center align-items-center h-500' style={{ maxHeight: '200px' }}>
-              <LoadingSmaller />
-            </div>
+            <LoadingState inline />
           ) : (
             <div className="listaGerirHorasExtra text-center">
               {((listaHorasExtra && listaHorasExtra.length > 0) || verificaTipo !== 1) &&
@@ -519,54 +516,52 @@ const GerirHorasExtra = () => {
               ) : (
                 <>
                   {!isLoading && !isLoadingPagamentos && (loaded === true) ? (
-                    <div className="mt-4 col-md-12  text-center ">
+                    <div className="mt-4 col-md-12 text-center">
                       {verificaAlterado === 0 ? (
                         <div>
                           {(verificaTipo === 1 || verificaTipo === 5) ? (
-                            <h1>Sem Pedidos de Horas Extra</h1>
+                            <EmptyState title="Sem Pedidos de Horas Extra" />
                           ) : (verificaTipo === 2 || verificaTipo === 6) ? (
-                            <h1>Sem Pedidos de Horas Extra Realizadas!</h1>
+                            <EmptyState title="Sem Pedidos de Horas Extra Realizadas" />
                           ) : (verificaTipo === 3 || verificaTipo === 7) ?
-                            <h1>Sem Pedidos de Compensação de Horas Extra</h1>
+                            <EmptyState title="Sem Pedidos de Compensação de Horas Extra" />
                             : (verificaTipo === 4) &&
-                            <h1>Sem Pedidos de Férias</h1>
+                            <EmptyState title="Sem Pedidos de Férias" />
                           }
                         </div>
                       ) : verificaAlterado === 1 ? (
                         <div>
                           {(verificaTipo === 1) ? (
-                            <h1>Sem Pedidos de Horas Extra Aceites!</h1>
+                            <EmptyState title="Sem Pedidos de Horas Extra Aceites" />
                           ) : (verificaTipo === 2) ? (
-                            <h1>Sem Pedidos de Horas Extra Realizadas Aceites!</h1>
+                            <EmptyState title="Sem Pedidos de Horas Extra Realizadas Aceites" />
                           ) : (verificaTipo === 3) ?
-                            <h1>Sem Pedidos de Compensação de Horas Extra Aceites!</h1>
+                            <EmptyState title="Sem Pedidos de Compensação de Horas Extra Aceites" />
                             : (verificaTipo === 4) &&
-                            <h1>Sem Pedidos de Férias Aceites!</h1>
+                            <EmptyState title="Sem Pedidos de Férias Aceites" />
                           }
                         </div>
                       ) : verificaAlterado === 2 ? (
                         <div>
                           {(verificaTipo === 1) ? (
-                            <h1>Sem Pedidos de Horas Extra Recusados!</h1>
+                            <EmptyState title="Sem Pedidos de Horas Extra Recusados" />
                           ) : (verificaTipo === 2) ? (
-                            <h1>Sem Pedidos de Horas Extra Realizadas Recusados!</h1>
+                            <EmptyState title="Sem Pedidos de Horas Extra Realizadas Recusados" />
                           ) : (verificaTipo === 3) ?
-                            <h1>Sem Pedidos de Compensação de Horas Extra Recusados!</h1>
+                            <EmptyState title="Sem Pedidos de Compensação de Horas Extra Recusados" />
                             : (verificaTipo === 4) &&
-                            <h1>Sem Pedidos de Férias Recusados!</h1>
+                            <EmptyState title="Sem Pedidos de Férias Recusados" />
                           }
                         </div>
                       ) : (
                         <div>
-                          <h1>Sem Horas Extra Pagas!</h1>
+                          <EmptyState title="Sem Horas Extra Pagas" />
                         </div>
                       )}
 
                     </div>
                   ) : (
-                    <div className='d-flex flex-column justify-content-center align-items-center h-200' style={{ maxHeight: '100px' }}>
-                      <LoadingSmaller />
-                    </div>
+                    <LoadingState inline />
                   )}
                 </>
               )}

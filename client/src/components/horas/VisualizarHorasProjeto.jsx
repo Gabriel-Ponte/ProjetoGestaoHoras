@@ -8,6 +8,7 @@ import Calendar from '@/components/dias/Calendar'
 import { getTipoTrabalho } from '@/features/tipoTrabalho/tipoTrabalhoSlice';
 import { getAllProjetos } from '@/features/allProjetos/allProjetosSlice';
 import DiasTodosProjetos from '@/components/dias/DiasTodosProjetos';
+import { EmptyState } from '@/components/ui';
 
 
 
@@ -480,11 +481,11 @@ const VisualizarHorasProjeto = () => {
           <>
             {(selectedProjeto === "Todos") ? (
               <div className='projetos'>
-                <h2>Não existem horas inseridas</h2>
+                <EmptyState inline title="Não existem horas inseridas" />
               </div>
             ) : (
               <div className='projetos'>
-                <h2>Projeto não possui horas inseridas</h2>
+                <EmptyState inline title="Projeto não possui horas inseridas" />
               </div>
             )}
           </>

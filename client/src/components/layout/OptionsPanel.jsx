@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { IoAddOutline } from 'react-icons/io5'
-import PropTypes from 'prop-types'; 
+import PropTypes from 'prop-types';
+import { AppInput, AppButton } from '@/components/ui';
 
 function OptionsPanel({ options, handleTipoTrabalho}) {
 
@@ -35,7 +36,7 @@ function OptionsPanel({ options, handleTipoTrabalho}) {
     return (
       <div className="row mb-3 text-center" key={"Other"}>
       <div className="col-md-12 text-center themed-grid-col">
-        <input
+        <AppInput
           id="autocomplete"
           type="text"
           value={inputValue}
@@ -43,11 +44,14 @@ function OptionsPanel({ options, handleTipoTrabalho}) {
           placeholder="Outro..."
           autoComplete="off"
         />
-        <button
+        <AppButton
           type="submit"
-          onClick={() => { handleSelectOption(inputValue) }}>
-            <IoAddOutline /> 
-        </button>
+          variant="primary"
+          size="sm"
+          onClick={() => { handleSelectOption(inputValue) }}
+        >
+          <IoAddOutline />
+        </AppButton>
       </div>
       {isDropdownOpen &&
       <div className="options-panel">

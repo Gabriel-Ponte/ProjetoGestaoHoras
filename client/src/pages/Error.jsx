@@ -1,17 +1,20 @@
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Wrapper from '@/styles/ErrorPage';
 import { Header, Footer } from '../components';
+import { ErrorState } from '@/components/ui';
 
 const Error = () => {
+  const navigate = useNavigate();
   return (
     <Wrapper className='full-page'>
       <Header />
-      <div>
-        <h3>Pagina não encontrada</h3>
-        <p>Não foi possivel encontrar a página que procura</p>
-        <Link to='/PaginaPrincipal'>Voltar á página Principal</Link>
-      </div>
-      <Footer/>
+      <ErrorState
+        title='Página não encontrada'
+        message='Não foi possível encontrar a página que procura.'
+        onRetry={() => navigate('/PaginaPrincipal')}
+        retryLabel='Voltar à Página Principal'
+      />
+      <Footer />
     </Wrapper>
   );
 };

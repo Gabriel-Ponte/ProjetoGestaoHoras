@@ -9,6 +9,7 @@ import { getProjetoAllVersoes } from '@/features/projetos/projetosSlice';
 import { FormRowSelect } from '@/components';
 import Calendar from '@/components/dias/Calendar'
 import VisualizarHorasProjetoVersion from '@/components/projetos/VisualizarProjetoVersion';
+import { AppSelect } from '@/components/ui';
 
 
 const VisualizarProjeto = () => {
@@ -382,7 +383,7 @@ const VisualizarProjeto = () => {
               {listaVProjeto && listaVProjeto.length > 0 && (
                 <div className="container">
                   <h2>Seleccione uma Versão:</h2>
-                  <select id="pageSelect" onChange={(event) => handleChangeVersion(event)}>
+                  <AppSelect id="pageSelect" onChange={(event) => handleChangeVersion(event)}>
 
                     <option key="default" value="Atual">
                       Atual
@@ -405,7 +406,7 @@ const VisualizarProjeto = () => {
                         </option>
                       );
                     })}
-                  </select>
+                  </AppSelect>
                 </div>
               )}
               <VisualizarHorasProjetoVersion

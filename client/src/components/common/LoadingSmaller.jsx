@@ -1,14 +1,14 @@
 import PropTypes from 'prop-types';
-import Wrapper from '@/styles/LoadingSmaller';
+import LoadingState from '@/components/ui/LoadingState';
 
-const LoadingSmaller = () => {
-  return (
-    <Wrapper>
-    <div className="loader">
-    </div>
-    </Wrapper>
-  );
-};
+/**
+ * LoadingSmaller — compact inline loader (inside cards, rows, tight panels).
+ * Thin wrapper over LoadingState in `inline` mode so it matches the app-wide
+ * spinner while staying small. Kept as its own component for its many callers.
+ */
+const LoadingSmaller = ({ message }) => (
+  <LoadingState inline size={38} message={message ?? null} />
+);
 
 LoadingSmaller.propTypes = {
   center: PropTypes.bool,

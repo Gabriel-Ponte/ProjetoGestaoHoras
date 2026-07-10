@@ -4,8 +4,9 @@ import { useDispatch } from 'react-redux';
 import { getProjetoList } from '@/features/projetos/projetosSlice';
 import { AiFillDelete } from 'react-icons/ai';
 import { getDiaID } from '@/features/dias/diasSlice';
-import PropTypes from 'prop-types'; 
-import LoadingSmaller from '@/components/common/LoadingSmaller';
+import PropTypes from 'prop-types';
+import { AppButton } from '@/components/ui';
+import LoadingState from '@/components/ui/LoadingState';
 const Dia = ({ _id, Data, NumeroHoras, _id_Group, Utilizador, tipoDeTrabalhoHoras, associated, listaTT, accepted, tipoUser, deleteDay , deleteDayGroup, buttonConfirmed}) => {
   const dispatch = useDispatch();
   const [projeto, setProjeto] = useState([]);
@@ -117,13 +118,11 @@ const Dia = ({ _id, Data, NumeroHoras, _id_Group, Utilizador, tipoDeTrabalhoHora
               {(accepted !== 2 && accepted !== 3 && accepted !== 5 && accepted !== 7 && _id_Group && _id_Group !== 0 ) ?
                 <div className='col-md-6'>
                   {buttonConfirmed ? (
-                  <div className="spinner-border text-danger" role="status">
-                    <span className="sr-only"></span>
-                  </div>
+                  <LoadingState inline size={24} message={null} />
                   ): (
-                  <button type='submit' onClick={() => deleteDiaGroupConfirm(_id, Data, _id_Group)} disabled={buttonConfirmed} className="btn btn-danger">
+                  <AppButton type='submit' variant='danger' size='sm' onClick={() => deleteDiaGroupConfirm(_id, Data, _id_Group)} disabled={buttonConfirmed}>
                     Apagar Pedido
-                  </button>
+                  </AppButton>
                   )}
                 </div>
                 :<div className='col-md-6'> </div>

@@ -7,6 +7,7 @@ import { AiOutlineClose } from 'react-icons/ai';
 import { IoAddCircleOutline } from "react-icons/io5";
 
 import Loading from '@/components/common/Loading';
+import { AppButton } from '@/components/ui';
 import NumberPicker from "react-widgets/NumberPicker";
 import PropTypes from 'prop-types'; 
 
@@ -195,9 +196,9 @@ const AddPagamentos = ({ horasExtraEsteMes, horasPorDar, selectedUser, responsab
                       </button>
                     </div>
                     <div className='col-12 text-end' id="addProjeto"></div>
-                    <button type='submit' className="btn btn-primary">
+                    <AppButton type='submit' variant="primary">
                       Adicionar
-                    </button>
+                    </AppButton>
                   </div>
 
                 </div>

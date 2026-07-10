@@ -1,11 +1,12 @@
 import { memo } from 'react';
 import Wrapper from '@/styles/FormRowSelectTipo';
-import PropTypes from 'prop-types'; 
+import PropTypes from 'prop-types';
+import AppSelect from '@/components/ui/AppSelect';
 
-const FormRowSelectTipo =  ({ labelText, name, value, handleChange, list, className , keyGet}) => {
+const FormRowSelectTipo = ({ labelText, name, value, handleChange, list, className, keyGet }) => {
   const generateUniqueId = `tt-${keyGet}`;
 
-  if(name === "responsavel"){
+  if (name === "responsavel") {
 
     let selectOptions = [];
 
@@ -17,78 +18,77 @@ const FormRowSelectTipo =  ({ labelText, name, value, handleChange, list, classN
           </option>
         );
       }
-      return(    
-            <Wrapper>
-              <div className={className ? className : 'form-row text-center'} style={{ width: '100%' }} key={keyGet}>
-                {labelText !== " " &&
-                <label htmlFor={keyGet} className='form-label'>  {labelText || name} </label>
-                }
-                  <div className="text-center">
-                  <select
-                  name={name}
-                  id={name}
-                  value={value}
-                  onChange={handleChange}
-                  className="form-select"
-                >
+      return (
+        <Wrapper>
+          <div className={className ? className : 'form-row text-center'} style={{ width: '100%' }} key={keyGet}>
+            {labelText !== " " &&
+              <label htmlFor={keyGet} className='form-label'>  {labelText || name} </label>
+            }
+            <div className="text-center">
+              <AppSelect
+                name={name}
+                id={name}
+                value={value}
+                onChange={handleChange}
+              >
                 {selectOptions}
-              </select>
-                <br></br>
-                </div>
-              </div>
-            </Wrapper>
+              </AppSelect>
+              <br></br>
+            </div>
+          </div>
+        </Wrapper>
       );
-  } else{
-    selectOptions = [ ];
+    } else {
+      selectOptions = [];
+    }
+
+    return (<></>);
   }
 
-    return(<></>);
-  }
-
-  if(value === 1 && name === "tipo"){
+  if (value === 1 && name === "tipo") {
     value = "Engenharia de Processos";
-  }else if(value === 2 && name === "tipo"){
+  } else if (value === 2 && name === "tipo") {
     value = "Administrador";
-  }else if(value === 3 && name === "tipo"){
+  } else if (value === 3 && name === "tipo") {
     value = "Laboratorio";
-  }else if(value === 4 && name === "tipo"){
+  } else if (value === 4 && name === "tipo") {
     value = "Outro";
-  }else if(value === 5 && name === "tipo"){
+  } else if (value === 5 && name === "tipo") {
     value = "Administrador Engenharia";
-  }else if(value === 6 && name === "tipo"){
+  } else if (value === 6 && name === "tipo") {
     value = "Administrador Laboratorio";
-  }else if(value === 7 && name === "tipo"){
+  } else if (value === 7 && name === "tipo") {
     value = "Administrador Recursos Humanos";
-  }else if(value === 8 && name === "tipo"){
+  } else if (value === 8 && name === "tipo") {
     value = "Inativo";
   }
-  
-  else if(value === 9 && name === "tipo"){
+
+  else if (value === 9 && name === "tipo") {
     value = "Responsavel Qualidade";
   }
-  else if(value === 10 && name === "tipo"){
+  else if (value === 10 && name === "tipo") {
     value = "Gestor Financeiro";
   }
-  else if(value === 11 && name === "tipo"){
+  else if (value === 11 && name === "tipo") {
     value = "Comercial";
   }
-  else if(value === 12 && name === "tipo"){
+  else if (value === 12 && name === "tipo") {
     value = "Logistica";
   }
 
-  if(value === 1 && name === "tipoT"){
+  if (value === 1 && name === "tipoT") {
     value = "Projetos";
-  }else if(value === 2 && name === "tipoT"){
+  } else if (value === 2 && name === "tipoT") {
     value = "Geral";
-  }else if(value === 3 && name === "tipoT"){
+  } else if (value === 3 && name === "tipoT") {
     value = "Outro";
-  }else if(value === 4 && name === "tipoT"){
+  } else if (value === 4 && name === "tipoT") {
     value = "Compensação";
-  }else if(value === 5 && name === "tipoT"){
+  } else if (value === 5 && name === "tipoT") {
     value = "Extra";
-  }else if(value === 6 && name === "tipoT"){
+  } else if (value === 6 && name === "tipoT") {
     value = "Compensação Domingo";
-  }else if(value === 7 && name === "tipoT"){
+  } else if (value === 7 && name === "tipoT") {
     value = "Ferias";
   }
 
@@ -97,38 +97,36 @@ const FormRowSelectTipo =  ({ labelText, name, value, handleChange, list, classN
     marginLeft: 'auto',
     marginRight: 'auto',
   };
-  
+
 
 
   return (
     <Wrapper>
-    <div className={className ? className : 'form-row text-center'} style={{ width: '100%' }} key={keyGet}>
-      {labelText !== " " &&
-      <label htmlFor={keyGet} className='form-label'>  {labelText || name} </label>
-      }
-      
-      <div className="text-center" style={containerStyle}>
-      <select
-        key={generateUniqueId}
-        name={name}
-        id = {keyGet}
-        value={value}
-        onChange={handleChange}
-        className='form-select'
-        disabled={value === "Compensação" || value === "Extra" || value === "Ferias" ||value === "Compensação Domingo"}
-      >
-        {list.map((itemValue, index) => {
-          return (
-            <option key={index} value={itemValue}>
-              {itemValue}
-            </option>
-          );
-        })}
+      <div className={className ? className : 'form-row text-center'} style={{ width: '100%' }} key={keyGet}>
+        {labelText !== " " &&
+          <label htmlFor={keyGet} className='form-label'>  {labelText || name} </label>
+        }
 
-      </select>
-      <br></br>
+        <div className="text-center" style={containerStyle}>
+          <AppSelect
+            key={generateUniqueId}
+            name={name}
+            id={keyGet}
+            value={value}
+            onChange={handleChange}
+            disabled={value === "Compensação" || value === "Extra" || value === "Ferias" || value === "Compensação Domingo"}
+          >
+            {list.map((itemValue, index) => {
+              return (
+                <option key={index} value={itemValue}>
+                  {itemValue}
+                </option>
+              );
+            })}
+          </AppSelect>
+          <br></br>
+        </div>
       </div>
-    </div>
     </Wrapper>
   );
 };
@@ -147,4 +145,3 @@ FormRowSelectTipo.propTypes = {
 }
 
 export default memo(FormRowSelectTipo);
-  

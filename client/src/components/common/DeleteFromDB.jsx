@@ -2,38 +2,23 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { deleteProjeto } from '@/features/projetos/projetosSlice';
-import { deleteUser } from "@/features/utilizadores/utilizadorSlice";
-import { toggleSidebar } from '@/features/utilizadores/utilizadorSlice';
+import { deleteUser, toggleSidebar } from '@/features/utilizadores/utilizadorSlice';
 import { AiFillDelete } from 'react-icons/ai';
-import PropTypes from 'prop-types'; 
-
+import PropTypes from 'prop-types';
+import { AppButton, ConfirmDialog } from '@/components/ui';
 
 const DeleteFromDB = ({ id, name, isLoading, type }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [showModal, setShowModal] = useState(false);
-  const [modalName, setModalName] = useState('');
-  const [modalType, setModalType] = useState('');
-  // const [modalID, setModalId] = useState('');
-  const handleClose = () => {
-    setShowModal(false);
-  };
-
-  const handleModal = (id, name, type) => {
-    setModalName(name);
-    setModalType(type);
-    // setModalId(id);
-    setShowModal(true);
-  };
-
+  const [open, setOpen] = useState(false);
 
   const handleConfirmDelete = async () => {
-    setShowModal(false);
+    setOpen(false);
     try {
       let result;
-      if (type === "Projeto") {
+      if (type === 'Projeto') {
         result = await dispatch(deleteProjeto(id));
-      } else if (type === "Utilizador") {
+      } else if (type === 'Utilizador') {
         result = await dispatch(deleteUser(id));
       }
       if (!result.error) {
@@ -49,48 +34,24 @@ const DeleteFromDB = ({ id, name, isLoading, type }) => {
 
   return (
     <>
-      <button
-        type="button"
-        className="btn btn-danger"
-        data-bs-toggle="modal"
-        data-bs-target="#ModalFoto"
-        data-bs-backdrop="static"
-        onClick={() => handleModal(id, name, type)}
-      >
-        {isLoading ? 'loading...' : <AiFillDelete />}
-      </button>
+      <AppButton
+        variant="danger"
+        leftIcon={<AiFillDelete />}
+        loading={isLoading}
+        onClick={() => setOpen(true)}
+        aria-label={`Eliminar ${type}`}
+      />
 
-      <div
-        className={showModal ? 'modal show' : 'modal fade'}
-        id="ModalFoto"
-        tabIndex="-1"
-        aria-labelledby="ModalLabelFoto"
-        aria-hidden={!showModal}
-        role="dialog"
-        aria-modal="true"
-      >
-        <div className="modal-dialog modal-dialog-centered">
-          <div className="modal-content  modal-dialog-centered">
-            <p>Deseja eliminar o {modalType}: {modalName}</p>
-            <div className="modal-actions">
-              <button
-                className="btn btn-danger"
-                data-bs-dismiss="modal"
-                onClick={handleConfirmDelete}
-              >
-                Apagar
-              </button>
-              <button
-                className="btn btn-success"
-                data-bs-dismiss="modal"
-                onClick={handleClose}
-              >
-                Cancelar
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <ConfirmDialog
+        open={open}
+        title={`Eliminar ${type}?`}
+        message={`Deseja eliminar o ${type}: ${name}`}
+        confirmLabel="Apagar"
+        cancelLabel="Cancelar"
+        variant="danger"
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setOpen(false)}
+      />
     </>
   );
 };
@@ -100,6 +61,6 @@ DeleteFromDB.propTypes = {
   name: PropTypes.string.isRequired,
   isLoading: PropTypes.bool.isRequired,
   type: PropTypes.string.isRequired,
-}
+};
 
 export default DeleteFromDB;
