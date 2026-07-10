@@ -1,224 +1,65 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 const Wrapper = styled.section`
-@media (max-width: 768px) {
-  .text-end {
-    align-content: center;
-    justify-content: center;
-    align-items: center;
-    justify-items: center;
-    text-align: center;
-    align-self:center;
-    width:auto;
-    text-align: center;
-    margin: auto;
+  .form-label {
+    display: inline-block;
+    margin-bottom: 0.3rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--grey-600);
   }
 
-  .text-start {
-    align-content: center;
-    justify-content: center;
-    align-items: center;
-    justify-items: center;
-    text-align: center;
-    align-self:center;
-    width:auto;
-    text-align: center;
-    margin: auto;
-  }
-}
-
-.checkboxRow{
-    height : 20vh;
-    overflow: auto;
-    width:30vw;
-    text-align:center;
-    items-align:center;
-    padding-top:5px;
-    border: 1px solid black;
-    box-sizing: border-box;
-    margin:auto;
-}
-
-    .checkboxRow::-webkit-scrollbar {
-      width: 15px;
-  }
-
-  .checkboxRow::-webkit-scrollbar-track {
-      background: #f1f1f1;
-  }
-
-  .checkboxRow::-webkit-scrollbar-thumb {
-      background: #CCCCCC;
-      border-radius: 10px;
-  }
-
-  .checkboxRow::-webkit-scrollbar-thumb:hover {
-      background: #000;
-  }
-
-.multiselect {
-    width: 200px;
-  }
-  
-  .selectBox {
-    position: relative;
-  }
-  
-  .form-select{
-    align-content: center;
-    justify-content: center;
-    align-items: center;
-    justify-items: center;
-    text-align: center;
-    align-self:center;
-    width:50%;
-    margin: auto;
+  /* scrollable list of checkbox options */
+  .checkboxRow {
+    max-height: 15rem;
     overflow-y: auto;
-  }
-
-    .form-select::-webkit-scrollbar {
-      width: 15px;
-  }
-
-  .form-select::-webkit-scrollbar-track {
-      background: #f1f1f1;
-  }
-
-  .form-select::-webkit-scrollbar-thumb {
-      background: #000;
-      border-radius: 10px;
-  }
-
-  .form-select::-webkit-scrollbar-thumb:hover {
-      background: #555;
-  }
-  .selectBox select {
     width: 100%;
-    font-weight: bold;
+    max-width: 440px;
+    margin: 0 auto;
+    padding: 0.35rem 0.5rem;
+    background: var(--white);
+    border: 1px solid var(--grey-300);
+    border-radius: var(--borderRadius);
+    box-sizing: border-box;
   }
-  
-  .overSelect {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-  }
-  
-  align-items: center;
-
-  /* width */
-  ::-webkit-scrollbar {
-    width: 20px;
-  }
-  
-  /* Track */
-  ::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 5px grey;
-    border-radius: 10px;
-  }
-  
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: red;
-    border-radius: 10px;
-  }
-
-  .MainForm {
-    width: 100%;
-    display: inline-block;;
-    align-self: baseline;
-    position: relative;
-    overflow: visible;
-    flex-direction: column;
-    align-content: center;
-    justify-content: center;
+  .checkboxRow .row {
     align-items: center;
-    justify-items: center;
-    flex-wrap: nowrap;
-    overflow-y: scroll;  overflow-y: scroll;
-    scrollbar-color: rebeccapurple green;
-    scrollbar-width: thin;
-  }
-
-  .form {
-    text-align:center;
-    align-items: center;
-    max-width: 100%;
-    min-width: 70%;
-    border-top: 5px solid var(--primary-500);
-  }
-
-  h3 {
-    text-align: center;
-  }
-  p {
     margin: 0;
-    margin-top: 1rem;
-    text-align: center;
+    padding: 0.3rem 0.4rem;
+    border-radius: 6px;
+    transition: var(--transition);
   }
-  .btn {
-    margin-top: 1rem;
+  .checkboxRow .row:hover {
+    background: var(--primary-50);
   }
-  .member-btn {
-    background: transparent;
-    border: transparent;
-    color: var(--primary-500);
+  .checkboxRow label {
+    margin: 0;
+    text-align: left;
+    color: var(--grey-800);
     cursor: pointer;
-    letter-spacing: var(--letterSpacing);
   }
 
-  input {
-    text-align:center;
-    min-width : 50%;
-    width: auto;
+  input[type='checkbox'] {
+    width: 1.1rem;
+    height: 1.1rem;
+    accent-color: var(--primary-500);
+    cursor: pointer;
   }
 
-
-
-
-  .formRowInput {
-    min-width: 20%;
-    max-width: auto;
-    display: flex;
-    flex-direction: row;
-    align-items: end;
-    justify-items: end;
-    align-content: space-evenly;
-    justify-content: space-evenly;
-    flex-wrap: wrap;
+  .text-end p,
+  .text-center p {
+    margin: 0.25rem 0 0;
+    font-size: 0.9rem;
+    color: var(--grey-600);
   }
 
-
-
-export default Wrapper
-  #checkboxes {
-    display: none;
-    border: 1px #dadada solid;
+  @media (max-width: 768px) {
+    .text-end,
+    .text-start {
+      text-align: center;
+      margin: auto;
+    }
   }
-  
-  #checkboxes label {
-    display: block;
-  }
-  
-  .form-field-label {
-    font-size: 200%;
-    align-content: center;
-    justify-content: center;
-    align-items: center;
-    justify-items: center;
-    text-align: center;
-    align-self:center;
-    width:auto;
-    text-align: center;
-  }
-  
-  #checkboxes label:hover {
-    background-color: #1e90ff;
-  }
+`;
 
-  
-
-`
-
-export default Wrapper
+export default Wrapper;

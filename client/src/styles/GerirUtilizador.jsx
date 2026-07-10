@@ -1,79 +1,62 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.section`
-font-size: auto;
-.tittle {
-  margin: 5%;
-  margin-top: 2%;
-}
-@media (max-width: 700px) {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
   .listaTiposUtilizador {
     display: grid;
-    gap: 5px;
-    flex-direction: row;
-    align-content: space-evenly;
-    width: 100%;
-    align-items: end;
-    grid-auto-flow: row;
-    justify-items: center;
-    align-self: stretch;
-    gap: 2px;
-    font-size: auto;
-    line-height: auto;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  @media (min-width: 700px) {
+    .listaTiposUtilizador {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (min-width: 1100px) {
+    .listaTiposUtilizador {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+  }
+
+  .user-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    background: var(--white);
+    border: 1px solid var(--grey-200);
+    border-radius: 10px;
+    box-shadow: var(--shadow-1);
+    padding: 1rem;
+    transition: var(--transition);
+  }
+  .user-card:hover {
+    box-shadow: var(--shadow-2);
+    border-color: var(--grey-300);
+  }
+
+  .user-card-info {
     text-align: center;
-    align-items: center;
-    flex-wrap: nowrap;
-    overflow-wrap: break-word;
+  }
+  .user-name {
+    margin: 0;
+    font-weight: 600;
+    color: var(--grey-900);
+  }
+  .user-email {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--grey-500);
     word-break: break-word;
   }
-}
-@media (min-width: 700px) {
-.listaTiposUtilizador {
-    display: grid;
-    gap: 5px;
-    flex-direction: row;
-    align-content: space-evenly;
-    width: 100%;
-    align-items: end;
-    grid-auto-flow: row;
-    justify-items: center;
-    align-self: stretch;
-    gap: 2px;
-    font-size: auto;
-    line-height: auto;
-    text-align: center;
-    direction: ltr;
-    grid-template-columns: 1fr 1fr 1fr;
-    margin-bottom: 3%;
-    grid-auto-rows: minmax(1fr, auto);
-    align-items: center;
-    flex-wrap: nowrap;
-    overflow-wrap: break-word;
-    word-break: break-word;
+
+  .user-actions {
+    display: flex;
+    justify-content: flex-end;
+    min-height: 2rem;
   }
-}
-  .listaTiposUtilizador > div {
-    width: 90%;
-    border: 1px solid black; /* Add border between grid items */
-    margin-bottom:5%;
-        align-items: center;
-}
-}
-.tiposUtilizador {
-  margin-top: 2%;
-
-
-.Buttons {
-  display: inline;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  padding: 0;
-  margin-top: auto;
-  margin-bottom: auto;
-  width: 100%;
-  height: 100%;
-}
 `;
 
 export default Wrapper;

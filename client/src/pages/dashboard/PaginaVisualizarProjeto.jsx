@@ -3,7 +3,7 @@ import { VisualizarProjeto } from '../../components';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
-
+import { canAccessProjetos } from '@/utils/roles';
 
 const PaginaAdicionarUtilizador = () => {
   
@@ -13,7 +13,7 @@ const PaginaAdicionarUtilizador = () => {
 
   useEffect(() => {
     if (user) {
-      if (!(user.user.tipo === 2 || user.user.tipo === 1 || user.user.tipo === 5 || user.user.tipo === 7)) {
+      if (!(canAccessProjetos(user.user.tipo))) {
         toast.error("Sem permissões para aceder a esta página!");
         navigate('/PaginaAdicionarHoras');
       }
@@ -27,7 +27,7 @@ const PaginaAdicionarUtilizador = () => {
 
   return (
     <>
-     {user && (user.user.tipo === 2 || user.user.tipo === 1 || user.user.tipo === 5 || user.user.tipo === 7) && <VisualizarProjeto />}
+     {user && (canAccessProjetos(user.user.tipo)) && <VisualizarProjeto />}
     </>
   );
 };

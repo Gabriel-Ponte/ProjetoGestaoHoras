@@ -1,33 +1,16 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 const Wrapper = styled.aside`
+  padding-bottom: 3rem;
 
-html,
-body {
-  height: 100%;
-}
+  .form-page {
+    max-width: 560px;
+    margin: 0 auto;
+  }
 
+  .form button[type='submit'] {
+    margin-top: 1rem;
+  }
+`;
 
-
-.form-signin {
-  max-width: 500px;
-  padding: 15px;
-}
-
-.form-signin .form-floating:focus-within {
-  z-index: 2;
-}
-
-.form-signin input[type="email"] {
-  margin-bottom: -1px;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
-}
-
-.form-signin input[type="password"] {
-  margin-bottom: 10px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-}
-`
-export default Wrapper
+export default Wrapper;

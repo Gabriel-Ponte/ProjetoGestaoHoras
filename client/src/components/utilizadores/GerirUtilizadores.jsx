@@ -1,12 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteUser, updateUserType, listaUtilizadores, listaUsersTipo } from '@/features/utilizadores/utilizadorSlice';
+import { updateUserType, listaUtilizadores, listaUsersTipo } from '@/features/utilizadores/utilizadorSlice';
 import Wrapper from '@/styles/GerirUtilizador';
-import { AiFillDelete } from 'react-icons/ai';
 import FormRowSelectTipo from '@/components/forms/FormRowSelectTipo';
-import { toast } from 'react-toastify';
-import Loading from '@/components/common/Loading';
+import { PageHeader, AppButton, LoadingState } from '@/components/ui';
 
 const GerirUtilizadores = () => {
   const [initialState, setInitialState] = useState([]);
@@ -15,20 +12,6 @@ const GerirUtilizadores = () => {
   const dispatch = useDispatch();
   const [callUseEffect, setCallUseEffect] = useState();
   const { user, isLoading } = useSelector((store) => store.utilizador.user);
-
-  const navigate = useNavigate();
-
-
-  useEffect(() => {
-    if (user && (user?.tipo === 1 )) {
-      toast.error("Sem permissões para aceder a esta página!");
-      navigate('/PaginaPrincipal');
-    }else if (user && (user?.tipo === 3 || user?.tipo === 4)){
-      toast.error("Sem permissões para aceder a esta página!");
-      navigate('/PaginaAdicionarHoras');
-    }
-  }, [user, navigate]);
-
 
   useEffect(() => {
     dispatch(listaUtilizadores()).then((res) => {
@@ -68,7 +51,6 @@ const GerirUtilizadores = () => {
   
 useEffect(() => {
     let  name = "";
-    let value = "";
 
     const fetchResponsaveis = async (valTipo) => {
         try {
@@ -141,24 +123,6 @@ updateList();
   //let StringListaUtilizadores = listaUtilizadores.map(item => item.Utilizador).join(",");
 
 
-
-  const handleConfirmDelete = async (id, nome) => {
-    try {
-      const confirmed = window.confirm("Tem a certeza que deseja apagar o utilizador: " + nome + "?");
-      if (confirmed) {
-        const result = await dispatch(deleteUser(id));
-        if (!result.error) {
-          setTimeout(() => {
-            navigate('/PaginaPrincipal');
-          }, 2000);
-          return "Utilizador Apagado. Voltando para a pagina principal...";
-        }
-      }
-    } catch (error) {
-      console.error(error);
-      return "Ocorreu um erro ao apagar o utilizador.";
-    }
-  };
 
   const alterarUtilizador = async (utilizador) => {
     try {
@@ -271,88 +235,60 @@ updateList();
 
 
 
-  if(isLoading){
-    return <Loading />
+  if (isLoading) {
+    return <LoadingState message="A carregar utilizadores…" />;
   }
   return (
     <Wrapper>
-      <div className={'row mb-12 text-center tittle'}>
-        <h1>Gerir Utilizadores</h1>
-      </div>
+      <PageHeader
+        title="Gerir Utilizadores"
+        subtitle="Perfis e permissões dos utilizadores"
+      />
       <div className="listaTiposUtilizador">
         {listaDeUtilizadores.map((t, i) => {
-          if (user.id !== t._id) {
-            return (
-              <div className="row text-center" key={i}>
-                  <div className={`${(verificaAlterado[t._id] === true) ? "col-md-8" : "col-md-12"} text-center tiposUtilizador`}>
-
-                  {
-                    <>
-                      <p>
-                        {t.nome}
-                      </p>
-                      <p>
-                        {t.email}
-                      </p>
-                    </>
-                  }
-                  <FormRowSelectTipo
-                    type="text"
-                    className="form-row"
-                    labelText=" "
-                    id="tipo"
-                    name="tipo"
-                    handleChange={(e) => handleChangeUtilizador(e, t._id)}
-                    placeholder="Escolha um tipo"
-                    value={t.tipo}
-                    list={[["Engenharia de Processos"], ["Laboratorio"] ,["Recursos Humanos"] , ["Responsavel Qualidade"], ["Gestor Financeiro"], ["Comercial"] , ["Logistica"], ["Administrador"] , ["Administrador Engenharia"] , ["Administrador Laboratorio"], ["Administrador Recursos Humanos"], ["Inativo"]]}
-                  />
-
-              {t.tipo === 3 &&
-                <>
-                <FormRowSelectTipo
-                      type="text"
-                      className="form-control"
-                      id="responsavel"
-                      name ="responsavel"
-                      labelText="Responsavel"
-                      value= {t.responsavel}
-                      list = {t?.listaResponsaveis}
-                      handleChange={(e) => handleChangeUtilizador(e, t._id)}  
-                  />
-              </>
-                }
-      
-                </div>
-                
-                <div className="col-md-4 text-center">
-                  <div className='Buttons'>
-                    {verificaAlterado[t._id] === true && (
-                      <button type='submit'
-                        onClick={() => alterarUtilizador(t)}
-                        className="btn btn-outline-primary">
-                        Alterar
-                      </button>
-                    ) 
-                    // : user.tipo === 2 && (
-                    //   <button type='submit'
-                    //     onClick={() => handleConfirmDelete(t._id, t.nome)}
-                    //     className="btn">
-                    //     <AiFillDelete />
-                    //   </button>
-
-                    // )
-                    }
-                  </div>
-                </div>
+          if (user.id === t._id) return null;
+          return (
+            <div className="user-card" key={i}>
+              <div className="user-card-info">
+                <p className="user-name">{t.nome}</p>
+                <p className="user-email">{t.email}</p>
               </div>
-            );
-          } else {
-            return null;
-          }
-        }
-        )
-        }
+
+              <FormRowSelectTipo
+                type="text"
+                className="form-row"
+                labelText=" "
+                id="tipo"
+                name="tipo"
+                handleChange={(e) => handleChangeUtilizador(e, t._id)}
+                placeholder="Escolha um tipo"
+                value={t.tipo}
+                list={[["Engenharia de Processos"], ["Laboratorio"], ["Recursos Humanos"], ["Responsavel Qualidade"], ["Gestor Financeiro"], ["Comercial"], ["Logistica"], ["Administrador"], ["Administrador Engenharia"], ["Administrador Laboratorio"], ["Administrador Recursos Humanos"], ["Inativo"]]}
+              />
+
+              {t.tipo === 3 && (
+                <FormRowSelectTipo
+                  type="text"
+                  className="form-control"
+                  id="responsavel"
+                  name="responsavel"
+                  labelText="Responsavel"
+                  value={t.responsavel}
+                  list={t?.listaResponsaveis}
+                  handleChange={(e) => handleChangeUtilizador(e, t._id)}
+                />
+              )}
+
+              <div className="user-actions">
+                {verificaAlterado[t._id] === true && (
+                  <AppButton size="sm" onClick={() => alterarUtilizador(t)}>
+                    Alterar
+                  </AppButton>
+                )}
+              </div>
+            </div>
+          );
+        })}
       </div>
     </Wrapper>
   );

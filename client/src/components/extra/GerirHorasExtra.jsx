@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllDiasHorasExtra, acceptDiasHorasExtra, declineDiasHorasExtra, getAllDiasHorasExtraAccepted, getAllDiasHorasExtraDeclined, getAllDiasHorasExtraDeclinedResponsavel, getAllDiasHorasExtraAcceptedResponsavel, getAllDiasHorasExtraResponsavel, acceptMultipleDiasHorasExtra, declineMultipleDiasHorasExtra } from '@/features/allDias/allDiasSlice';
 import Wrapper from '@/styles/GerirHorasExtra';
@@ -8,7 +7,8 @@ import { listaUtilizadores } from '@/features/utilizadores/utilizadorSlice';
 import { getAllPagamentos, handleChangePagamentos } from '@/features/pagamentos/pagamentosSlice';
 import { FcCheckmark } from 'react-icons/fc';
 import { IoMdClose } from 'react-icons/io';
-import { toast } from 'react-toastify';
+import { AppButton } from '@/components/ui';
+import { isHorasExtraFullManager } from '@/utils/roles';
 import FormRowListaHorasExtraPagas from '@/components/forms/FormRowListaHorasExtraPagas';
 import FormRowListaHorasExtraPagasHeader from '@/components/forms/FormRowListaHorasExtraPagasHeader';
 import LoadingSmaller from '@/components/common/LoadingSmaller';
@@ -31,27 +31,17 @@ const GerirHorasExtra = () => {
   const [callUseEffect, setCallUseEffect] = useState(false);
   const { user, utilizadores } = useSelector((store) => store.utilizador);
 
-
-  const navigate = useNavigate();
-
+  // Admin (tipo 2) is treated like Admin RH (tipo 7): full gestão, every tab.
+  const isFullManager = isHorasExtraFullManager(user?.user?.tipo);
 
   useEffect(() => {
-    if (user?.user && (user?.user?.tipo === 1)) {
-      toast.error("Sem permissões para aceder a esta página!");
-      navigate('/PaginaPrincipal');
-    } else if ((user?.user && user?.user?.tipo === 3) || (user?.user?.tipo === 4)) {
-      toast.error("Sem permissões para aceder a esta página!");
-      navigate('/PaginaAdicionarHoras');
-    }
-
-
     handleChangeTipo(2);
-  }, [user?.user, navigate]);
+  }, [user?.user]);
 
   useEffect(() => {
     dispatch(listaUtilizadores());
 
-    if (user?.user?.tipo === 7) {
+    if (isFullManager) {
       if (verificaAlterado === 0) {
         listHorasExtra()
       }
@@ -382,67 +372,56 @@ const GerirHorasExtra = () => {
     return (
       <Wrapper>
         <div className={'row mb-12 text-center tittle'}>
-          {user?.user?.tipo === 7 &&
+          {isFullManager &&
             <>
               <div className='col-md-6'>
-              <button
-                  type="submit"
-                  style={{ ...styleButton }}
-                  className={`btn middleButton activeMainButton`}
-                  
-                >
-                    Gestão de Pedidos
-                </button>
-          
+                <AppButton type="button" fullWidth variant="primary">
+                  Gestão de Pedidos
+                </AppButton>
               </div>
-              <div className='col-md-6  d-flex flex-column justify-content-center align-items-center' >
-                <button
-                  type="submit"
-                  style={{ ...styleButton }}
-                  className={`btn middleButton `}
-                  onClick={(e) => { setGerirFerias(true) }}
-                >
+              <div className='col-md-6'>
+                <AppButton type="button" fullWidth variant="secondary"
+                  onClick={() => setGerirFerias(true)}>
                   Gestão de Férias
-                </button>
+                </AppButton>
               </div>
             </>}
           {user?.user?.tipo === 6 && <h1>Gestão de Horas Extra Responsável</h1>}
         </div>
         <div className="col-md-12 mb-4 text-center ">
           <div className="row">
-            <div className={user?.user?.tipo === 7 ? "col-md-3" : "col-md-4"}>
-              <button type='button'
-                className={`btn ButtonsTest ${verificaAlterado === 0 ? 'active' : ''}`}
+            <div className={isFullManager ? "col-md-3" : "col-md-4"}>
+              <AppButton type="button" fullWidth
+                variant={verificaAlterado === 0 ? 'primary' : 'secondary'}
                 disabled={isLoading || isLoadingPagamentos}
-
                 onClick={() => handleChangeButtonClicked(0)}>
                 Pedidos por Aceitar
-              </button>
+              </AppButton>
             </div>
-            <div className={user?.user?.tipo === 7 ? "col-md-3" : "col-md-4"}>
-              <button type='button'
-                className={`btn ButtonsTest ${verificaAlterado === 1 ? 'active' : ''}`}
+            <div className={isFullManager ? "col-md-3" : "col-md-4"}>
+              <AppButton type="button" fullWidth
+                variant={verificaAlterado === 1 ? 'primary' : 'secondary'}
                 disabled={isLoading || isLoadingPagamentos}
                 onClick={() => handleChangeButtonClicked(1)}>
                 Pedidos Aceites
-              </button>
+              </AppButton>
             </div>
-            <div className={user?.user?.tipo === 7 ? "col-md-3" : "col-md-4"}>
-              <button type='button'
-                className={`btn ButtonsTest ${verificaAlterado === 2 ? 'active' : ''}`}
+            <div className={isFullManager ? "col-md-3" : "col-md-4"}>
+              <AppButton type="button" fullWidth
+                variant={verificaAlterado === 2 ? 'primary' : 'secondary'}
                 disabled={isLoading || isLoadingPagamentos}
                 onClick={() => handleChangeButtonClicked(2)}>
                 Pedidos Recusados
-              </button>
+              </AppButton>
             </div>
-            {user.user.tipo === 7 &&
+            {isFullManager &&
               <div className="col-md-3">
-                <button type='button'
-                  className={`btn ButtonsTest ${verificaAlterado === 3 ? 'active' : ''}`}
+                <AppButton type="button" fullWidth
+                  variant={verificaAlterado === 3 ? 'primary' : 'secondary'}
                   disabled={isLoading || isLoadingPagamentos}
                   onClick={() => handleChangeButtonClicked(3)}>
                   Horas Extra Pagas
-                </button>
+                </AppButton>
               </div>
             }
           </div>
@@ -459,37 +438,37 @@ const GerirHorasExtra = () => {
                   {(verificaAlterado !== 3) &&
                     <div className='row mt-4 mb-4'>
                       <div className={`${verificaAlterado === 0 ? 'col-md-4' : 'col-md-3'}`}>
-                        <button type='button'
-                          className={`btn ButtonsTestSecondary ${(verificaTipo === 2 || verificaTipo === 6) ? 'activeSecondary' : ''}`}
+                        <AppButton type="button" size="sm" fullWidth
+                          variant={(verificaTipo === 2 || verificaTipo === 6) ? 'primary' : 'secondary'}
                           disabled={isLoading || isLoadingPagamentos}
                           onClick={() => handleChangeTipo(2)}>
                           Horas Extra
-                        </button>
+                        </AppButton>
                       </div>
                       <div className={`${verificaAlterado === 0 ? 'col-md-4' : 'col-md-3'}`}>
-                        <button type='button'
-                          className={`btn ButtonsTestSecondary ${(verificaTipo === 3 || verificaTipo === 7) ? 'activeSecondary' : ''}`}
+                        <AppButton type="button" size="sm" fullWidth
+                          variant={(verificaTipo === 3 || verificaTipo === 7) ? 'primary' : 'secondary'}
                           disabled={isLoading || isLoadingPagamentos}
                           onClick={() => handleChangeTipo(3)}>
                           Compensação de Horas Extra
-                        </button>
+                        </AppButton>
                       </div>
                       <div className={`${verificaAlterado === 0 ? 'col-md-4' : 'col-md-3'}`}>
-                        <button type='button'
-                          className={`btn ButtonsTestSecondary ${(verificaTipo === 4 || verificaTipo === 7) ? 'activeSecondary' : ''}`}
+                        <AppButton type="button" size="sm" fullWidth
+                          variant={(verificaTipo === 4 || verificaTipo === 7) ? 'primary' : 'secondary'}
                           disabled={isLoading || isLoadingPagamentos}
                           onClick={() => handleChangeTipo(4)}>
                           Ferias
-                        </button>
+                        </AppButton>
                       </div>
                       {(verificaAlterado !== 0) &&
                         <div className='col-md-3'>
-                          <button type='button'
-                            className={`btn ButtonsTestSecondary ${(verificaTipo === 1 || verificaTipo === 5) ? 'activeSecondary' : ''}`}
+                          <AppButton type="button" size="sm" fullWidth
+                            variant={(verificaTipo === 1 || verificaTipo === 5) ? 'primary' : 'secondary'}
                             disabled={isLoading || isLoadingPagamentos}
                             onClick={() => handleChangeTipo(1)}>
                             Todos os pedidos
-                          </button>
+                          </AppButton>
                         </div>
                       }
                     </div>

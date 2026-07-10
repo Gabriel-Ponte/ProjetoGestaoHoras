@@ -3,9 +3,7 @@ import { AddHorasProjeto } from '../../components';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useEffect } from 'react';
-
-
-
+import { canAccessProjetos } from '@/utils/roles';
 
 const PaginaAdicionarHoras = () => {
   const { user } = useSelector((store) => store.utilizador);
@@ -13,7 +11,7 @@ const PaginaAdicionarHoras = () => {
 
   useEffect(() => {
     if (user) {
-      if (user.user.tipo === 2 || user.user.tipo === 1 || user.user.tipo === 5 || user.user.tipo === 7) {
+      if (canAccessProjetos(user.user.tipo)) {
         // Render the component
       } else {
         toast.error("Sem permissões para aceder a esta página!");
@@ -28,7 +26,7 @@ const PaginaAdicionarHoras = () => {
 
   return (
     <>
-      {user && (user.user.tipo === 1 || user.user.tipo === 2 || user.user.tipo === 5 || user.user.tipo === 7) && <AddHorasProjeto />}
+      {user && canAccessProjetos(user.user.tipo) && <AddHorasProjeto />}
     </>
   );
 

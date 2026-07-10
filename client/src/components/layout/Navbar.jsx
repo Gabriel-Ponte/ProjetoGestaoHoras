@@ -5,12 +5,17 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleSidebar, clearStore } from '@/features/utilizadores/utilizadorSlice';
 import { getAllDiasHorasExtra, getAllDiasHorasExtraResponsavel } from '@/features/allDias/allDiasSlice';
-
-// import { GiHourglass } from 'react-icons/gi';
-// import { GoDiffAdded } from 'react-icons/go';
 import { handleChange } from '@/features/allProjetos/allProjetosSlice';
-
 import { handleChangePagamentos } from '@/features/pagamentos/pagamentosSlice';
+import { AppButton } from '@/components/ui';
+import {
+  ROLE,
+  showsGestaoProjetos,
+  showsGestaoHoras,
+  showsGestaoHorasExtra,
+  showsHorasProjetos,
+} from '@/utils/roles';
+
 const Navbar = () => {
   const [showLogout, setShowLogout] = useState(false);
   const [disableAddHoras, setDisableAddHoras] = useState(false);
@@ -19,286 +24,192 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const tipo = user?.user?.tipo;
 
   useEffect(() => {
     try {
-      
-      dispatch(handleChangePagamentos({ name: 'tipo', value: "1" }));
-      if(user?.user?.tipo === 6){
+      dispatch(handleChangePagamentos({ name: 'tipo', value: '1' }));
 
-        dispatch(getAllDiasHorasExtraResponsavel()).then((res) => {
-          const horasExtraArray = Array.isArray(res?.payload?.diasHorasExtra) ? res.payload.diasHorasExtra : [];
-          if(horasExtraArray && horasExtraArray.length > 0){
+      const markPending = (res) => {
+        const arr = Array.isArray(res?.payload?.diasHorasExtra) ? res.payload.diasHorasExtra : [];
+        setVerificaHorasExtra(arr.length > 0);
+      };
 
-            setVerificaHorasExtra(true)
-          } else{
-            setVerificaHorasExtra(false)
-          }
-        });
-      }else if(user?.user?.tipo === 7){
-        dispatch(getAllDiasHorasExtra()).then((res) => {
-          const horasExtraArray = Array.isArray(res?.payload?.diasHorasExtra) ? res.payload.diasHorasExtra : [];
-          if(horasExtraArray && horasExtraArray.length > 0){
-
-            setVerificaHorasExtra(true)
-          } else{
-            setVerificaHorasExtra(false)
-          }
-        });
+      if (tipo === ROLE.ADMIN_LAB) {
+        dispatch(getAllDiasHorasExtraResponsavel()).then(markPending);
+      } else if (tipo === ROLE.ADMIN_RH) {
+        dispatch(getAllDiasHorasExtra()).then(markPending);
       }
     } catch (error) {
       console.error(error);
     }
-}, [user?.user, navigate, dispatch]);
+  }, [tipo, dispatch]);
 
-  const toggle = () => {
+  const closeMenus = () => {
     setShowLogout(false);
     setDisableAddHoras(false);
+  };
+
+  const toggle = () => {
+    closeMenus();
     dispatch(toggleSidebar());
   };
 
   const handleShowLogoutClick = () => {
-    setShowLogout(!showLogout);
-    setDisableAddHoras(!disableAddHoras);
+    setShowLogout((v) => !v);
+    setDisableAddHoras((v) => !v);
   };
 
   const editarPerfil = () => {
-    setShowLogout(false);
-    setDisableAddHoras(false);
-    //window.location.reload(navigate('/PaginaEditarPerfil'));
+    closeMenus();
     navigate('/PaginaEditarPerfil');
   };
 
   const logout = () => {
-    setShowLogout(false);
-    setDisableAddHoras(false);
-    dispatch(clearStore('Logging out...'))
+    closeMenus();
+    dispatch(clearStore('Logging out...'));
     navigate('/login');
   };
+
   const returnMain = () => {
-    setShowLogout(false);
-    setDisableAddHoras(false);
-    dispatch(handleChange({ name: 'tipoTrabalho', value: "" }));
+    closeMenus();
+    dispatch(handleChange({ name: 'tipoTrabalho', value: '' }));
     dispatch(toggleSidebar(false));
     navigate('/PaginaPrincipal');
-    //window.location.reload(navigate('/PaginaPrincipal'));
   };
 
   const navGestaoHorasExtra = () => {
-    setShowLogout(false);
-    setDisableAddHoras(false);
-    dispatch(handleChange({ name: 'tipoTrabalho', value: "" }));
+    closeMenus();
+    dispatch(handleChange({ name: 'tipoTrabalho', value: '' }));
     dispatch(toggleSidebar(false));
     navigate('/paginaGerirHorasExtra');
-    //window.location.reload(navigate('/PaginaPrincipal'));
   };
 
-  const visualizarHoras=()=>{
-    setShowLogout(false);
-    setDisableAddHoras(false);
+  const visualizarHoras = () => {
+    closeMenus();
     dispatch(toggleSidebar(false));
-    //window.location.reload(navigate('/PaginaVisualizarHoras'));
     navigate('/PaginaVisualizarHoras');
-  }
+  };
 
-  const visualizarHorasProjetos=()=>{
-    setShowLogout(false);
-    setDisableAddHoras(false);
+  const visualizarHorasProjetos = () => {
+    closeMenus();
     dispatch(toggleSidebar(false));
-    //window.location.reload(navigate('/PaginaVisualizarHoras'));
     navigate('/PaginaVisualizarHorasProjetos');
-  }
-
+  };
 
   const addHoras = () => {
-    setShowLogout(false);
-    setDisableAddHoras(false);
+    closeMenus();
     dispatch(toggleSidebar(false));
     navigate('/PaginaAdicionarHoras');
   };
 
-  const styleButton = {
-    fontSize: "1.5vw",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    whiteSpace: "nowrap",
-    display: "inline-block",
-};
+  const gestaoProjetos = showsGestaoProjetos(tipo);
+  const gestaoHoras = showsGestaoHoras(tipo);
+  const gestaoHorasExtra = showsGestaoHorasExtra(tipo);
+  const fallbackTitle = !gestaoProjetos && !gestaoHoras && !gestaoHorasExtra;
+
+  const fotoUrl = user?.user?.foto
+    ? URL.createObjectURL(
+        new Blob([new Uint8Array(user.user.foto.data.data)], { type: user.user.foto.contentType })
+      )
+    : null;
 
   return (
     <Wrapper>
       <div className='subheader'>
-
-        <div className='col-3 middleButton'>
-        <button type='button' className='toggle-btn' onClick={toggle}>
-          <FaAlignLeft />
-        </button>
+        <div className='nav-left'>
+          <button type='button' className='toggle-btn' onClick={toggle} aria-label='Abrir menu'>
+            <FaAlignLeft />
+          </button>
         </div>
-        {user?.user?.tipo === 1|| user?.user?.tipo === 2 || user?.user?.tipo === 5 ?
-        <div className='col-6 middleButton' >
-          <button className='btn btn-light'     
-          style={styleButton} type='button' onClick={returnMain}>Gestão Projetos</button>
-        </div>
-        : (user?.user?.tipo === 7) ? 
-      <div className='col-6 middleButton' >
-        <div className='col-5 middleButton' >
-        <button className='btn btn-light' style={styleButton} type='button' onClick={returnMain}>Gestão Projetos</button>
-        </div>
-        <div className='col-6 middleButton' >
-        <button className='btn btn-light'     style={{
-    ...styleButton, // Spread the properties of styleButton
-    backgroundColor: verificaHorasExtra ? "#A6C48A" : "" // Add or override specific styles
-  }} type='button' onClick={navGestaoHorasExtra}>Gestão Horas</button>
-      </div>
-      </div>:
-      (user?.user?.tipo === 6) ? 
-      <div className='col-6 middleButton' >
-        <div className='col-6 middleButton' >
-        <button
-    className='btn btn-light'
-    style={{...styleButton ,backgroundColor: verificaHorasExtra ? "#A6C48A" : ""}}
-    type='button'
-    onClick={navGestaoHorasExtra}>Gestão Horas Extra</button>
-      </div>
-      </div> :
-        <div className='col-6 middleButton' >
-        <h1 style={{fontSize : "250%", maxHeight: "80px" ,textTransform: 'none'}}>Gestão de Horas</h1>
-      </div>
-      }
-      
-        <div className='col-3'>
-        <div className='btn-container'>
-          <div className='divButtonUtilizador'>
-            
-          <button
-            type='button'
-            className='btn'
-            style={{
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
 
-              padding: "3px 10px",
-              lineHeight: "normal",
-            }}
-            onClick={handleShowLogoutClick}
-          >
-            {user?.user.nome}
-            <img
-              src={
-                user?.user.foto
-                  ?
-                  URL.createObjectURL(new Blob([new Uint8Array(user?.user.foto.data.data)], { type: user?.user.foto.contentType }))
-                  : <FaUserCircle/>
-              }
-              alt="Imagem Perfil Utilizador"
-              width="20" height="20"
-              className="rounded-circle" style={{ backgroundColor: "#D9D9D9" }}
-            />
-            <FaCaretDown />
-          </button>
-          </div>
-          { (showLogout === false) ? (
-          <div className='divButtonUtilizador text-center'>
-            <div>
-          <button 
-          className='button-30'
-          onClick={addHoras} 
-          
-          style={{   
-            fontSize: "85%",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-            display: "inline-block",
-            lineHeight: "normal",
-            width:'auto',
- 
-            visibility: disableAddHoras ? 'hidden' : 'visible' }} 
-          disabled={disableAddHoras} >
-                Adicionar Horas
-          </button>
-          <button 
-          className='button-30'
-          onClick={visualizarHoras} 
-          style={{            
-            fontSize: "85%",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-            display: "inline-block",
-            lineHeight: "normal",
-
-            width:'auto',visibility: disableAddHoras ? 'hidden' : 'visible' }} 
-          disabled={disableAddHoras} >
-                Visualizar Horas
-          </button>
-            { (user?.user?.tipo === 2 || user?.user?.tipo === 7) && (
-          <button 
-          className='button-30'
-          onClick={visualizarHorasProjetos} 
-          style={{        
-            width:'auto',
-            fontSize: "85%",
-              
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-            display: "inline-block",
-            lineHeight: "normal",
-            visibility: disableAddHoras ? 'hidden' : 'visible' }} 
-            disabled={disableAddHoras} >
-                Horas Projetos
-          </button>
+        <div className='nav-center'>
+          {gestaoProjetos && (
+            <AppButton variant='secondary' size='sm' onClick={returnMain}>
+              Gestão Projetos
+            </AppButton>
           )}
-          </div>
-          </div>
-          ) :(
-          <div className={'col-md-11'} >
-
-            <div className='row drop'>
-            <div className='col-md-1'></div>
-              <div className='col-md-6 text-end' >
-            <button
-              type='button'
-              className='button-30'
-              onClick={editarPerfil}
-              style={{        
-                width:'auto',
-                fontSize: "85%",
-                overflow: "hidden",
-                lineHeight: "normal" }} 
+          {gestaoHoras && (
+            <AppButton
+              variant={verificaHorasExtra ? 'success' : 'secondary'}
+              size='sm'
+              onClick={navGestaoHorasExtra}
             >
-              Editar Perfil
-            </button>
-            </div>
-
-
-            <div className='col-md-4 text-start' >
-            <button
-              type='button'
-              className='button-30'
-              onClick={logout}
-              style={{        
-                width:'auto',
-                fontSize: "85%",
-                overflow: "hidden",
-                backgroundColor: "#D00000",
-                padding: "10px",
-                lineHeight: "normal" }} 
+              Gestão Horas
+            </AppButton>
+          )}
+          {gestaoHorasExtra && (
+            <AppButton
+              variant={verificaHorasExtra ? 'success' : 'secondary'}
+              size='sm'
+              onClick={navGestaoHorasExtra}
             >
-              Log out
+              Gestão Horas Extra
+            </AppButton>
+          )}
+          {fallbackTitle && <h1>Gestão de Horas</h1>}
+        </div>
+
+        <div className='nav-right'>
+          <div className='btn-container'>
+            <button type='button' className='user-chip' onClick={handleShowLogoutClick}>
+              <span className='user-chip-name'>{user?.user?.nome}</span>
+              {fotoUrl ? (
+                <img
+                  src={fotoUrl}
+                  alt='Foto de perfil'
+                  width='22'
+                  height='22'
+                  className='rounded-circle avatar'
+                />
+              ) : (
+                <FaUserCircle size={22} className='avatar-icon' />
+              )}
+              <FaCaretDown />
             </button>
-            </div>
-            <div className='col-md-1'></div>
-            </div>
-            </div>
+
+            {!showLogout ? (
+              <div className='quick-actions'>
+                <AppButton
+                  variant='secondary'
+                  size='sm'
+                  onClick={addHoras}
+                  disabled={disableAddHoras}
+                >
+                  Adicionar Horas
+                </AppButton>
+                <AppButton
+                  variant='secondary'
+                  size='sm'
+                  onClick={visualizarHoras}
+                  disabled={disableAddHoras}
+                >
+                  Visualizar Horas
+                </AppButton>
+                {showsHorasProjetos(tipo) && (
+                  <AppButton
+                    variant='secondary'
+                    size='sm'
+                    onClick={visualizarHorasProjetos}
+                    disabled={disableAddHoras}
+                  >
+                    Horas Projetos
+                  </AppButton>
+                )}
+              </div>
+            ) : (
+              <div className='drop'>
+                <AppButton variant='secondary' size='sm' onClick={editarPerfil}>
+                  Editar Perfil
+                </AppButton>
+                <AppButton variant='danger' size='sm' onClick={logout}>
+                  Log out
+                </AppButton>
+              </div>
             )}
           </div>
-          
         </div>
-        </div>
-  
+      </div>
     </Wrapper>
   );
 };

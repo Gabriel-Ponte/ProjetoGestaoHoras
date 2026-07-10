@@ -1,5 +1,4 @@
 import { useEffect, useState} from 'react';
-import { useNavigate } from 'react-router-dom';
 import Projeto from '@/components/projetos/ProjetoLista';
 import Wrapper from '@/styles/ProjetossContainer';
 import { useSelector, useDispatch } from 'react-redux';
@@ -10,7 +9,7 @@ import ListaProjetosHeader from '@/components/projetos/ListaProjetosHeader';
 import { handleChange } from '@/features/allProjetos/allProjetosSlice';
 import { listaUtilizadores } from '@/features/utilizadores/utilizadorSlice';
 import FormRowCheckbox from '@/components/forms/FormRowCheckbox';
-import { toast } from 'react-toastify';
+import { EmptyState } from '@/components/ui';
 
 const ListaProjetos = () => {
 
@@ -29,22 +28,13 @@ const ListaProjetos = () => {
   } = useSelector((store) => store.allProjetos);
 
 
-  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { user } = useSelector((store) => store.utilizador.user);
   const { utilizadores } = useSelector((store) => store.utilizador);
 
   const [verificaAlterado, setVerificaAlterado] = useState(0);
 
   const formattedListUtilizadores = Array.isArray(utilizadores) ? utilizadores.filter(user => user.email.endsWith('isqctag.pt')) : [];
  
-  useEffect(() => {
-    if (user && (user?.tipo === 3 || user?.tipo === 4 || user?.tipo === 6)) {
-      toast.error("Sem permissões para aceder a esta página!");
-      navigate('/PaginaAdicionarHoras');
-    }
-  }, [user, navigate]);
-
   useEffect(() => {
     dispatch(getAllProjetos());
   }, [page, search, searchStatus, searchType, sort, projetoFinalizado, DataObjetivoC, dispatch]);
@@ -138,7 +128,10 @@ const ListaProjetos = () => {
         )}
       </div>
 
-        <h2>Sem projetos para apresentar</h2>
+        <EmptyState
+          title="Sem projetos"
+          message="Não há projetos para apresentar com os filtros atuais."
+        />
       </Wrapper>
     );
   }

@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
 import Wrapper from '@/styles/AddProjetoForm';
-import { FormRow, FormRowCheckboxMultiple, FormRowCheckboxListaClientes } from '@/components';
+import { FormRowCheckboxMultiple, FormRowCheckboxListaClientes } from '@/components';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { createProjeto , getClientes } from '@/features/projetos/projetosSlice';
-//import { getTipoTrabalho, createTipoTrabalho } from '@/features/tipoTrabalho/tipoTrabalhoSlice';
 import { listaUtilizadores, toggleSidebar} from '@/features/utilizadores/utilizadorSlice';
 import { useNavigate } from 'react-router-dom';
-import Loading from '@/components/common/Loading';
+import { PageHeader, SectionCard, FormGroup, AppInput, AppButton, LoadingState } from '@/components/ui';
 
 
 
@@ -58,7 +57,7 @@ const AddProjectForm = () => {
   }, [listaClientes]);
 
   if (isLoadingU) {
-    return <Loading />;
+    return <LoadingState message="A carregar…" />;
   }
 
 
@@ -115,175 +114,84 @@ const AddProjectForm = () => {
     //navigate('/');
   };
   
-  const toggleMember = () => {
-    setValues({ ...values });
-  };
-
   return (
     <Wrapper>
-      <form onSubmit={handleSubmit} className='MainForm'>
-      <h1 className="h3 mb-4 fw-normal text-center">Adicionar Projeto</h1>
-        <div className='form'>
-          
-          <FormRow
-            type="text"
-            className="row mb-3 text-center" 
-            classNameLabel='col-md-3 text-end' 
-            classNameInput='col-md-9'
-            id="nomeProjeto"
-            name="Nome"
-            labelText="Nome:"
-            placeholder="projeto"
-            value={values.Nome}
-            handleChange={handleChange}
-          />
+      <div className="form-page">
+        <PageHeader title="Adicionar Projeto" divider={false} />
+        <SectionCard>
+          <form onSubmit={handleSubmit} className="MainForm">
+            <FormGroup label="Nome" htmlFor="Nome">
+              <AppInput id="Nome" name="Nome" type="text" placeholder="Nome do projeto" value={values.Nome} onChange={handleChange} />
+            </FormGroup>
 
-          {/* <FormRow
-            type="text"
-            className="row mb-3 text-center" 
-            classNameLabel='col-md-3 text-end' 
-            classNameInput='col-md-9'
-            id="temaProjeto"
-            name="Tema"
-            labelText="Tema:"
-            placeholder="Tema"
-            value={values.Tema}
-            handleChange={handleChange}
-          /> */}
+            <FormGroup label="Ação" htmlFor="Acao">
+              <AppInput id="Acao" name="Acao" type="text" placeholder="Ação" value={values.Acao} onChange={handleChange} />
+            </FormGroup>
 
-          <FormRow
-            type="text"
-            className="row mb-3 text-center" 
-            classNameLabel='col-md-3 text-end' 
-            classNameInput='col-md-9'
-            id="Acao"
-            name="Acao"
-            labelText="Ação:"
-            placeholder="Ação"
-            value={values.Acao}
-            handleChange={handleChange}
-          />
+            <FormRowCheckboxListaClientes
+              type="text"
+              className="row mb-3 mt-3 text-center"
+              classNameLabel='col-md-3 text-end'
+              classNameInput=' checkboxRow'
+              classNameResult='col-md-6 text-start'
+              classNameLabelResult="col-md-6 text-start"
+              id="Cliente"
+              name="Cliente"
+              placeholder="Cliente"
+              labelText="Cliente: "
+              value={[values.Cliente]}
+              list={listaClientes}
+              handleChange={handleChangeFormRowSelect}
+              multiple={false}
+            />
 
-          {
-          //   <FormRow
-          //   type="text"
-          //   className="row mb-3 text-center" 
-          //   classNameLabel='col-md-3 text-end' 
-          //   classNameInput='col-md-9'
-          //   id="Cliente"
-          //   name="Cliente"
-          //   labelText="Cliente:"
-          //   placeholder="Cliente Projeto"
-          //   value={values.Cliente}
-          //   handleChange={handleChange}
-          // />
-          }
+            <FormGroup label="Data Inicial" htmlFor="DataInicio">
+              <AppInput id="DataInicio" name="DataInicio" type="date" value={values.DataInicio} onChange={handleChange} />
+            </FormGroup>
 
-          <FormRowCheckboxListaClientes
-            type="text"
-            className="row mb-3 mt-3 text-center" 
-            classNameLabel='col-md-3 text-end' 
-            classNameInput=' checkboxRow'
-            classNameResult='col-md-6 text-start'
-            classNameLabelResult="col-md-6 text-start"
-            id="Cliente"
-            name="Cliente"
-            placeholder="Cliente"
-            labelText = "Cliente: "
-            value={[values.Cliente]}
-            list={listaClientes}
-            handleChange={handleChangeFormRowSelect}
-            multiple={false}
-          />
+            <FormGroup label="Data Objetivo" htmlFor="DataObjetivo">
+              <AppInput id="DataObjetivo" name="DataObjetivo" type="date" value={values.DataObjetivo} onChange={handleChange} />
+            </FormGroup>
 
-          <FormRow
-            type="date"
-            className="row mb-3 text-center" 
-            classNameLabel='col-md-3 text-end' 
-            classNameInput='col-md-9'
-            id="dataInicial"
-            name="DataInicio"
-            placeholder="Data Inicial"
-            labelText="Data Inicial:"
-            value={values.DataInicio}
-            handleChange={handleChange}
-          />
+            <FormGroup label="Notas" htmlFor="Notas">
+              <AppInput id="Notas" name="Notas" type="text" placeholder="Notas" value={values.Notas} onChange={handleChange} />
+            </FormGroup>
 
-          <FormRow
-            type="date"
-            className="row mb-3 text-center" 
-            classNameLabel='col-md-3 text-end' 
-            classNameInput='col-md-9'
-            id="dataObjetivo"
-            name="DataObjetivo"
-            labelText="Data Objetivo:"
-            placeholder="Data Objetivo"
-            value={values.DataObjetivo}
-            handleChange={handleChange}
-          />
+            <FormGroup label="Link A3" htmlFor="Links">
+              <AppInput id="Links" name="Links" type="text" placeholder="Link A3" value={values.Links} onChange={handleChange} />
+            </FormGroup>
 
-          <FormRow
-            type="text"
-            className="row mb-3 text-center" 
-            classNameLabel='col-md-3 text-end' 
-            classNameInput='col-md-9'
-            id="Notas"
-            name="Notas"
-            labelText="Notas:"
-            placeholder="Notas"
-            value={values.Notas}
-            handleChange={handleChange}
-          />
-          <FormRow
-            type="text"
-            className="row mb-3 text-center" 
-            classNameLabel='col-md-3 text-end' 
-            classNameInput='col-md-9'
-            id="Links"
-            name="Links"
-            labelText="Link A3:"
-            placeholder="Links"
-            value={values.Links}
-            handleChange={handleChange}
-          />
-          <FormRow
-            type="text"
-            className="row mb-3 text-center" 
-            classNameLabel='col-md-3 text-end' 
-            classNameInput='col-md-9'
-            id="LinkResumo"
-            name="LinkResumo"
-            labelText="Link Resumo:"
-            placeholder="LinkResumo"
-            value={values.LinkResumo}
-            handleChange={handleChange}
-          />
+            <FormGroup label="Link Resumo" htmlFor="LinkResumo">
+              <AppInput id="LinkResumo" name="LinkResumo" type="text" placeholder="Link Resumo" value={values.LinkResumo} onChange={handleChange} />
+            </FormGroup>
 
-          <FormRowCheckboxMultiple
-            type="text"
-            className="row mb-3 mt-3 text-center" 
-            classNameLabel='col-md-3 text-end' 
-            classNameInput=' checkboxRow'
-            classNameResult='col-md-6 text-start'
-            classNameLabelResult="col-md-6 text-start"
-            id="piloto"
-            name="Piloto"
-            placeholder="Piloto"
-            labelText = "Piloto:"
-            value={[values.Piloto]}
-            list={formattedListUtilizadores}
-            handleChange={handleChangeFormRowSelect}
-            multiple={true}
-          />
+            <FormRowCheckboxMultiple
+              type="text"
+              className="row mb-3 mt-3 text-center"
+              classNameLabel='col-md-3 text-end'
+              classNameInput=' checkboxRow'
+              classNameResult='col-md-6 text-start'
+              classNameLabelResult="col-md-6 text-start"
+              id="piloto"
+              name="Piloto"
+              placeholder="Piloto"
+              labelText="Piloto:"
+              value={[values.Piloto]}
+              list={formattedListUtilizadores}
+              handleChange={handleChangeFormRowSelect}
+              multiple={true}
+            />
 
-          <div id="addProjeto">
-            <button type='submit' onClick={toggleMember} className="w-100 btn btn-lg btn-primary">
+            {values.errorMessage && (
+              <p style={{ color: 'var(--red-dark)' }}>{values.errorMessage}</p>
+            )}
+
+            <AppButton type="submit" fullWidth>
               Adicionar
-            </button>
-          </div>
-          <div style={{ color: 'red' }}>{values.errorMessage}</div>
-        </div>
-      </form>
+            </AppButton>
+          </form>
+        </SectionCard>
+      </div>
     </Wrapper>
   );
 }

@@ -31,10 +31,22 @@ const Wrapper = styled.section`
   }
 }
   
-  .form__field{
-    outline: 0;
-    border: 0;
-    resize :none;
+  .form__field {
+    width: 100%;
+    padding: 0.5rem 0.7rem;
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: var(--grey-900);
+    background: var(--white);
+    border: 1px solid var(--grey-300);
+    border-radius: var(--borderRadius);
+    resize: vertical;
+    transition: var(--transition);
+  }
+  .form__field:focus {
+    outline: none;
+    border-color: var(--primary-500);
+    box-shadow: 0 0 0 3px rgba(30, 90, 150, 0.18);
   }
 
 `

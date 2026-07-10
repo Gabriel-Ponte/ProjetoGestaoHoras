@@ -3,33 +3,26 @@ import { useNavigate } from 'react-router-dom';
 import { GerirUtilizadores } from '../../components';
 import { toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
+import { canManageUtilizadores, canAccessProjetos } from '@/utils/roles';
 
 const PaginaGerirUtilizadores = () => {
   const { user } = useSelector((store) => store.utilizador);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user) {
-      if (user.user.tipo === 2 || user.user.tipo === 7) {
-        // Render the component
-      } else if (user.user.tipo === 1 || user.user.tipo === 5) {
-        toast.error("Sem permissões para aceder a esta página!");
-        navigate('/PaginaPrincipal');
-      } else {
-        toast.error("Sem permissões para aceder a esta página!");
-        navigate('/PaginaAdicionarHoras');
-      }
-    } else {
-      // Handle the case where user is undefined (optional, depending on your use case)
+    if (!user) {
       toast.error("Utilizador não autenticado!");
       navigate('/LoginPage');
+    } else if (!canManageUtilizadores(user.user.tipo)) {
+      toast.error("Sem permissões para aceder a esta página!");
+      navigate(canAccessProjetos(user.user.tipo) ? '/PaginaPrincipal' : '/PaginaAdicionarHoras');
     }
   }, [user, navigate]);
 
-  //{user &&  (user.user.tipo === 2 || user.user.tipo === 7) && <GerirUtilizadores />}
+  //{user &&  (canManageUtilizadores(user.user.tipo)) && <GerirUtilizadores />}
   return (
     <>
-      {user &&  (user.user.tipo === 2 || user.user.tipo === 7) && <GerirUtilizadores />}
+      {user &&  (canManageUtilizadores(user.user.tipo)) && <GerirUtilizadores />}
     </>
   );
 };

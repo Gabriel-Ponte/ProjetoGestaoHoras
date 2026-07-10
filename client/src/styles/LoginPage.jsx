@@ -1,118 +1,150 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 const Wrapper = styled.section`
-  display: grid;
-  align-items: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--grey-100);
 
-  @media (max-height: 500px) {
   .MainLogin {
+    flex: 1;
     width: 100%;
-    height: 150%;
-    overflow: auto;
     display: flex;
-    position:relative;
     flex-direction: column;
+    align-items: center;
     justify-content: center;
-    align-items: center;
     text-align: center;
-    margin:auto;
-  }
-}
-@media (min-height: 500px) {
-  .MainLogin {
-    width: 100%;
-    height: 70vh;
-    overflow: auto;
-    display: flex;
-    position:relative;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    margin:auto;
-  }
-}
-  .title{
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-items: center;
-    width: 100%;
-    align-self: center;
-    margin-bottom:2%;
-  }
-  
-  .buttonPassword{
-    width: 15%;
-    display: flex;
-    align-self: center;
-    justify-content: end;
-    align-items: top;
-    justify-items: start;
-    flex-wrap: nowrap;
-    text-size: auto;
-  }
-  .buttonPassword .buttonP{
-    margin-top:0;
+    padding: 2rem 1rem 5.5rem; /* bottom clearance for the fixed footer */
   }
 
-
-
-  .btn {
-    margin-top: 1rem;
+  .title {
+    color: var(--primary-700);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 0 0 1.5rem;
   }
 
-
+  /* the form is a centered card */
   .loginForm {
-    display: flex;
     width: 100%;
-    heigth: 70%;
-    margin:0;
+    max-width: 420px;
+    margin: 0 auto;
+    background: var(--white);
+    border: 1px solid var(--grey-200);
+    border-top: 3px solid var(--primary-500);
+    border-radius: 10px;
+    box-shadow: var(--shadow-3);
+    padding: 2rem 1.75rem 2.25rem;
+    display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-items: center;
-    flex-wrap: nowrap;
-
-    align-self: center;
-    position: relative;
+    text-align: left;
   }
 
-  .formRowInput {
-    display: flex;
-    flex-direction: row;
-    align-items: end;
-    justify-items: end;
-    align-content: space-evenly;
-    justify-content: space-evenly;
-    flex-wrap: wrap;
-  }
-  
-  .formRow {
-    display: grid;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-content: center;
-    grid-template-columns: 1fr 1fr;
-    gap: 1px;
-    justify-items: center;
-    align-items: center;
-    overflow: auto;
-    align-self: center;
-    position: relative;
-    grid-auto-flow: row;
-    text-align: start;
+  .loginForm h3 {
+    text-align: center;
+    color: var(--grey-900);
+    margin: 0 0 1.5rem !important;
   }
 
-  .formRowLabel {
-    display: flex;
-    flex-direction: row;
-    align-items: start;
-    justify-items: start;
-    align-content: start;
-    justify-content: start;
+  .loginForm > p {
+    text-align: center;
+    color: var(--grey-600);
+    font-size: 0.9rem;
+    margin: 0 0 1.25rem;
   }
-`
 
-export default Wrapper
+  /* neutralise Bootstrap row gutters inside the card */
+  .loginForm .row {
+    --bs-gutter-x: 0;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .loginForm br {
+    display: none;
+  }
+
+  /* field labels */
+  .loginForm .col-md-3,
+  .loginForm .form-label {
+    text-align: left !important;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--grey-500);
+    margin-bottom: 0.35rem;
+    padding: 0;
+  }
+
+  /* inputs (override inherited centering / inline widths) */
+  .loginForm input {
+    width: 100% !important;
+    min-width: 0 !important;
+    text-align: left !important;
+    font-size: 0.95rem !important;
+    padding: 0.6rem 0.75rem;
+    color: var(--grey-900);
+    background: var(--white);
+    border: 1px solid var(--grey-300);
+    border-radius: var(--borderRadius);
+    transition: var(--transition);
+  }
+  .loginForm input:focus {
+    outline: none;
+    border-color: var(--primary-500);
+    box-shadow: 0 0 0 3px rgba(30, 90, 150, 0.18);
+  }
+
+  /* buttons */
+  .loginForm .btn {
+    width: 100%;
+    padding: 0.6rem 1rem;
+    font-weight: 600;
+    border-radius: var(--borderRadius);
+    margin-top: 0.75rem;
+  }
+  .loginForm .btn-outline-primary {
+    background: var(--primary-500);
+    border-color: var(--primary-500);
+    color: #fff;
+  }
+  .loginForm .btn-outline-primary:hover,
+  .loginForm .btn-outline-primary:focus {
+    background: var(--primary-600);
+    border-color: var(--primary-600);
+    color: #fff;
+  }
+  .loginForm .btn-outline-secondary {
+    background: var(--white);
+    border-color: var(--grey-300);
+    color: var(--grey-700);
+  }
+  .loginForm .btn-outline-secondary:hover {
+    background: var(--grey-100);
+    color: var(--grey-900);
+  }
+
+  /* "Repor password" link — right-aligned, subtle */
+  .loginForm .btn-link {
+    width: auto;
+    margin: -0.25rem 0 0.25rem auto; /* margin-left:auto -> right align in the flex row */
+    padding: 0;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--primary-600);
+    text-decoration: none;
+  }
+  .loginForm .btn-link:hover {
+    text-decoration: underline;
+    color: var(--primary-700);
+  }
+
+  @media (max-width: 480px) {
+    .loginForm {
+      padding: 1.5rem 1.25rem 1.75rem;
+      box-shadow: var(--shadow-2);
+    }
+  }
+`;
+
+export default Wrapper;

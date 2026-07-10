@@ -3,9 +3,7 @@ import { AddProjectForm } from '../../components';
 import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
-
-
-
+import { canAccessProjetos } from '@/utils/roles';
 
 const PaginaAdicionarProjeto = () => {
 
@@ -14,7 +12,7 @@ const PaginaAdicionarProjeto = () => {
 
   useEffect(() => {
     if (user) {
-      if (!(user.user.tipo === 2 || user.user.tipo === 1 || user.user.tipo === 5 || user.user.tipo === 7)) {
+      if (!(canAccessProjetos(user.user.tipo))) {
         toast.error("Sem permissões para aceder a esta página!");
         navigate('/PaginaAdicionarHoras');
       }
@@ -26,7 +24,7 @@ const PaginaAdicionarProjeto = () => {
   }, [user, navigate]);
   return (
     <>
-      {user && (user.user.tipo === 1 || user.user.tipo === 2 || user.user.tipo === 5 || user.user.tipo === 7) && <AddProjectForm />}
+      {user && canAccessProjetos(user.user.tipo) && <AddProjectForm />}
     </>
   );
 };

@@ -1,174 +1,149 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 const Wrapper = styled.nav`
-  height: 90px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 1px 0px 0px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
-  z-index: 9998;
-
-  .logo {
-    display: flex;
-    align-items: center;
-    width: 100px;
-  }
-  
-  .middleButton {
-    margin: auto;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    max-heigth:70px;
-  }
-
-  .nav-center {
-    display: flex;
-    width: 90vw;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .app-Button{
-    display: center;
-    width 100%;
-  }
-  .toggle-btn {
-    background: transparent;
-    border-color: transparent;
-    font-size: 1.75rem;
-    color: var(--primary-500);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-  }
+  z-index: 998;
   background: var(--white);
-  .btn-container {
-    position: relative;
-  }
-  .btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0 0.5rem;
-    position: relative;
-    box-shadow: var(--shadow-2);
-  }
-
-  .dropdown {
-    display: inline;
-    position: absolute;
-    left: 0;
-    rigth: 0;
-    width: 100%;
-    align-items: top;
-    padding: 0.5rem;
-    text-align: center;
-    visibility: hidden;
-    z-index: 9998;
-  }
-
-  .show-dropdown {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    top: 90%;
-    left: 0%;
-    width:auto;
-    visibility: visible;
-    background-color: #E5E5E5;
-    z-index: 9998;
-  }
-
-  .dropdown-btn {
-    background: transparent;
-    border-color: transparent;
-    color: var(--primary-500);
-    letter-spacing: var(--letterSpacing);
-    text-transform: capitalize;
-    cursor: pointer;
-  }
-
-  @media (min-width: 992px) {
-    position: sticky;
-    top: 0;
-    .nav-center {
-      width: 90%;
-    }
-  }
+  border-bottom: 1px solid var(--grey-200);
+  box-shadow: var(--shadow-1);
 
   .subheader {
     display: flex;
-    align-self: stretch;
-    flex-direction: row;
     align-items: center;
-    overflow: visible;
-    justify-items: stretch;
-    flex-wrap: wrap;
-    align-content: space-around;
-    justify-content: space-around;
-    gap: 0px;
-    position: relative;
-    padding: 0px;
-    font-weight: 200;
-    text-align: end;
+    justify-content: space-between;
+    gap: 0.75rem;
     width: 100%;
-    text-transform: lowercase;
-    font-style: normal;
-    direction: ltr;
-    font-size-adjust: inherit;
-    background-color: #FFFFFF;
-    opacity: 1.0;
+    min-height: 68px;
+    padding: 0.5rem 1.25rem;
+    background: var(--white);
   }
 
-  
-.button-30 {
-  align-items: center;
-  appearance: none;
-  background-color: #fffff;
-  border-radius: 4px;
-  border-width: 0;
-  box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,rgba(45, 35, 66, 0.3) 0 7px 13px -3px,#D6D6E7 0 -3px 0 inset;
-  box-sizing: border-box;
-  color: #36395A;
-  cursor: pointer;
-  display: inline-flex;
-  font-family: "JetBrains Mono",monospace;
-  height: 80%;
-  padding: 5px;
-  justify-content: center;
-  line-height: 1;
-  list-style: none;
-  overflow: hidden;
-  position: relative;
-  text-align: left;
-  text-decoration: none;
-  transition: box-shadow .15s,transform .15s;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  white-space: nowrap;
-  will-change: box-shadow,transform;
+  .middleButton {
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+  }
 
-}
+  /* main nav buttons ("Adicionar Horas" / "Visualizar Horas") */
+  .subheader .btn-outline-secondary {
+    font-weight: 600;
+    color: var(--grey-800);
+    background: var(--white);
+    border: 1px solid var(--grey-300);
+    border-radius: var(--borderRadius);
+    transition: var(--transition);
+  }
+  .subheader .btn-outline-secondary:hover {
+    background: var(--primary-50);
+    border-color: var(--primary-300);
+    color: var(--primary-700);
+  }
+  .subheader .btn-outline-secondary.active {
+    color: var(--white);
+    background: var(--primary-500);
+    border-color: var(--primary-500);
+  }
 
-.button-30:focus {
- background-color: #D6D6E7;
-  box-shadow: #D6D6E7 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
-}
+  /* user chip */
+  .btn-container {
+    position: relative;
+  }
+  .divButtonUtilizador {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .divButtonUtilizador > .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: var(--grey-50);
+    border: 1px solid var(--grey-200);
+    border-radius: 999px;
+    padding: 0.3rem 0.75rem;
+    color: var(--grey-800);
+    font-weight: 500;
+    box-shadow: none;
+    transition: var(--transition);
+  }
+  .divButtonUtilizador > .btn:hover {
+    background: var(--primary-50);
+    border-color: var(--primary-200);
+    color: var(--primary-700);
+  }
+  .divButtonUtilizador .rounded-circle {
+    object-fit: cover;
+    border-radius: 50%;
+  }
 
-.button-30:hover {
-  box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
-  transform: translateY(-2px);
-}
+  .toggle-btn {
+    background: transparent;
+    border: none;
+    font-size: 1.4rem;
+    color: var(--primary-500);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+  }
 
-.button-30:active {
- background-color: #D6D6E7;
-  box-shadow: #D6D6E7 0 3px 7px inset;
-  transform: translateY(2px);
-}
-`
-export default Wrapper
+  /* dropdown buttons */
+  .button-30 {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    margin: 0.15rem;
+    padding: 0.4rem 0.85rem;
+    background: var(--white);
+    color: var(--grey-800);
+    border: 1px solid var(--grey-300);
+    border-radius: var(--borderRadius);
+    box-shadow: var(--shadow-1);
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.85rem;
+    line-height: 1.15;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+  .button-30:hover {
+    border-color: var(--primary-300);
+    color: var(--primary-700);
+    box-shadow: var(--shadow-2);
+    transform: translateY(-1px);
+  }
+  .button-30:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-1);
+  }
+  .button-30:focus-visible {
+    outline: 2px solid var(--primary-500);
+    outline-offset: 2px;
+  }
+
+  /* profile / logout dropdown -> floating card */
+  .drop {
+    --bs-gutter-x: 0;
+    position: absolute;
+    right: 0;
+    top: calc(100% + 8px);
+    margin: 0;
+    padding: 0.4rem;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--white);
+    border: 1px solid var(--grey-200);
+    border-radius: var(--borderRadius);
+    box-shadow: var(--shadow-3);
+    z-index: 999;
+  }
+`;
+
+export default Wrapper;

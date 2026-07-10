@@ -65,7 +65,7 @@ const Navbar = () => {
                 className='btn btn-outline-secondary'
                 onClick={addHoras}
                 style={{
-                  fontSize: "1.5vw",
+                  fontSize: "0.9rem",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
                   whiteSpace: "nowrap",
@@ -86,7 +86,7 @@ const Navbar = () => {
                 className={`btn btn-outline-secondary ${(disableVisualizardHoras === 1) ? 'active' : ''}`}
                 onClick={visualizarHoras}
                 style={{
-                  fontSize: "1.5vw",
+                  fontSize: "0.9rem",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
                   whiteSpace: "nowrap",
@@ -142,10 +142,11 @@ const Navbar = () => {
                   <button
                     type='button'
                     className='button-30'
-                    style={{  
-                      fontSize: "110%", 
-                      backgroundColor: "#D00000",
-                    margin:'2px'}} 
+                    style={{
+                      fontSize: "110%",
+                      backgroundColor: "var(--red-dark)",
+                      color: "#fff",
+                    margin:'2px'}}
                     onClick={logout}
                   >Logout
                   </button>

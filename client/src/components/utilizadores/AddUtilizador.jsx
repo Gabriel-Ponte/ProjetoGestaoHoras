@@ -1,12 +1,11 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import Wrapper from '@/styles/AddUser';
-import { FormRow, FormRowSelect, FormRowSelectTipo } from '@/components';
-import { useNavigate } from 'react-router-dom';
+import { FormRowSelectTipo } from '@/components';
 import ModalFoto from "@/components/utilizadores/ModalFoto";
-import { listaUsersTipo, listaUtilizadores, registerUser } from '@/features/utilizadores/utilizadorSlice';
-import Loading from '@/components/common/Loading';
+import { listaUsersTipo, registerUser } from '@/features/utilizadores/utilizadorSlice';
+import { PageHeader, SectionCard, FormGroup, AppInput, AppButton, LoadingState } from '@/components/ui';
 //import DefaultUserImg from "@/assets/image/DefaultUserImg.png";
 
 const  initialState = {
@@ -28,23 +27,12 @@ const AddUtilizador = () => {
     const [listaUserTipo , setListaUserTipo]  = useState([]);
     const [listTipoUser , setListTipoUser]  = useState([]);
     //const { isLoading } = useSelector((store) => store.projetos);
-    const navigate = useNavigate();
     const dispatch = useDispatch();
 
 
 
-  useEffect(() => {
-    if (user && (user?.tipo === 1 )) {
-      toast.error("Sem permissões para aceder a esta página!");
-      navigate('/PaginaPrincipal');
-    }else if (user && (user?.tipo === 3 || user?.tipo === 4)){
-      toast.error("Sem permissões para aceder a esta página!");
-      navigate('/PaginaAdicionarHoras');
-    }
-  }, [user, navigate]);
-    
     if (isLoading) {
-      return <Loading />;
+      return <LoadingState message="A carregar…" />;
     }
     
 
@@ -202,99 +190,85 @@ const AddUtilizador = () => {
       }
   };
 
-  
-  const toggleMember = () => {
-    // handle form submission logic here
-    setValues({ ...values });
-  };
-
-
-
   return (
     <Wrapper>
-    <main style={{ marginBottom: "100px" }}>
-      <div className="form-signin m-auto">
-        <h1 className="h3 mb-3 fw-normal text-center">Criar Utilizador</h1>
-        <p className='text-center'>Preencha o formulario para criar uma conta.</p>
-        <form onSubmit = {handleSubmit} className='form'>
-
-          <div className="container">
-            <FormRow
-              type="text"
-              id="nomeUtilizador"
-              name="nome"
-              label="Nome"
-              labelText="Nome"
-              className="form-control"
-              value={values.nome}
-              handleChange={handleChange}
-              feedbackMessage="Nome"
-            />
+      <div className="form-page">
+        <PageHeader
+          title="Criar Utilizador"
+          subtitle="Preencha o formulário para criar uma conta."
+          divider={false}
+        />
+        <SectionCard>
+          <form onSubmit={handleSubmit} className="form">
+            <FormGroup label="Nome" htmlFor="nomeUtilizador">
+              <AppInput
+                id="nomeUtilizador"
+                name="nome"
+                type="text"
+                value={values.nome}
+                onChange={handleChange}
+              />
+            </FormGroup>
 
             {/* TIPO */}
             <FormRowSelectTipo
+              type="text"
+              className="form-control"
+              id="tipo"
+              name="tipo"
+              labelText="Tipo de Utilizador"
+              value={values.tipo}
+              list={listTipoUser}
+              handleChange={handleChangeTipo}
+            />
+
+            {/* RESPONSAVEL */}
+            {values.tipo === 3 && (
+              <FormRowSelectTipo
                 type="text"
                 className="form-control"
-                id="tipo"
-                name ="tipo"
-                labelText="Tipo de Utilizador"
-                value= {values.tipo}
-                list = {listTipoUser}
-                handleChange ={handleChangeTipo}            
-            />
-    
-          {/*RESPONSAVEL*/}
-          {values.tipo === 3 &&
-            <FormRowSelectTipo
-                  type="text"
-                  className="form-control"
-                  id="responsavel"
-                  name ="responsavel"
-                  labelText="Responsavel"
-                  value= {values?.responsavel}
-                  list = {listaUserTipo}
-                  handleChange ={handleResponsavel}            
+                id="responsavel"
+                name="responsavel"
+                labelText="Responsavel"
+                value={values?.responsavel}
+                list={listaUserTipo}
+                handleChange={handleResponsavel}
               />
-          }
+            )}
 
-            <FormRow
-              type="text"
-              id="loginProjeto"
-              name="login"
-              label="Login"
-              labelText="Login"
-              className="form-control"
-              value={values.login}
-              handleChange={handleChange}
-            />
+            <FormGroup label="Login" htmlFor="loginProjeto">
+              <AppInput
+                id="loginProjeto"
+                name="login"
+                type="text"
+                value={values.login}
+                onChange={handleChange}
+              />
+            </FormGroup>
 
-            <FormRow
-              type="password"
-              id="password"
-              name="password"
-              label="Password"
-              labelText="Password"
-              className="form-control"
-              autocomp= ""
-              value={values.password}
-              handleChange={handleChange}
-            />
+            <FormGroup label="Password" htmlFor="password">
+              <AppInput
+                id="password"
+                name="password"
+                type="password"
+                autoComplete="new-password"
+                value={values.password}
+                onChange={handleChange}
+              />
+            </FormGroup>
 
-            <FormRow
-              type="text"
-              id="email"
-              name="email"
-              label="Email"
-              labelText="Email"
-              className="form-control"
-              value={values.email}
-              handleChange={handleChange}
-              placeholder="Email"
-            />
+            <FormGroup label="Email" htmlFor="email">
+              <AppInput
+                id="email"
+                name="email"
+                type="email"
+                placeholder="nome@empresa.pt"
+                value={values.email}
+                onChange={handleChange}
+              />
+            </FormGroup>
 
-
-
-            <ModalFoto 
+            <ModalFoto
               type="file"
               id="fotoU"
               name="foto"
@@ -302,26 +276,19 @@ const AddUtilizador = () => {
               labelText="Foto de Perfil"
               className="form-control"
               value={values.foto}
-              handleChange = {handleChangeFoto}
+              handleChange={handleChangeFoto}
             />
 
-            <div className="form-group">
-              <div id="addUtilizador">
-                <button
-                  type="submit"
-                  disabled={isLoading}
-                  onClick={toggleMember}
-                  className="w-100 btn btn-lg btn-primary"
-                >
-                  {isLoading ? 'Carregando...' : 'Adicionar'}
-                </button>
-              </div>
-              <div style={{ color: 'red' }}>{values.errorMessage}</div>
-            </div>
-          </div>
-        </form>
+            {values.errorMessage && (
+              <p style={{ color: 'var(--red-dark)' }}>{values.errorMessage}</p>
+            )}
+
+            <AppButton type="submit" fullWidth loading={isLoading} disabled={isLoading}>
+              {isLoading ? 'A criar…' : 'Adicionar'}
+            </AppButton>
+          </form>
+        </SectionCard>
       </div>
-    </main>
     </Wrapper>
   );
 }

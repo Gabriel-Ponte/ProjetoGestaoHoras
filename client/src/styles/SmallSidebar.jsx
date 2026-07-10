@@ -7,18 +7,20 @@ const Wrapper = styled.aside`
   .sidebar-container {
     position: fixed;
     inset: 0;
-    background-color: rgb(112,112,112);
-    background: rgb(112,112,112);
+    background: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(2px);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 9998;
     opacity: 0;
+    pointer-events: none;
     transition: var(--transition);
   }
   .show-sidebar {
     z-index: 9998;
     opacity: 1;
+    pointer-events: auto;
   }
   .content {
     background: var(--white);

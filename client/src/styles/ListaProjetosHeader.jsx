@@ -1,58 +1,59 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.a`
+  display: block;
+  width: 100%;
 
-align-items: center;
-justify-content: center;
-box-shadow: 0 1px 0px 0px rgba(0, 0, 0, 0.1);
-z-index: 9995;
-height:100%;
-width:100%;
-padding:0px;
+  /* keep the column header visible while scrolling, just under the navbar */
+  position: sticky;
+  top: var(--navbar-height, 90px);
+  z-index: 5;
 
-
-
-hr {
-  border: 1px solid #303030;
-  margin:0;
-}
-
-.ListaProjetosHeader {
-  width:100%;
-  background-color: #E5E5E5;
-  align-self: center;
-  vertical-align: baseline;
-  margin:0;
-}
-
-  .buttonHeader{
-    font-weight: bold;
-    align-items: center;
-    margin:0;
-    font-size: 1.2vw;
-    }
-
-  @media (min-width: 768px) {
-    position: sticky;
-    top: 85px;
-    .buttonHeader{
-      font-weight: bold;
-      align-items: center;
-      margin:0;
-      font-size: 1.2vw;
-      }
-    }
-  @media (min-width: 1500px) {
-  .buttonHeader{
-
-    font-weight: bold;
-    align-items: center;
-    margin:0;
-    font-size: 130%;
-    }
+  .ListaProjetosHeader {
+    width: 100%;
+    background: var(--grey-100);
+    border-radius: var(--borderRadius) var(--borderRadius) 0 0;
+    margin: 0;
   }
 
+  .list-group-item {
+    border: none;
+    background: transparent;
+    padding: 0.15rem 0;
+  }
 
-  `;
+  hr {
+    border: none;
+    border-top: 1px solid var(--grey-200);
+    margin: 0;
+  }
+
+  .buttonHeader {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    width: 100%;
+    padding: 0.55rem 0.25rem;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    font-weight: 600;
+    font-size: 0.82rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--grey-600);
+    transition: var(--transition);
+  }
+  .buttonHeader:hover {
+    color: var(--primary-600);
+  }
+
+  @media (min-width: 1500px) {
+    .buttonHeader {
+      font-size: 0.9rem;
+    }
+  }
+`;
 
 export default Wrapper;

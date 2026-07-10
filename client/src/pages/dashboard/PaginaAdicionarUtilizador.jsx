@@ -3,33 +3,25 @@ import { AddUtilizador } from '../../components';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
-
+import { canCreateUtilizador, canAccessProjetos } from '@/utils/roles';
 
 const PaginaAdicionarUtilizador = () => {
   const { user } = useSelector((store) => store.utilizador);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user) {
-      if (user.user.tipo === 2 || user.user.tipo === 5 || user.user.tipo === 6 || user.user.tipo === 7) {
-        // Render the component
-      } else if( user.user.tipo === 1){
-        toast.error("Sem permissões para aceder a esta página!");
-        navigate('/PaginaPrincipal');
-      }else {
-        toast.error("Sem permissões para aceder a esta página!");
-        navigate('/PaginaAdicionarHoras');
-      }
-    } else {
-      // Handle the case where user is undefined (optional, depending on your use case)
+    if (!user) {
       toast.error("Utilizador não autenticado!");
       navigate('/LoginPage');
+    } else if (!canCreateUtilizador(user.user.tipo)) {
+      toast.error("Sem permissões para aceder a esta página!");
+      navigate(canAccessProjetos(user.user.tipo) ? '/PaginaPrincipal' : '/PaginaAdicionarHoras');
     }
   }, [user, navigate]);
 
   return (
     <>
-      {user && (user.user.tipo === 2 || user.user.tipo === 5 || user.user.tipo === 6 || user.user.tipo === 7) && <AddUtilizador />}
+      {user && (canCreateUtilizador(user.user.tipo)) && <AddUtilizador />}
     </>
   );
 };

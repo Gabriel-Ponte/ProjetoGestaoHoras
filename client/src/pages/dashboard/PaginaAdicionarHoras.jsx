@@ -1,23 +1,15 @@
 import { AddHoras, AddHorasGeral } from '../../components';
 import { useSelector } from 'react-redux';
-
-
+import { canAccessProjetos, addsHorasGeral } from '@/utils/roles';
 
 const PaginaAdicionarHoras = () => {
   const { user } = useSelector((store) => store.utilizador);
+  const tipo = user.user.tipo;
 
-  if(user.user.tipo === 1 || user.user.tipo === 2 || user.user.tipo === 5 || user.user.tipo === 7){
-  return (
-    <>
-      <AddHoras />
-    </>
-  );
-  }else if(user.user.tipo === 3 || user.user.tipo === 4 || user.user.tipo === 6 || user.user.tipo === 9 || user.user.tipo === 10 || user.user.tipo === 11 || user.user.tipo === 12){
-    return (
-      <>
-        <AddHorasGeral />
-      </>
-    );
+  if (canAccessProjetos(tipo)) {
+    return <AddHoras />;
+  } else if (addsHorasGeral(tipo)) {
+    return <AddHorasGeral />;
   }
 };
 export default PaginaAdicionarHoras;

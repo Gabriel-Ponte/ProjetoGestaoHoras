@@ -3,7 +3,7 @@ import { VisualizarHorasProjeto } from '../../components';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
-
+import { canAccessProjetos } from '@/utils/roles';
 
 const PaginaVisualizarHorasProjetos = () => {
   
@@ -11,9 +11,9 @@ const PaginaVisualizarHorasProjetos = () => {
   const navigate = useNavigate();
   useEffect(() => {
     if (user) {
-      if (!(user.user.tipo === 2 || user.user.tipo === 1 || user.user.tipo === 5 || user.user.tipo === 7)) {
+      if (!canAccessProjetos(user.user.tipo)) {
         toast.error("Sem permissões para aceder a esta página!");
-        navigate('/paginaVisualizarHorasProjetos');
+        navigate('/PaginaAdicionarHoras');
       }
     } else {
       // Handle the case where user is undefined (optional, depending on your use case)
@@ -25,7 +25,7 @@ const PaginaVisualizarHorasProjetos = () => {
 
   return (
     <>
-     {user && (user.user.tipo === 2 || user.user.tipo === 1 || user.user.tipo === 5 || user.user.tipo === 7) && <VisualizarHorasProjeto />}
+     {user && canAccessProjetos(user.user.tipo) && <VisualizarHorasProjeto />}
     </>
   );
 };

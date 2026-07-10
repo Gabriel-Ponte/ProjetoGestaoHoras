@@ -3,27 +3,6 @@ import PropTypes from 'prop-types';
 
 
 const FormRow = ({ type, name, value, handleChange, labelText, className, classNameLabel, classNameInput,classNameInputDate, required, autocomp }) => {
-  // Calculate the content size
-  const contentSize = value ? value.length : 0; // Assuming the value is a string
-  // Calculate the input size based on content size
-  let inputSize = "auto";
-  let textSize = "100%";  
-  if (contentSize > 30) {
-    inputSize = 70;
-    if(contentSize > 60){
-    inputSize = 100;
-    }
-    if (contentSize < 60){
-      inputSize = 70;
-    }
-    if(contentSize >100){
-      textSize = "70%"
-    }
-    if(contentSize >150){
-      textSize = "60%"
-    }
-  }
-
   return (
     <Wrapper>
       <div className={className ? className : 'form-row'}>
@@ -44,10 +23,6 @@ const FormRow = ({ type, name, value, handleChange, labelText, className, classN
               value={value}
               onChange={handleChange}
               autoComplete = {autocomp}
-              style={{
-                width: classNameInputDate ? '' : `${inputSize}%`,
-                fontSize: classNameInputDate ? '' : textSize
-              }} // Set the width dynamically
               required={required ? true : undefined} />
           </div>
         ) : (
@@ -59,10 +34,6 @@ const FormRow = ({ type, name, value, handleChange, labelText, className, classN
             onChange={handleChange}
             autoComplete = {autocomp}
             className={classNameInputDate ? classNameInputDate: 'form-input'}
-            style={{
-              width: classNameInputDate ? '' : `${inputSize}%`,
-              fontSize: classNameInputDate ? '' : textSize
-            }}// Set the width dynamically
             required={required ? true : undefined} />
             
         )}

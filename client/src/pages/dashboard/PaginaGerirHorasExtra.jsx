@@ -3,38 +3,26 @@ import { GerirHorasExtra } from '../../components';
 import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { ROLE, canManageHorasExtra } from '@/utils/roles';
 
 const PaginaGerirHorasExtra = () => {
   const { user } = useSelector((store) => store.utilizador);
   const navigate = useNavigate();
+  const tipo = user?.user?.tipo;
+  const allowed = canManageHorasExtra(tipo);
 
   useEffect(() => {
-    if (user) {
-      if (user.user.tipo === 7 || user.user.tipo === 6) {
-        // Render the component
-      } else if (user.user.tipo === 1 || user?.user?.tipo === 2) {
-        toast.error("Sem permissões para aceder a esta página!");
-        navigate('/PaginaPrincipal');
-      } else {
-        toast.error("Sem permissões para aceder a esta página!");
-        navigate('/PaginaAdicionarHoras');
-      }
-    } else {
-      // Handle the case where user is undefined (optional, depending on your use case)
-      toast.error("Utilizador não autenticado!");
+    if (!user) {
+      toast.error('Utilizador não autenticado!');
       navigate('/LoginPage');
+      return;
     }
-  }, [user, navigate]);
+    if (!allowed) {
+      toast.error('Sem permissões para aceder a esta página!');
+      navigate(tipo === ROLE.ENG_PROCESSOS ? '/PaginaPrincipal' : '/PaginaAdicionarHoras');
+    }
+  }, [user, allowed, tipo, navigate]);
 
-  if (user && (user?.user?.tipo === 7 || user?.user?.tipo === 6)) {
-    return (
-      <>
-        {user && (user?.user?.tipo === 7 || user?.user?.tipo === 6) && <GerirHorasExtra />}
-      </>
-    );
-  } else {
-    toast.error("Utilizador sem permissões!");
-    navigate('/LoginPage');
-  }
+  return allowed ? <GerirHorasExtra /> : null;
 };
 export default PaginaGerirHorasExtra;
