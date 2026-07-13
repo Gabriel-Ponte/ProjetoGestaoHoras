@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { FormRow, FormRowCheckbox, FormRowCheckboxMultiple } from '@/components';
 
@@ -12,6 +13,7 @@ import DeleteFromDB from "@/components/common/DeleteFromDB";
 import { AppButton } from '@/components/ui';
 
 function VisualizarProjeto() {
+  const { t } = useTranslation('projetos');
   const { projeto, isLoading } = useSelector((store) => store.projeto);
   const { utilizadores, listaDeUtilizadores } = useSelector((store) => store.utilizador);
   const [listaTipoTrabalho, setListaTipoTrabalho] = useState([]);
@@ -113,9 +115,13 @@ function VisualizarProjeto() {
       const emptyField = requiredFields.find(field => !values[field]);
 
       if (emptyField) {
-        toast.error(`Por favor, preencha o campo obrigatório: ${emptyField}!`);
+        toast.error(
+          t('toast.requiredField', {
+            field: t(`fieldNames.${emptyField}`, { defaultValue: emptyField }),
+          })
+        );
       } else {
-        toast.error('Por favor, preencha todos os campos obrigatórios!');
+        toast.error(t('toast.requiredFields'));
       }
       return;
     }
@@ -183,7 +189,7 @@ function VisualizarProjeto() {
       const dataFim  = new Date(target.value);
 
       if (dataInicio > dataFim) {
-        toast.error("Data Final não pode ser antes da data inicial")
+        toast.error(t('toast.endDateBeforeStart'))
         return;
       }
     }
@@ -211,7 +217,7 @@ function VisualizarProjeto() {
       <div className="container">
         <main>
           <div className="form m-auto">
-            <h1 className="h3 mb-4 fw-normal text-center">Editar Projeto</h1>
+            <h1 className="h3 mb-4 fw-normal text-center">{t('edit.title')}</h1>
             <form onSubmit={handleSubmit} className='form'>
               <div className="row mb-3 text-center" style={{ marginTop: '3%', textAlign: 'center' }}>
                 <div className="container">
@@ -219,13 +225,13 @@ function VisualizarProjeto() {
                     type="text"
                     id="nomeProjeto"
                     name="Nome"
-                    label="Nome"
-                    labelText = "Nome"
+                    label={t('fields.name')}
+                    labelText={t('fields.name')}
                     className="form-control"
-                    
+
                     value={values.Nome}
                     handleChange={handleChange}
-                    feedbackMessage="Nome"
+                    feedbackMessage={t('fields.name')}
                   />
                   {/* <FormRow
                     type="text"
@@ -242,8 +248,8 @@ function VisualizarProjeto() {
                     type="text"
                     id="nomeCliente"
                     name="Cliente"
-                    label="Cliente"
-                    labelText = "Cliente"
+                    label={t('fields.client')}
+                    labelText={t('fields.client')}
                     className="form-control"
                     value={values.Cliente}
                     handleChange={handleChange}
@@ -254,9 +260,9 @@ function VisualizarProjeto() {
                     type="date"
                     id="dataI"
                     name="DataInicio"
-                    label="Data Inicio"
-                    labelText = "Data Inicio"
-                    className="row mb-3 mt-3 text-center" 
+                    label={t('fields.startDateShort')}
+                    labelText={t('fields.startDateShort')}
+                    className="row mb-3 mt-3 text-center"
                     classNameLabel='col-md-6 text-end' 
                     classNameInput='col-md-6 text-start'
                     value={values.DataInicio ? new Date(values.DataInicio).toLocaleDateString('en-CA') : ''}
@@ -269,9 +275,9 @@ function VisualizarProjeto() {
                     type="date"
                     id="dataO"
                     name="DataObjetivo"
-                    label="Data Objetivo"
-                    labelText = "Data Objetivo"
-                    className="row mb-3 mt-3 text-center" 
+                    label={t('fields.targetDate')}
+                    labelText={t('fields.targetDate')}
+                    className="row mb-3 mt-3 text-center"
                     classNameLabel='col-md-6 text-end' 
                     classNameInput='col-md-6 text-start'
                     value={values.DataObjetivo ? new Date(values.DataObjetivo).toLocaleDateString('en-CA') : ''}
@@ -300,8 +306,8 @@ function VisualizarProjeto() {
                     className="form-control"
                     id="Acao"
                     name="Acao"
-                    placeholder="Ação"
-                    labelText = "Ação"
+                    placeholder={t('fields.action')}
+                    labelText={t('fields.action')}
                     value={values.Acao}
                     handleChange={handleChange}
                   />
@@ -311,8 +317,8 @@ function VisualizarProjeto() {
                     className="form-control"
                     id="Notas"
                     name="Notas"
-                    labelText = "Notas"
-                    placeholder="Notas"
+                    labelText={t('fields.notes')}
+                    placeholder={t('fields.notes')}
                     value={values.Notas}
                     handleChange={handleChange}
                   />
@@ -323,7 +329,7 @@ function VisualizarProjeto() {
                     className="form-control"
                     id="Links"
                     name="Links"
-                    labelText = "Link A3"
+                    labelText={t('fields.linkA3')}
                     placeholder="Links"
                     value={values.Links}
                     handleChange={handleChange}
@@ -334,11 +340,11 @@ function VisualizarProjeto() {
                     className="form-control"
                     id="LinkResumo"
                     name="LinkResumo"
-                    labelText = "Link Resumo"
+                    labelText={t('fields.linkSummary')}
                     placeholder="LinkResumo"
                     value={values.LinkResumo}
                     handleChange={handleChange}
-                  />      
+                  />
                   <div className="form-control">
 
                   <FormRowCheckboxMultiple
@@ -350,8 +356,8 @@ function VisualizarProjeto() {
                     classNameLabelResult="col-md-6 text-start"
                     id="piloto"
                     name="Piloto"
-                    labelText = "Piloto:"
-                    placeholder="Piloto"
+                    labelText={t('fields.pilotLabel')}
+                    placeholder={t('fields.pilot')}
                     value={values.Piloto}
                     list={formattedListUtilizadores}
                     multiple={true}
@@ -364,7 +370,8 @@ function VisualizarProjeto() {
                     className="form-control"
                     id="Finalizado"
                     name="Finalizado"
-                    placeholder="Finalizado"
+                    labelText={t('fields.finished')}
+                    placeholder={t('fields.finished')}
                     value={values.Finalizado}
                     handleChange={handleChange}
                   />
@@ -376,7 +383,8 @@ function VisualizarProjeto() {
                         className="form-control"
                         id="Resultado"
                         name="Resultado"
-                        placeholder="Resultado"
+                        labelText={t('fields.result')}
+                        placeholder={t('fields.result')}
                         value={values.Resultado}
                         handleChange={handleChange}
                       />
@@ -385,7 +393,8 @@ function VisualizarProjeto() {
                         className="form-control"
                         id="dataFinal"
                         name="DataFim"
-                        placeholder="Data Final Projeto"
+                        labelText={t('fields.endDateProject')}
+                        placeholder={t('fields.endDateProject')}
                         value={values.DataFim ? new Date(values.DataFim).toLocaleDateString('en-CA') : new Date().toISOString().slice(0, 10)}
                         handleChange={handleChange}
                       />
@@ -396,7 +405,7 @@ function VisualizarProjeto() {
               </div>
               <div id="addProjeto">
                 <AppButton type='submit' variant="primary" size="lg" fullWidth loading={isLoading} disabled={isLoading} onClick={toggleMember}>
-                  submit
+                  {t('edit.submit')}
                 </AppButton>
 
 

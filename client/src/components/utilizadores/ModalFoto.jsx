@@ -1,11 +1,14 @@
 import { useState, useEffect, useRef } from "react";
+import { useTranslation } from 'react-i18next';
 import DefaultUserImg from "@/assets/image/DefaultUserImg.png";
 import Wrapper from '@/styles/ModalFoto';
 import { Buffer } from 'buffer';
-import PropTypes from 'prop-types'; 
+import PropTypes from 'prop-types';
+import { AppModal, AppButton } from '@/components/ui';
 
 
 function ModalFoto({ label, name, value, handleChange, className }) {
+  const { t } = useTranslation('utilizadores');
   const [file, setFile] = useState("");
   const [showModal, setShowModal] = useState(false);
   const imgRef = useRef(null);
@@ -158,16 +161,13 @@ function ModalFoto({ label, name, value, handleChange, className }) {
         </div>
         <div className="row mb-3 text-center">
           <div className="col-md-12 themed-grid-col">
-          <button
-                type="button"
-                className="btn"
-                data-bs-toggle="modal"
-                data-bs-target="#ModalFoto"
-                onClick={() => setShowModal(true)}
-              >
+            <button
+              type="button"
+              className="btn"
+              onClick={() => setShowModal(true)}
+            >
               <img
-                ref={imgRef}
-                alt="Imagem Perfil"
+                alt={t('photo.alt')}
                 src={
                   foto.data
                     ? URL.createObjectURL(new Blob([new Uint8Array(foto.data.data)], { type: foto.contentType }))
@@ -176,80 +176,50 @@ function ModalFoto({ label, name, value, handleChange, className }) {
                 className="rounded mx-auto d-block"
                 style={{ maxWidth: "100px" }}
               />
-                Escolher
-              </button>
+              {t('photo.choose')}
+            </button>
           </div>
         </div>
       </div>
-      <div
-        className={showModal ? "modal show" : "modal fade"}
-        id="ModalFoto"
-        tabIndex="-1"
-        aria-labelledby="ModalLabelFoto"
-        aria-hidden={!showModal}
-        role="dialog"
-        aria-modal="true"
+
+      <AppModal
+        open={showModal}
+        onClose={close}
+        title={t('photo.title')}
+        footer={
+          <>
+            <AppButton variant="secondary" onClick={close}>
+              {t('photo.close')}
+            </AppButton>
+            <AppButton variant="primary" onClick={handleFileChange} disabled={!file}>
+              {t('photo.save')}
+            </AppButton>
+          </>
+        }
       >
-        <div className="modal-dialog modal-dialog-centered">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title" id="ModalLabel">
-                Inserir Foto
-              </h5>
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-                onClick={close}
-              ></button>
-            </div>
-            <div className="modal-body">
-              <div className="container">
-                <img
-                  ref={imgRef}
-                  alt="Imagem Perfil"
-                  src={
-                    foto.data
-                      ? URL.createObjectURL(new Blob([new Uint8Array(foto.data.data)], { type: foto.contentType }))
-                      : DefaultUserImg
-                  }
-                  className="rounded mx-auto d-block"
-                  style={{ maxWidth: "100px" }}
-                />
-                <br />
-                <input
-                  id="foto"
-                  name="foto"
-                  type="file"
-                  accept=".jpg,.png"
-                  className="rounded mx-auto d-block"
-                  onChange={handleFileChange1}
-                />
-              </div>
-            </div>
-            <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-secondary"
-                data-bs-dismiss="modal"
-                onClick={close}
-              >
-                Sair
-              </button>
-              <button
-                type="button"
-                className="btn btn-primary"
-                data-bs-dismiss="modal"
-                onClick={handleFileChange}
-                disabled={!file}
-              >
-                Guardar
-              </button>
-            </div>
-          </div>
+        <div className="container">
+          <img
+            ref={imgRef}
+            alt={t('photo.alt')}
+            src={
+              foto.data
+                ? URL.createObjectURL(new Blob([new Uint8Array(foto.data.data)], { type: foto.contentType }))
+                : DefaultUserImg
+            }
+            className="rounded mx-auto d-block"
+            style={{ maxWidth: "100px" }}
+          />
+          <br />
+          <input
+            id="foto"
+            name="foto"
+            type="file"
+            accept=".jpg,.png"
+            className="rounded mx-auto d-block"
+            onChange={handleFileChange1}
+          />
         </div>
-      </div>
+      </AppModal>
     </Wrapper>
   );
 }

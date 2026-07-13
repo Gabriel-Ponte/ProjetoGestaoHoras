@@ -1,5 +1,6 @@
 
 import { useState, useEffect, memo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 // import { FaCaretDown } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
@@ -21,6 +22,9 @@ const AddHorasGeralDropdown = ({ sortedProjetos, verificaChange, listaTipoTrabal
   arrayTipoTrabalho, matchFoundProjeto, ListaTrabalhoAll,
   ListaTrabalhoGeral, ListaTrabalhoGeralOther, setListaTrabalhoGeralOther,
   setListaTipoTrabalho, setListaTrabalhoGeral, change }) => {
+
+  // aliased: `t` is already used as the tipo-de-trabalho map variable throughout this file
+  const { t: translate } = useTranslation('horas');
 
   const [StringListaTrabalhoGeral, setStringListaTrabalhoGeral] = useState();
   const [StringListaTrabalhoGeralOther, setStringListaTrabalhoGeralOther] = useState();
@@ -168,7 +172,7 @@ const AddHorasGeralDropdown = ({ sortedProjetos, verificaChange, listaTipoTrabal
         setStringListaTrabalhoGeral(NovaStringListaTrabalhoGeral.join(","));
 
       } else {
-        toast.error('Valor inserido não permitido!');
+        toast.error(translate('toast.valueNotAllowed'));
       }
     }
   }

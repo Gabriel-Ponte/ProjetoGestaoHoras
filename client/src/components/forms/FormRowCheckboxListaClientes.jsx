@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import Wrapper from '@/styles/FormRowCheckboxMultiple';
-import PropTypes from 'prop-types'; 
+import PropTypes from 'prop-types';
 
 const FormRowCheckboxListaClientes = ({ labelText, name, value, handleChange, list, className, classNameLabelResult, classNameLabel, classNameInput, classNameResult }) => {
+  const { t } = useTranslation('forms');
   // Define state for selected checkboxes
   const [selectedOption, setSelectedOption] = useState(value);
   // State for the new option input field
@@ -83,8 +85,7 @@ const FormRowCheckboxListaClientes = ({ labelText, name, value, handleChange, li
         {value && (
           <div className={'row text-end'}>
             <div className={classNameLabelResult ? classNameLabelResult : 'form-label text-end'}>
-            <p className="text-end">{'Selecionado: '}</p>
-              {/* <p className="text-end">{name ? (name + ': ') : 'Selecionado: ' }</p> */}
+            <p className="text-end">{t('common.selecionado')}</p>
             </div>
             <div className={classNameResult ? classNameResult : 'form-label'}>
               <p className="text-center">{selectedOption}</p>

@@ -1,10 +1,12 @@
 import NavLinks from '@/components/layout/NavLinks';
 import Wrapper from '@/styles/BigSidebar';
 import { useSelector, useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { toggleSidebar } from '@/features/utilizadores/utilizadorSlice';
 import { FaTimes } from 'react-icons/fa';
 
 const BigSidebar = () => {
+  const { t } = useTranslation('layout');
   const { isSidebarOpen } = useSelector((store) => store.utilizador);
   const dispatch = useDispatch();
   const close = () => dispatch(toggleSidebar(false));
@@ -24,7 +26,7 @@ const BigSidebar = () => {
           type='button'
           className='close-btn'
           onClick={close}
-          aria-label='Fechar menu'
+          aria-label={t('sidebar.close')}
         >
           <FaTimes />
         </button>

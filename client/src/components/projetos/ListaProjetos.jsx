@@ -1,4 +1,5 @@
 import { useEffect, useState} from 'react';
+import { useTranslation } from 'react-i18next';
 import Projeto from '@/components/projetos/ProjetoLista';
 import Wrapper from '@/styles/ProjetossContainer';
 import { useSelector, useDispatch } from 'react-redux';
@@ -12,6 +13,8 @@ import FormRowCheckbox from '@/components/forms/FormRowCheckbox';
 import { EmptyState } from '@/components/ui';
 
 const ListaProjetos = () => {
+
+  const { t } = useTranslation('projetos');
 
   const {
     projetos,
@@ -78,20 +81,27 @@ const ListaProjetos = () => {
     dispatch(handleChange({ name: 'DataObjetivoC', value: DataObjetivo }));
   };
 
+  // The "<n> projeto(s) <estado> encontrado(s)" sentence is one key per state, so
+  // each language can pluralise/agree it in its own way.
+  const foundKey =
+    projetoFinalizado === true
+      ? 'list.foundFinished'
+      : DataObjetivoC === true
+        ? 'list.foundOngoing'
+        : 'list.foundWaiting';
 
-  
   if (projetos.length === 0) {
     return (
       <Wrapper>
       <div className="row text-center">
         
         <div className="col-md-3 themed-grid-col">
-          <h1>Gestão Projetos</h1>
+          <h1>{t('list.title')}</h1>
         </div>
 
         <div className="col-md-9 finalizado themed-grid-col">
           <h5>
-          {totalProjetos} projeto{projetos.length > 1 && 's'} {projetoFinalizado === true ? " Finalizados " : DataObjetivoC=== true ? " Em Curso " : "em espera"} encontrado{projetos.length > 1 && 's'}
+          {t(foundKey, { count: totalProjetos })}
           </h5>
         </div>
 
@@ -104,7 +114,8 @@ const ListaProjetos = () => {
               classNameInput="col-md-1 themed-grid-col"
               id="Finalizado"
               name="Finalizado"
-              placeholder="Finalizado"
+              labelText={t('fields.finished')}
+              placeholder={t('fields.finished')}
               value={projetoFinalizado}
               handleChange={handleChangeCheckbox}
             />
@@ -119,8 +130,8 @@ const ListaProjetos = () => {
             classNameInput="col-md-1 themed-grid-col"
             id="DataObjetivoC"
             name="DataObjetivoC"
-            labelText="Possui Data Objetivo"
-            placeholder="Possui Data Objetivo"
+            labelText={t('list.hasTargetDate')}
+            placeholder={t('list.hasTargetDate')}
             value={DataObjetivoC}
             handleChange={handleChangeCheckboxDataObjetivo}
           />
@@ -129,8 +140,8 @@ const ListaProjetos = () => {
       </div>
 
         <EmptyState
-          title="Sem projetos"
-          message="Não há projetos para apresentar com os filtros atuais."
+          title={t('list.emptyTitle')}
+          message={t('list.emptyMessage')}
         />
       </Wrapper>
     );
@@ -141,12 +152,12 @@ const ListaProjetos = () => {
       <div className="row text-center">
         
         <div className="col-md-3 themed-grid-col">
-          <h1>Gestão Projetos</h1>
+          <h1>{t('list.title')}</h1>
         </div>
 
         <div className="col-md-9 finalizado themed-grid-col">
           <h5>
-            {totalProjetos} projeto{projetos.length > 1 && 's'} {projetoFinalizado === true ? " Finalizados " : DataObjetivoC=== true ? " Em Curso " : "em Espera"} encontrado{projetos.length > 1 && 's'}
+            {t(foundKey, { count: totalProjetos })}
           </h5>
         </div>
 
@@ -159,7 +170,8 @@ const ListaProjetos = () => {
               classNameInput="col-md-1 themed-grid-col"
               id="Finalizado"
               name="Finalizado"
-              placeholder="Finalizado"
+              labelText={t('fields.finished')}
+              placeholder={t('fields.finished')}
               value={projetoFinalizado}
               handleChange={handleChangeCheckbox}
             />
@@ -174,8 +186,8 @@ const ListaProjetos = () => {
             classNameInput="col-md-1 themed-grid-col"
             id="DataObjetivoC"
             name="DataObjetivoC"
-            labelText="Possui Data Objetivo"
-            placeholder="Possui Data Objetivo"
+            labelText={t('list.hasTargetDate')}
+            placeholder={t('list.hasTargetDate')}
             value={DataObjetivoC}
             handleChange={handleChangeCheckboxDataObjetivo}
           />
@@ -203,8 +215,8 @@ const ListaProjetos = () => {
       </div>
       {verificaAlterado > 0 && (
          <div className='text-center mt-3'>
-        <p><b>Possui {verificaAlterado} projeto{verificaAlterado > 1 ? "s" : ""} por confirmar alteração! </b></p>
-      </div> 
+        <p><b>{t('list.pendingChanges', { count: verificaAlterado })}</b></p>
+      </div>
       )}
       {numOfPages > 1 && <PageBtnContainer />}
     </Wrapper>

@@ -4,20 +4,22 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { canManageTiposTrabalho, canAccessProjetos } from '@/utils/roles';
+import { useTranslation } from 'react-i18next';
 
 const PaginaGerirTipoTrabalho = () => {
+  const { t } = useTranslation('auth');
   const { user } = useSelector((store) => store.utilizador);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!user) {
-      toast.error("Utilizador não autenticado!");
+      toast.error(t('guard.notAuthenticated'));
       navigate('/LoginPage');
     } else if (!canManageTiposTrabalho(user.user.tipo)) {
-      toast.error("Sem permissões para aceder a esta página!");
+      toast.error(t('guard.noPermission'));
       navigate(canAccessProjetos(user.user.tipo) ? '/PaginaPrincipal' : '/PaginaAdicionarHoras');
     }
-  }, [user, navigate]);
+  }, [user, navigate, t]);
 
 
   return (

@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Error, Login, ProtectedRoute } from './pages';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useTheme } from '@/context/ThemeContext';
 import {
   PaginaAdicionarUtilizador,
   PaginaPrincipal,
@@ -22,6 +23,8 @@ import {
 } from './pages/dashboard';
 
 function App() {
+  const { theme } = useTheme();
+
   return (
     <BrowserRouter>
       <Routes>
@@ -54,7 +57,7 @@ function App() {
         <Route path='paginaResetPasswordChange/:token' element={<PaginaResetPasswordChange />} />
         <Route path='*' element={<Error />} />
       </Routes>
-      <ToastContainer position='top-center' />
+      <ToastContainer position='top-center' theme={theme} />
     </BrowserRouter>
   );
 }

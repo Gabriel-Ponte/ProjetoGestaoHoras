@@ -16,3 +16,6 @@ export { default as ConfirmDialog } from './ConfirmDialog';
 export { default as LoadingState } from './LoadingState';
 export { default as EmptyState } from './EmptyState';
 export { default as ErrorState } from './ErrorState';
+
+export { default as ThemeToggle } from './ThemeToggle';
+export { default as LanguageSelector } from './LanguageSelector';

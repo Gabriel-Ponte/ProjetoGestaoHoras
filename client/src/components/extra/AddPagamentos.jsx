@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Wrapper from '@/styles/AddProjetoForm';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { addPagamentosUtilizador } from '@/features/pagamentos/pagamentosSlice';
 import { AiOutlineClose } from 'react-icons/ai';
 import { IoAddCircleOutline } from "react-icons/io5";
@@ -45,6 +46,7 @@ const AddPagamentos = ({ horasExtraEsteMes, horasPorDar, selectedUser, responsab
   };
 
   const dispatch = useDispatch();
+  const { t } = useTranslation('extra');
   const [loading, setLoading] = useState(false);
   const [pagamentoVisible, setPagamentoVisible] = useState(false);
   const [values, setValues] = useState(initialState);
@@ -126,16 +128,19 @@ const AddPagamentos = ({ horasExtraEsteMes, horasPorDar, selectedUser, responsab
 
 
       if (emptyField) {
-        toast.error(`Por favor, preencha o campo obrigatório: ${emptyField}!`);
+        // `emptyField` stays the raw data key; only its label is translated.
+        toast.error(t('toast.requiredField', {
+          field: t(`fields.${emptyField}`, { defaultValue: emptyField }),
+        }));
       } else {
-        toast.error('Por favor, preencha todos os campos obrigatórios!');
+        toast.error(t('toast.requiredFields'));
       }
       return;
     }
 
     try {
       await dispatch(addPagamentosUtilizador(values));
-      toast.success("Horas pagas adicionadas!");
+      toast.success(t('toast.paymentAdded'));
       handleChange();
 
     } catch (error) {
@@ -169,14 +174,14 @@ const AddPagamentos = ({ horasExtraEsteMes, horasPorDar, selectedUser, responsab
         {!pagamentoVisible ? (
           <div className='col-12 ' id="addProjeto">
             <button onClick={() => setVisible(true)} className='btn'>
-              Adicionar Pagamento <IoAddCircleOutline />
+              {t('payments.add')} <IoAddCircleOutline />
             </button>
           </div>
         ) : (
           <div className='row  d-flex text-center '>
             <div className='col-3'></div>
             <div className='col-6 text-center  mb-4'>
-              <h3 className="fw-normal">Adicionar Pagamento</h3>
+              <h3 className="fw-normal">{t('payments.add')}</h3>
               <form className='MainForm' onSubmit={handleSubmit}>
                 <div className='row d-flex align-items-md-center'>
 
@@ -197,7 +202,7 @@ const AddPagamentos = ({ horasExtraEsteMes, horasPorDar, selectedUser, responsab
                     </div>
                     <div className='col-12 text-end' id="addProjeto"></div>
                     <AppButton type='submit' variant="primary">
-                      Adicionar
+                      {t('payments.submit')}
                     </AppButton>
                   </div>
 

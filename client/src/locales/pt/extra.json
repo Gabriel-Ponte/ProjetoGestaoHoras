@@ -1,0 +1,59 @@
+{
+  "title": {
+    "managerOvertime": "Gestão de Horas Extra Responsável"
+  },
+  "sections": {
+    "requestManagement": "Gestão de Pedidos",
+    "vacationManagement": "Gestão de Férias"
+  },
+  "tabs": {
+    "pending": "Pedidos por Aceitar",
+    "accepted": "Pedidos Aceites",
+    "declined": "Pedidos Recusados",
+    "paidOvertime": "Horas Extra Pagas"
+  },
+  "filters": {
+    "overtime": "Horas Extra",
+    "overtimeCompensation": "Compensação de Horas Extra",
+    "vacation": "Ferias",
+    "allRequests": "Todos os pedidos"
+  },
+  "empty": {
+    "noOvertimeRequests": "Sem Pedidos de Horas Extra",
+    "noWorkedOvertimeRequests": "Sem Pedidos de Horas Extra Realizadas",
+    "noOvertimeCompensationRequests": "Sem Pedidos de Compensação de Horas Extra",
+    "noVacationRequests": "Sem Pedidos de Férias",
+    "noAcceptedOvertimeRequests": "Sem Pedidos de Horas Extra Aceites",
+    "noAcceptedWorkedOvertimeRequests": "Sem Pedidos de Horas Extra Realizadas Aceites",
+    "noAcceptedOvertimeCompensationRequests": "Sem Pedidos de Compensação de Horas Extra Aceites",
+    "noAcceptedVacationRequests": "Sem Pedidos de Férias Aceites",
+    "noDeclinedOvertimeRequests": "Sem Pedidos de Horas Extra Recusados",
+    "noDeclinedWorkedOvertimeRequests": "Sem Pedidos de Horas Extra Realizadas Recusados",
+    "noDeclinedOvertimeCompensationRequests": "Sem Pedidos de Compensação de Horas Extra Recusados",
+    "noDeclinedVacationRequests": "Sem Pedidos de Férias Recusados",
+    "noPaidOvertime": "Sem Horas Extra Pagas"
+  },
+  "confirm": {
+    "declineDay": "Tem a certeza que deseja recusar o dia: {{date}} a {{name}}?",
+    "declineRequest": "Tem a certeza que deseja recusar o pedido a {{name}}?"
+  },
+  "errors": {
+    "declineDay": "Ocorreu um erro ao recusar o Dia."
+  },
+  "payments": {
+    "add": "Adicionar Pagamento",
+    "submit": "Adicionar"
+  },
+  "fields": {
+    "Utilizador": "Utilizador",
+    "Utilizador Responsavel": "Utilizador Responsável",
+    "Mes": "Mês",
+    "Ano": "Ano",
+    "Horas": "Horas"
+  },
+  "toast": {
+    "requiredField": "Por favor, preencha o campo obrigatório: {{field}}!",
+    "requiredFields": "Por favor, preencha todos os campos obrigatórios!",
+    "paymentAdded": "Horas pagas adicionadas!"
+  }
+}

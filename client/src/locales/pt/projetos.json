@@ -1,0 +1,133 @@
+{
+  "common": {
+    "loading": "A carregar…"
+  },
+  "fields": {
+    "name": "Nome",
+    "namePlaceholder": "Nome do projeto",
+    "action": "Ação",
+    "client": "Cliente",
+    "clientLabel": "Cliente: ",
+    "startDate": "Data Inicial",
+    "startDateShort": "Data Inicio",
+    "targetDate": "Data Objetivo",
+    "endDate": "Data Final",
+    "endDateProject": "Data Final Projeto",
+    "notes": "Notas",
+    "linkA3": "Link A3",
+    "linkSummary": "Link Resumo",
+    "pilot": "Piloto",
+    "pilotLabel": "Piloto:",
+    "finished": "Finalizado",
+    "result": "Resultado",
+    "workTypes": "Tipos de Trabalho"
+  },
+  "fieldNames": {
+    "Nome": "Nome",
+    "Acao": "Ação",
+    "Cliente": "Cliente",
+    "DataInicio": "Data Inicial",
+    "DataObjetivo": "Data Objetivo",
+    "Tema": "Tema",
+    "Piloto": "Piloto"
+  },
+  "add": {
+    "title": "Adicionar Projeto",
+    "submit": "Adicionar"
+  },
+  "edit": {
+    "title": "Editar Projeto",
+    "submit": "Submeter"
+  },
+  "list": {
+    "title": "Gestão Projetos",
+    "foundFinished_one": "{{count}} projeto Finalizado encontrado",
+    "foundFinished_other": "{{count}} projetos Finalizados encontrados",
+    "foundOngoing_one": "{{count}} projeto Em Curso encontrado",
+    "foundOngoing_other": "{{count}} projetos Em Curso encontrados",
+    "foundWaiting_one": "{{count}} projeto em Espera encontrado",
+    "foundWaiting_other": "{{count}} projetos em Espera encontrados",
+    "hasTargetDate": "Possui Data Objetivo",
+    "emptyTitle": "Sem projetos",
+    "emptyMessage": "Não há projetos para apresentar com os filtros atuais.",
+    "pendingChanges_one": "Possui {{count}} projeto por confirmar alteração!",
+    "pendingChanges_other": "Possui {{count}} projetos por confirmar alteração!"
+  },
+  "header": {
+    "client": "Cliente",
+    "project": "Projeto",
+    "actions": "Ações",
+    "notes": "Notas",
+    "pilot": "Piloto",
+    "endDate": "Data Final",
+    "result": "Resultado",
+    "targetDate": "Data Objetivo",
+    "daysAlert": "Alerta dias"
+  },
+  "row": {
+    "insert": "Inserir",
+    "save": "Alterar",
+    "edit": "Editar",
+    "view": "Visualizar",
+    "addLinkA3": "Adicionar Link A3",
+    "openA3": "Abrir A3",
+    "addLinkResumo": "Adicionar Link Resumo",
+    "openResumo": "Abrir Resumo",
+    "closeLink": "Fechar"
+  },
+  "view": {
+    "selectVersion": "Seleccione uma Versão:",
+    "currentVersion": "Atual",
+    "chooseUser": "Escolha Utilizador",
+    "userLabel": "Utilizador:",
+    "legend": {
+      "weekend": "Fim de Semana",
+      "holidays": "Feriados",
+      "inserted": "Inserido",
+      "startDate": "Data Inicio",
+      "endDate": "Data Fim",
+      "targetDate": "Data Objetivo"
+    },
+    "noStartDate": "Sem data Inicial",
+    "noEndDate": "Sem Data Final",
+    "noTargetDate": "Sem data Objetivo",
+    "totalHours": "Numero Total Horas",
+    "totalHoursOn": "Numero total Horas {{date}}",
+    "noHours": "Sem Horas Inseridas no Projeto",
+    "noHoursAll": "Não existem horas inseridas no projeto",
+    "noHoursUser": "{{user}} não possui horas inseridas no projeto",
+    "noHoursDayAll": "Não existem horas inseridas no projeto neste dia {{date}}",
+    "noHoursDayUser": "{{user}} não possui horas inseridas no projeto neste dia {{date}}",
+    "noHoursMonthAll": "Não existem horas inseridas no projeto neste mês {{date}}",
+    "noHoursMonthUser": "{{user}} não possui horas inseridas no projeto neste mês {{date}}",
+    "noWorkTypes": "Sem Tipos de Trabalho definidos"
+  },
+  "version": {
+    "client": "Cliente",
+    "pilots": "Piloto/s",
+    "noPilots": "Sem Pilotos",
+    "action": "Ação",
+    "noActions": "Sem Ações",
+    "notes": "Notas",
+    "noNotes": "Sem Notas",
+    "version": "Versão",
+    "links": "Links",
+    "noLinkA3": "Sem Link A3",
+    "linkSummary": "Link Resumo",
+    "noLinkSummary": "Sem Link Resumo",
+    "done": "Realizado",
+    "yes": "Sim",
+    "no": "Não",
+    "result": "Resultado",
+    "success": "Sucesso",
+    "failure": "Insucesso"
+  },
+  "toast": {
+    "requiredField": "Por favor, preencha o campo obrigatório: {{field}}!",
+    "requiredFields": "Por favor, preencha todos os campos obrigatórios!",
+    "loadProjectFailed": "Não foi possível carregar o projeto",
+    "insertLink": "Por favor, insira o Link!",
+    "updateError": "Erro ao atualizar!",
+    "endDateBeforeStart": "Data Final não pode ser antes da data inicial"
+  }
+}

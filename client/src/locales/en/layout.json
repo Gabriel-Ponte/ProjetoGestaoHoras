@@ -1,0 +1,47 @@
+{
+  "nav": {
+    "openMenu": "Open menu",
+    "appTitle": "Hours Management",
+    "projetosManagement": "Project Management",
+    "horasManagement": "Hours Management",
+    "horasExtraManagement": "Overtime Management",
+    "addHoras": "Add Hours",
+    "viewHoras": "View Hours",
+    "horasProjetos": "Project Hours",
+    "editProfile": "Edit Profile",
+    "logout": "Log Out",
+    "loggingOut": "Logging out...",
+    "profilePhotoAlt": "Profile photo"
+  },
+  "sidebar": {
+    "close": "Close menu"
+  },
+  "links": {
+    "editarPerfil": "Edit Profile",
+    "adicionarUtilizador": "Add User",
+    "gerirUtilizadores": "Manage Users",
+    "gerirTiposTrabalho": "Manage Work Types",
+    "adicionarProjeto": "Add Project",
+    "editarProjetos": "Edit Projects",
+    "visualizarProjetos": "View Projects",
+    "exportarProjetosExcel": "Export Projects to Excel",
+    "exportarHorasExcel": "Export Hours to Excel"
+  },
+  "exportModal": {
+    "title": "Export Hours",
+    "groupLabel": "Group:",
+    "close": "Close",
+    "export": "Export"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "optionsPanel": {
+    "otherPlaceholder": "Other...",
+    "add": "Add"
+  },
+  "footer": {
+    "version": "Version {{version}}"
+  }
+}

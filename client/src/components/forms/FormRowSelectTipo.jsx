@@ -1,9 +1,11 @@
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import Wrapper from '@/styles/FormRowSelectTipo';
 import PropTypes from 'prop-types';
 import AppSelect from '@/components/ui/AppSelect';
 
 const FormRowSelectTipo = ({ labelText, name, value, handleChange, list, className, keyGet }) => {
+  const { t } = useTranslation('forms');
   const generateUniqueId = `tt-${keyGet}`;
 
   if (name === "responsavel") {
@@ -117,9 +119,13 @@ const FormRowSelectTipo = ({ labelText, name, value, handleChange, list, classNa
             disabled={value === "Compensação" || value === "Extra" || value === "Ferias" || value === "Compensação Domingo"}
           >
             {list.map((itemValue, index) => {
+              // `itemValue` is the raw literal (or a 1-element array holding it) and is
+              // load-bearing: it is the option VALUE and is compared in the callers'
+              // handlers. Only the visible label is translated.
+              const rawValue = Array.isArray(itemValue) ? itemValue[0] : itemValue;
               return (
                 <option key={index} value={itemValue}>
-                  {itemValue}
+                  {t(`types.${rawValue}`, { defaultValue: rawValue })}
                 </option>
               );
             })}

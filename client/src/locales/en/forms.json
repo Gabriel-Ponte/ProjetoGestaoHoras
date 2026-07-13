@@ -1,0 +1,61 @@
+{
+  "common": {
+    "todos": "All",
+    "selecionado": "Selected: ",
+    "naoEncontrado": "Not found",
+    "adicionar": "Add"
+  },
+  "select": {
+    "novaOpcao": "New Option:",
+    "opcaoJaAdicionada": "This option was already added.",
+    "administradores": "Administrators",
+    "engenhariaProcessos": "Process Engineering",
+    "laboratorio": "Laboratory",
+    "outro": "Other",
+    "responsavel": "Manager"
+  },
+  "types": {
+    "Projetos": "Projects",
+    "Geral": "General",
+    "Outro": "Other",
+    "Compensação": "Compensation",
+    "Extra": "Overtime",
+    "Compensação Domingo": "Sunday Compensation",
+    "Ferias": "Holidays",
+    "Engenharia de Processos": "Process Engineering",
+    "Laboratorio": "Laboratory",
+    "Recursos Humanos": "Human Resources",
+    "Responsavel Qualidade": "Quality Manager",
+    "Gestor Financeiro": "Financial Manager",
+    "Comercial": "Sales",
+    "Logistica": "Logistics",
+    "Administrador": "Administrator",
+    "Administrador Engenharia": "Engineering Administrator",
+    "Administrador Laboratorio": "Laboratory Administrator",
+    "Administrador Recursos Humanos": "Human Resources Administrator",
+    "Inativo": "Inactive"
+  },
+  "horasExtra": {
+    "tipos": {
+      "Férias": "Holidays",
+      "Feriado": "Public holiday",
+      "Domingo": "Sunday",
+      "Fim semana": "Weekend",
+      "Sexta-Feira": "Friday",
+      "Semana": "Weekday"
+    },
+    "compensacaoDomingo": "Sunday Compensation"
+  },
+  "header": {
+    "responsavel": "Manager",
+    "utilizador": "User",
+    "mes": "Month",
+    "numeroHoras": "Number of Hours",
+    "data": "Date",
+    "horas": "Hours",
+    "numeroDias": "Number of Days",
+    "horasExtra": "Overtime",
+    "tipo": "Type",
+    "trabalho": "Work"
+  }
+}

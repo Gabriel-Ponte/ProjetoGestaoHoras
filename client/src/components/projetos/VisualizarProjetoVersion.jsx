@@ -1,10 +1,13 @@
-import PropTypes from 'prop-types'; 
+import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 
 
 const VisualizarHorasProjetoVersion = ({
     values,
     utilizadores,
   }) => {
+    const { t } = useTranslation('projetos');
+
     return(
         <div className="col-7 left text-center" >
 
@@ -18,7 +21,7 @@ const VisualizarHorasProjetoVersion = ({
         </div> */}
         <div className="row mb-3">
           <div className="col-6">
-            <h5>Cliente</h5>
+            <h5>{t('version.client')}</h5>
           </div>
           <div className="col-6 text-start">
             <p>{values?.Cliente}</p>
@@ -28,7 +31,7 @@ const VisualizarHorasProjetoVersion = ({
         <div className="row mb-3">
           <div className="col-6 text-center">
             <h5 className="">
-              Piloto/s
+              {t('version.pilots')}
             </h5>
           </div>
           <div className="col-6 text-start">
@@ -52,7 +55,7 @@ const VisualizarHorasProjetoVersion = ({
                         <p key={index}>{item}</p>
                       ))
                     ) : (
-                      <p>Sem Pilotos</p>
+                      <p>{t('version.noPilots')}</p>
                     )}
                   </>
                 );
@@ -64,28 +67,28 @@ const VisualizarHorasProjetoVersion = ({
         <div className="row mb-3">
           <div className="col-6 text-center">
             <h5 className="">
-              Ação
+              {t('version.action')}
             </h5>
           </div>
           <div className="col-6 text-start">
-            <p>{values?.Acao ? values.Acao : "Sem Ações"}</p>
+            <p>{values?.Acao ? values.Acao : t('version.noActions')}</p>
           </div>
         </div>
 
         <div className="row mb-3">
           <div className="col-6 text-center">
             <h5 className="">
-              Notas
+              {t('version.notes')}
             </h5>
           </div>
           <div className="col-6 text-start">
-            <p>{values?.Notas ? values.Notas : "Sem Notas"}</p>
+            <p>{values?.Notas ? values.Notas : t('version.noNotes')}</p>
           </div>
         </div>
         <div className="row mb-3">
           <div className="col-6 text-center">
             <h5 className="">
-              Versão
+              {t('version.version')}
             </h5>
           </div>
           <div className="col-6 text-start">
@@ -95,40 +98,40 @@ const VisualizarHorasProjetoVersion = ({
         <div className="row mb-3">
           <div className="col-6 text-center">
             <h5 className="">
-              Links
+              {t('version.links')}
             </h5>
           </div>
           <div className="col-6 text-start">
-            <p style={{ wordWrap: 'break-word' }}>{values.Links ? values.Links : "Sem Link A3"}</p>
+            <p style={{ wordWrap: 'break-word' }}>{values.Links ? values.Links : t('version.noLinkA3')}</p>
           </div>
         </div>
         <div className="row mb-3">
           <div className="col-6 text-center">
             <h5 className="">
-              Link Resumo
+              {t('version.linkSummary')}
             </h5>
           </div>
           <div className="col-6 text-start">
-            <p style={{ wordWrap: 'break-word' }}>{values.LinkResumo ? values.LinkResumo : "Sem Link Resumo"}</p>
+            <p style={{ wordWrap: 'break-word' }}>{values.LinkResumo ? values.LinkResumo : t('version.noLinkSummary')}</p>
           </div>
         </div>
         <div className="row mb-3">
           <div className="col-6 text-center">
             <h5 className="">
-              Realizado
+              {t('version.done')}
             </h5>
           </div>
           <div className="col-6 text-start">
-            <p>{values.Finalizado === true ? "Sim" : "Não"}</p>
+            <p>{values.Finalizado === true ? t('version.yes') : t('version.no')}</p>
           </div>
         </div>
         {values.Finalizado === true ? (
           <div className="row mb-3">
             <div className="col-7 text-center">
-              <h5>Resultado</h5>
+              <h5>{t('version.result')}</h5>
             </div>
             <div className="col-5 text-start">
-              <p style={{ width: "100%" }}> {values.Resultado === true ? "Sucesso" : "Insucesso"}</p>
+              <p style={{ width: "100%" }}> {values.Resultado === true ? t('version.success') : t('version.failure')}</p>
             </div>
           </div>
         ) : null}
@@ -142,4 +145,3 @@ const VisualizarHorasProjetoVersion = ({
     utilizadores: PropTypes.array.isRequired,
   }
   export default VisualizarHorasProjetoVersion;
-

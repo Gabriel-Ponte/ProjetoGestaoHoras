@@ -1,6 +1,7 @@
 
 import { memo, useState, useEffect, useCallback } from 'react';
 //, useMemo
+import { useTranslation } from 'react-i18next';
 import { FaCaretDown } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
 import { createTipoTrabalhoOther } from '@/features/tipoTrabalho/tipoTrabalhoSlice';
@@ -22,6 +23,9 @@ import { getFeriadosPortugalDate } from '@/components/dias/FeriadosPortugal';
 const AddHorasDropdown = ({ sortedProjetos, verificaChange, listaTipoTrabalho, values, handleHorasChange, convertToMinutes, arrayTipoTrabalho, matchFoundProjeto, ListaTrabalhoAll,
   ListaTrabalhoGeral, ListaTrabalhoGeralOther, setListaTrabalhoGeralOther,
   setListaTipoTrabalho, setListaTrabalhoGeral, change, blocked }) => {
+
+  // aliased: `t` is already used as the tipo-de-trabalho map variable throughout this file
+  const { t: translate } = useTranslation('horas');
 
   const [StringListaTrabalho, setStringListaTrabalho] = useState('');
   const [StringListaTrabalhoGeral, setStringListaTrabalhoGeral] = useState('');
@@ -178,10 +182,10 @@ const AddHorasDropdown = ({ sortedProjetos, verificaChange, listaTipoTrabalho, v
 
         setStringListaTrabalhoGeral(NovaStringListaTrabalhoGeral.join(","));
       } else {
-        toast.error('Valor inserido não permitido!');
+        toast.error(translate('toast.valueNotAllowed'));
       }
     }
-  }, [StringListaTrabalhoGeral, options, dispatch, ListaTrabalhoGeral, listaTipoTrabalho, ListaTrabalhoGeralOther, StringListaTrabalhoGeralOther]);
+  }, [StringListaTrabalhoGeral, options, dispatch, ListaTrabalhoGeral, listaTipoTrabalho, ListaTrabalhoGeralOther, StringListaTrabalhoGeralOther, translate]);
 
 
   const handleDropdownToggle = useCallback((projectId) => {

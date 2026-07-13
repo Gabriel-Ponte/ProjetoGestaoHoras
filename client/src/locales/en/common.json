@@ -1,0 +1,46 @@
+{
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "close": "Close",
+    "exit": "Exit",
+    "confirm": "Confirm",
+    "back": "Back",
+    "export": "Export",
+    "insert": "Insert",
+    "change": "Update",
+    "view": "View",
+    "retry": "Try again",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "state": {
+    "loading": "Loading…",
+    "emptyTitle": "No results",
+    "emptyMessage": "There is no data to display.",
+    "errorTitle": "Something went wrong",
+    "errorMessage": "The operation could not be completed. Please try again."
+  },
+  "theme": {
+    "toggleToDark": "Switch to dark theme",
+    "toggleToLight": "Switch to light theme",
+    "dark": "Dark",
+    "light": "Light"
+  },
+  "language": {
+    "label": "Language",
+    "select": "Choose language"
+  },
+  "entities": {
+    "Projeto": "project",
+    "Utilizador": "user"
+  },
+  "delete": {
+    "title": "Delete {{type}}?",
+    "message": "Do you want to delete the {{type}}: {{name}}",
+    "aria": "Delete {{type}}"
+  }
+}

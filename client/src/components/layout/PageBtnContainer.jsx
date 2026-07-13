@@ -1,10 +1,12 @@
 import { HiChevronDoubleLeft, HiChevronDoubleRight } from 'react-icons/hi';
 import Wrapper from '@/styles/PageBtnContainer';
 import { useSelector, useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { changePage } from '@/features/allProjetos/allProjetosSlice';
-import PropTypes from 'prop-types'; 
+import PropTypes from 'prop-types';
 
 const PageBtnContainer = ({ small }) => {
+  const { t } = useTranslation('layout');
   const { numOfPages, page } = useSelector((store) => store.allProjetos);
   const dispatch = useDispatch();
   const small1 = small;
@@ -35,7 +37,7 @@ const PageBtnContainer = ({ small }) => {
         <div className="row">
           <button type='button' className='prev-btn' onClick={prevPage}>
             <HiChevronDoubleLeft />
-            Anterior
+            {t('pagination.previous')}
           </button>
             {pages.map((pageNumber) => {
   
@@ -51,18 +53,28 @@ const PageBtnContainer = ({ small }) => {
               );
             })}
           <button type='button' className='next-btn' onClick={nextPage}>
-            Proximo
+            {t('pagination.next')}
             <HiChevronDoubleRight />
           </button>
         </div>
 
       ) : (
         <div className='row'>
-          <button type='button' className='prev-btn' onClick={prevPage}>
+          <button
+            type='button'
+            className='prev-btn'
+            onClick={prevPage}
+            aria-label={t('pagination.previous')}
+          >
             <HiChevronDoubleLeft />
           </button>
           <p className={page ? 'pageBtn active' : 'pageBtn'}>{page}</p>
-          <button type='button' className='next-btn' onClick={nextPage}>
+          <button
+            type='button'
+            className='next-btn'
+            onClick={nextPage}
+            aria-label={t('pagination.next')}
+          >
             <HiChevronDoubleRight />
           </button>
         </div>

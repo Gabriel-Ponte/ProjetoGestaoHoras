@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import Wrapper from '@/styles/VisualizarProjeto';
+import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import Loading from '@/components/common/Loading';
 import { getAllDias, getAllDiasProjetoUtilizador } from '@/features/allDias/allDiasSlice';
@@ -14,6 +15,7 @@ import { AppSelect } from '@/components/ui';
 
 const VisualizarProjeto = () => {
 
+  const { t } = useTranslation('projetos');
 
   function createInitialState(projeto) {
     return {
@@ -32,7 +34,7 @@ const VisualizarProjeto = () => {
       Finalizado: projeto.Finalizado,
       Resultado: projeto.Resultado,
       Notas: projeto.Notas,
-      NumeroHorasTotal: "Sem Horas Inseridas no Projeto",
+      NumeroHorasTotal: t('view.noHours'),
       NumeroHorasTipoTrabalho: "",
       Versao: projeto.Versao,
     };
@@ -230,22 +232,30 @@ const VisualizarProjeto = () => {
         } else {
           if(selectedDay){
             if(selectedDay?.dia !== 0){
+          const dataDia = `${selectedDay?.dia}/${selectedDay?.mes + 1}/${selectedDay?.ano}`;
           setValues({
             ...values,
-            NumeroHorasTotal: selectedUser === "Todos" ? `Não existem horas inseridas no projeto neste dia ${selectedDay?.dia}/${selectedDay?.mes + 1}/${selectedDay?.ano}` : `${selectedUser} não possui horas inseridas no projeto neste dia ${selectedDay?.dia}/${selectedDay?.mes + 1}/${selectedDay?.ano}`,
+            NumeroHorasTotal: selectedUser === "Todos"
+              ? t('view.noHoursDayAll', { date: dataDia })
+              : t('view.noHoursDayUser', { user: selectedUser, date: dataDia }),
             NumeroHorasTipoTrabalho: ""
           });
         }else {
+          const dataMes = `${selectedDay?.mes + 1}/${selectedDay?.ano}`;
           setValues({
             ...values,
-            NumeroHorasTotal: selectedUser === "Todos" ? `Não existem horas inseridas no projeto neste mes ${selectedDay?.mes + 1}/${selectedDay?.ano}` : `${selectedUser} não possui horas inseridas no projeto neste mes ${selectedDay?.mes + 1}/${selectedDay?.ano}`,
+            NumeroHorasTotal: selectedUser === "Todos"
+              ? t('view.noHoursMonthAll', { date: dataMes })
+              : t('view.noHoursMonthUser', { user: selectedUser, date: dataMes }),
             NumeroHorasTipoTrabalho: ""
           });
         }
         }else{
           setValues({
             ...values,
-            NumeroHorasTotal: selectedUser === "Todos" ? `Não existem horas inseridas no projeto` : `${selectedUser} não possui horas inseridas no projeto!`,
+            NumeroHorasTotal: selectedUser === "Todos"
+              ? t('view.noHoursAll')
+              : t('view.noHoursUser', { user: selectedUser }),
             NumeroHorasTipoTrabalho: ""
           });
         }
@@ -253,7 +263,9 @@ const VisualizarProjeto = () => {
       } else {
         setValues({
           ...values,
-          NumeroHorasTotal: selectedUser === "Todos" ? "Não existem horas inseridas no projeto" : `${selectedUser} não possui horas inseridas no projeto`,
+          NumeroHorasTotal: selectedUser === "Todos"
+            ? t('view.noHoursAll')
+            : t('view.noHoursUser', { user: selectedUser }),
           NumeroHorasTipoTrabalho: "",
         });
       }
@@ -382,11 +394,11 @@ const VisualizarProjeto = () => {
               </div>
               {listaVProjeto && listaVProjeto.length > 0 && (
                 <div className="container">
-                  <h2>Seleccione uma Versão:</h2>
+                  <h2>{t('view.selectVersion')}</h2>
                   <AppSelect id="pageSelect" onChange={(event) => handleChangeVersion(event)}>
 
                     <option key="default" value="Atual">
-                      Atual
+                      {t('view.currentVersion')}
                     </option>
   
                     {listaVProjeto.map((projetoVersion, index) => {
@@ -417,7 +429,7 @@ const VisualizarProjeto = () => {
 
                 {(user?.user?.tipo === 2) ? (
                   <div className='text-center mb-5'>
-                    <h3 className='mb-5'>Escolha Utilizador</h3>
+                    <h3 className='mb-5'>{t('view.chooseUser')}</h3>
                     <FormRowSelect
                       type="text"
                       className="row mb-3 text-center"
@@ -426,7 +438,7 @@ const VisualizarProjeto = () => {
                       classNameResult='col-md-6'
                       id="piloto"
                       name="Piloto"
-                      labelText="Utilizador:"
+                      labelText={t('view.userLabel')}
                       value={selectedUser}
                       list={formattedListUtilizadores}
                       handleChange={handleChangeUtilizador}
@@ -436,7 +448,7 @@ const VisualizarProjeto = () => {
                   </div>
                 ) : (
                   <div className='text-center mb-5'>
-                    <h3 className='mb-5'>Escolha Utilizador</h3>
+                    <h3 className='mb-5'>{t('view.chooseUser')}</h3>
                     <FormRowSelect
                       type="text"
                       className="row mb-3 text-center"
@@ -445,7 +457,7 @@ const VisualizarProjeto = () => {
                       classNameResult='col-md-6'
                       id="piloto"
                       name="Piloto"
-                      labelText="Utilizador:"
+                      labelText={t('view.userLabel')}
                       value={selectedUser}
                       list={[user?.user]}
                       handleChange={handleChangeUtilizador}
@@ -459,7 +471,7 @@ const VisualizarProjeto = () => {
                 <div className='col-12 description'>
                   <div className='row mb'>
                     <div className='col-9 text-end'>
-                      <p>Fim de Semana</p>
+                      <p>{t('view.legend.weekend')}</p>
                     </div>
                     <div className='col-3'>
                       <p className='fimSemana'></p>
@@ -468,7 +480,7 @@ const VisualizarProjeto = () => {
 
                   <div className='row'>
                     <div className='col-9 text-end'>
-                      <p>Feriados</p>
+                      <p>{t('view.legend.holidays')}</p>
                     </div>
                     <div className='col-3'>
                       <p className='feriados'></p>
@@ -476,7 +488,7 @@ const VisualizarProjeto = () => {
                   </div>
                   <div className='row'>
                     <div className='col-9 text-end'>
-                      <p>Inserido</p>
+                      <p>{t('view.legend.inserted')}</p>
                     </div>
                     <div className='col-3'>
                       <p className='inserido'></p>
@@ -484,7 +496,7 @@ const VisualizarProjeto = () => {
                   </div>
                   <div className='row'>
                     <div className='col-9 text-end'>
-                      <p>Data Inicio</p>
+                      <p>{t('view.legend.startDate')}</p>
                     </div>
                     <div className='col-3'>
                       <p className='dataInicio'></p>
@@ -494,7 +506,7 @@ const VisualizarProjeto = () => {
 
                   <div className='row'>
                     <div className='col-9 text-end'>
-                      <p>Data Fim</p>
+                      <p>{t('view.legend.endDate')}</p>
                     </div>
                     <div className='col-3'>
                       <p className='dataFim'></p>
@@ -503,7 +515,7 @@ const VisualizarProjeto = () => {
 
                   <div className='row'>
                     <div className='col-9 text-end'>
-                      <p>Data Objetivo</p>
+                      <p>{t('view.legend.targetDate')}</p>
                     </div>
                     <div className='col-3'>
                       <p className='dataObjetivo'></p>
@@ -532,28 +544,28 @@ const VisualizarProjeto = () => {
                 </div>
                 <div className="row mb-3 ">
                   <div className="col-3">
-                    <h5>Data Inicio</h5>
+                    <h5>{t('fields.startDateShort')}</h5>
                   </div>
                   <div className="col-3">
-                    <p>{values.DataInicio ? new Date(values.DataInicio).toLocaleDateString('en-CA') : 'Sem data Inicial'}</p>
+                    <p>{values.DataInicio ? new Date(values.DataInicio).toLocaleDateString('en-CA') : t('view.noStartDate')}</p>
                   </div>
 
                   {values.Finalizado === true ? (
                     <>
                       <div className="col-3">
-                        <h5>Data Final</h5>
+                        <h5>{t('fields.endDate')}</h5>
                       </div>
                       <div className="col-3">
-                        <p>{values.DataFim ? new Date(values.DataFim).toLocaleDateString('en-CA') : 'Sem Data Final'}</p>
+                        <p>{values.DataFim ? new Date(values.DataFim).toLocaleDateString('en-CA') : t('view.noEndDate')}</p>
                       </div>
                     </>
                   ) : (
                     <>
                       <div className="col-3">
-                        <h5>Data Objetivo</h5>
+                        <h5>{t('fields.targetDate')}</h5>
                       </div>
                       <div className="col-3">
-                        <p>{values.DataObjetivo ? new Date(values.DataObjetivo).toLocaleDateString('en-CA') : 'Sem data Objetivo'}</p>
+                        <p>{values.DataObjetivo ? new Date(values.DataObjetivo).toLocaleDateString('en-CA') : t('view.noTargetDate')}</p>
                       </div>
                     </>
                   )}
@@ -562,7 +574,11 @@ const VisualizarProjeto = () => {
                   {selectedDay && selectedDay?.dia !== 0 &&
                     <h5>{selectedDay?.dia}/{selectedDay?.mes + 1}/{selectedDay?.ano}</h5>}
                   <div className="col-6">
-                  <h5>{selectedDay ? selectedDay?.dia === 0 ? `Numero total Horas ${selectedDay?.mes +1}/${selectedDay?.ano}` : `Numero total Horas ${selectedDay?.dia}/${selectedDay?.mes + 1}/${selectedDay?.ano}`  : `Numero Total Horas`}</h5>
+                  <h5>{selectedDay
+                    ? selectedDay?.dia === 0
+                      ? t('view.totalHoursOn', { date: `${selectedDay?.mes + 1}/${selectedDay?.ano}` })
+                      : t('view.totalHoursOn', { date: `${selectedDay?.dia}/${selectedDay?.mes + 1}/${selectedDay?.ano}` })
+                    : t('view.totalHours')}</h5>
                  </div>
                   <div className="col-6">
                     <p>{values.NumeroHorasTotal}</p>
@@ -571,7 +587,7 @@ const VisualizarProjeto = () => {
                 {typeof values.NumeroHorasTotal === 'number' && (
                   <div className="row mb-3">
                     <div className="col-3">
-                      <h5>Tipos de Trabalho</h5>
+                      <h5>{t('fields.workTypes')}</h5>
                     </div>
                     <div>
                       {listaTipoTrabalho && listaTipoTrabalho.length > 0 ? (
@@ -593,7 +609,7 @@ const VisualizarProjeto = () => {
                         })
                       ) : (
                         <div>
-                          <p>Sem Tipos de Trabalho definidos</p>
+                          <p>{t('view.noWorkTypes')}</p>
                         </div>
                       )}
                     </div>

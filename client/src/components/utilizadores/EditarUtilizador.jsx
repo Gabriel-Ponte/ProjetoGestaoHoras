@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { FormRow } from '@/components';
 import { useNavigate } from 'react-router-dom';
@@ -10,6 +11,7 @@ import Loading from '@/components/common/Loading';
 import { AppButton } from '@/components/ui';
 
 const EditarUtilizador = () => {
+    const { t } = useTranslation('utilizadores');
     const { user } = useSelector((store) => store.utilizador);
     const initialState = {
       _id: user.user.id,
@@ -82,11 +84,11 @@ const EditarUtilizador = () => {
   const handleSubmit = async(e) => {
       e.preventDefault();
       if (!values.login || !values.email || !values.nome || !values.password ) {
-        toast.error('Por favor, preencha todos os campos obrigatórios!');
+        toast.error(t('toast.requiredFields'));
         return;
       }
       if(values.password.length < 6){
-        toast.error('Password necessita ter pelo menos 6 caracteres!');
+        toast.error(t('toast.passwordTooShort'));
         return;
       }
 
@@ -113,25 +115,25 @@ const EditarUtilizador = () => {
     <Wrapper>
     <main >
       <div className="form-signin w-100 m-auto" >
-        <h1 className="h3 mb-4 fw-normal text-center">Editar Perfil</h1>
+        <h1 className="h3 mb-4 fw-normal text-center">{t('edit.title')}</h1>
         <form onSubmit = {handleSubmit} className='form'>
           <div className="container">
             <FormRow
               type="text"
               id="nomeUtilizador"
               name="nome"
-              labelText="Nome"
+              labelText={t('form.name')}
               className="form-control"
               value={values.nome}
               handleChange={handleChange}
-              feedbackMessage="Nome"
+              feedbackMessage={t('form.name')}
             />
 
             <FormRow
               type="text"
               id="loginProjeto"
               name="login"
-              labelText="Login"
+              labelText={t('form.login')}
               className="form-control"
               value={values.login}
               handleChange={handleChange}
@@ -141,7 +143,7 @@ const EditarUtilizador = () => {
               type="password"
               id="password"
               name="password"
-              labelText="Password"
+              labelText={t('form.password')}
               className="form-control"
               value={values.password}
               handleChange={handleChange}
@@ -151,18 +153,18 @@ const EditarUtilizador = () => {
               type="text"
               id="email"
               name="email"
-              labelText="Email"
+              labelText={t('form.email')}
               className="form-control"
               value={values.email}
               handleChange={handleChange}
-              placeholder="Email"
+              placeholder={t('form.email')}
             />
 
             <ModalFoto 
               type="file"
               id="fotoU"
               name="foto"
-              label="Foto de Perfil"
+              label={t('form.profilePhoto')}
               className="form-control"
               value={values.foto}
               handleChange = {handleChangeFoto}
@@ -179,7 +181,7 @@ const EditarUtilizador = () => {
                   disabled={isLoading || !alterado}
                   onClick={toggleMember}
                 >
-                  Alterar
+                  {t('edit.submit')}
                 </AppButton>
               </div>
               <div style={{ color: 'red' }}>{values.errorMessage}</div>

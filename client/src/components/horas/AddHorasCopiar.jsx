@@ -1,4 +1,5 @@
 import { memo, useMemo, useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FormRow } from '@/components';
 import { AiOutlineClose } from 'react-icons/ai';
 import { AppButton } from '@/components/ui';
@@ -6,6 +7,7 @@ import LoadingState from '@/components/ui/LoadingState';
 import PropTypes from 'prop-types';
 
 const AddHorasCopiar = ({ verificaCopiarHoras, copiar, DataCopy, verificaDiaLast, handleDia, copyExists, buttonClicked }) => {
+  const { t } = useTranslation('horas');
   const [loading, setLoading] = useState(false);
   const [copiarValue ,setCopiarValue] = useState(false);
 
@@ -48,7 +50,7 @@ const AddHorasCopiar = ({ verificaCopiarHoras, copiar, DataCopy, verificaDiaLast
           {!verificaCopiarHoras ? (
             <div className='d-flex flex-column justify-content-center align-items-center h-100'>
               <AppButton variant='secondary' disabled={buttonClicked} onClick={() => copiarHoras(true)}>
-                Copiar Horas
+                {t('actions.copyHours')}
               </AppButton>
             </div>
           ) : (
@@ -61,27 +63,28 @@ const AddHorasCopiar = ({ verificaCopiarHoras, copiar, DataCopy, verificaDiaLast
                     classNameLabel="form-field-label"
                     id="Dia Copia"
                     name="Data a Copiar"
+                    labelText={t('labels.dateToCopy')}
                     placeholder="Dia Adicionar Horas"
                     value={dataCopyValue}
                     handleChange={verificaDiaLast}
                   />
                 ) : (
-                  <p>Sem Horas inseridas para copiar</p>
+                  <p>{t('empty.noHoursToCopy')}</p>
                 )}
               </div>
               <div className='col-4 d-flex flex-column justify-content-center align-items-center'>
-                <button onClick={() => copiarHoras(false)} className='btn' style={{ margin: '5%' }}>
+                <button onClick={() => copiarHoras(false)} className='btn' style={{ margin: '5%' }} aria-label={t('actions.close')}>
                   <AiOutlineClose />
                 </button>
                 <div className="col-12">
                   <AppButton variant='primary' onClick={handleDia} disabled={buttonClicked}>
-                    Copiar
+                    {t('actions.copy')}
                   </AppButton>
                 </div>
               </div>
               {!copyExists && (
                 <div className="col-12">
-                  <p>Não possui horas inseridas no dia escolhido. Ultimo dia com horas possíveis selecionado!</p>
+                  <p>{t('empty.noHoursOnChosenDay')}</p>
                 </div>
               )}
             </div>

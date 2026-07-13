@@ -1,0 +1,53 @@
+{
+  "tabs": {
+    "manageRequests": "Gestión de Solicitudes",
+    "manageVacation": "Gestión de Vacaciones"
+  },
+  "actions": {
+    "addVacation": "Añadir Vacaciones",
+    "manageVacation": "Gestionar Vacaciones"
+  },
+  "fields": {
+    "user": "Usuario:"
+  },
+  "confirm": {
+    "deleteDays": "¿Seguro que desea eliminar los Días de Vacaciones?"
+  },
+  "toast": {
+    "dayDeleted": "Día Eliminado",
+    "daysAdded": "¡Días añadidos!",
+    "invalidDays": "¡Días introducidos inválidos!",
+    "addError": "¡Error al añadir las Vacaciones!",
+    "invalidValues": "¡Valores Introducidos Inválidos!"
+  },
+  "add": {
+    "title": "Añadir Vacaciones",
+    "addDaysButton": "Añadir Días",
+    "remainingVacation": "Vacaciones por reclamar: {{total}}",
+    "pendingRequests": "Vacaciones por aceptar: {{total}}",
+    "startDate": "Inicio",
+    "endDate": "Fin",
+    "datePlaceholder": "Día Añadir Horas",
+    "day": "Día",
+    "days": "Días",
+    "invalidSelectedDays": "¡Días seleccionados inválidos!",
+    "totalDays": "Total de días: {{total}}",
+    "submit": "Insertar Vacaciones"
+  },
+  "header": {
+    "user": "Usuario",
+    "accepted": "Aceptados",
+    "possible": "Posibles",
+    "remaining": "Por Reclamar",
+    "add": "Añadir",
+    "year": "Año"
+  },
+  "list": {
+    "add": "Añadir",
+    "responsible": "Responsable",
+    "inserted": "Insertados",
+    "correspondingYear": "Año Correspondiente",
+    "date": "Fecha",
+    "numberOfDays": "Número de Días"
+  }
+}

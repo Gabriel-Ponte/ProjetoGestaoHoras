@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { getAllDiasHorasExtra, acceptDiasHorasExtra, declineDiasHorasExtra, getAllDiasHorasExtraAccepted, getAllDiasHorasExtraDeclined, getAllDiasHorasExtraDeclinedResponsavel, getAllDiasHorasExtraAcceptedResponsavel, getAllDiasHorasExtraResponsavel, acceptMultipleDiasHorasExtra, declineMultipleDiasHorasExtra } from '@/features/allDias/allDiasSlice';
 import Wrapper from '@/styles/GerirHorasExtra';
 import FormRowListaHorasExtra from '@/components/forms/FormRowListaHorasExtra';
@@ -17,6 +18,7 @@ import GerirHorasFerias from '@/components/ferias/GerirHorasFerias';
 const GerirHorasExtra = () => {
 
   const dispatch = useDispatch();
+  const { t } = useTranslation('extra');
 
   const [listaHorasExtra, setListaHorasExtra] = useState([]);
   const [listaPagamentos, setListaPagamentos] = useState([]);
@@ -188,7 +190,7 @@ const GerirHorasExtra = () => {
           const dia = data.getDate();
           const mes = data.getMonth() + 1;
           const ano = data.getFullYear();
-          const confirmed = window.confirm("Tem a certeza que deseja recusar o dia: " + dia + "/" + mes + "/" + ano + " a " + name + "?");
+          const confirmed = window.confirm(t('confirm.declineDay', { date: `${dia}/${mes}/${ano}`, name }));
           if (confirmed) {
             const result = await dispatch(declineDiasHorasExtra(value[0]));
             if (!result.error) {
@@ -196,7 +198,7 @@ const GerirHorasExtra = () => {
             }
           }
         } else {
-          const confirmed = window.confirm("Tem a certeza que deseja recusar o pedido a " + name + "?");
+          const confirmed = window.confirm(t('confirm.declineRequest', { name }));
           if (confirmed) {
             const result = await dispatch(declineMultipleDiasHorasExtra(value));
             if (!result.error) {
@@ -211,7 +213,7 @@ const GerirHorasExtra = () => {
         const mes = data.getMonth() + 1;
         const ano = data.getFullYear();
 
-        const confirmed = window.confirm("Tem a certeza que deseja recusar o dia: " + dia + "/" + mes + "/" + ano + " a " + name + "?");
+        const confirmed = window.confirm(t('confirm.declineDay', { date: `${dia}/${mes}/${ano}`, name }));
         if (confirmed) {
           const result = await dispatch(declineDiasHorasExtra(value));
           if (!result.error) {
@@ -221,7 +223,7 @@ const GerirHorasExtra = () => {
       }
 
     } catch {
-      return "Ocorreu um erro ao recusar o Dia.";
+      return t('errors.declineDay');
     }
   };
 
@@ -375,17 +377,17 @@ const GerirHorasExtra = () => {
             <>
               <div className='col-md-6'>
                 <AppButton type="button" fullWidth variant="primary">
-                  Gestão de Pedidos
+                  {t('sections.requestManagement')}
                 </AppButton>
               </div>
               <div className='col-md-6'>
                 <AppButton type="button" fullWidth variant="secondary"
                   onClick={() => setGerirFerias(true)}>
-                  Gestão de Férias
+                  {t('sections.vacationManagement')}
                 </AppButton>
               </div>
             </>}
-          {user?.user?.tipo === 6 && <h1>Gestão de Horas Extra Responsável</h1>}
+          {user?.user?.tipo === 6 && <h1>{t('title.managerOvertime')}</h1>}
         </div>
         <div className="col-md-12 mb-4 text-center ">
           <div className="row">
@@ -394,7 +396,7 @@ const GerirHorasExtra = () => {
                 variant={verificaAlterado === 0 ? 'primary' : 'secondary'}
                 disabled={isLoading || isLoadingPagamentos}
                 onClick={() => handleChangeButtonClicked(0)}>
-                Pedidos por Aceitar
+                {t('tabs.pending')}
               </AppButton>
             </div>
             <div className={isFullManager ? "col-md-3" : "col-md-4"}>
@@ -402,7 +404,7 @@ const GerirHorasExtra = () => {
                 variant={verificaAlterado === 1 ? 'primary' : 'secondary'}
                 disabled={isLoading || isLoadingPagamentos}
                 onClick={() => handleChangeButtonClicked(1)}>
-                Pedidos Aceites
+                {t('tabs.accepted')}
               </AppButton>
             </div>
             <div className={isFullManager ? "col-md-3" : "col-md-4"}>
@@ -410,7 +412,7 @@ const GerirHorasExtra = () => {
                 variant={verificaAlterado === 2 ? 'primary' : 'secondary'}
                 disabled={isLoading || isLoadingPagamentos}
                 onClick={() => handleChangeButtonClicked(2)}>
-                Pedidos Recusados
+                {t('tabs.declined')}
               </AppButton>
             </div>
             {isFullManager &&
@@ -419,7 +421,7 @@ const GerirHorasExtra = () => {
                   variant={verificaAlterado === 3 ? 'primary' : 'secondary'}
                   disabled={isLoading || isLoadingPagamentos}
                   onClick={() => handleChangeButtonClicked(3)}>
-                  Horas Extra Pagas
+                  {t('tabs.paidOvertime')}
                 </AppButton>
               </div>
             }
@@ -439,7 +441,7 @@ const GerirHorasExtra = () => {
                           variant={(verificaTipo === 2 || verificaTipo === 6) ? 'primary' : 'secondary'}
                           disabled={isLoading || isLoadingPagamentos}
                           onClick={() => handleChangeTipo(2)}>
-                          Horas Extra
+                          {t('filters.overtime')}
                         </AppButton>
                       </div>
                       <div className={`${verificaAlterado === 0 ? 'col-md-4' : 'col-md-3'}`}>
@@ -447,7 +449,7 @@ const GerirHorasExtra = () => {
                           variant={(verificaTipo === 3 || verificaTipo === 7) ? 'primary' : 'secondary'}
                           disabled={isLoading || isLoadingPagamentos}
                           onClick={() => handleChangeTipo(3)}>
-                          Compensação de Horas Extra
+                          {t('filters.overtimeCompensation')}
                         </AppButton>
                       </div>
                       <div className={`${verificaAlterado === 0 ? 'col-md-4' : 'col-md-3'}`}>
@@ -455,7 +457,7 @@ const GerirHorasExtra = () => {
                           variant={(verificaTipo === 4 || verificaTipo === 7) ? 'primary' : 'secondary'}
                           disabled={isLoading || isLoadingPagamentos}
                           onClick={() => handleChangeTipo(4)}>
-                          Ferias
+                          {t('filters.vacation')}
                         </AppButton>
                       </div>
                       {(verificaAlterado !== 0) &&
@@ -464,7 +466,7 @@ const GerirHorasExtra = () => {
                             variant={(verificaTipo === 1 || verificaTipo === 5) ? 'primary' : 'secondary'}
                             disabled={isLoading || isLoadingPagamentos}
                             onClick={() => handleChangeTipo(1)}>
-                            Todos os pedidos
+                            {t('filters.allRequests')}
                           </AppButton>
                         </div>
                       }
@@ -520,42 +522,42 @@ const GerirHorasExtra = () => {
                       {verificaAlterado === 0 ? (
                         <div>
                           {(verificaTipo === 1 || verificaTipo === 5) ? (
-                            <EmptyState title="Sem Pedidos de Horas Extra" />
+                            <EmptyState title={t('empty.noOvertimeRequests')} />
                           ) : (verificaTipo === 2 || verificaTipo === 6) ? (
-                            <EmptyState title="Sem Pedidos de Horas Extra Realizadas" />
+                            <EmptyState title={t('empty.noWorkedOvertimeRequests')} />
                           ) : (verificaTipo === 3 || verificaTipo === 7) ?
-                            <EmptyState title="Sem Pedidos de Compensação de Horas Extra" />
+                            <EmptyState title={t('empty.noOvertimeCompensationRequests')} />
                             : (verificaTipo === 4) &&
-                            <EmptyState title="Sem Pedidos de Férias" />
+                            <EmptyState title={t('empty.noVacationRequests')} />
                           }
                         </div>
                       ) : verificaAlterado === 1 ? (
                         <div>
                           {(verificaTipo === 1) ? (
-                            <EmptyState title="Sem Pedidos de Horas Extra Aceites" />
+                            <EmptyState title={t('empty.noAcceptedOvertimeRequests')} />
                           ) : (verificaTipo === 2) ? (
-                            <EmptyState title="Sem Pedidos de Horas Extra Realizadas Aceites" />
+                            <EmptyState title={t('empty.noAcceptedWorkedOvertimeRequests')} />
                           ) : (verificaTipo === 3) ?
-                            <EmptyState title="Sem Pedidos de Compensação de Horas Extra Aceites" />
+                            <EmptyState title={t('empty.noAcceptedOvertimeCompensationRequests')} />
                             : (verificaTipo === 4) &&
-                            <EmptyState title="Sem Pedidos de Férias Aceites" />
+                            <EmptyState title={t('empty.noAcceptedVacationRequests')} />
                           }
                         </div>
                       ) : verificaAlterado === 2 ? (
                         <div>
                           {(verificaTipo === 1) ? (
-                            <EmptyState title="Sem Pedidos de Horas Extra Recusados" />
+                            <EmptyState title={t('empty.noDeclinedOvertimeRequests')} />
                           ) : (verificaTipo === 2) ? (
-                            <EmptyState title="Sem Pedidos de Horas Extra Realizadas Recusados" />
+                            <EmptyState title={t('empty.noDeclinedWorkedOvertimeRequests')} />
                           ) : (verificaTipo === 3) ?
-                            <EmptyState title="Sem Pedidos de Compensação de Horas Extra Recusados" />
+                            <EmptyState title={t('empty.noDeclinedOvertimeCompensationRequests')} />
                             : (verificaTipo === 4) &&
-                            <EmptyState title="Sem Pedidos de Férias Recusados" />
+                            <EmptyState title={t('empty.noDeclinedVacationRequests')} />
                           }
                         </div>
                       ) : (
                         <div>
-                          <EmptyState title="Sem Horas Extra Pagas" />
+                          <EmptyState title={t('empty.noPaidOvertime')} />
                         </div>
                       )}
 

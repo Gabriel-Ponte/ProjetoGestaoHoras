@@ -1,42 +1,42 @@
 import { useState, useCallback } from 'react';
-
-import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
+import { useTranslation } from 'react-i18next';
 import FormRow from '@/components/forms/FormRow';
 import { toast } from 'react-toastify';
-import PropTypes from 'prop-types'; 
+import PropTypes from 'prop-types';
+import { AppModal, AppButton } from '@/components/ui';
 
-const AddHorasDomingo = ({ handleDateChoosen,handleClose, state, checkDate,dataReceived, feriadosPortugal}) => {
-    const verificaData = (dataChoosen ,type)=>{
+const AddHorasDomingo = ({ handleDateChoosen, handleClose, state, checkDate, dataReceived, feriadosPortugal }) => {
+    const { t } = useTranslation('horas');
+
+    const verificaData = (dataChoosen, type) => {
         const dayOfWeek = dataChoosen.getDay();
         const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-        if(feriadosPortugal(dataChoosen)){
-            if(type === "0"){
-                toast.error('Data escolhida não permitida! Feriado!');
+        if (feriadosPortugal(dataChoosen)) {
+            if (type === "0") {
+                toast.error(t('toast.dateNotAllowedHoliday'));
             }
             return false;
-        }else if(isWeekend){
-            if(type === "0"){
-                toast.error("Data escolhida não permitida! Fim de Semana")
+        } else if (isWeekend) {
+            if (type === "0") {
+                toast.error(t('toast.dateNotAllowedWeekend'))
             }
             return false;
-      } else if(checkDate(dataChoosen)){
-            if(type === "0"){
-                toast.error("Data escolhida já possui horas!")
+        } else if (checkDate(dataChoosen)) {
+            if (type === "0") {
+                toast.error(t('toast.dateAlreadyHasHours'))
             }
             return false;
-      } else{
-        return true;
-      }
-    
+        } else {
+            return true;
+        }
+
     }
 
-    
+
     const incrementDateByOneDay = (date) => {
         const newDate = new Date(date);
         newDate.setDate(newDate.getDate() + 1);
-        while(!verificaData(newDate, "1")){
+        while (!verificaData(newDate, "1")) {
             newDate.setDate(newDate.getDate() + 1);
         }
         return newDate;
@@ -52,112 +52,77 @@ const AddHorasDomingo = ({ handleDateChoosen,handleClose, state, checkDate,dataR
     };
 
 
+    const verificaDia = useCallback((e) => {
+        const { value } = e.target;
 
-    const style = {
-        position: 'absolute',
-        zIndex: 9998,
-        left: '0%',
-        width: '100%',
-        height: '100%',
-        textAlign: "center",
-        alignItems: 'center',  
-        justifyContent: 'center',
-        bottom: '0',
-        display:'block',
-    };
+        const newDateR = new Date(dataReceived);
+        const DataChoosen = new Date(value);
 
-    const styleBox = {
-        position: 'relative',
-        zIndex: 9998,
-        top: '30rem',
-        height: '50%',
-        left: '0%',
-        transform: 'translateY(-13rem)', 
-        width: '100%',
-        backgroundColor: "#FFFFFF",
-        padding: 10,
-        margin:0,
-        textAlign: "center",
-    };
+        const itemDay = DataChoosen.getDate();
+        const itemMonth = DataChoosen.getMonth();
+        const itemYear = DataChoosen.getFullYear();
 
-const verificaDia = useCallback((e) => {
-    const { value } = e.target; 
+        const currentDay = newDateR.getDate();
+        const currentMonth = newDateR.getMonth();
+        const currentYear = newDateR.getFullYear();
 
-    const newDateR = new Date(dataReceived);
-    const DataChoosen = new Date(value);
+        if (
+            currentYear < itemYear ||
+            (currentYear === itemYear && currentMonth < itemMonth) || (currentYear === itemYear && currentMonth === itemMonth && currentDay < itemDay)
+        ) {
 
-    const itemDay = DataChoosen.getDate();
-    const itemMonth = DataChoosen.getMonth();
-    const itemYear = DataChoosen.getFullYear();
+            if (verificaData(DataChoosen, "0")) {
+                setData(value)
+            }
 
-    const currentDay = newDateR.getDate();
-    const currentMonth = newDateR.getMonth();
-    const currentYear = newDateR.getFullYear();
-
-    if (
-        currentYear < itemYear ||
-        (currentYear === itemYear  && currentMonth  < itemMonth) || (currentYear === itemYear && currentMonth === itemMonth  && currentDay < itemDay)
-      ) {
-
-        if(verificaData(DataChoosen ,"0")){
-            setData(value)
+        } else {
+            toast.error(t('toast.dateMustBeAfter'))
         }
 
-        } else{
-            toast.error("Data escolhida não permitida! \n Por favor escolha um dia posterior ao Inserido!")
-        }
-     
     }, []);
 
 
     return (
-        <>
-            <Modal sx={style} open={open} aria-describedby="modal-modal-description">
-                <Box sx={styleBox}>
-                    <Typography className="mb-5" id="modal-modal-title" variant="h4" component="h2">
-                        Escolha um dia para Compensar o Domingo
-                    </Typography>
-                    <div id="modal-modal-description" >
-                    <FormRow
-                        type="date"
-                        className="dataAddHoras form__field__date"
-                        classNameLabel="form-field-label"
-                        id="Dia Retirar"
-                        name="Compensar no dia: "
-                        placeholder="Dia retirar Horas"
-                        value={new Date(data).toLocaleDateString('en-CA')}
-                        handleChange={verificaDia}
-                    />
-                </div>
-
-         
-                    <div className='row col-md-12'>
-                    <div className='col-md-6 text-center' >
-                    <button  type="button" className="btn btn-outline-success"  onClick={handleConfirmButton} >
-                        Confirmar
-                    </button>
-                    </div>
-                    <div className='col-md-6 text-center'>
- 
-                    <button  type="button" className="btn btn-outline-danger" onClick={handleClose} >
-                        Fechar
-                    </button>
-                    </div>
-                    </div>
-                </Box>
-            </Modal>
-        </>
+        <AppModal
+            open={open}
+            onClose={handleClose}
+            title={t('titles.chooseSundayCompensationDay')}
+            footer={
+                <>
+                    <AppButton variant="danger" onClick={handleClose}>
+                        {t('actions.close')}
+                    </AppButton>
+                    <AppButton variant="success" onClick={handleConfirmButton}>
+                        {t('actions.confirm')}
+                    </AppButton>
+                </>
+            }
+        >
+            <div id="modal-modal-description">
+                <FormRow
+                    type="date"
+                    className="dataAddHoras form__field__date"
+                    classNameLabel="form-field-label"
+                    id="Dia Retirar"
+                    name="Compensar no dia: "
+                    labelText={t('labels.compensateOnDay')}
+                    placeholder="Dia retirar Horas"
+                    value={new Date(data).toLocaleDateString('en-CA')}
+                    handleChange={verificaDia}
+                />
+            </div>
+        </AppModal>
     );
 };
 
 AddHorasDomingo.propTypes = {
     handleDateChoosen: PropTypes.func.isRequired,
-    handleClose: PropTypes.func.isRequired, 
-    state: PropTypes.bool.isRequired, 
+    handleClose: PropTypes.func.isRequired,
+    state: PropTypes.bool.isRequired,
     checkDate: PropTypes.func.isRequired,
-    dataReceived: PropTypes.string.isRequired, 
+    dataReceived: PropTypes.string.isRequired,
     feriadosPortugal: PropTypes.func.isRequired,
 
-  }
+}
 
 export default AddHorasDomingo;

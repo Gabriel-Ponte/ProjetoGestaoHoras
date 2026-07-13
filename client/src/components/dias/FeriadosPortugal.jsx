@@ -1,4 +1,12 @@
 import { useMemo } from 'react';
+import i18n from '@/i18n';
+
+// This module exports a hook plus a plain function (`getFeriadosPortugalDate`) that is
+// called from render code outside of a component's hook scope, so it cannot use
+// `useTranslation`. Holidays are therefore stored with a stable `nameKey` and translated
+// on demand through the shared i18n instance, which keeps the returned value a ready-to-
+// display string for every existing caller.
+const holidayName = (nameKey) => i18n.t(`dias:holidays.${nameKey}`);
 
 
 const useFeriadosPortugal = () => {
@@ -34,25 +42,25 @@ const getHolidaysForYear = (year) => {
 
   for (let i = year - 5; i < year + 5; i++) {
     holidays.push(
-      { name: "Ano Novo", date: new Date(i, 0, 1) },
-      { name: "Dia da Liberdade", date: new Date(i, 3, 25) },
-      { name: "Dia do Trabalhador", date: new Date(i, 4, 1) },
-      { name: "Dia de Portugal", date: new Date(i, 5, 10) },
-      { name: "Assunção de Nossa Senhora", date: new Date(i, 7, 15) },
-      { name: "Ferias Coletivas", date: new Date(2024, 7, 16) },
-      { name: "Implantação da República", date: new Date(i, 9, 5) },
-      { name: "Dia de Todos os Santos", date: new Date(i, 10, 1) },
-      { name: "Restauração da Independência", date: new Date(i, 11, 1) },
-      { name: "Dia da Imaculada Conceição", date: new Date(i, 11, 8) },
-      { name: "Feriado Municipal", date: new Date(i, 2, 12) },
-      { name: "Ferias Coletivas", date: new Date(i, 11, 24) },
-      { name: "Natal", date: new Date(i, 11, 25) },
-      { name: "Ferias Coletivas", date: new Date(i, 11, 26) },
-      { name: "Carnaval", date: calculateEaster(i, "Carnaval") },
-      { name: "Sexta-feira Santa", date: calculateEaster(i, "SextaFeiraSanta") },
-      { name: "Páscoa", date: calculateEaster(i, "DomingoPascoa") },
-      { name: "Segunda-feira de Páscoa", date: new Date(2023, 3, 10) }, //{ name: "Segunda-feira de Páscoa", date: calculateEaster(i, "SegundaPascoa") },
-      { name: "Corpo de Deus", date: calculateCorpusChristi(i) },
+      { nameKey: "anoNovo", date: new Date(i, 0, 1) },
+      { nameKey: "diaLiberdade", date: new Date(i, 3, 25) },
+      { nameKey: "diaTrabalhador", date: new Date(i, 4, 1) },
+      { nameKey: "diaPortugal", date: new Date(i, 5, 10) },
+      { nameKey: "assuncaoNossaSenhora", date: new Date(i, 7, 15) },
+      { nameKey: "feriasColetivas", date: new Date(2024, 7, 16) },
+      { nameKey: "implantacaoRepublica", date: new Date(i, 9, 5) },
+      { nameKey: "diaTodosSantos", date: new Date(i, 10, 1) },
+      { nameKey: "restauracaoIndependencia", date: new Date(i, 11, 1) },
+      { nameKey: "diaImaculadaConceicao", date: new Date(i, 11, 8) },
+      { nameKey: "feriadoMunicipal", date: new Date(i, 2, 12) },
+      { nameKey: "feriasColetivas", date: new Date(i, 11, 24) },
+      { nameKey: "natal", date: new Date(i, 11, 25) },
+      { nameKey: "feriasColetivas", date: new Date(i, 11, 26) },
+      { nameKey: "carnaval", date: calculateEaster(i, "Carnaval") },
+      { nameKey: "sextaFeiraSanta", date: calculateEaster(i, "SextaFeiraSanta") },
+      { nameKey: "pascoa", date: calculateEaster(i, "DomingoPascoa") },
+      { nameKey: "segundaFeiraPascoa", date: new Date(2023, 3, 10) }, //{ nameKey: "segundaFeiraPascoa", date: calculateEaster(i, "SegundaPascoa") },
+      { nameKey: "corpoDeus", date: calculateCorpusChristi(i) },
       );
   }
 
@@ -67,27 +75,27 @@ export function getFeriadosPortugalDate(date) {
 
   for (let i = date.getFullYear() - 5; i < date.getFullYear() + 5; i++) {
     feriados.push(
-      { name: "Ano Novo", date: new Date(i, 0, 1) },
-      { name: "Dia da Liberdade", date: new Date(i, 3, 25) },
-      { name: "Dia do Trabalhador", date: new Date(i, 4, 1) },
-      { name: "Dia de Portugal", date: new Date(i, 5, 10) },
-      { name: "Assunção de Nossa Senhora", date: new Date(i, 7, 15) },
-      { name: "Ferias Coletivas", date: new Date(2024, 7, 16) },
-      { name: "Implantação da República", date: new Date(i, 9, 5) },
-      { name: "Dia de Todos os Santos", date: new Date(i, 10, 1) },
-      { name: "Restauração da Independência", date: new Date(i, 11, 1) },
-      { name: "Dia da Imaculada Conceição", date: new Date(i, 11, 8) },
-      { name: "Feriado Municipal", date: new Date(i, 2, 12) },
-      { name: "Ferias Coletivas", date: new Date(2024, 11, 24) },
-      { name: "Natal", date: new Date(i, 11, 25) },
-      { name: "Ferias Coletivas", date: new Date(2024, 11, 26) },
-      { name: "Ferias Coletivas", date: new Date(2023, 11, 26) },
-      { name: "Ferias Coletivas", date: new Date(2024, 11, 31) },
-      { name: "Carnaval", date: calculateEaster(i, "Carnaval") },
-      { name: "Sexta-feira Santa", date: calculateEaster(i, "SextaFeiraSanta") },
-      { name: "Páscoa", date: calculateEaster(i, "DomingoPascoa") },
-      { name: "Segunda-feira de Páscoa", date: new Date(2023, 3, 10) }, //{ name: "Segunda-feira de Páscoa", date: calculateEaster(i, "SegundaPascoa") },
-      { name: "Corpo de Deus", date: calculateCorpusChristi(i) },
+      { nameKey: "anoNovo", date: new Date(i, 0, 1) },
+      { nameKey: "diaLiberdade", date: new Date(i, 3, 25) },
+      { nameKey: "diaTrabalhador", date: new Date(i, 4, 1) },
+      { nameKey: "diaPortugal", date: new Date(i, 5, 10) },
+      { nameKey: "assuncaoNossaSenhora", date: new Date(i, 7, 15) },
+      { nameKey: "feriasColetivas", date: new Date(2024, 7, 16) },
+      { nameKey: "implantacaoRepublica", date: new Date(i, 9, 5) },
+      { nameKey: "diaTodosSantos", date: new Date(i, 10, 1) },
+      { nameKey: "restauracaoIndependencia", date: new Date(i, 11, 1) },
+      { nameKey: "diaImaculadaConceicao", date: new Date(i, 11, 8) },
+      { nameKey: "feriadoMunicipal", date: new Date(i, 2, 12) },
+      { nameKey: "feriasColetivas", date: new Date(2024, 11, 24) },
+      { nameKey: "natal", date: new Date(i, 11, 25) },
+      { nameKey: "feriasColetivas", date: new Date(2024, 11, 26) },
+      { nameKey: "feriasColetivas", date: new Date(2023, 11, 26) },
+      { nameKey: "feriasColetivas", date: new Date(2024, 11, 31) },
+      { nameKey: "carnaval", date: calculateEaster(i, "Carnaval") },
+      { nameKey: "sextaFeiraSanta", date: calculateEaster(i, "SextaFeiraSanta") },
+      { nameKey: "pascoa", date: calculateEaster(i, "DomingoPascoa") },
+      { nameKey: "segundaFeiraPascoa", date: new Date(2023, 3, 10) }, //{ nameKey: "segundaFeiraPascoa", date: calculateEaster(i, "SegundaPascoa") },
+      { nameKey: "corpoDeus", date: calculateCorpusChristi(i) },
     );
   }
 
@@ -97,7 +105,7 @@ export function getFeriadosPortugalDate(date) {
       date.getMonth() === feriado.date.getMonth() &&
       date.getFullYear() === feriado.date.getFullYear()
     ) {
-      return feriado?.name;
+      return feriado?.nameKey ? holidayName(feriado.nameKey) : false;
     }
   }
   return false;

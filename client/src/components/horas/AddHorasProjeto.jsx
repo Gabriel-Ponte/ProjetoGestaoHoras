@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import Wrapper from '@/styles/addHorasProjeto';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAllProjetos, handleChange } from '@/features/allProjetos/allProjetosSlice';
@@ -18,7 +19,8 @@ const initialState = {
 };
 
 const ListaProjetos = () => {
- 
+
+    const { t } = useTranslation('horas');
     const [values, setValues] = useState(initialState);
     const { projeto, isLoading } = useSelector((store) => store.projeto);
     const { user } = useSelector((store) => store.utilizador);
@@ -97,10 +99,10 @@ const verificaDia = useCallback((e) => {
     const handleDia = async (e) => {
         e.preventDefault();
         if (horasT > 8) {
-            toast.error('Valor inserido excede as 8 Horas diarias!');
+            toast.error(t('toast.exceeds8Hours'));
         }
         if (horasT <= 0) {
-            toast.error('Valor inserido invalido!');
+            toast.error(t('toast.invalidValue'));
             return;
         }
 
@@ -173,7 +175,7 @@ const verificaDia = useCallback((e) => {
         }
 
         if (newHorasT > 24) {
-            toast.error('Valor inserido excede as 24 Horas!');
+            toast.error(t('toast.exceeds24Hours'));
             setValues({ ...values, [projectId]: 0 });
             //setHorasT(horasT - (showProjeto[projectId + tipoTrabalho] || 0));
             return;
@@ -253,7 +255,7 @@ const verificaDia = useCallback((e) => {
             <div className="list-group mx-1 w-auto">
                                 <div className="row md-3 ">
                     <div className="col-md-12">
-                        <h1>{verificaDiaCalled ? 'Editar Dia' : 'Adicionar Dia'}</h1>
+                        <h1>{verificaDiaCalled ? t('titles.editDay') : t('titles.addDay')}</h1>
 
 
                         <FormRow
@@ -263,6 +265,7 @@ const verificaDia = useCallback((e) => {
                             classNameInputDate="form__field__date"
                             id="Dia"
                             name="Data"
+                            labelText={t('labels.date')}
                             placeholder="Dia Adicionar Horas"
                             value={values.Data ? new Date(values.Data).toLocaleDateString('en-CA') : ''}
                             handleChange={verificaDia}
@@ -293,7 +296,7 @@ const verificaDia = useCallback((e) => {
       
                         <div className="card text-center">
                             <div className="card-body">
-                                <h5 className="card-title">Total de horas diárias: {horasT} horas</h5>
+                                <h5 className="card-title">{t('summary.totalDailyHours', { value: horasT })}</h5>
                             </div>
 
                             <div className="card-body">
@@ -306,7 +309,7 @@ const verificaDia = useCallback((e) => {
                                     disabled={isLoading}
                                     onClick={(e) => { handleDia(e) }}
                                 >
-                                    {verificaDiaCalled ? 'Editar Dia' : 'Adicionar Dia'}
+                                    {verificaDiaCalled ? t('actions.editDay') : t('actions.addDay')}
                                 </AppButton>
                             </div>
                         </div>

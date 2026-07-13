@@ -1,0 +1,43 @@
+{
+  "state": {
+    "loading": "Cargando…"
+  },
+  "add": {
+    "title": "Crear Usuario",
+    "subtitle": "Rellene el formulario para crear una cuenta.",
+    "submit": "Añadir",
+    "submitting": "Creando…"
+  },
+  "edit": {
+    "title": "Editar Perfil",
+    "submit": "Actualizar"
+  },
+  "manage": {
+    "title": "Gestionar Usuarios",
+    "subtitle": "Perfiles y permisos de los usuarios",
+    "loading": "Cargando usuarios…",
+    "typePlaceholder": "Elija un tipo",
+    "change": "Actualizar"
+  },
+  "form": {
+    "name": "Nombre",
+    "userType": "Tipo de Usuario",
+    "responsible": "Responsable",
+    "login": "Usuario",
+    "password": "Contraseña",
+    "email": "Correo electrónico",
+    "emailPlaceholder": "nombre@empresa.es",
+    "profilePhoto": "Foto de Perfil"
+  },
+  "photo": {
+    "title": "Insertar Foto",
+    "choose": "Elegir",
+    "alt": "Imagen de perfil",
+    "save": "Guardar",
+    "close": "Salir"
+  },
+  "toast": {
+    "requiredFields": "¡Por favor, rellene todos los campos obligatorios!",
+    "passwordTooShort": "¡La contraseña debe tener al menos 6 caracteres!"
+  }
+}

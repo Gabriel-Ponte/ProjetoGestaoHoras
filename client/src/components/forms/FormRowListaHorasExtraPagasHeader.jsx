@@ -2,10 +2,12 @@ import { AiOutlineArrowDown } from 'react-icons/ai';
 import { AiOutlineArrowUp } from 'react-icons/ai';
 import { BsArrowLeftShort } from 'react-icons/bs';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import Wrapper from '@/styles/ListaProjetosHeader';
-import PropTypes from 'prop-types'; 
+import PropTypes from 'prop-types';
 
 const FormRowListaHorasExtraPagasHeader = ({ sortValue, tipoHoras, handleChange, pagas }) => {
+    const { t } = useTranslation('forms');
 
     const sort =()=>{
         if(pagas === 3){
@@ -157,7 +159,7 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, tipoHoras, handleChange,
                                                 onClick={() => toggleSort('UtilizadorResponsavel')}
                                             >
 
-                                                Responsavel{' '}
+                                                {t('header.responsavel')}{' '}
                                                 {verificaActivo === "-UtilizadorResponsavel" ?
                                                     <AiOutlineArrowUp /> : (verificaActivo === "UtilizadorResponsavel" ?
                                                         <AiOutlineArrowDown /> : <BsArrowLeftShort />
@@ -173,7 +175,7 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, tipoHoras, handleChange,
                                                 onClick={() => toggleSort('Utilizador')}
                                             >
 
-                                                Utilizador{' '}
+                                                {t('header.utilizador')}{' '}
                                                 {verificaActivo === "-Utilizador" ?
                                                     <AiOutlineArrowUp /> : (verificaActivo === "Utilizador" ?
                                                         <AiOutlineArrowDown /> : <BsArrowLeftShort />
@@ -189,7 +191,7 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, tipoHoras, handleChange,
                                                 onClick={() => toggleSort('Mes')}
                                             >
 
-                                                Mes{' '}
+                                                {t('header.mes')}{' '}
                                                 {verificaActivo === "-Mes" ?
                                                     <AiOutlineArrowUp /> : (verificaActivo === "Mes" ?
                                                         <AiOutlineArrowDown /> : <BsArrowLeftShort />
@@ -205,7 +207,7 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, tipoHoras, handleChange,
                                                 onClick={() => toggleSort('Horas')}
                                             >
 
-                                                Numero Horas{' '}
+                                                {t('header.numeroHoras')}{' '}
                                                 {verificaActivo === "-Horas" ?
                                                     <AiOutlineArrowUp /> : (verificaActivo === "Horas" ?
                                                         <AiOutlineArrowDown /> : <BsArrowLeftShort />
@@ -226,7 +228,7 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, tipoHoras, handleChange,
                                                 onClick={() => toggleSort('Utilizador')}
                                             >
 
-                                                Utilizador{' '}
+                                                {t('header.utilizador')}{' '}
                                                 {verificaActivo === "-Utilizador" ?
                                                     <AiOutlineArrowUp /> : (verificaActivo === "Utilizador" ?
                                                         <AiOutlineArrowDown /> : <BsArrowLeftShort />
@@ -242,7 +244,7 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, tipoHoras, handleChange,
                                                 onClick={() => toggleSort('Data')}
                                             >
 
-                                                Data{' '}
+                                                {t('header.data')}{' '}
                                                 {verificaActivo === "-Data" ?
                                                     <AiOutlineArrowUp /> : (verificaActivo === "Data" ?
                                                         <AiOutlineArrowDown /> : <BsArrowLeftShort />
@@ -258,7 +260,7 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, tipoHoras, handleChange,
                                                 onClick={() => toggleSort('Horas')}
                                             >
 
-                                                Horas{' '}
+                                                {t('header.horas')}{' '}
                                                 {verificaActivo === "-Horas" ?
                                                     <AiOutlineArrowUp /> : (verificaActivo === "Horas" ?
                                                         <AiOutlineArrowDown /> : <BsArrowLeftShort />
@@ -278,7 +280,7 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, tipoHoras, handleChange,
 
                                             >
 
-                                                Numero Dias{' '}
+                                                {t('header.numeroDias')}{' '}
                                             </button>
 
                                             )
@@ -290,7 +292,7 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, tipoHoras, handleChange,
 
                                             >
 
-                                                Horas Extra{' '}
+                                                {t('header.horasExtra')}{' '}
                                             </button>
                                         )}
   
@@ -305,7 +307,7 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, tipoHoras, handleChange,
                                                 className="btn buttonHeader"
                                                 onClick={() => toggleSort('nHoras')}
                                             >
-                                                Tipo{' '}
+                                                {t('header.tipo')}{' '}
                                             </button>
                                         </div>
 
@@ -318,7 +320,7 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, tipoHoras, handleChange,
    
                                             >
 
-                                                Trabalho{' '}
+                                                {t('header.trabalho')}{' '}
                                                 {verificaActivo === "-Tipo" ?   <AiOutlineArrowUp /> : (verificaActivo === "Tipo" ?     <AiOutlineArrowDown /> : <BsArrowLeftShort /> )
                                                 }
                                             </button>
@@ -332,7 +334,7 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, tipoHoras, handleChange,
                                                 className="btn buttonHeader"
       
                                             >
-                                                Trabalho{' '}
+                                                {t('header.trabalho')}{' '}
                                         </button>
                                          </div>) : (tipoHoras === 4) ? (
                                         <div className="col-md-1 themed-grid-col">
@@ -342,7 +344,7 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, tipoHoras, handleChange,
                                                 className="btn buttonHeader"
       
                                             >
-                                                Tipo{' '}
+                                                {t('header.tipo')}{' '}
                                         </button>
                                          </div>)  :(
                                             <>
@@ -353,7 +355,7 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, tipoHoras, handleChange,
                                                     className="btn buttonHeader"
                                                     onClick={() => toggleSort('nHoras')}
                                                 >
-                                                    Tipo{' '}
+                                                    {t('header.tipo')}{' '}
                                                 </button>
                                             </div>
 
@@ -365,7 +367,7 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, tipoHoras, handleChange,
         
                                                 >
 
-                                                    Trabalho{' '}
+                                                    {t('header.trabalho')}{' '}
                                                 </button>
                                             </div>
                                             </>

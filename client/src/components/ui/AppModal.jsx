@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { IoClose } from 'react-icons/io5';
+import { useTranslation } from 'react-i18next';
 
 /**
  * AppModal — accessible dialog rendered in a portal. No MUI needed.
@@ -103,6 +104,7 @@ const AppModal = ({
   closeOnEsc = true,
   showClose = true,
 }) => {
+  const { t } = useTranslation('common');
   const dialogRef = useRef(null);
   const titleId = useRef(`app-modal-title-${(titleSeq += 1)}`);
 
@@ -145,7 +147,7 @@ const AppModal = ({
           <div className="modal-head">
             {title ? <h2 id={titleId.current} className="modal-title">{title}</h2> : <span />}
             {showClose && (
-              <button type="button" className="modal-close" onClick={onClose} aria-label="Fechar">
+              <button type="button" className="modal-close" onClick={onClose} aria-label={t('actions.close')}>
                 <IoClose />
               </button>
             )}

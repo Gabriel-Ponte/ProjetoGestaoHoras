@@ -1,11 +1,13 @@
 import Wrapper from '@/styles/FormRowListaTipoTrabalho';
 import { useCallback, useEffect, useState } from 'react';
-import PropTypes from 'prop-types'; 
+import { useTranslation } from 'react-i18next';
+import PropTypes from 'prop-types';
 
 //import { useSelector, useDispatch } from 'react-redux';
 //import LoadingSmaller from '@/components/common/LoadingSmaller';
 
 const FormRowListaHorasExtra = ({ type, value, tipoHoras, utilizadores, changed }) => {
+  const { t } = useTranslation('forms');
   const id = `myTextarea${type}${value}`;
   const [initialDate, setInitialDate] = useState([]);
   const [initialName, setName] = useState([]);
@@ -381,14 +383,16 @@ const FormRowListaHorasExtra = ({ type, value, tipoHoras, utilizadores, changed 
         </div>
         <div className="col-md-2 text-center" >
           {tipo === "Férias"  ? 
-          (<p style={{ backgroundColor: compensacao ? "#E8FCCF" : ferias ? "#B7B5E4" : "" }}>{horasExtra}</p>)
+          (<p style={{ backgroundColor: compensacao ? "var(--status-compensation-soft)" : ferias ? "var(--status-vacation)" : "" }}>{horasExtra}</p>)
            :(
-          <p style={{ backgroundColor: compensacao ? "#E8FCCF" : ferias ? "#B7B5E4" : "" }}>{convertToMinutes(horasExtra)}</p>
+          <p style={{ backgroundColor: compensacao ? "var(--status-compensation-soft)" : ferias ? "var(--status-vacation)" : "" }}>{convertToMinutes(horasExtra)}</p>
         )}
         </div>
         {(tipoHoras !== 3) && (
           <div className="col-md-1 text-center" >
-            <p>{tipo}</p>
+            {/* `tipo` stays raw in state (it is compared against "Férias" below and above);
+                only the rendered label is translated. */}
+            <p>{tipo ? t(`horasExtra.tipos.${tipo}`, { defaultValue: tipo }) : tipo}</p>
           </div>
         )}
         {tipo !== "Férias" && 
@@ -432,7 +436,7 @@ const FormRowListaHorasExtra = ({ type, value, tipoHoras, utilizadores, changed 
             </div>
             <div className="col-md-2 text-center"></div>
             <div className="col-md-2 text-start" >
-              <p>Compensação Domingo </p>
+              <p>{t('horasExtra.compensacaoDomingo')} </p>
             </div>
 
           </div>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import Wrapper from '@/styles/VisualizarHorasProjetos';
 import { useSelector, useDispatch } from 'react-redux';
 import Loading from '@/components/common/Loading';
@@ -13,6 +14,7 @@ import { EmptyState } from '@/components/ui';
 
 
 const VisualizarHorasProjeto = () => {
+  const { t } = useTranslation('horas');
   const { user } = useSelector((store) => store.utilizador);
 
   const { dias } = useSelector((store) => store.allDias);
@@ -206,22 +208,30 @@ const VisualizarHorasProjeto = () => {
         } else {
           if (selectedDay) {
             if (selectedDay?.dia !== 0) {
+              const dateParts = { dia: selectedDay?.dia, mes: selectedDay?.mes + 1, ano: selectedDay?.ano };
               setProjeto({
                 ...projeto,
-                NumeroHorasTotal: selectedProjeto === "Todos" ? `Não existem horas inseridas no projeto neste dia ${selectedDay?.dia}/${selectedDay?.mes + 1}/${selectedDay?.ano}` : `${projeto.Nome} não possui horas inseridas neste dia ${selectedDay?.dia}/${selectedDay?.mes + 1}/${selectedDay?.ano}`,
+                NumeroHorasTotal: selectedProjeto === "Todos"
+                  ? t('empty.projectNoHoursDayAll', dateParts)
+                  : t('empty.projectNoHoursDay', { projeto: projeto.Nome, ...dateParts }),
                 NumeroHorasTipoTrabalho: ""
               });
             } else {
+              const monthParts = { mes: selectedDay?.mes + 1, ano: selectedDay?.ano };
               setProjeto({
                 ...projeto,
-                NumeroHorasTotal: selectedProjeto === "Todos" ? `Não existem horas inseridas no projeto neste mes ${selectedDay?.mes + 1}/${selectedDay?.ano}` : `${projeto.Nome} não possui horas inseridas neste mes ${selectedDay?.mes + 1}/${selectedDay?.ano}`,
+                NumeroHorasTotal: selectedProjeto === "Todos"
+                  ? t('empty.projectNoHoursMonthAll', monthParts)
+                  : t('empty.projectNoHoursMonth', { projeto: projeto.Nome, ...monthParts }),
                 NumeroHorasTipoTrabalho: ""
               });
             }
           } else {
             setProjeto({
               ...projeto,
-              NumeroHorasTotal: selectedProjeto === "Todos" ? `Não existem horas inseridas no projeto` : `${projeto.Nome} não possui horas inseridas!`,
+              NumeroHorasTotal: selectedProjeto === "Todos"
+                ? t('empty.projectNoHoursAll')
+                : t('empty.projectNoHoursNamed', { projeto: projeto.Nome }),
               NumeroHorasTipoTrabalho: ""
             });
           }
@@ -229,7 +239,9 @@ const VisualizarHorasProjeto = () => {
       } else {
         setProjeto({
           ...projeto,
-          NumeroHorasTotal: selectedProjeto === "Todos" ? "Não existem horas inseridas no projeto" : `${selectedProjeto} não possui horas inseridas no projeto`,
+          NumeroHorasTotal: selectedProjeto === "Todos"
+            ? t('empty.projectNoHoursAll')
+            : t('empty.projectNoHoursSelected', { projeto: selectedProjeto }),
           NumeroHorasTipoTrabalho: "",
         });
       }
@@ -389,7 +401,7 @@ const VisualizarHorasProjeto = () => {
       <div className='mainVisualiza'>
         {((user?.user?.tipo === 2 || user?.user?.tipo === 5 || user?.user?.tipo === 6 || user?.user?.tipo === 7) && (
           <div className='text-center mb-5'>
-            <h3 className='mb-5'>Escolha Projeto</h3>
+            <h3 className='mb-5'>{t('titles.chooseProject')}</h3>
 
             {(() => {
 
@@ -402,7 +414,7 @@ const VisualizarHorasProjeto = () => {
                   classNameResult='col-md-6 text-start'
                   id="listaProjetos"
                   name="listaProjetos"
-                  labelText="Projetos:"
+                  labelText={t('labels.projects')}
                   value={selectedProjeto}
                   list={formatedListProjetos}
                   handleChange={handleChangeProjeto}
@@ -421,7 +433,7 @@ const VisualizarHorasProjeto = () => {
           <div className='col-3 description'>
             <div className='row mb'>
               <div className='col-9 text-end'>
-                <p>Fim de Semana</p>
+                <p>{t('legend.weekend')}</p>
               </div>
               <div className='col-3'>
                 <p className='fimSemana'></p>
@@ -430,7 +442,7 @@ const VisualizarHorasProjeto = () => {
 
             <div className='row'>
               <div className='col-9 text-end'>
-                <p>Feriados</p>
+                <p>{t('legend.holidays')}</p>
               </div>
               <div className='col-3'>
                 <p className='feriados'></p>
@@ -438,7 +450,7 @@ const VisualizarHorasProjeto = () => {
             </div>
             <div className='row'>
               <div className='col-9 text-end'>
-                <p>Inserido</p>
+                <p>{t('legend.inserted')}</p>
               </div>
               <div className='col-3'>
                 <p className='inserido'></p>
@@ -448,7 +460,7 @@ const VisualizarHorasProjeto = () => {
               <>
                 <div className='row'>
                   <div className='col-9 text-end'>
-                    <p>Data Inicio</p>
+                    <p>{t('legend.startDate')}</p>
                   </div>
                   <div className='col-3'>
                     <p className='dataInicio'></p>
@@ -458,7 +470,7 @@ const VisualizarHorasProjeto = () => {
 
                 <div className='row'>
                   <div className='col-9 text-end'>
-                    <p>Data Fim</p>
+                    <p>{t('legend.endDate')}</p>
                   </div>
                   <div className='col-3'>
                     <p className='dataFim'></p>
@@ -467,7 +479,7 @@ const VisualizarHorasProjeto = () => {
 
                 <div className='row'>
                   <div className='col-9 text-end'>
-                    <p>Data Objetivo</p>
+                    <p>{t('legend.targetDate')}</p>
                   </div>
                   <div className='col-3'>
                     <p className='dataObjetivo'></p>
@@ -481,11 +493,11 @@ const VisualizarHorasProjeto = () => {
           <>
             {(selectedProjeto === "Todos") ? (
               <div className='projetos'>
-                <EmptyState inline title="Não existem horas inseridas" />
+                <EmptyState inline title={t('empty.noHoursAtAll')} />
               </div>
             ) : (
               <div className='projetos'>
-                <EmptyState inline title="Projeto não possui horas inseridas" />
+                <EmptyState inline title={t('empty.projectNoHours')} />
               </div>
             )}
           </>
@@ -494,35 +506,35 @@ const VisualizarHorasProjeto = () => {
             {(selectedProjeto !== "Todos") && (
               <div className="row mb-3 ">
                 <div className="col-3">
-                  <h5>Data Inicio</h5>
+                  <h5>{t('labels.startDate')}</h5>
                 </div>
                 <div className="col-3">
-                  <p>{projeto?.DataInicio ? new Date(projeto?.DataInicio).toLocaleDateString('en-CA') : 'Sem data Inicial'}</p>
+                  <p>{projeto?.DataInicio ? new Date(projeto?.DataInicio).toLocaleDateString('en-CA') : t('empty.noStartDate')}</p>
                 </div>
 
                 {projeto?.Finalizado === true ? (
                   <>
                     <div className="col-3">
-                      <h5>Data Final</h5>
+                      <h5>{t('labels.endDate')}</h5>
                     </div>
                     <div className="col-3">
-                      <p>{projeto.DataFim ? new Date(projeto?.DataFim).toLocaleDateString('en-CA') : 'Sem Data Final'}</p>
+                      <p>{projeto.DataFim ? new Date(projeto?.DataFim).toLocaleDateString('en-CA') : t('empty.noEndDate')}</p>
                     </div>
                   </>
                 ) : (
                   <>
                     <div className="col-3">
-                      <h5>Data Objetivo</h5>
+                      <h5>{t('labels.targetDate')}</h5>
                     </div>
                     <div className="col-3">
-                      <p>{projeto.DataObjetivo ? new Date(projeto.DataObjetivo).toLocaleDateString('en-CA') : 'Sem data Objetivo'}</p>
+                      <p>{projeto.DataObjetivo ? new Date(projeto.DataObjetivo).toLocaleDateString('en-CA') : t('empty.noTargetDate')}</p>
                     </div>
                   </>
                 )}
 
 
                 <div className='col-12 text-center'>
-                  <h5>Numero Total Horas : {convertToMinutes(numeroTotalHoras)}</h5>
+                  <h5>{t('summary.totalHoursNumber')} : {convertToMinutes(numeroTotalHoras)}</h5>
                 </div>
               </div>
             )}
@@ -622,7 +634,11 @@ const VisualizarHorasProjeto = () => {
                     {selectedDay && selectedDay?.dia !== 0 &&
                       <h5>{selectedDay?.dia}/{selectedDay?.mes + 1}/{selectedDay?.ano}</h5>}
                     <div className="col-6">
-                      <h5>{selectedDay ? selectedDay?.dia === 0 ? `Numero total Horas ${selectedDay?.mes + 1}/${selectedDay?.ano}` : `Numero total Horas ${selectedDay?.dia}/${selectedDay?.mes + 1}/${selectedDay?.ano}` : `Numero Total Horas`}</h5>
+                      <h5>{selectedDay
+                        ? selectedDay?.dia === 0
+                          ? t('summary.totalHoursMonth', { mes: selectedDay?.mes + 1, ano: selectedDay?.ano })
+                          : t('summary.totalHoursDay', { dia: selectedDay?.dia, mes: selectedDay?.mes + 1, ano: selectedDay?.ano })
+                        : t('summary.totalHoursNumber')}</h5>
                     </div>
                     <div className="col-6">
                       <p>{convertToMinutes(projeto?.NumeroHorasTotal)}</p>
@@ -633,7 +649,7 @@ const VisualizarHorasProjeto = () => {
                     <div className="row mb-3">
                       <div className="col-1"></div>
                       <div className="col-5 mb-3">
-                        <h5>Tipos de Trabalho</h5>
+                        <h5>{t('labels.workTypes')}</h5>
                       </div>
                       <div>
                         {listaTipoTrabalho && listaTipoTrabalho?.length > 0 ? (
@@ -657,7 +673,7 @@ const VisualizarHorasProjeto = () => {
                           })
                         ) : (
                           <div>
-                            <p>Sem Tipos de Trabalho definidos</p>
+                            <p>{t('empty.noWorkTypes')}</p>
                           </div>
                         )}
                       </div>

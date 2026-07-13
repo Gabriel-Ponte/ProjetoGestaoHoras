@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { FiAlertTriangle } from 'react-icons/fi';
+import { useTranslation } from 'react-i18next';
 import AppButton from './AppButton';
 
 /**
@@ -45,26 +46,27 @@ const Wrap = styled.div`
   }
 `;
 
-const ErrorState = ({
-  title = 'Ocorreu um erro',
-  message = 'Não foi possível concluir a operação. Tente novamente.',
-  onRetry,
-  retryLabel = 'Tentar novamente',
-  inline = false,
-}) => (
-  <Wrap $inline={inline} role="alert">
-    <span className="error-icon" aria-hidden="true"><FiAlertTriangle /></span>
-    {title && <p className="error-title">{title}</p>}
-    {message && <p className="error-message">{message}</p>}
-    {onRetry && (
-      <div className="error-action">
-        <AppButton variant="secondary" size="sm" onClick={onRetry}>
-          {retryLabel}
-        </AppButton>
-      </div>
-    )}
-  </Wrap>
-);
+const ErrorState = ({ title, message, onRetry, retryLabel, inline = false }) => {
+  const { t } = useTranslation('common');
+  const heading = title === undefined ? t('state.errorTitle') : title;
+  const body = message === undefined ? t('state.errorMessage') : message;
+  const retry = retryLabel === undefined ? t('actions.retry') : retryLabel;
+
+  return (
+    <Wrap $inline={inline} role="alert">
+      <span className="error-icon" aria-hidden="true"><FiAlertTriangle /></span>
+      {heading && <p className="error-title">{heading}</p>}
+      {body && <p className="error-message">{body}</p>}
+      {onRetry && (
+        <div className="error-action">
+          <AppButton variant="secondary" size="sm" onClick={onRetry}>
+            {retry}
+          </AppButton>
+        </div>
+      )}
+    </Wrap>
+  );
+};
 
 ErrorState.propTypes = {
   title: PropTypes.node,

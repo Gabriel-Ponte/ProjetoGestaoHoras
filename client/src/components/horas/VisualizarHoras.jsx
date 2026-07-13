@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState, useLayoutEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import Wrapper from '@/styles/VisualizarHoras';
 import { useSelector, useDispatch } from 'react-redux';
 import Loading from '@/components/common/Loading';
@@ -19,6 +20,7 @@ import { EmptyState } from '@/components/ui';
 
 
 const ListaHoras = () => {
+  const { t } = useTranslation('horas');
   const { user, utilizadores } = useSelector((store) => store.utilizador);
   const { dias } = useSelector((store) => store.allDias);
   const [loading, setLoading] = useState(false);
@@ -812,12 +814,12 @@ const ListaHoras = () => {
   const deleteDiaConfirm = async (id, data) => {
     try {
       const dataString = (data ? new Date(data).toLocaleDateString('en-CA') : '')
-      const confirmed = window.confirm("Tem a certeza que deseja apagar o Dia: " + dataString + "?");
+      const confirmed = window.confirm(t('confirm.deleteDay', { data: dataString }));
 
       if (confirmed) {
         const result = await dispatch(deleteDia(id));
         if (!result.error) {
-          toast.success("Dia Apagado")
+          toast.success(t('toast.dayDeleted'))
           const updatedListaDias = listaDias.filter(dia => dia._id !== id);
           const updatedDias = dias.filter(dia => dia._id !== id);
           const updateAceitacao = aceitacao.filter(dia => dia._id !== id);
@@ -847,13 +849,13 @@ const ListaHoras = () => {
   const deleteDiaGroupConfirm = async (id, data, _id_Group) => {
     try {
 
-      const confirmed = window.confirm("Tem a certeza que deseja o pedido de Férias?");
+      const confirmed = window.confirm(t('confirm.deleteVacationRequest'));
 
       if (confirmed) {
         setButtonConfirmed(true)
         const result = await dispatch(deleteDiaGroup(id));
         if (!result.error) {
-          toast.success("Pedido de Férias Apagado");
+          toast.success(t('toast.vacationRequestDeleted'));
           setButtonConfirmed(false)
           const updatedListaDias = listaDias.filter(dia => dia._id_Group !== _id_Group);
           const updatedDias = dias.filter(dia => dia._id_Group !== _id_Group);
@@ -936,7 +938,7 @@ const ListaHoras = () => {
       <div className='mainVisualiza'>
         {((user?.user?.tipo === 2 || user?.user?.tipo === 5 || user?.user?.tipo === 6 || user?.user?.tipo === 7) && (
           <div className='text-center mb-5'>
-            <h3 className='mb-5'>Escolha Utilizador</h3>
+            <h3 className='mb-5'>{t('titles.chooseUser')}</h3>
 
             {(() => {
               let filteredUsers = formattedListUtilizadores;
@@ -959,7 +961,7 @@ const ListaHoras = () => {
                   classNameResult='col-md-6 text-start'
                   id="piloto"
                   name="Piloto"
-                  labelText="Utilizador:"
+                  labelText={t('labels.user')}
                   value={selectedUser}
                   list={filteredUsers}
                   handleChange={handleChangeUtilizador}
@@ -979,7 +981,7 @@ const ListaHoras = () => {
                 <div className='row'>
 
                   <div className='col-md-8 text-end'>
-                    <p>Horas Possiveis:</p>
+                    <p>{t('summary.possibleHours')}</p>
                   </div>
                   <div className='col-md-4 text-center'>
                     <p>{convertToMinutes(possibleHours)}</p>
@@ -990,7 +992,7 @@ const ListaHoras = () => {
 
                 <div className='row'>
                   <div className='col-md-8 text-end'>
-                    <p>Horas Realizadas:</p>
+                    <p>{t('summary.workedHours')}</p>
                   </div>
                   <div className='col-md-4 text-center'>
                     <p>{convertToMinutes(horasRealizadas)}</p>
@@ -999,7 +1001,7 @@ const ListaHoras = () => {
 
                 <div className='row'>
                   <div className='col-md-8 text-end'>
-                    <p>Percentagem:</p>
+                    <p>{t('summary.percentage')}</p>
                   </div>
                   <div className='col-md-4 text-center'>
                     {percentagemHoras >= 0 && percentagemHoras !== Infinity && <p>{percentagemHoras.toFixed(1)}%</p>}
@@ -1011,7 +1013,7 @@ const ListaHoras = () => {
                     <hr></hr>
                     <div className='row'>
                       <div className='col-md-8 text-end'>
-                        <p>Dias de Férias por reclamar:</p>
+                        <p>{t('summary.vacationDaysUnclaimed')}</p>
                       </div>
                       <div className='col-md-4 text-center'>
                         <p>{feriasPossiveis}</p>
@@ -1022,7 +1024,7 @@ const ListaHoras = () => {
                       <>
                         <div className='row'>
                           <div className='col-md-8 text-end'>
-                            <p>Dias de Férias em aceitacão:</p>
+                            <p>{t('summary.vacationDaysPending')}</p>
                           </div>
                           <div className='col-md-4 text-center'>
                             <p>{pedidosFerias}</p>
@@ -1032,7 +1034,7 @@ const ListaHoras = () => {
                         </div>
                         <div className='row'>
                           <div className='col-md-8 text-end'>
-                            <p>Dias de Férias total:</p>
+                            <p>{t('summary.vacationDaysTotal')}</p>
                           </div>
                           <div className='col-md-4 text-center'>
                             <p>{feriasPossiveis - pedidosFerias}</p>
@@ -1055,7 +1057,7 @@ const ListaHoras = () => {
 
                     <>
                       <div className='col-md-8 text-end'>
-                        <p>Horas extra até este mês: </p>
+                        <p>{t('summary.overtimeUntilMonth')} </p>
                       </div>
                       <div className='col-md-4 text-center'>
                         <p>{convertToMinutes(horasExtraAteMes)}</p>
@@ -1067,7 +1069,7 @@ const ListaHoras = () => {
                     {(parseDurationToHours(horasExtraMensal) !== 0) && (
                       <>
                         <div className='col-md-8 text-end'>
-                          <p>Horas extra este mês: </p>
+                          <p>{t('summary.overtimeThisMonth')} </p>
                         </div>
                         <div className='col-md-4 text-center'>
                           <p>{convertToMinutes(horasExtraMensal)}</p>
@@ -1080,7 +1082,7 @@ const ListaHoras = () => {
                   <div className='row'>
                     <>
                       <div className='col-md-8 text-end'>
-                        <p>Horas extra por aceitar:</p>
+                        <p>{t('summary.overtimePending')}</p>
                       </div>
                       <div className='col-md-4 text-center'>
                         <p>{convertToMinutes(horasExtraAceitar)}</p>
@@ -1092,7 +1094,7 @@ const ListaHoras = () => {
                   <div className='row'>
                     <>
                       <div className='col-md-8 text-end'>
-                        <p>Total horas extra por dar:</p>
+                        <p>{t('summary.overtimeToGive')}</p>
                       </div>
                       <div className='col-md-4 text-center'>
                         <p> {horasExtra}</p>
@@ -1114,7 +1116,7 @@ const ListaHoras = () => {
 
                     <>
                       <div className='col-md-8 text-end'>
-                        <p>Horas extra pagas até este mês:</p>
+                        <p>{t('summary.overtimePaidUntilMonth')}</p>
                       </div>
                       <div className='col-md-4 text-center'>
                         <p>{convertToMinutes(horasExtraPagasAteMes)}</p>
@@ -1127,7 +1129,7 @@ const ListaHoras = () => {
                   <div className='row'>
                     <>
                       <div className='col-md-8 text-end'>
-                        <p>Horas Extra pagas este mês:</p>
+                        <p>{t('summary.overtimePaidThisMonth')}</p>
                       </div>
                       <div className='col-md-4 text-center'>
                         <p>{convertToMinutes(horasPagasMes)}</p>
@@ -1139,7 +1141,7 @@ const ListaHoras = () => {
                   <div className='row'>
                     <>
                       <div className='col-md-8 text-end'>
-                        <p>Total horas pagas:</p>
+                        <p>{t('summary.totalPaidHours')}</p>
                       </div>
                       <div className='col-md-4 text-center'>
                         <p>{convertToMinutes(totalHorasPagas)}</p>
@@ -1156,7 +1158,7 @@ const ListaHoras = () => {
           <div className='col-2 description'>
             <div className='row mb'>
               <div className='col-9 text-end'>
-                <p>Fim de Semana</p>
+                <p>{t('legend.weekend')}</p>
               </div>
               <div className='col-3'>
                 <p className='fimSemana'></p>
@@ -1165,7 +1167,7 @@ const ListaHoras = () => {
 
             <div className='row'>
               <div className='col-9 text-end'>
-                <p>Feriados</p>
+                <p>{t('legend.holidays')}</p>
               </div>
               <div className='col-3'>
                 <p className='feriados'></p>
@@ -1174,7 +1176,7 @@ const ListaHoras = () => {
             {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro" && selectedUser !== "Responsavel") && (
               <div className='row'>
                 <div className='col-9 text-end'>
-                  <p>Férias</p>
+                  <p>{t('legend.vacation')}</p>
                 </div>
                 <div className='col-3'>
                   <p className='ferias'></p>
@@ -1184,7 +1186,7 @@ const ListaHoras = () => {
             {(selectedUser !== "Todos" && selectedUser !== "Engenharia de Processos" && selectedUser !== "Laboratorio" && selectedUser !== "Administradores" && selectedUser !== "Outro" && selectedUser !== "Responsavel") && (
               <div className='row'>
                 <div className='col-9 text-end'>
-                  <p>Horas Compensação</p>
+                  <p>{t('legend.compensationHours')}</p>
                 </div>
                 <div className='col-3'>
                   <p className='horasCompensacao'></p>
@@ -1193,7 +1195,7 @@ const ListaHoras = () => {
             )}
             <div className='row'>
               <div className='col-9 text-end'>
-                <p>Horário Completo</p>
+                <p>{t('legend.fullSchedule')}</p>
               </div>
               <div className='col-3'>
                 <p className='normal'></p>
@@ -1202,7 +1204,7 @@ const ListaHoras = () => {
 
             <div className='row'>
               <div className='col-9 text-end'>
-                <p>Horas extra</p>
+                <p>{t('legend.overtime')}</p>
               </div>
               <div className='col-3'>
                 <p className='extra'></p>
@@ -1212,7 +1214,7 @@ const ListaHoras = () => {
 
             <div className='row'>
               <div className='col-9 text-end'>
-                <p>Horário Incompleto</p>
+                <p>{t('legend.incompleteSchedule')}</p>
               </div>
 
               <div className='col-3'>
@@ -1223,7 +1225,7 @@ const ListaHoras = () => {
               <>
                 <div className='row'>
                   <div className='col-9 text-end'>
-                    <p>Horas em Aceitação</p>
+                    <p>{t('legend.pendingAcceptance')}</p>
                   </div>
                   <div className='col-3'>
                     <p className='filtro'></p>
@@ -1233,7 +1235,7 @@ const ListaHoras = () => {
 
                 <div className='row'>
                   <div className='col-9 text-end'>
-                    <p>Compensação Domingo</p>
+                    <p>{t('legend.sundayCompensation')}</p>
                   </div>
                   <div className='col-3'>
                     <p className='compensDomingo'></p>
@@ -1260,16 +1262,16 @@ const ListaHoras = () => {
             {(selectedUser === "Todos" || selectedUser === "Engenharia de Processos" || selectedUser === "Administradores" || selectedUser === "Laboratorio" || selectedUser === "Outro" || selectedUser === "Responsavel") ? (
               filteredUsers.length > 0 ? (
                 <div className='projetos'>
-                  <h2>Grupo não possui horas inseridas!</h2>
+                  <h2>{t('empty.groupNoHours')}</h2>
                 </div>
               ) : (
                 <div className='projetos'>
-                  <h2>Grupo não possui utilizadores!</h2>
+                  <h2>{t('empty.groupNoUsers')}</h2>
                 </div>
               )
             ) : (
               <div className='projetos'>
-                <h2>Utilizador não possui horas inseridas!</h2>
+                <h2>{t('empty.userNoHours')}</h2>
               </div>
             )}
           </>
@@ -1308,7 +1310,7 @@ const ListaHoras = () => {
                     }
                     return isSameMonth && isSameDate;
                   }).length === 0 && diaSelected === 0 && (
-                      <EmptyState inline title="Sem Horas inseridas neste mês!" />
+                      <EmptyState inline title={t('empty.noHoursMonth')} />
                     )}
 
                   {listaDiasT.filter((dia) => {
@@ -1320,7 +1322,7 @@ const ListaHoras = () => {
                     }
                     return isSameMonth && isSameDate;
                   }).length === 0 && diaSelected !== 0 && (
-                      <EmptyState inline title={`Sem Horas inseridas neste dia ${diaSelected}!`} />
+                      <EmptyState inline title={t('empty.noHoursDay', { dia: diaSelected })} />
                     )}
 
 
@@ -1430,7 +1432,7 @@ const ListaHoras = () => {
                       } else if (diaSelected === 0) {
                         return (
                           <div>
-                            <EmptyState inline title="Sem Horas inseridas neste mês!" />
+                            <EmptyState inline title={t('empty.noHoursMonth')} />
                           </div>
                         );
                       } else if (diaSelected !== 0 || diaSelected !== "0") {
@@ -1439,7 +1441,7 @@ const ListaHoras = () => {
                             {isFeriado &&
                               <h4>{isFeriado}</h4>
                             }
-                            <EmptyState inline title={`Sem Horas inseridas neste dia ${diaSelected}!`} />
+                            <EmptyState inline title={t('empty.noHoursDay', { dia: diaSelected })} />
                           </div>
                         );
                       }

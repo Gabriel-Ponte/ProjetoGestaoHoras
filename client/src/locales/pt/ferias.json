@@ -1,0 +1,53 @@
+{
+  "tabs": {
+    "manageRequests": "Gestão de Pedidos",
+    "manageVacation": "Gestão de Férias"
+  },
+  "actions": {
+    "addVacation": "Adicionar Férias",
+    "manageVacation": "Gerir Férias"
+  },
+  "fields": {
+    "user": "Utilizador:"
+  },
+  "confirm": {
+    "deleteDays": "Tem a certeza que deseja apagar os Dias de Férias?"
+  },
+  "toast": {
+    "dayDeleted": "Dia Apagado",
+    "daysAdded": "Dias adicionados!",
+    "invalidDays": "Dias inseridos inválidos!",
+    "addError": "Erro ao adicionar Férias!",
+    "invalidValues": "Valores Inseridos Inválidos!"
+  },
+  "add": {
+    "title": "Adicionar Férias",
+    "addDaysButton": "Adicionar Dias",
+    "remainingVacation": "Férias por reclamar: {{total}}",
+    "pendingRequests": "Férias por aceitar: {{total}}",
+    "startDate": "Início",
+    "endDate": "Fim",
+    "datePlaceholder": "Dia Adicionar Horas",
+    "day": "Dia",
+    "days": "Dias",
+    "invalidSelectedDays": "Dias escolhidos inválidos!",
+    "totalDays": "Total de dias: {{total}}",
+    "submit": "Inserir Férias"
+  },
+  "header": {
+    "user": "Utilizador",
+    "accepted": "Aceites",
+    "possible": "Possíveis",
+    "remaining": "Por Reclamar",
+    "add": "Adicionar",
+    "year": "Ano"
+  },
+  "list": {
+    "add": "Adicionar",
+    "responsible": "Responsável",
+    "inserted": "Inseridos",
+    "correspondingYear": "Ano Correspondente",
+    "date": "Data",
+    "numberOfDays": "Número de Dias"
+  }
+}

@@ -4,8 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import Wrapper from '@/styles/LoginPage';
 import { FormRow, Header, Footer } from '@/components';
 import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 const ForgetPassword = () => {
+  const { t } = useTranslation('auth');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
@@ -21,7 +23,7 @@ const ForgetPassword = () => {
     try {
       const result = await dispatch(resetPassword(email));
       if(!result.error){
-        setMessage(`Um email para resetar a password foi enviado para ${email}`);
+        setMessage(t('reset.sent', { email }));
         setTimeout(() => {
           navigate('/login');
         }, 5000);
@@ -41,10 +43,10 @@ const ForgetPassword = () => {
         <Header />
     <div className='MainLogin'>
         
-      <h2 className='mt-5 title'>Repor Password</h2>
+      <h2 className='mt-5 title'>{t('reset.title')}</h2>
 
       <form className='loginForm' onSubmit={handleSubmit}>
-        <p>Insira o Email associado á sua conta!</p>
+        <p>{t('reset.instructions')}</p>
       {message && <p className='mb-2'>{message}</p>}
 
       <FormRow 
@@ -52,17 +54,17 @@ const ForgetPassword = () => {
       classNameLabel='col-md-3 text-end' 
       classNameInput='col-md-9'
       type='email' 
-      name='email' 
-      labelText='Email:' 
-      value={email} 
+      name='email'
+      labelText={t('reset.emailLabel')}
+      value={email}
       handleChange={handleEmailChange} 
       required="True"
       />
   
       <button type='submit' className='btn btn-outline-primary'>
-              Reset Password
+              {t('reset.submit')}
       </button>
-        <button type="button" className='btn btn-outline-secondary' onClick={handleVoltar}>Voltar</button>
+        <button type="button" className='btn btn-outline-secondary' onClick={handleVoltar}>{t('reset.back')}</button>
       </form>
     </div>
     <Footer/>

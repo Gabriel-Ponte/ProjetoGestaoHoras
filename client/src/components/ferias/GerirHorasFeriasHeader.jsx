@@ -4,11 +4,13 @@ import { BsArrowLeftShort } from 'react-icons/bs';
 import { useState } from 'react';
 import Wrapper from '@/styles/ListaProjetosHeader';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 const GerirHorasFeriasHeader = ({ sortValue, handleChange, setSelectedYear, selectedYear }) => {
+    const { t } = useTranslation('ferias');
 
     const sort = () => {
 
@@ -103,7 +105,7 @@ const GerirHorasFeriasHeader = ({ sortValue, handleChange, setSelectedYear, sele
                                         <AiOutlineArrowDown /> : <BsArrowLeftShort />
                                     )
                                 }
-                                Utilizador
+                                {t('header.user')}
                             </button>
                         </div>
 
@@ -123,7 +125,7 @@ const GerirHorasFeriasHeader = ({ sortValue, handleChange, setSelectedYear, sele
                                                 <AiOutlineArrowDown /> : <BsArrowLeftShort />
                                             )
                                         }
-                                        Aceites
+                                        {t('header.accepted')}
                                     </button>
                                 </div>
                                 <div className="col-md-4 themed-grid-col" style={{ margin: "auto" }}>
@@ -139,7 +141,7 @@ const GerirHorasFeriasHeader = ({ sortValue, handleChange, setSelectedYear, sele
                                                 <AiOutlineArrowDown /> : <BsArrowLeftShort />
                                             )
                                         }
-                                        Possiveis
+                                        {t('header.possible')}
                                     </button>
                                 </div>
 
@@ -156,7 +158,7 @@ const GerirHorasFeriasHeader = ({ sortValue, handleChange, setSelectedYear, sele
                                                 <AiOutlineArrowDown /> : <BsArrowLeftShort />
                                             )
                                         }
-                                        Por Reclamar
+                                        {t('header.remaining')}
                                     </button>
                                 </div>
                             </div>
@@ -167,7 +169,7 @@ const GerirHorasFeriasHeader = ({ sortValue, handleChange, setSelectedYear, sele
                                 name="VisualizarButton"
                                 className="btn buttonHeader"
                             >
-                                Adicionar
+                                {t('header.add')}
                             </h1>
                         </div>
 
@@ -177,7 +179,7 @@ const GerirHorasFeriasHeader = ({ sortValue, handleChange, setSelectedYear, sele
                                 name="VisualizarButton"
                                 className="btn buttonHeader"
                             >
-                                Ano
+                                {t('header.year')}
                             </h1>
                         </div>
                         <div className="col-md-2 themed-grid-col" style={{ margin: "auto" }}>

@@ -1,0 +1,43 @@
+{
+  "state": {
+    "loading": "Loading…"
+  },
+  "add": {
+    "title": "Create User",
+    "subtitle": "Fill in the form to create an account.",
+    "submit": "Add",
+    "submitting": "Creating…"
+  },
+  "edit": {
+    "title": "Edit Profile",
+    "submit": "Update"
+  },
+  "manage": {
+    "title": "Manage Users",
+    "subtitle": "User profiles and permissions",
+    "loading": "Loading users…",
+    "typePlaceholder": "Choose a type",
+    "change": "Update"
+  },
+  "form": {
+    "name": "Name",
+    "userType": "User Type",
+    "responsible": "Manager",
+    "login": "Login",
+    "password": "Password",
+    "email": "Email",
+    "emailPlaceholder": "name@company.com",
+    "profilePhoto": "Profile Photo"
+  },
+  "photo": {
+    "title": "Upload Photo",
+    "choose": "Choose",
+    "alt": "Profile picture",
+    "save": "Save",
+    "close": "Close"
+  },
+  "toast": {
+    "requiredFields": "Please fill in all the required fields!",
+    "passwordTooShort": "Password must be at least 6 characters long!"
+  }
+}

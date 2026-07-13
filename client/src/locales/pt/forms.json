@@ -1,0 +1,61 @@
+{
+  "common": {
+    "todos": "Todos",
+    "selecionado": "Selecionado: ",
+    "naoEncontrado": "Não encontrado",
+    "adicionar": "Adicionar"
+  },
+  "select": {
+    "novaOpcao": "Nova Opção:",
+    "opcaoJaAdicionada": "Esta opção já foi adicionada.",
+    "administradores": "Administradores",
+    "engenhariaProcessos": "Engenharia Processos",
+    "laboratorio": "Laboratorio",
+    "outro": "Outro",
+    "responsavel": "Responsável"
+  },
+  "types": {
+    "Projetos": "Projetos",
+    "Geral": "Geral",
+    "Outro": "Outro",
+    "Compensação": "Compensação",
+    "Extra": "Extra",
+    "Compensação Domingo": "Compensação Domingo",
+    "Ferias": "Férias",
+    "Engenharia de Processos": "Engenharia de Processos",
+    "Laboratorio": "Laboratório",
+    "Recursos Humanos": "Recursos Humanos",
+    "Responsavel Qualidade": "Responsável de Qualidade",
+    "Gestor Financeiro": "Gestor Financeiro",
+    "Comercial": "Comercial",
+    "Logistica": "Logística",
+    "Administrador": "Administrador",
+    "Administrador Engenharia": "Administrador de Engenharia",
+    "Administrador Laboratorio": "Administrador de Laboratório",
+    "Administrador Recursos Humanos": "Administrador de Recursos Humanos",
+    "Inativo": "Inativo"
+  },
+  "horasExtra": {
+    "tipos": {
+      "Férias": "Férias",
+      "Feriado": "Feriado",
+      "Domingo": "Domingo",
+      "Fim semana": "Fim de semana",
+      "Sexta-Feira": "Sexta-Feira",
+      "Semana": "Semana"
+    },
+    "compensacaoDomingo": "Compensação Domingo"
+  },
+  "header": {
+    "responsavel": "Responsável",
+    "utilizador": "Utilizador",
+    "mes": "Mês",
+    "numeroHoras": "Número Horas",
+    "data": "Data",
+    "horas": "Horas",
+    "numeroDias": "Número Dias",
+    "horasExtra": "Horas Extra",
+    "tipo": "Tipo",
+    "trabalho": "Trabalho"
+  }
+}

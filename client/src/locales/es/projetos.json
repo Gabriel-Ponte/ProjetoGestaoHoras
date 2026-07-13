@@ -1,0 +1,133 @@
+{
+  "common": {
+    "loading": "Cargando…"
+  },
+  "fields": {
+    "name": "Nombre",
+    "namePlaceholder": "Nombre del proyecto",
+    "action": "Acción",
+    "client": "Cliente",
+    "clientLabel": "Cliente: ",
+    "startDate": "Fecha de Inicio",
+    "startDateShort": "Fecha de Inicio",
+    "targetDate": "Fecha Objetivo",
+    "endDate": "Fecha Final",
+    "endDateProject": "Fecha Final del Proyecto",
+    "notes": "Notas",
+    "linkA3": "Enlace A3",
+    "linkSummary": "Enlace Resumen",
+    "pilot": "Piloto",
+    "pilotLabel": "Piloto:",
+    "finished": "Finalizado",
+    "result": "Resultado",
+    "workTypes": "Tipos de Trabajo"
+  },
+  "fieldNames": {
+    "Nome": "Nombre",
+    "Acao": "Acción",
+    "Cliente": "Cliente",
+    "DataInicio": "Fecha de Inicio",
+    "DataObjetivo": "Fecha Objetivo",
+    "Tema": "Tema",
+    "Piloto": "Piloto"
+  },
+  "add": {
+    "title": "Añadir Proyecto",
+    "submit": "Añadir"
+  },
+  "edit": {
+    "title": "Editar Proyecto",
+    "submit": "Enviar"
+  },
+  "list": {
+    "title": "Gestión de Proyectos",
+    "foundFinished_one": "{{count}} proyecto Finalizado encontrado",
+    "foundFinished_other": "{{count}} proyectos Finalizados encontrados",
+    "foundOngoing_one": "{{count}} proyecto En Curso encontrado",
+    "foundOngoing_other": "{{count}} proyectos En Curso encontrados",
+    "foundWaiting_one": "{{count}} proyecto En Espera encontrado",
+    "foundWaiting_other": "{{count}} proyectos En Espera encontrados",
+    "hasTargetDate": "Tiene Fecha Objetivo",
+    "emptyTitle": "Sin proyectos",
+    "emptyMessage": "No hay proyectos para mostrar con los filtros actuales.",
+    "pendingChanges_one": "¡Tiene {{count}} proyecto con cambios por confirmar!",
+    "pendingChanges_other": "¡Tiene {{count}} proyectos con cambios por confirmar!"
+  },
+  "header": {
+    "client": "Cliente",
+    "project": "Proyecto",
+    "actions": "Acciones",
+    "notes": "Notas",
+    "pilot": "Piloto",
+    "endDate": "Fecha Final",
+    "result": "Resultado",
+    "targetDate": "Fecha Objetivo",
+    "daysAlert": "Alerta días"
+  },
+  "row": {
+    "insert": "Insertar",
+    "save": "Guardar",
+    "edit": "Editar",
+    "view": "Visualizar",
+    "addLinkA3": "Añadir Enlace A3",
+    "openA3": "Abrir A3",
+    "addLinkResumo": "Añadir Enlace Resumen",
+    "openResumo": "Abrir Resumen",
+    "closeLink": "Cerrar"
+  },
+  "view": {
+    "selectVersion": "Seleccione una Versión:",
+    "currentVersion": "Actual",
+    "chooseUser": "Elija Usuario",
+    "userLabel": "Usuario:",
+    "legend": {
+      "weekend": "Fin de Semana",
+      "holidays": "Festivos",
+      "inserted": "Registrado",
+      "startDate": "Fecha de Inicio",
+      "endDate": "Fecha Final",
+      "targetDate": "Fecha Objetivo"
+    },
+    "noStartDate": "Sin fecha de Inicio",
+    "noEndDate": "Sin Fecha Final",
+    "noTargetDate": "Sin fecha Objetivo",
+    "totalHours": "Número Total de Horas",
+    "totalHoursOn": "Número total de Horas {{date}}",
+    "noHours": "Sin Horas Registradas en el Proyecto",
+    "noHoursAll": "No existen horas registradas en el proyecto",
+    "noHoursUser": "{{user}} no tiene horas registradas en el proyecto",
+    "noHoursDayAll": "No existen horas registradas en el proyecto en el día {{date}}",
+    "noHoursDayUser": "{{user}} no tiene horas registradas en el proyecto en el día {{date}}",
+    "noHoursMonthAll": "No existen horas registradas en el proyecto en el mes {{date}}",
+    "noHoursMonthUser": "{{user}} no tiene horas registradas en el proyecto en el mes {{date}}",
+    "noWorkTypes": "Sin Tipos de Trabajo definidos"
+  },
+  "version": {
+    "client": "Cliente",
+    "pilots": "Piloto/s",
+    "noPilots": "Sin Pilotos",
+    "action": "Acción",
+    "noActions": "Sin Acciones",
+    "notes": "Notas",
+    "noNotes": "Sin Notas",
+    "version": "Versión",
+    "links": "Enlaces",
+    "noLinkA3": "Sin Enlace A3",
+    "linkSummary": "Enlace Resumen",
+    "noLinkSummary": "Sin Enlace Resumen",
+    "done": "Realizado",
+    "yes": "Sí",
+    "no": "No",
+    "result": "Resultado",
+    "success": "Éxito",
+    "failure": "Fracaso"
+  },
+  "toast": {
+    "requiredField": "¡Por favor, rellene el campo obligatorio: {{field}}!",
+    "requiredFields": "¡Por favor, rellene todos los campos obligatorios!",
+    "loadProjectFailed": "No se ha podido cargar el proyecto",
+    "insertLink": "¡Por favor, introduzca el Enlace!",
+    "updateError": "¡Error al actualizar!",
+    "endDateBeforeStart": "La Fecha Final no puede ser anterior a la fecha de inicio"
+  }
+}

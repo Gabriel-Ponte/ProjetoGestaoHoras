@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import Wrapper from '@/styles/AddUser';
 import { FormRowSelectTipo } from '@/components';
@@ -21,6 +22,7 @@ const  initialState = {
 
 
 const AddUtilizador = () => {
+    const { t } = useTranslation('utilizadores');
     const [values, setValues] = useState(initialState);
     const { isLoading } = useSelector((store) => store.utilizador)
     const { user } = useSelector((store) => store.utilizador.user);
@@ -32,7 +34,7 @@ const AddUtilizador = () => {
 
 
     if (isLoading) {
-      return <LoadingState message="A carregar…" />;
+      return <LoadingState message={t('state.loading')} />;
     }
     
 
@@ -175,7 +177,7 @@ const AddUtilizador = () => {
   const handleSubmit = async (e) => {
       e.preventDefault();
       if (!values.login || !values.email || !values.nome) {
-        toast.error('Por favor, preencha todos os campos obrigatórios!');
+        toast.error(t('toast.requiredFields'));
         return;
       }
       try {
@@ -194,13 +196,13 @@ const AddUtilizador = () => {
     <Wrapper>
       <div className="form-page">
         <PageHeader
-          title="Criar Utilizador"
-          subtitle="Preencha o formulário para criar uma conta."
+          title={t('add.title')}
+          subtitle={t('add.subtitle')}
           divider={false}
         />
         <SectionCard>
           <form onSubmit={handleSubmit} className="form">
-            <FormGroup label="Nome" htmlFor="nomeUtilizador">
+            <FormGroup label={t('form.name')} htmlFor="nomeUtilizador">
               <AppInput
                 id="nomeUtilizador"
                 name="nome"
@@ -216,7 +218,7 @@ const AddUtilizador = () => {
               className="form-control"
               id="tipo"
               name="tipo"
-              labelText="Tipo de Utilizador"
+              labelText={t('form.userType')}
               value={values.tipo}
               list={listTipoUser}
               handleChange={handleChangeTipo}
@@ -229,14 +231,14 @@ const AddUtilizador = () => {
                 className="form-control"
                 id="responsavel"
                 name="responsavel"
-                labelText="Responsavel"
+                labelText={t('form.responsible')}
                 value={values?.responsavel}
                 list={listaUserTipo}
                 handleChange={handleResponsavel}
               />
             )}
 
-            <FormGroup label="Login" htmlFor="loginProjeto">
+            <FormGroup label={t('form.login')} htmlFor="loginProjeto">
               <AppInput
                 id="loginProjeto"
                 name="login"
@@ -246,7 +248,7 @@ const AddUtilizador = () => {
               />
             </FormGroup>
 
-            <FormGroup label="Password" htmlFor="password">
+            <FormGroup label={t('form.password')} htmlFor="password">
               <AppInput
                 id="password"
                 name="password"
@@ -257,12 +259,12 @@ const AddUtilizador = () => {
               />
             </FormGroup>
 
-            <FormGroup label="Email" htmlFor="email">
+            <FormGroup label={t('form.email')} htmlFor="email">
               <AppInput
                 id="email"
                 name="email"
                 type="email"
-                placeholder="nome@empresa.pt"
+                placeholder={t('form.emailPlaceholder')}
                 value={values.email}
                 onChange={handleChange}
               />
@@ -272,8 +274,8 @@ const AddUtilizador = () => {
               type="file"
               id="fotoU"
               name="foto"
-              label="Foto de Perfil"
-              labelText="Foto de Perfil"
+              label={t('form.profilePhoto')}
+              labelText={t('form.profilePhoto')}
               className="form-control"
               value={values.foto}
               handleChange={handleChangeFoto}
@@ -284,7 +286,7 @@ const AddUtilizador = () => {
             )}
 
             <AppButton type="submit" fullWidth loading={isLoading} disabled={isLoading}>
-              {isLoading ? 'A criar…' : 'Adicionar'}
+              {isLoading ? t('add.submitting') : t('add.submit')}
             </AppButton>
           </form>
         </SectionCard>

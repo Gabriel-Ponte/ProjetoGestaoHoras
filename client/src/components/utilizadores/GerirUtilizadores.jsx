@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { updateUserType, listaUtilizadores, listaUsersTipo } from '@/features/utilizadores/utilizadorSlice';
 import Wrapper from '@/styles/GerirUtilizador';
 import FormRowSelectTipo from '@/components/forms/FormRowSelectTipo';
 import { PageHeader, AppButton, LoadingState } from '@/components/ui';
 
 const GerirUtilizadores = () => {
+  const { t } = useTranslation('utilizadores');
   const [initialState, setInitialState] = useState([]);
   const [verificaAlterado, setVerificaAlterado] = useState({});
   const [listaDeUtilizadores, setListaUtilizadores] = useState([]);
@@ -236,22 +238,22 @@ updateList();
 
 
   if (isLoading) {
-    return <LoadingState message="A carregar utilizadores…" />;
+    return <LoadingState message={t('manage.loading')} />;
   }
   return (
     <Wrapper>
       <PageHeader
-        title="Gerir Utilizadores"
-        subtitle="Perfis e permissões dos utilizadores"
+        title={t('manage.title')}
+        subtitle={t('manage.subtitle')}
       />
       <div className="listaTiposUtilizador">
-        {listaDeUtilizadores.map((t, i) => {
-          if (user.id === t._id) return null;
+        {listaDeUtilizadores.map((utilizador, i) => {
+          if (user.id === utilizador._id) return null;
           return (
             <div className="user-card" key={i}>
               <div className="user-card-info">
-                <p className="user-name">{t.nome}</p>
-                <p className="user-email">{t.email}</p>
+                <p className="user-name">{utilizador.nome}</p>
+                <p className="user-email">{utilizador.email}</p>
               </div>
 
               <FormRowSelectTipo
@@ -260,29 +262,29 @@ updateList();
                 labelText=" "
                 id="tipo"
                 name="tipo"
-                handleChange={(e) => handleChangeUtilizador(e, t._id)}
-                placeholder="Escolha um tipo"
-                value={t.tipo}
+                handleChange={(e) => handleChangeUtilizador(e, utilizador._id)}
+                placeholder={t('manage.typePlaceholder')}
+                value={utilizador.tipo}
                 list={[["Engenharia de Processos"], ["Laboratorio"], ["Recursos Humanos"], ["Responsavel Qualidade"], ["Gestor Financeiro"], ["Comercial"], ["Logistica"], ["Administrador"], ["Administrador Engenharia"], ["Administrador Laboratorio"], ["Administrador Recursos Humanos"], ["Inativo"]]}
               />
 
-              {t.tipo === 3 && (
+              {utilizador.tipo === 3 && (
                 <FormRowSelectTipo
                   type="text"
                   className="form-control"
                   id="responsavel"
                   name="responsavel"
-                  labelText="Responsavel"
-                  value={t.responsavel}
-                  list={t?.listaResponsaveis}
-                  handleChange={(e) => handleChangeUtilizador(e, t._id)}
+                  labelText={t('form.responsible')}
+                  value={utilizador.responsavel}
+                  list={utilizador?.listaResponsaveis}
+                  handleChange={(e) => handleChangeUtilizador(e, utilizador._id)}
                 />
               )}
 
               <div className="user-actions">
-                {verificaAlterado[t._id] === true && (
-                  <AppButton size="sm" onClick={() => alterarUtilizador(t)}>
-                    Alterar
+                {verificaAlterado[utilizador._id] === true && (
+                  <AppButton size="sm" onClick={() => alterarUtilizador(utilizador)}>
+                    {t('manage.change')}
                   </AppButton>
                 )}
               </div>

@@ -1,8 +1,18 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import Wrapper from '@/styles/FormRowCheckboxMultiple';
-import PropTypes from 'prop-types'; 
+import PropTypes from 'prop-types';
 
 const FormRowCheckboxMultiple = ({ labelText, name, value, handleChange, handleChangeSubmit, list, className, classNameLabelResult, classNameLabel, classNameInput, classNameResult }) => {
+  const { t } = useTranslation('forms');
+  // The raw literals 'Todos' / 'Não encontrado' stay in state: they are the option
+  // ids, the select-all sentinel and are compared/submitted. Only labels are translated.
+  const translateOption = (option) =>
+    option === 'Todos'
+      ? t('common.todos')
+      : option === 'Não encontrado'
+        ? t('common.naoEncontrado')
+        : option;
   // eslint-disable-next-line no-useless-escape
   const [controlArray] = useState(Array.isArray(value) ? (value.length > 0 ? value[0].split(/[,\/]/) : []) : value.split(/[,\/]/));
   const [selectedOptions, setSelectedOptions] = useState([]);
@@ -115,7 +125,7 @@ const FormRowCheckboxMultiple = ({ labelText, name, value, handleChange, handleC
     <div key={index}>
       <div className='row'>
         <div className='col-9'>
-          <label htmlFor={option} style={{ cursor: 'pointer' }}>{option}</label>
+          <label htmlFor={option} style={{ cursor: 'pointer' }}>{translateOption(option)}</label>
         </div>
         <div className='col-3'>
           <input
@@ -151,11 +161,10 @@ const FormRowCheckboxMultiple = ({ labelText, name, value, handleChange, handleC
         {value && (
           <div className={'row text-end'}>
             <div className={classNameLabelResult ? classNameLabelResult : 'form-label text-end'}>
-            <p className="text-end">{'Selecionado: '}</p>
-              {/* <p className="text-end">{name ? name + ': ' : 'Selecionado: ' }</p> */}
+            <p className="text-end">{t('common.selecionado')}</p>
             </div>
             <div className={classNameResult ? classNameResult : 'form-label'}>
-              <p className="text-center">{Array.isArray(separatedArray) ? separatedArray.join(', ') : separatedArray}</p>
+              <p className="text-center">{Array.isArray(separatedArray) ? separatedArray.map(translateOption).join(', ') : translateOption(separatedArray)}</p>
             </div>
           </div>
         )}

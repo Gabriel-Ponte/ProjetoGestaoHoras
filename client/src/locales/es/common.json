@@ -1,0 +1,46 @@
+{
+  "actions": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "add": "Añadir",
+    "close": "Cerrar",
+    "exit": "Salir",
+    "confirm": "Confirmar",
+    "back": "Volver",
+    "export": "Exportar",
+    "insert": "Insertar",
+    "change": "Modificar",
+    "view": "Visualizar",
+    "retry": "Reintentar",
+    "yes": "Sí",
+    "no": "No"
+  },
+  "state": {
+    "loading": "Cargando…",
+    "emptyTitle": "Sin resultados",
+    "emptyMessage": "No hay datos para mostrar.",
+    "errorTitle": "Se ha producido un error",
+    "errorMessage": "No se ha podido completar la operación. Inténtelo de nuevo."
+  },
+  "theme": {
+    "toggleToDark": "Cambiar a tema oscuro",
+    "toggleToLight": "Cambiar a tema claro",
+    "dark": "Oscuro",
+    "light": "Claro"
+  },
+  "language": {
+    "label": "Idioma",
+    "select": "Elegir idioma"
+  },
+  "entities": {
+    "Projeto": "proyecto",
+    "Utilizador": "usuario"
+  },
+  "delete": {
+    "title": "¿Eliminar {{type}}?",
+    "message": "¿Desea eliminar el {{type}}: {{name}}?",
+    "aria": "Eliminar {{type}}"
+  }
+}

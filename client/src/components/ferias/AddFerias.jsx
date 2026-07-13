@@ -3,6 +3,7 @@ import { FormRow, useFeriadosPortugal } from '@/components';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { adicionarFerias } from '@/features/dias/diasSlice';
 import { getFeriasUtilizador } from '@/features/ferias/feriasSlice';
 import { AppButton } from '@/components/ui';
@@ -10,6 +11,7 @@ import { AppButton } from '@/components/ui';
 
 
 const AddFerias = ({ user, setAddFerias, verificaDia, Data, listaDias, accepted, getDates ,updateCalendar}) => {
+  const { t } = useTranslation('ferias');
   const { feriadosPortugal } = useFeriadosPortugal();
   const [fimFerias, setFimFerias] = useState(Data);
   const [selectedDates, setSelectedDates] = useState([]);
@@ -270,7 +272,7 @@ const AddFerias = ({ user, setAddFerias, verificaDia, Data, listaDias, accepted,
 
 
     if (selectedDates.length === 0) {
-      toast.error('Dias inserido invalidos!');
+      toast.error(t('toast.invalidDays'));
       setButtonClicked(false);
       return;
     }
@@ -293,7 +295,7 @@ const AddFerias = ({ user, setAddFerias, verificaDia, Data, listaDias, accepted,
       }, 500);
     }
   } else {
-    toast.error("Erro ao adicionar Ferias!")
+    toast.error(t('toast.addError'))
   }
 
   };
@@ -303,7 +305,7 @@ const AddFerias = ({ user, setAddFerias, verificaDia, Data, listaDias, accepted,
           {(accepted !== 2 && (
         <div className='row'>
           <div className='col-4'>
-            <h3>Adicionar Ferias</h3>
+            <h3>{t('add.title')}</h3>
           </div>
           <div className='col-4  d-flex flex-column justify-content-center align-items-center'>
 
@@ -325,7 +327,7 @@ const AddFerias = ({ user, setAddFerias, verificaDia, Data, listaDias, accepted,
                 height: 'auto',
               }}
             >
-              Adicionar Dias
+              {t('add.addDaysButton')}
             </button>
    
           </div>
@@ -334,15 +336,15 @@ const AddFerias = ({ user, setAddFerias, verificaDia, Data, listaDias, accepted,
             {pedidosFerias > 0 ?
               <>
                 <div className='row'>
-                  <h5>{feriasPossiveis ? 'Férias por reclamar: ' + feriasPossiveis : ''}</h5>
+                  <h5>{feriasPossiveis ? t('add.remainingVacation', { total: feriasPossiveis }) : ''}</h5>
                 </div>
                 <div className='row'>
-                  <h5>{pedidosFerias ? 'Férias por aceitar: ' + pedidosFerias : ''}</h5>
+                  <h5>{pedidosFerias ? t('add.pendingRequests', { total: pedidosFerias }) : ''}</h5>
                 </div>
               </> :
 
               <div className='row'>
-                <h4>{feriasPossiveis ? 'Férias por reclamar: ' + feriasPossiveis : ''}</h4>
+                <h4>{feriasPossiveis ? t('add.remainingVacation', { total: feriasPossiveis }) : ''}</h4>
               </div>
             }
           </div>
@@ -358,7 +360,8 @@ const AddFerias = ({ user, setAddFerias, verificaDia, Data, listaDias, accepted,
             classNameLabel="form-field-label"
             id="Dia"
             name="Inicio"
-            placeholder="Dia Adicionar Horas"
+            labelText={t('add.startDate')}
+            placeholder={t('add.datePlaceholder')}
             value={Data ? new Date(Data).toLocaleDateString('en-CA') : ''}
             handleChange={(e) => verificaData(e)}
           />
@@ -372,7 +375,8 @@ const AddFerias = ({ user, setAddFerias, verificaDia, Data, listaDias, accepted,
             classNameLabel="form-field-label"
             id="fimFerias"
             name="Fim"
-            placeholder="Dia Adicionar Horas"
+            labelText={t('add.endDate')}
+            placeholder={t('add.datePlaceholder')}
             value={fimFerias ? new Date(fimFerias).toLocaleDateString('en-CA') : ''}
             handleChange={(e) => verificaFim(e)}
           />
@@ -383,11 +387,11 @@ const AddFerias = ({ user, setAddFerias, verificaDia, Data, listaDias, accepted,
         <div className="card-body">
           {stringDates ? (
             <>
-              <h4>{selectedDates.length === 1 ? "Dia" : "Dias"}</h4>
+              <h4>{selectedDates.length === 1 ? t('add.day') : t('add.days')}</h4>
               <p dangerouslySetInnerHTML={{ __html: stringDates }} />
             </>
           ) : (
-            <p>Dias escolhidos inválidos!</p>
+            <p>{t('add.invalidSelectedDays')}</p>
           )}
 
         </div>
@@ -395,12 +399,12 @@ const AddFerias = ({ user, setAddFerias, verificaDia, Data, listaDias, accepted,
       <div className="card text-center">
         <div className="card-body">
           <h5 className="card-title">
-            Total de dias: {selectedDates.length}
+            {t('add.totalDays', { total: selectedDates.length })}
           </h5>
         </div>
-        {accepted === 2 && 
+        {accepted === 2 &&
             <div className='row'>
-              <h4>{feriasPossiveis ? 'Férias por reclamar: ' + (feriasPossiveis - selectedDates?.length) : ''}</h4>
+              <h4>{feriasPossiveis ? t('add.remainingVacation', { total: feriasPossiveis - selectedDates?.length }) : ''}</h4>
             </div>
         }
         <div className="card-body">
@@ -412,7 +416,7 @@ const AddFerias = ({ user, setAddFerias, verificaDia, Data, listaDias, accepted,
             disabled={buttonClicked}
             onClick={(e) => { handleInsertFerias(e) }}
           >
-            {'Inserir Férias'}
+            {t('add.submit')}
           </AppButton>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 
 /**
  * LoadingState — consistent spinner + optional message.
@@ -34,12 +35,18 @@ const Wrap = styled.div`
   }
 `;
 
-const LoadingState = ({ message = 'A carregar…', inline = false, size = 44 }) => (
-  <Wrap $inline={inline} $size={size} role="status" aria-live="polite">
-    <span className="spinner" aria-hidden="true" />
-    {message && <p>{message}</p>}
-  </Wrap>
-);
+const LoadingState = ({ message, inline = false, size = 44 }) => {
+  const { t } = useTranslation('common');
+  // `undefined` -> translated default; `null` -> deliberately no text (spinner only).
+  const text = message === undefined ? t('state.loading') : message;
+
+  return (
+    <Wrap $inline={inline} $size={size} role="status" aria-live="polite">
+      <span className="spinner" aria-hidden="true" />
+      {text && <p>{text}</p>}
+    </Wrap>
+  );
+};
 
 LoadingState.propTypes = {
   message: PropTypes.string,

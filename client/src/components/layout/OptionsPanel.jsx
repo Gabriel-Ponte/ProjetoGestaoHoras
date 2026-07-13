@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { IoAddOutline } from 'react-icons/io5'
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { AppInput, AppButton } from '@/components/ui';
 
 function OptionsPanel({ options, handleTipoTrabalho}) {
 
+   const { t } = useTranslation('layout');
    const [inputValue, setInputValue] = useState('');
    const [filteredOptions, setFilteredOptions] = useState([]);
    const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -41,7 +43,7 @@ function OptionsPanel({ options, handleTipoTrabalho}) {
           type="text"
           value={inputValue}
           onChange={handleInputChange}
-          placeholder="Outro..."
+          placeholder={t('optionsPanel.otherPlaceholder')}
           autoComplete="off"
         />
         <AppButton
@@ -49,6 +51,8 @@ function OptionsPanel({ options, handleTipoTrabalho}) {
           variant="primary"
           size="sm"
           onClick={() => { handleSelectOption(inputValue) }}
+          aria-label={t('optionsPanel.add')}
+          title={t('optionsPanel.add')}
         >
           <IoAddOutline />
         </AppButton>

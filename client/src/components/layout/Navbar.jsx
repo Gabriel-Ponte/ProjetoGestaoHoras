@@ -2,6 +2,7 @@ import Wrapper from '@/styles/Navbar';
 import { FaAlignLeft, FaUserCircle, FaCaretDown } from 'react-icons/fa';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleSidebar, clearStore } from '@/features/utilizadores/utilizadorSlice';
 import { getAllDiasHorasExtra, getAllDiasHorasExtraResponsavel } from '@/features/allDias/allDiasSlice';
@@ -17,6 +18,7 @@ import {
 } from '@/utils/roles';
 
 const Navbar = () => {
+  const { t } = useTranslation('layout');
   const [showLogout, setShowLogout] = useState(false);
   const [disableAddHoras, setDisableAddHoras] = useState(false);
   const [verificaHorasExtra, setVerificaHorasExtra] = useState(false);
@@ -67,7 +69,7 @@ const Navbar = () => {
 
   const logout = () => {
     closeMenus();
-    dispatch(clearStore('Logging out...'));
+    dispatch(clearStore(t('nav.loggingOut')));
     navigate('/login');
   };
 
@@ -118,7 +120,12 @@ const Navbar = () => {
     <Wrapper>
       <div className='subheader'>
         <div className='nav-left'>
-          <button type='button' className='toggle-btn' onClick={toggle} aria-label='Abrir menu'>
+          <button
+            type='button'
+            className='toggle-btn'
+            onClick={toggle}
+            aria-label={t('nav.openMenu')}
+          >
             <FaAlignLeft />
           </button>
         </div>
@@ -126,7 +133,7 @@ const Navbar = () => {
         <div className='nav-center'>
           {gestaoProjetos && (
             <AppButton variant='secondary' size='sm' onClick={returnMain}>
-              Gestão Projetos
+              {t('nav.projetosManagement')}
             </AppButton>
           )}
           {gestaoHoras && (
@@ -135,7 +142,7 @@ const Navbar = () => {
               size='sm'
               onClick={navGestaoHorasExtra}
             >
-              Gestão Horas
+              {t('nav.horasManagement')}
             </AppButton>
           )}
           {gestaoHorasExtra && (
@@ -144,10 +151,10 @@ const Navbar = () => {
               size='sm'
               onClick={navGestaoHorasExtra}
             >
-              Gestão Horas Extra
+              {t('nav.horasExtraManagement')}
             </AppButton>
           )}
-          {fallbackTitle && <h1>Gestão de Horas</h1>}
+          {fallbackTitle && <h1>{t('nav.appTitle')}</h1>}
         </div>
 
         <div className='nav-right'>
@@ -157,7 +164,7 @@ const Navbar = () => {
               {fotoUrl ? (
                 <img
                   src={fotoUrl}
-                  alt='Foto de perfil'
+                  alt={t('nav.profilePhotoAlt')}
                   width='22'
                   height='22'
                   className='rounded-circle avatar'
@@ -176,7 +183,7 @@ const Navbar = () => {
                   onClick={addHoras}
                   disabled={disableAddHoras}
                 >
-                  Adicionar Horas
+                  {t('nav.addHoras')}
                 </AppButton>
                 <AppButton
                   variant='secondary'
@@ -184,7 +191,7 @@ const Navbar = () => {
                   onClick={visualizarHoras}
                   disabled={disableAddHoras}
                 >
-                  Visualizar Horas
+                  {t('nav.viewHoras')}
                 </AppButton>
                 {showsHorasProjetos(tipo) && (
                   <AppButton
@@ -193,17 +200,17 @@ const Navbar = () => {
                     onClick={visualizarHorasProjetos}
                     disabled={disableAddHoras}
                   >
-                    Horas Projetos
+                    {t('nav.horasProjetos')}
                   </AppButton>
                 )}
               </div>
             ) : (
               <div className='drop'>
                 <AppButton variant='secondary' size='sm' onClick={editarPerfil}>
-                  Editar Perfil
+                  {t('nav.editProfile')}
                 </AppButton>
                 <AppButton variant='danger' size='sm' onClick={logout}>
-                  Log out
+                  {t('nav.logout')}
                 </AppButton>
               </div>
             )}

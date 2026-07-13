@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import Wrapper from '@/styles/FormRowSelect';
-import PropTypes from 'prop-types'; 
+import PropTypes from 'prop-types';
 
 
 const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, handleLista, className, classNameLabel, classNameInput, classNameResult, todos , blocked}) => {
+  const { t } = useTranslation('forms');
   if (multiple === null) {
     multiple = true;
   }
@@ -95,7 +97,7 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
     if(multiple){
     selectOptions = [
       <option key="default" value="Todos">
-        Todos
+        {t('common.todos')}
       </option>,
       ...listaUtilizador,
     ];
@@ -103,19 +105,19 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
     if(todos && (todos === 2 || todos === 7)){
       selectOptions = [
         <option key="default" value="Todos">
-          Todos
+          {t('common.todos')}
         </option>,
         <option key="Administradores" value="Administradores">
-        Administradores
+        {t('select.administradores')}
         </option>,
         <option key="Engenharia de Processos" value="Engenharia de Processos">
-        Engenharia Processos
+        {t('select.engenhariaProcessos')}
         </option>,
         <option key="Laboratorio" value="Laboratorio">
-          Laboratorio
+          {t('select.laboratorio')}
         </option>,
         <option key="Outro" value="Outro">
-          Outro
+          {t('select.outro')}
         </option>,
           <option key="separator" disabled>
           ---------------
@@ -126,7 +128,7 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
     else if(todos && todos === 5){
       selectOptions = [
         <option key="Engenharia de Processos" value="Engenharia de Processos">
-        Engenharia Processos
+        {t('select.engenhariaProcessos')}
         </option>,
 
           <option key="separator" disabled>
@@ -138,10 +140,10 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
       selectOptions = [
 
         <option key="Laboratorio" value="Laboratorio">
-          Laboratorio
+          {t('select.laboratorio')}
         </option>,
         <option key="Responsavel" value="Responsavel">
-          Responsável
+          {t('select.responsavel')}
        </option>,
           <option key="separator" disabled>
           ---------------
@@ -152,18 +154,18 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
     else if(todos && todos === 7){
       selectOptions = [
         <option key="Outro" value="Outro">
-          Outro
+          {t('select.outro')}
         </option>,
           <option key="separator" disabled>
           ---------------
         </option>,
         ...listaUtilizador,
       ];
-    } 
+    }
      else if(todos && todos === 8){
       selectOptions = [
         <option key="default" value="Todos">
-          Todos
+          {t('common.todos')}
         </option>,
           <option key="separator" disabled>
           ---------------
@@ -187,7 +189,7 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
     ));
     selectOptions = [
       <option key="Todos" value="Todos">
-        Todos
+        {t('common.todos')}
       </option>,
         <option key="separator" disabled>
         ---------------
@@ -218,7 +220,7 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
       }];
 
       if (list.some(item => item.TipoTrabalho === newOption) || updatedList.some(item => item.TipoTrabalho === newOption)) {
-        alert('This option was already added.');
+        alert(t('select.opcaoJaAdicionada'));
         setNewOption('');
         return;
       }
@@ -268,8 +270,7 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
           {value && name !== 'listaProjetos' && (
             <div className={className ? className : 'row mb-3 text-center'}>
               <div className={classNameLabel ? classNameLabel : 'form-label'}>
-              <p className="text-end">{'Selecionado: '}</p>
-              {/* <p className="text-end">{name ? name + ': ' : 'Selecionado: ' }</p> */}
+              <p className="text-end">{t('common.selecionado')}</p>
               </div>
               <div className={classNameResult ? classNameResult : 'form-label'}>
                 <p>
@@ -283,7 +284,7 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
             <div className={className ? className : 'row mb-3 text-center'}>
               <div className={classNameLabel ? classNameLabel : 'form-row'}>
                 <label htmlFor={`${name}-new-option`} className="form-label">
-                  Nova Opção:
+                  {t('select.novaOpcao')}
                 </label>
               </div>
 
@@ -296,7 +297,7 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
                   className="form-input"
                 />
                 <button type="button" onClick={handleAddToList}>
-                  Adicionar
+                  {t('common.adicionar')}
                 </button>
               </div>
             </div>

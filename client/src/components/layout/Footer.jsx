@@ -1,8 +1,12 @@
 import Wrapper from '@/styles/footer';
 import { MdOutlineEmail } from 'react-icons/md';
 import { BsTelephoneFill } from 'react-icons/bs';
+import { useTranslation } from 'react-i18next';
+
+const APP_VERSION = '1.0.0';
 
 function Footer() {
+  const { t } = useTranslation('layout');
   const data = new Date().toISOString().slice(0, 10);
   const email = import.meta.env.VITE_INFO_EMAIL;
   const phone = import.meta.env.VITE_PHONE_NUMBER;
@@ -14,7 +18,7 @@ function Footer() {
         <div className="footer-inner">
           <span className="footer-item">{data}</span>
           <span className="footer-sep">•</span>
-          <span className="footer-item">Versão 1.0.0</span>
+          <span className="footer-item">{t('footer.version', { version: APP_VERSION })}</span>
 
           {email && (
             <>

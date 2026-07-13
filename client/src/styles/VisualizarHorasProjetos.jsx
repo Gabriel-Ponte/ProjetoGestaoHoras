@@ -43,7 +43,7 @@ const Wrapper = styled.section`
   .fimSemana {
     width: 10px;
     height: 10px;
-    background-color: #BCB8B1;
+    background-color: var(--status-weekend);
     display: inline-block;
     vertical-align: middle;
     margin-top:auto;
@@ -52,7 +52,7 @@ const Wrapper = styled.section`
   .inserido{
     width:10px;
     height:10px;
-    background-color: #898121;
+    background-color: var(--status-project);
     display: inline-block;
     vertical-align: middle;
     margin-top:auto;
@@ -61,7 +61,7 @@ const Wrapper = styled.section`
   .dataFim{
     width:10px;
     height:10px;
-    background-color: #001524;
+    background-color: var(--status-date-end);
     display: inline-block;
     vertical-align: middle;
     margin-top:auto;
@@ -70,7 +70,7 @@ const Wrapper = styled.section`
   .dataObjetivo{
     width:10px;
     height:10px;
-    background-color: #81171B;
+    background-color: var(--status-date-target);
     display: inline-block;
     vertical-align: middle;
     margin-top:auto;
@@ -79,7 +79,7 @@ const Wrapper = styled.section`
   .dataInicio{
     width:10px;
     height:10px;
-    background-color: #588157;
+    background-color: var(--status-date-start);
     display: inline-block;
     vertical-align: middle;
     margin-top:auto;
@@ -89,7 +89,7 @@ const Wrapper = styled.section`
   .feriados{
     width:10px;
     height:10px;
-    background-color: #c26c18;
+    background-color: var(--status-holiday);
     display: inline-block;
     vertical-align: middle;
     margin-top:auto;

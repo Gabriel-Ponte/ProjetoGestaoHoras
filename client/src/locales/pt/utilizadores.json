@@ -1,0 +1,43 @@
+{
+  "state": {
+    "loading": "A carregar…"
+  },
+  "add": {
+    "title": "Criar Utilizador",
+    "subtitle": "Preencha o formulário para criar uma conta.",
+    "submit": "Adicionar",
+    "submitting": "A criar…"
+  },
+  "edit": {
+    "title": "Editar Perfil",
+    "submit": "Alterar"
+  },
+  "manage": {
+    "title": "Gerir Utilizadores",
+    "subtitle": "Perfis e permissões dos utilizadores",
+    "loading": "A carregar utilizadores…",
+    "typePlaceholder": "Escolha um tipo",
+    "change": "Alterar"
+  },
+  "form": {
+    "name": "Nome",
+    "userType": "Tipo de Utilizador",
+    "responsible": "Responsável",
+    "login": "Login",
+    "password": "Password",
+    "email": "Email",
+    "emailPlaceholder": "nome@empresa.pt",
+    "profilePhoto": "Foto de Perfil"
+  },
+  "photo": {
+    "title": "Inserir Foto",
+    "choose": "Escolher",
+    "alt": "Imagem de Perfil",
+    "save": "Guardar",
+    "close": "Sair"
+  },
+  "toast": {
+    "requiredFields": "Por favor, preencha todos os campos obrigatórios!",
+    "passwordTooShort": "Password necessita ter pelo menos 6 caracteres!"
+  }
+}

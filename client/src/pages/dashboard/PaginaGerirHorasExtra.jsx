@@ -4,8 +4,10 @@ import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { ROLE, canManageHorasExtra } from '@/utils/roles';
+import { useTranslation } from 'react-i18next';
 
 const PaginaGerirHorasExtra = () => {
+  const { t } = useTranslation('auth');
   const { user } = useSelector((store) => store.utilizador);
   const navigate = useNavigate();
   const tipo = user?.user?.tipo;
@@ -13,15 +15,15 @@ const PaginaGerirHorasExtra = () => {
 
   useEffect(() => {
     if (!user) {
-      toast.error('Utilizador não autenticado!');
+      toast.error(t('guard.notAuthenticated'));
       navigate('/LoginPage');
       return;
     }
     if (!allowed) {
-      toast.error('Sem permissões para aceder a esta página!');
+      toast.error(t('guard.noPermission'));
       navigate(tipo === ROLE.ENG_PROCESSOS ? '/PaginaPrincipal' : '/PaginaAdicionarHoras');
     }
-  }, [user, allowed, tipo, navigate]);
+  }, [user, allowed, tipo, navigate, t]);
 
   return allowed ? <GerirHorasExtra /> : null;
 };

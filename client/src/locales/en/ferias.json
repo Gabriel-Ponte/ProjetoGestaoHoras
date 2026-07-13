@@ -1,0 +1,53 @@
+{
+  "tabs": {
+    "manageRequests": "Request Management",
+    "manageVacation": "Vacation Management"
+  },
+  "actions": {
+    "addVacation": "Add Vacation",
+    "manageVacation": "Manage Vacation"
+  },
+  "fields": {
+    "user": "User:"
+  },
+  "confirm": {
+    "deleteDays": "Are you sure you want to delete the Vacation Days?"
+  },
+  "toast": {
+    "dayDeleted": "Day Deleted",
+    "daysAdded": "Days added!",
+    "invalidDays": "Invalid days entered!",
+    "addError": "Error adding Vacation!",
+    "invalidValues": "Invalid Values Entered!"
+  },
+  "add": {
+    "title": "Add Vacation",
+    "addDaysButton": "Add Days",
+    "remainingVacation": "Vacation days to claim: {{total}}",
+    "pendingRequests": "Vacation days awaiting approval: {{total}}",
+    "startDate": "Start",
+    "endDate": "End",
+    "datePlaceholder": "Day to add hours",
+    "day": "Day",
+    "days": "Days",
+    "invalidSelectedDays": "Selected days are invalid!",
+    "totalDays": "Total days: {{total}}",
+    "submit": "Submit Vacation"
+  },
+  "header": {
+    "user": "User",
+    "accepted": "Accepted",
+    "possible": "Available",
+    "remaining": "To Claim",
+    "add": "Add",
+    "year": "Year"
+  },
+  "list": {
+    "add": "Add",
+    "responsible": "Approved by",
+    "inserted": "Added",
+    "correspondingYear": "Corresponding Year",
+    "date": "Date",
+    "numberOfDays": "Number of Days"
+  }
+}

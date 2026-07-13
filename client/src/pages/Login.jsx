@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../features/utilizadores/utilizadorSlice';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const initialState = {
   email: '',
@@ -12,6 +13,7 @@ const initialState = {
 };
 
 function Login() {
+  const { t } = useTranslation('auth');
   const [values, setValues] = useState(initialState);
   const { user, isLoading } = useSelector((store) => store.utilizador);
   const dispatch = useDispatch();
@@ -27,7 +29,7 @@ function Login() {
     e.preventDefault();
     const { email, password } = values;
     if (!email || !password) {
-      toast.error('Preencha todos os campos');
+      toast.error(t('login.fillAllFields'));
       return;
     }
     const result = await dispatch(loginUser({ email, password }));
@@ -44,7 +46,7 @@ function Login() {
         return;
       }
     } else {
-      toast.error('Valores inseridos incorretos!');
+      toast.error(t('login.invalidCredentials'));
       return;
     }
   };
@@ -69,9 +71,9 @@ const handleForget =()=>{
     <Wrapper className='full-page'>
       <Header />
       <div className="MainLogin">
-        <h1 className='mt-5 title'>Gestão Horas</h1>
+        <h1 className='mt-5 title'>{t('login.appTitle')}</h1>
         <form className='loginForm' onSubmit={onSubmit}>
-          <h3 className='mb-5'>{'Login'}</h3>
+          <h3 className='mb-5'>{t('login.heading')}</h3>
           
           {/* email field */}
           <FormRow 
@@ -79,9 +81,9 @@ const handleForget =()=>{
           classNameLabel='col-md-3 text-end' 
           classNameInput='col-md-9'
           type='email' 
-          name='email' 
-          labelText='Email:' 
-          value={values.email} 
+          name='email'
+          labelText={t('login.emailLabel')}
+          value={values.email}
           autocomp='@isqctag.pt'
           handleChange={handleChange} 
           required="True"
@@ -95,8 +97,8 @@ const handleForget =()=>{
           type='password' 
           name='password' 
           autocomp='off'
-          labelText='Password:' 
-          value={values.password} 
+          labelText={t('login.passwordLabel')}
+          value={values.password}
           handleChange={handleChange} 
           required="True"
           />
@@ -107,11 +109,11 @@ const handleForget =()=>{
           className='buttonP btn btn-link' 
           onClick={handleForget} 
           disabled={isLoading}>
-            {isLoading ? 'loading...' : 'Repor password'}
+            {isLoading ? t('login.loading') : t('login.forgotPassword')}
           </button>
           </div>
           <button type='submit' className='btn btn-outline-primary' disabled={isLoading}>
-            {isLoading ? 'loading...' : 'Submeter'}
+            {isLoading ? t('login.loading') : t('login.submit')}
           </button>
         </form>
       </div>

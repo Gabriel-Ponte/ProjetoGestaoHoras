@@ -4,8 +4,10 @@ import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useEffect } from 'react';
 import { canAccessProjetos } from '@/utils/roles';
+import { useTranslation } from 'react-i18next';
 
 const PaginaAdicionarHoras = () => {
+  const { t } = useTranslation('auth');
   const { user } = useSelector((store) => store.utilizador);
   const navigate = useNavigate();
 
@@ -14,15 +16,15 @@ const PaginaAdicionarHoras = () => {
       if (canAccessProjetos(user.user.tipo)) {
         // Render the component
       } else {
-        toast.error("Sem permissões para aceder a esta página!");
+        toast.error(t('guard.noPermission'));
         navigate('/PaginaAdicionarHoras');
       }
     } else {
       // Handle the case where user is undefined (optional, depending on your use case)
-      toast.error("Utilizador não autenticado!");
+      toast.error(t('guard.notAuthenticated'));
       navigate('/LoginPage');
     }
-  }, [user, navigate]);
+  }, [user, navigate, t]);
 
   return (
     <>

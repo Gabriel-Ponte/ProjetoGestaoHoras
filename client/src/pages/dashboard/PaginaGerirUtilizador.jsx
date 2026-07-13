@@ -4,20 +4,22 @@ import { GerirUtilizadores } from '../../components';
 import { toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
 import { canManageUtilizadores, canAccessProjetos } from '@/utils/roles';
+import { useTranslation } from 'react-i18next';
 
 const PaginaGerirUtilizadores = () => {
+  const { t } = useTranslation('auth');
   const { user } = useSelector((store) => store.utilizador);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!user) {
-      toast.error("Utilizador não autenticado!");
+      toast.error(t('guard.notAuthenticated'));
       navigate('/LoginPage');
     } else if (!canManageUtilizadores(user.user.tipo)) {
-      toast.error("Sem permissões para aceder a esta página!");
+      toast.error(t('guard.noPermission'));
       navigate(canAccessProjetos(user.user.tipo) ? '/PaginaPrincipal' : '/PaginaAdicionarHoras');
     }
-  }, [user, navigate]);
+  }, [user, navigate, t]);
 
   //{user &&  (canManageUtilizadores(user.user.tipo)) && <GerirUtilizadores />}
   return (

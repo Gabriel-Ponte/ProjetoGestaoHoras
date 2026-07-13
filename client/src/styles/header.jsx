@@ -11,6 +11,7 @@ const Wrapper = styled.section`
   }
 
   .header .container {
+    position: relative; /* anchor for .header-actions */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -27,12 +28,39 @@ const Wrapper = styled.section`
     object-fit: contain;
   }
 
+  /* Absolutely positioned so the logo stays optically centred. */
+  .header-actions {
+    position: absolute;
+    right: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
   @media (max-width: 700px) {
     .header .container {
       padding: 0.65rem 1rem;
     }
     .imageLogo {
       height: 40px;
+    }
+    .header-actions {
+      right: 0.75rem;
+      gap: 0.35rem;
+    }
+  }
+
+  /* Very small screens: stop the controls overlapping the logo. */
+  @media (max-width: 420px) {
+    .header .container {
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .header-actions {
+      position: static;
+      transform: none;
     }
   }
 `;

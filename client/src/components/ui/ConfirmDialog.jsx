@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import AppModal from './AppModal';
 import AppButton from './AppButton';
 
@@ -16,31 +17,36 @@ import AppButton from './AppButton';
  */
 const ConfirmDialog = ({
   open,
-  title = 'Confirmar',
+  title,
   message,
-  confirmLabel = 'Confirmar',
-  cancelLabel = 'Cancelar',
+  confirmLabel,
+  cancelLabel,
   variant = 'primary',
   loading = false,
   onConfirm,
   onCancel,
   children,
 }) => {
+  const { t } = useTranslation('common');
+  const heading = title === undefined ? t('actions.confirm') : title;
+  const okLabel = confirmLabel === undefined ? t('actions.confirm') : confirmLabel;
+  const noLabel = cancelLabel === undefined ? t('actions.cancel') : cancelLabel;
+
   return (
     <AppModal
       open={open}
       onClose={onCancel}
-      title={title}
+      title={heading}
       size="sm"
       closeOnBackdrop={!loading}
       closeOnEsc={!loading}
       footer={
         <>
           <AppButton variant="secondary" onClick={onCancel} disabled={loading}>
-            {cancelLabel}
+            {noLabel}
           </AppButton>
           <AppButton variant={variant} onClick={onConfirm} loading={loading}>
-            {confirmLabel}
+            {okLabel}
           </AppButton>
         </>
       }

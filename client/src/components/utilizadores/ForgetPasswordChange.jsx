@@ -6,8 +6,10 @@ import { useDispatch } from 'react-redux';
 import { FormRow, Header, Footer } from '@/components';
 import Wrapper from '@/styles/LoginPage';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const ForgetPasswordChange = () => {
+  const { t } = useTranslation('auth');
   const { token } = useParams();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -26,11 +28,11 @@ const ForgetPasswordChange = () => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      setMessage('Passwords não equivalem.');
+      setMessage(t('changePassword.mismatch'));
       return;
     }
     if (password.length < 6) {
-      setMessage('Insira pelo menos 6 caracteres!');
+      setMessage(t('changePassword.tooShort'));
       return;
     }
     try {
@@ -38,13 +40,13 @@ const ForgetPasswordChange = () => {
 
       const result = await dispatch(updatePassword({ token, password }));
       if (!result.error) {
-        setMessage(`Password Alterada`);
+        setMessage(t('changePassword.success'));
         setTimeout(() => {
           navigate('/login');
         }, 5000);
       }
     } catch (error) {
-      setMessage('Ocorreu um erro ao mudar a password');
+      setMessage(t('changePassword.error'));
       console.error(error);
     }
   };
@@ -53,7 +55,7 @@ const ForgetPasswordChange = () => {
     <Wrapper>
       <Header />
       <div className='MainLogin'>
-        <h1 className='mt-5 title'>Alterar Password</h1>
+        <h1 className='mt-5 title'>{t('changePassword.title')}</h1>
         <form className='loginForm' onSubmit={handleSubmit}>
           <p className='mb-3'>{message}</p>
 
@@ -63,7 +65,7 @@ const ForgetPasswordChange = () => {
             classNameInput='col-md-9'
             type='password'
             name='password'
-            labelText='Nova Password:'
+            labelText={t('changePassword.newPasswordLabel')}
             value={password}
             handleChange={handlePasswordChange}
             required="True" />
@@ -74,14 +76,14 @@ const ForgetPasswordChange = () => {
             classNameInput='col-md-9'
             type='password'
             name='Confirmpassword'
-            labelText='Confirmar Password:'
+            labelText={t('changePassword.confirmPasswordLabel')}
             value={confirmPassword}
             handleChange={handleConfirmPasswordChange}
             required="True"
           />
 
           <button type='submit' className='btn btn-outline-primary'>
-            Alterar Password
+            {t('changePassword.submit')}
           </button>
         </form>
 

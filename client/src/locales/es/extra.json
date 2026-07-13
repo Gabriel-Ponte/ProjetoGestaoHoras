@@ -1,0 +1,59 @@
+{
+  "title": {
+    "managerOvertime": "Gestión de Horas Extra del Responsable"
+  },
+  "sections": {
+    "requestManagement": "Gestión de Solicitudes",
+    "vacationManagement": "Gestión de Vacaciones"
+  },
+  "tabs": {
+    "pending": "Solicitudes por Aceptar",
+    "accepted": "Solicitudes Aceptadas",
+    "declined": "Solicitudes Rechazadas",
+    "paidOvertime": "Horas Extra Pagadas"
+  },
+  "filters": {
+    "overtime": "Horas Extra",
+    "overtimeCompensation": "Compensación de Horas Extra",
+    "vacation": "Vacaciones",
+    "allRequests": "Todas las solicitudes"
+  },
+  "empty": {
+    "noOvertimeRequests": "Sin Solicitudes de Horas Extra",
+    "noWorkedOvertimeRequests": "Sin Solicitudes de Horas Extra Realizadas",
+    "noOvertimeCompensationRequests": "Sin Solicitudes de Compensación de Horas Extra",
+    "noVacationRequests": "Sin Solicitudes de Vacaciones",
+    "noAcceptedOvertimeRequests": "Sin Solicitudes de Horas Extra Aceptadas",
+    "noAcceptedWorkedOvertimeRequests": "Sin Solicitudes de Horas Extra Realizadas Aceptadas",
+    "noAcceptedOvertimeCompensationRequests": "Sin Solicitudes de Compensación de Horas Extra Aceptadas",
+    "noAcceptedVacationRequests": "Sin Solicitudes de Vacaciones Aceptadas",
+    "noDeclinedOvertimeRequests": "Sin Solicitudes de Horas Extra Rechazadas",
+    "noDeclinedWorkedOvertimeRequests": "Sin Solicitudes de Horas Extra Realizadas Rechazadas",
+    "noDeclinedOvertimeCompensationRequests": "Sin Solicitudes de Compensación de Horas Extra Rechazadas",
+    "noDeclinedVacationRequests": "Sin Solicitudes de Vacaciones Rechazadas",
+    "noPaidOvertime": "Sin Horas Extra Pagadas"
+  },
+  "confirm": {
+    "declineDay": "¿Está seguro de que desea rechazar el día: {{date}} a {{name}}?",
+    "declineRequest": "¿Está seguro de que desea rechazar la solicitud de {{name}}?"
+  },
+  "errors": {
+    "declineDay": "Se ha producido un error al rechazar el Día."
+  },
+  "payments": {
+    "add": "Añadir Pago",
+    "submit": "Añadir"
+  },
+  "fields": {
+    "Utilizador": "Usuario",
+    "Utilizador Responsavel": "Responsable",
+    "Mes": "Mes",
+    "Ano": "Año",
+    "Horas": "Horas"
+  },
+  "toast": {
+    "requiredField": "¡Por favor, rellene el campo obligatorio: {{field}}!",
+    "requiredFields": "¡Por favor, rellene todos los campos obligatorios!",
+    "paymentAdded": "¡Horas pagadas añadidas!"
+  }
+}

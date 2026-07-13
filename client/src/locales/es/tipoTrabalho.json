@@ -1,0 +1,26 @@
+{
+  "page": {
+    "title": "Tipos de Trabajo",
+    "subtitle": "Gestionar los tipos de trabajo disponibles"
+  },
+  "form": {
+    "escolhaTipo": "Elija un tipo",
+    "addSectionTitle": "Añadir tipo de trabajo",
+    "novoTipoPlaceholder": "Nombre del nuevo tipo de trabajo…"
+  },
+  "actions": {
+    "alterar": "Modificar",
+    "adicionar": "Añadir",
+    "apagar": "Eliminar",
+    "apagarAriaLabel": "Eliminar {{nome}}"
+  },
+  "confirm": {
+    "apagarTitle": "¿Eliminar tipo de trabajo?",
+    "apagarMessage": "¿Está seguro de que desea eliminar el tipo de trabajo \"{{nome}}\"?"
+  },
+  "errors": {
+    "apagar": "Se ha producido un error al eliminar el Tipo de Trabajo.",
+    "vazio": "¡Por favor, no introduzca un tipo de trabajo vacío!",
+    "duplicado": "Este tipo de trabajo {{nome}} ya existe."
+  }
+}

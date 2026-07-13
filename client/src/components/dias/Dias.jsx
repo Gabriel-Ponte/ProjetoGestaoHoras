@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, memo } from 'react';
 import Wrapper from '@/styles/Dias';
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { getProjetoList } from '@/features/projetos/projetosSlice';
 import { AiFillDelete } from 'react-icons/ai';
@@ -8,6 +9,7 @@ import PropTypes from 'prop-types';
 import { AppButton } from '@/components/ui';
 import LoadingState from '@/components/ui/LoadingState';
 const Dia = ({ _id, Data, NumeroHoras, _id_Group, Utilizador, tipoDeTrabalhoHoras, associated, listaTT, accepted, tipoUser, deleteDay , deleteDayGroup, buttonConfirmed}) => {
+  const { t } = useTranslation('dias');
   const dispatch = useDispatch();
   const [projeto, setProjeto] = useState([]);
   const [diaAssociated, setDiaAssociated] = useState(null);
@@ -121,7 +123,7 @@ const Dia = ({ _id, Data, NumeroHoras, _id_Group, Utilizador, tipoDeTrabalhoHora
                   <LoadingState inline size={24} message={null} />
                   ): (
                   <AppButton type='submit' variant='danger' size='sm' onClick={() => deleteDiaGroupConfirm(_id, Data, _id_Group)} disabled={buttonConfirmed}>
-                    Apagar Pedido
+                    {t('dia.deleteRequest')}
                   </AppButton>
                   )}
                 </div>
@@ -148,7 +150,7 @@ const Dia = ({ _id, Data, NumeroHoras, _id_Group, Utilizador, tipoDeTrabalhoHora
                             const matchingTT = listaTT.find(item => item?._id === trabalho);
                             return (
                               <p key={index}>
-                                {matchingTT ? matchingTT.TipoTrabalho.trim() : 'Tipo de Trabalho Apagado'} 
+                                {matchingTT ? matchingTT.TipoTrabalho.trim() : t('dia.deletedWorkType')}
                                 {(accepted === 5 || accepted === 4) && diaAssociated ? ` ${new Date(diaAssociated).toLocaleDateString('en-CA')}` : ''}
                               </p>
                             );

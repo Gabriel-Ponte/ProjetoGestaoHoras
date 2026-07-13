@@ -1,0 +1,59 @@
+{
+  "title": {
+    "managerOvertime": "Manager Overtime Management"
+  },
+  "sections": {
+    "requestManagement": "Request Management",
+    "vacationManagement": "Holiday Management"
+  },
+  "tabs": {
+    "pending": "Pending Requests",
+    "accepted": "Accepted Requests",
+    "declined": "Declined Requests",
+    "paidOvertime": "Paid Overtime"
+  },
+  "filters": {
+    "overtime": "Overtime",
+    "overtimeCompensation": "Overtime Compensation",
+    "vacation": "Holidays",
+    "allRequests": "All requests"
+  },
+  "empty": {
+    "noOvertimeRequests": "No Overtime Requests",
+    "noWorkedOvertimeRequests": "No Worked Overtime Requests",
+    "noOvertimeCompensationRequests": "No Overtime Compensation Requests",
+    "noVacationRequests": "No Holiday Requests",
+    "noAcceptedOvertimeRequests": "No Accepted Overtime Requests",
+    "noAcceptedWorkedOvertimeRequests": "No Accepted Worked Overtime Requests",
+    "noAcceptedOvertimeCompensationRequests": "No Accepted Overtime Compensation Requests",
+    "noAcceptedVacationRequests": "No Accepted Holiday Requests",
+    "noDeclinedOvertimeRequests": "No Declined Overtime Requests",
+    "noDeclinedWorkedOvertimeRequests": "No Declined Worked Overtime Requests",
+    "noDeclinedOvertimeCompensationRequests": "No Declined Overtime Compensation Requests",
+    "noDeclinedVacationRequests": "No Declined Holiday Requests",
+    "noPaidOvertime": "No Paid Overtime"
+  },
+  "confirm": {
+    "declineDay": "Are you sure you want to decline the day: {{date}} for {{name}}?",
+    "declineRequest": "Are you sure you want to decline the request from {{name}}?"
+  },
+  "errors": {
+    "declineDay": "An error occurred while declining the Day."
+  },
+  "payments": {
+    "add": "Add Payment",
+    "submit": "Add"
+  },
+  "fields": {
+    "Utilizador": "User",
+    "Utilizador Responsavel": "Manager",
+    "Mes": "Month",
+    "Ano": "Year",
+    "Horas": "Hours"
+  },
+  "toast": {
+    "requiredField": "Please fill in the required field: {{field}}!",
+    "requiredFields": "Please fill in all required fields!",
+    "paymentAdded": "Paid hours added!"
+  }
+}

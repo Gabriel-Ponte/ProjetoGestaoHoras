@@ -43,7 +43,7 @@ const Wrapper = styled.section`
   .fimSemana {
     width: 10px;
     height: 10px;
-    background-color: #BCB8B1;
+    background-color: var(--status-weekend);
     display: inline-block;
     vertical-align: middle;
     margin-top:auto;
@@ -52,7 +52,7 @@ const Wrapper = styled.section`
   .extra{
     width:10px;
     height:10px;
-    background-color: #1A4301;
+    background-color: var(--status-hours-high);
     display: inline-block;
     vertical-align: middle;
     margin-top:auto;
@@ -61,7 +61,7 @@ const Wrapper = styled.section`
   .normal{
     width:10px;
     height:10px;
-    background-color: #588157;
+    background-color: var(--status-hours);
     display: inline-block;
     vertical-align: middle;
     margin-top:auto;
@@ -70,7 +70,7 @@ const Wrapper = styled.section`
   .menos{
     width:10px;
     height:10px;
-    background-color: #DDDF00;
+    background-color: var(--status-hours-low);
     display: inline-block;
     vertical-align: middle;
     margin-top:auto;
@@ -79,7 +79,7 @@ const Wrapper = styled.section`
   .filtro{
     width:10px;
     height:10px;
-    background-color: #DDE5B6;
+    background-color: var(--status-approval);
     display: inline-block;
     vertical-align: middle;
     margin-top:auto;
@@ -88,7 +88,7 @@ const Wrapper = styled.section`
   .compensDomingo{
     width:10px;
     height:10px;
-    background-color:  #CCCCCC;
+    background-color: var(--status-compensation-sunday);
     display: inline-block;
     vertical-align: middle;
     margin-top:auto;
@@ -97,7 +97,7 @@ const Wrapper = styled.section`
   .ferias{
     width:10px;
     height:10px;
-    background-color: #B7B5E4;
+    background-color: var(--status-vacation);
     display: inline-block;
     vertical-align: middle;
     margin-top:auto;
@@ -108,7 +108,7 @@ const Wrapper = styled.section`
   .horasCompensacao{
     width:10px;
     height:10px;
-    background-color: #3C5B6F;
+    background-color: var(--status-compensation);
     display: inline-block;
     vertical-align: middle;
     margin-top:auto;
@@ -118,7 +118,7 @@ const Wrapper = styled.section`
   .feriados{
     width:10px;
     height:10px;
-    background-color: #c26c18;
+    background-color: var(--status-holiday);
     display: inline-block;
     vertical-align: middle;
     margin-top:auto;

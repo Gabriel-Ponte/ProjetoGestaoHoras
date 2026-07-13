@@ -2,10 +2,13 @@ import { AiOutlineArrowDown } from 'react-icons/ai';
 import { AiOutlineArrowUp } from 'react-icons/ai';
 import { BsArrowLeftShort } from 'react-icons/bs';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import Wrapper from '@/styles/ListaProjetosHeader';
-import PropTypes from 'prop-types'; 
+import PropTypes from 'prop-types';
 
 const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
+
+    const { t } = useTranslation('projetos');
 
     const sort =()=>{
         // Projeto
@@ -142,7 +145,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                         className="btn buttonHeader"
                                         onClick={() => toggleSort('Cliente')}
                                     >
-                                        Cliente{' '}
+                                        {t('header.client')}{' '}
                                         {verificaActivo === "-Cliente" ?
                                             <AiOutlineArrowUp /> : (verificaActivo === "Cliente" ?
                                                 <AiOutlineArrowDown /> : <BsArrowLeftShort />
@@ -157,7 +160,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                         className="btn buttonHeader"
                                         onClick={() => toggleSort('Nome')}
                                     >
-                                        Projeto{' '}
+                                        {t('header.project')}{' '}
                                         {verificaActivo === "-Nome" ?
                                             <AiOutlineArrowUp /> : (verificaActivo === "Nome" ?
                                                 <AiOutlineArrowDown /> : <BsArrowLeftShort />
@@ -177,7 +180,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                         className="btn buttonHeader"
                                         onClick={() => toggleSort('Acao')}
                                     >
-                                        Ações{' '}
+                                        {t('header.actions')}{' '}
                                         {verificaActivo === "-Acao" ?
                                             <AiOutlineArrowUp /> : (verificaActivo === "Acao" ?
                                                 <AiOutlineArrowDown /> : <BsArrowLeftShort />
@@ -192,7 +195,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                         className="btn buttonHeader"
                                         onClick={() => toggleSort('Notas')}
                                     >
-                                        Notas{' '}
+                                        {t('header.notes')}{' '}
                                         {verificaActivo === "-Notas" ?
                                             <AiOutlineArrowUp /> : (verificaActivo === "Notas" ?
                                                 <AiOutlineArrowDown /> : <BsArrowLeftShort />
@@ -207,7 +210,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                         name="VisualizarButton"
                                         className="btn buttonHeader"
                                     >
-                                        Piloto
+                                        {t('header.pilot')}
                                     </button>
                                 </div>
                             </div>
@@ -224,7 +227,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                                 onClick={() => toggleSort('DataFim')}
                                             >
 
-                                                Data Final{' '}
+                                                {t('header.endDate')}{' '}
                                                 {verificaActivo === "-DataFim" ?
                                                     <AiOutlineArrowUp /> : (verificaActivo === "DataFim" ?
                                                         <AiOutlineArrowDown /> : <BsArrowLeftShort />
@@ -240,7 +243,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                                 onClick={() => toggleSort('Resultado')}
                                             >
 
-                                                Resultado{' '}
+                                                {t('header.result')}{' '}
                                                 {verificaActivo === "-Resultado" ?
                                                     <AiOutlineArrowUp /> : (verificaActivo === "Resultado" ?
                                                         <AiOutlineArrowDown /> : <BsArrowLeftShort />
@@ -258,7 +261,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                                 className="btn buttonHeader"
                                                 onClick={() => toggleSort('DataObjetivo')}
                                             >
-                                                Data Objetivo{' '}
+                                                {t('header.targetDate')}{' '}
 
                                                 {verificaActivo === "-DataObjetivo" ?
                                                     <AiOutlineArrowUp /> : (verificaActivo === "DataObjetivo" ?
@@ -269,7 +272,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                         </div>
                                         <div className="col-md-4 themed-grid-col">
                                         <p className="btn buttonHeader" disabled>
-                                                Alerta dias
+                                                {t('header.daysAlert')}
                                             </p>
                                         </div>
 

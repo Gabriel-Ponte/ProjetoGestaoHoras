@@ -1,0 +1,55 @@
+{
+  "calendar": {
+    "months": {
+      "january": "Enero",
+      "february": "Febrero",
+      "march": "Marzo",
+      "april": "Abril",
+      "may": "Mayo",
+      "june": "Junio",
+      "july": "Julio",
+      "august": "Agosto",
+      "september": "Septiembre",
+      "october": "Octubre",
+      "november": "Noviembre",
+      "december": "Diciembre"
+    },
+    "weekdays": {
+      "sun": "Domingo",
+      "mon": "Lunes",
+      "tue": "Martes",
+      "wed": "Miércoles",
+      "thu": "Jueves",
+      "fri": "Viernes",
+      "sat": "Sábado"
+    },
+    "errors": {
+      "startNotDate": "Inicio no es una fecha",
+      "objectiveNotDate": "Objetivo no es una fecha",
+      "endNotDate": "Fin no es una fecha"
+    }
+  },
+  "dia": {
+    "deleteRequest": "Eliminar Petición",
+    "deletedWorkType": "Tipo de Trabajo Eliminado"
+  },
+  "holidays": {
+    "anoNovo": "Año Nuevo",
+    "diaLiberdade": "Día de la Libertad",
+    "diaTrabalhador": "Día del Trabajador",
+    "diaPortugal": "Día de Portugal",
+    "assuncaoNossaSenhora": "Asunción de Nuestra Señora",
+    "feriasColetivas": "Vacaciones Colectivas",
+    "implantacaoRepublica": "Implantación de la República",
+    "diaTodosSantos": "Día de Todos los Santos",
+    "restauracaoIndependencia": "Restauración de la Independencia",
+    "diaImaculadaConceicao": "Inmaculada Concepción",
+    "feriadoMunicipal": "Fiesta Municipal",
+    "natal": "Navidad",
+    "carnaval": "Carnaval",
+    "sextaFeiraSanta": "Viernes Santo",
+    "pascoa": "Pascua",
+    "segundaFeiraPascoa": "Lunes de Pascua",
+    "corpoDeus": "Corpus Christi"
+  }
+}

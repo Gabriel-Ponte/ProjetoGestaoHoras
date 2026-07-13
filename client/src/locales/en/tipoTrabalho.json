@@ -1,0 +1,26 @@
+{
+  "page": {
+    "title": "Work Types",
+    "subtitle": "Manage the available work types"
+  },
+  "form": {
+    "escolhaTipo": "Choose a type",
+    "addSectionTitle": "Add work type",
+    "novoTipoPlaceholder": "Name of the new work type…"
+  },
+  "actions": {
+    "alterar": "Update",
+    "adicionar": "Add",
+    "apagar": "Delete",
+    "apagarAriaLabel": "Delete {{nome}}"
+  },
+  "confirm": {
+    "apagarTitle": "Delete work type?",
+    "apagarMessage": "Are you sure you want to delete the work type \"{{nome}}\"?"
+  },
+  "errors": {
+    "apagar": "An error occurred while deleting the Work Type.",
+    "vazio": "Please do not enter an empty work type!",
+    "duplicado": "This work type {{nome}} already exists."
+  }
+}

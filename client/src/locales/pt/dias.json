@@ -1,0 +1,55 @@
+{
+  "calendar": {
+    "months": {
+      "january": "Janeiro",
+      "february": "Fevereiro",
+      "march": "Março",
+      "april": "Abril",
+      "may": "Maio",
+      "june": "Junho",
+      "july": "Julho",
+      "august": "Agosto",
+      "september": "Setembro",
+      "october": "Outubro",
+      "november": "Novembro",
+      "december": "Dezembro"
+    },
+    "weekdays": {
+      "sun": "Domingo",
+      "mon": "Segunda",
+      "tue": "Terça",
+      "wed": "Quarta",
+      "thu": "Quinta",
+      "fri": "Sexta",
+      "sat": "Sábado"
+    },
+    "errors": {
+      "startNotDate": "Inicio não é uma data",
+      "objectiveNotDate": "Objetivo não é uma data",
+      "endNotDate": "Fim não é uma data"
+    }
+  },
+  "dia": {
+    "deleteRequest": "Apagar Pedido",
+    "deletedWorkType": "Tipo de Trabalho Apagado"
+  },
+  "holidays": {
+    "anoNovo": "Ano Novo",
+    "diaLiberdade": "Dia da Liberdade",
+    "diaTrabalhador": "Dia do Trabalhador",
+    "diaPortugal": "Dia de Portugal",
+    "assuncaoNossaSenhora": "Assunção de Nossa Senhora",
+    "feriasColetivas": "Ferias Coletivas",
+    "implantacaoRepublica": "Implantação da República",
+    "diaTodosSantos": "Dia de Todos os Santos",
+    "restauracaoIndependencia": "Restauração da Independência",
+    "diaImaculadaConceicao": "Dia da Imaculada Conceição",
+    "feriadoMunicipal": "Feriado Municipal",
+    "natal": "Natal",
+    "carnaval": "Carnaval",
+    "sextaFeiraSanta": "Sexta-feira Santa",
+    "pascoa": "Páscoa",
+    "segundaFeiraPascoa": "Segunda-feira de Páscoa",
+    "corpoDeus": "Corpo de Deus"
+  }
+}

@@ -75,20 +75,128 @@
   --view-width: 90vw;
   --nav-height: 6rem;
 
-  /* ---- Calendar (react-widgets custom calendar, intentional dark theme) --- */
-  --calendar-bg-color: #262829;
-  --calendar-font-color: #ffffff;
-  --weekdays-border-bottom-color: #404040;
-  --calendar-date-hover-color: #505050;
-  --calendar-current-date-color: #1b1f21;
-  --calendar-today-color: linear-gradient(to bottom, #03a9f4, #2196f3);
-  --calendar-today-innerborder-color: transparent;
+  /* ---- Calendar -----------------------------------------------------------
+     These are built ON TOP of the semantic tokens above, so the calendar
+     follows light/dark automatically — no separate dark block is needed.
+     (It used to be a hardcoded dark widget sitting inside a light app.) */
+  --calendar-bg-color: var(--white);
+  --calendar-border-color: var(--grey-200);
+  --calendar-font-color: var(--grey-800);
+  --calendar-muted-color: var(--grey-500);
+  --weekdays-border-bottom-color: var(--grey-200);
+  --calendar-date-hover-color: var(--primary-300);
+  --calendar-date-hover-bg: var(--primary-50);
+  --calendar-current-date-color: var(--grey-100);
+  --calendar-today-color: var(--primary-700);
+  --calendar-today-bg: var(--primary-50);
+  --calendar-today-innerborder-color: var(--primary-300);
   --calendar-nextprev-bg-color: transparent;
-  --next-prev-arrow-color: #ffffff;
+  --next-prev-arrow-color: var(--grey-600);
   --calendar-border-radius: 16px;
-  --calendar-prevnext-date-color: #484848;
+  --calendar-prevnext-date-color: var(--grey-400);
+
+  /* ---- Status colour code -------------------------------------------------
+     THE single source of truth for the app's semantic status colours. The same
+     hues render as calendar day-chips AND as the 10px legend swatches in
+     VisualizarHoras / VisualizarHorasProjetos / VisualizarProjeto, plus the
+     overtime rows. They used to be copy-pasted across 5 files, so a legend could
+     silently drift from the calendar it explains. Change them HERE only.
+
+     These hues are FIXED — they do not flip with the theme (a colour code must
+     mean the same thing in light and dark). Consequently the text placed on them
+     is fixed too: --status-on-dark / --status-on-light.
+
+     `hours` and `date-start` (and `date-target` / `not-found`) currently share a
+     value but are separate tokens on purpose: they carry different meanings and
+     must be able to diverge without dragging each other. */
+  --status-weekend: #bcb8b1;
+  --status-holiday: #c26c18;
+
+  --status-hours: #588157; /* hours inserted / on target */
+  --status-hours-low: #dddf00; /* below target */
+  --status-hours-high: #1a4301; /* overtime */
+  --status-approval: #dde5b6; /* awaiting approval */
+
+  --status-vacation: #b7b5e4;
+  --status-vacation-pending: #a7c957; /* being selected */
+  --status-compensation: #3c5b6f;
+  --status-compensation-sunday: #cccccc;
+  --status-compensation-soft: #e8fccf; /* compensation row tint */
+
+  --status-project: #898121; /* project hours inserted */
+  --status-date-start: #588157;
+  --status-date-end: #001524;
+  --status-date-target: #81171b;
+  --status-not-found: #81171b;
+
+  /* Text on the fixed chips above. */
+  --status-on-dark: #ffffff;
+  --status-on-light: #1b1f21;
 
   color-scheme: light;
+}
+
+/* =============================================================================
+   Dark theme
+   -----------------------------------------------------------------------------
+   Only the TOKENS are re-mapped — no component CSS is duplicated, so every
+   styled-component and every UI-kit component follows automatically.
+
+   The re-map is semantic, not a blind inversion:
+   - `--white` is always a SURFACE (cards, navbar, inputs) -> becomes a dark
+     surface that sits *above* the page background (`--grey-100`).
+   - `--grey-50..900` flip: 50 = subtle/darkest, 900 = strongest text.
+   - `--primary-600/700` are HOVER states: in light they darken, in dark they
+     must LIGHTEN, so they are mapped to lighter blues.
+   - `--red-dark` / `--green-dark` do double duty (solid button background WITH
+     white text, and error/success TEXT on the page). They are therefore kept as
+     mid-tones that stay legible in both roles instead of being inverted.
+   - Text placed on brand colour uses hardcoded #fff in the components, so it is
+     intentionally immune to this re-map.
+============================================================================= */
+:root[data-theme='dark'] {
+  /* ---- Surfaces & neutrals ------------------------------------------------ */
+  --white: #1a212b; /* primary surface: cards, navbar, modals, inputs */
+  --black: #f4f7fa;
+
+  --grey-50: #212a35; /* elevated/alt surface: card footers, subtle hover */
+  --grey-100: #0f151c; /* page background, table head, disabled fields */
+  --grey-200: #2b3542; /* borders, dividers */
+  --grey-300: #3a4655; /* stronger borders (inputs) */
+  --grey-400: #6b7a8d; /* placeholders, scrollbar thumb */
+  --grey-500: #94a3b8; /* muted text */
+  --grey-600: #aab7c5; /* labels */
+  --grey-700: #c8d2dd; /* secondary text */
+  --grey-800: #e3e9ef; /* body text */
+  --grey-900: #f4f7fa; /* headings */
+
+  /* ---- Primary (brand blue, lifted for contrast on dark) ------------------ */
+  --primary-50: #17293c; /* subtle blue tint used for hover backgrounds */
+  --primary-100: #1d3a52;
+  --primary-200: #24455f;
+  --primary-300: #35607f;
+  --primary-400: #2f74ab;
+  --primary-500: #3d87c9; /* main brand blue, lightened so it reads on dark */
+  --primary-600: #529ad9; /* hover -> lighter (inverse of light mode) */
+  --primary-700: #6fb0e6;
+  --primary-800: #8fc4ee;
+  --primary-900: #b3d8f5;
+
+  /* ---- State colours (mid-tones: legible as button bg AND as text) -------- */
+  --red-light: #3a1b1f;
+  --red-dark: #e5484d;
+  --green-light: #14301f;
+  --green-dark: #2f9e5f;
+  --amber-light: #3a2e12;
+  --amber-dark: #d99a2b;
+
+  /* ---- Shadows (need more opacity to read on dark) ------------------------ */
+  --shadow-1: 0 1px 3px 0 rgba(0, 0, 0, 0.5), 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 4px 6px -1px rgba(0, 0, 0, 0.55), 0 2px 4px -1px rgba(0, 0, 0, 0.4);
+  --shadow-3: 0 10px 15px -3px rgba(0, 0, 0, 0.6), 0 4px 6px -2px rgba(0, 0, 0, 0.45);
+  --shadow-4: 0 20px 25px -5px rgba(0, 0, 0, 0.65), 0 10px 10px -5px rgba(0, 0, 0, 0.5);
+
+  color-scheme: dark;
 }
 
 /* ---- Reset ---------------------------------------------------------------- */

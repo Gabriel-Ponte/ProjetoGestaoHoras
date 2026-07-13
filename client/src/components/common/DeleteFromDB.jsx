@@ -5,12 +5,17 @@ import { deleteProjeto } from '@/features/projetos/projetosSlice';
 import { deleteUser, toggleSidebar } from '@/features/utilizadores/utilizadorSlice';
 import { AiFillDelete } from 'react-icons/ai';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import { AppButton, ConfirmDialog } from '@/components/ui';
 
 const DeleteFromDB = ({ id, name, isLoading, type }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation('common');
   const [open, setOpen] = useState(false);
+
+  // `type` is the raw entity key from the caller ("Projeto" | "Utilizador").
+  const entity = t(`entities.${type}`, { defaultValue: type });
 
   const handleConfirmDelete = async () => {
     setOpen(false);
@@ -39,15 +44,15 @@ const DeleteFromDB = ({ id, name, isLoading, type }) => {
         leftIcon={<AiFillDelete />}
         loading={isLoading}
         onClick={() => setOpen(true)}
-        aria-label={`Eliminar ${type}`}
+        aria-label={t('delete.aria', { type: entity })}
       />
 
       <ConfirmDialog
         open={open}
-        title={`Eliminar ${type}?`}
-        message={`Deseja eliminar o ${type}: ${name}`}
-        confirmLabel="Apagar"
-        cancelLabel="Cancelar"
+        title={t('delete.title', { type: entity })}
+        message={t('delete.message', { type: entity, name })}
+        confirmLabel={t('actions.delete')}
+        cancelLabel={t('actions.cancel')}
         variant="danger"
         onConfirm={handleConfirmDelete}
         onCancel={() => setOpen(false)}

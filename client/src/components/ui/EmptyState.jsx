@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { FiInbox } from 'react-icons/fi';
+import { useTranslation } from 'react-i18next';
 
 /**
  * EmptyState — friendly "nothing here yet" placeholder with an optional action.
@@ -44,14 +45,19 @@ const Wrap = styled.div`
   }
 `;
 
-const EmptyState = ({ icon, title = 'Sem resultados', message, action, inline = false }) => (
-  <Wrap $inline={inline}>
-    <span className="empty-icon" aria-hidden="true">{icon || <FiInbox />}</span>
-    {title && <p className="empty-title">{title}</p>}
-    {message && <p className="empty-message">{message}</p>}
-    {action && <div className="empty-action">{action}</div>}
-  </Wrap>
-);
+const EmptyState = ({ icon, title, message, action, inline = false }) => {
+  const { t } = useTranslation('common');
+  const heading = title === undefined ? t('state.emptyTitle') : title;
+
+  return (
+    <Wrap $inline={inline}>
+      <span className="empty-icon" aria-hidden="true">{icon || <FiInbox />}</span>
+      {heading && <p className="empty-title">{heading}</p>}
+      {message && <p className="empty-message">{message}</p>}
+      {action && <div className="empty-action">{action}</div>}
+    </Wrap>
+  );
+};
 
 EmptyState.propTypes = {
   icon: PropTypes.node,

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { addDiasFeriasUtilizador, deleteDiasFerias, getAllFerias, getFeriasUtilizador, handleChangeFerias } from '@/features/ferias/feriasSlice';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import GerirHorasFeriasHeader from '@/components/ferias/GerirHorasFeriasHeader';
 import GerirHorasFeriasList from '@/components/ferias/GerirHorasFeriasList';
 import Loading from '@/components/common/Loading';
@@ -10,9 +11,11 @@ import AddFerias from '@/components/ferias/AddFerias';
 import FormRowSelect from '@/components/forms/FormRowSelect';
 import Calendar from '@/components/dias/Calendar'
 import { getAllDiasUtilizador } from '@/features/allDias/allDiasSlice';
+import { AppButton } from '@/components/ui';
 
 
 const GerirHorasFerias = ({ setGerirFerias, styleButton }) => {
+  const { t } = useTranslation('ferias');
   const dispatch = useDispatch();
 
   const [listaFerias, setlistaFerias] = useState({});
@@ -92,12 +95,12 @@ const GerirHorasFerias = ({ setGerirFerias, styleButton }) => {
 
   const deleteDiasFeriasConfirm = async (id) => {
     try {
-      const confirmed = window.confirm("Tem a certeza que deseja os  Dias de Férias?");
+      const confirmed = window.confirm(t('confirm.deleteDays'));
 
       if (confirmed) {
         const result = dispatch(deleteDiasFerias(id));
         if (!result.error) {
-          toast.success("Dia Apagado")
+          toast.success(t('toast.dayDeleted'))
           setUpdate(!update);
         }
       }
@@ -111,7 +114,7 @@ const GerirHorasFerias = ({ setGerirFerias, styleButton }) => {
     try {
       const result = await dispatch(addDiasFeriasUtilizador(values));
       if (result) {
-        toast.success("Dias adicionados!");
+        toast.success(t('toast.daysAdded'));
         setUpdate(!update);
       }
     } catch (error) {
@@ -227,37 +230,16 @@ const GerirHorasFerias = ({ setGerirFerias, styleButton }) => {
       <div className="row mb-12 text-center tittle">
       <div className="row ">
         <div className="col-md-6 d-flex flex-column justify-content-center align-items-center">
-          <button
-            type="submit"
-            style={{ ...styleButton }}
-            className={`btn middleButton `}
-            onClick={() => setGerirFerias(false)}
-          >
-            Gestão de Pedidos
-          </button>
+          <AppButton variant="secondary" fullWidth onClick={() => setGerirFerias(false)}>{t('tabs.manageRequests')}</AppButton>
         </div>
         <div className="col-md-6">
-          <button
-            type="submit"
-            style={{ ...styleButton }}
-            className={`btn middleButton activeMainButton`}
-
-          >
-            Gestão de Férias
-          </button>
+          <AppButton variant="primary" fullWidth>{t('tabs.manageVacation')}</AppButton>
         </div>
 
       </div>
       <div className="col-md-2"></div>
       <div className="col-md-8">
-      <button
-          type="submit"
-          style={{ ...styleButton }}
-          className={`btn middleButton `}
-          onClick={() => setAddFerias(false)}
-        >
-              Gerir Ferias
-    </button> </div>
+      <AppButton variant="secondary" fullWidth onClick={() => setAddFerias(false)}>{t('actions.manageVacation')}</AppButton> </div>
     <div className="container mt-5">
         <FormRowSelect
           type="text"
@@ -267,7 +249,7 @@ const GerirHorasFerias = ({ setGerirFerias, styleButton }) => {
           classNameResult='col-md-6 text-start'
           id="piloto"
           name="Piloto"
-          labelText="Utilizador:"
+          labelText={t('fields.user')}
           value={selectedUser}
           list={filteredUsers}
           handleChange={handleChangeUtilizador}
@@ -302,7 +284,9 @@ const GerirHorasFerias = ({ setGerirFerias, styleButton }) => {
       
       </div>
     );
-  }, [selectedUser,selectedUserID,listaFeriasUser?.length, listaFeriasUser?.length > 0 ? listaFeriasUser[0]?._id : "" , selectedDates, selectedDayCalendar, memoizedIsLoading ,update]);
+    // `t` is a dep: react-i18next hands back a new `t` on language change, and this
+    // memoized subtree renders translated labels — without it they would stay stale.
+  }, [selectedUser,selectedUserID,listaFeriasUser?.length, listaFeriasUser?.length > 0 ? listaFeriasUser[0]?._id : "" , selectedDates, selectedDayCalendar, memoizedIsLoading ,update, t]);
 
 
 
@@ -318,23 +302,11 @@ const GerirHorasFerias = ({ setGerirFerias, styleButton }) => {
       <div className="row mb-12 text-center tittle">
         <div className="row">
           <div className="col-md-6 d-flex flex-column justify-content-center align-items-center">
-            <button
-              type="submit"
-              style={{ ...styleButton }}
-              className={`btn middleButton `}
-            >
-              Gestão de Pedidos
-            </button>
+            <AppButton variant="secondary" fullWidth>{t('tabs.manageRequests')}</AppButton>
           </div>
           <div className="col-md-6">
-            <button
-              type="submit"
-              style={{ ...styleButton }}
-              className={`btn middleButton activeMainButton`}
-            >
-              Gestão de Férias
-            </button>
-            
+            <AppButton variant="primary" fullWidth>{t('tabs.manageVacation')}</AppButton>
+
           </div></div>
         <div className="container">
           <Loading />
@@ -346,35 +318,15 @@ const GerirHorasFerias = ({ setGerirFerias, styleButton }) => {
       <div className="row mb-12 text-center tittle">
         <div className="row">
           <div className="col-md-6 d-flex flex-column justify-content-center align-items-center">
-            <button
-              type="submit"
-              style={{ ...styleButton }}
-              className={`btn middleButton `}
-              onClick={() => setGerirFerias(false)}
-            >
-              Gestão de Pedidos
-            </button>
+            <AppButton variant="secondary" fullWidth onClick={() => setGerirFerias(false)}>{t('tabs.manageRequests')}</AppButton>
           </div>
           <div className="col-md-6">
-            <button
-              type="submit"
-              style={{ ...styleButton }}
-              className={`btn middleButton activeMainButton`}
-            >
-              Gestão de Férias
-            </button>
+            <AppButton variant="primary" fullWidth>{t('tabs.manageVacation')}</AppButton>
           </div>
         </div>
         <div className="col-md-2"></div>
       <div className="col-md-8">
-      <button
-              type="submit"
-              style={{ ...styleButton }}
-              className={`btn middleButton `}
-              onClick={() => setAddFerias(true)}
-            >
-              Adicionar Ferias
-            </button>
+      <AppButton variant="secondary" fullWidth onClick={() => setAddFerias(true)}>{t('actions.addVacation')}</AppButton>
              </div>
              <div className="col-md-2"></div>
         <div className="container">

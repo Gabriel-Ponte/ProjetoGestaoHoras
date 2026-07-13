@@ -5,6 +5,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { FaCaretDown } from 'react-icons/fa';
 import { AiFillDelete } from 'react-icons/ai';
 import useFeriadosPortugal from '@/components/dias/FeriadosPortugal';
@@ -20,6 +21,7 @@ const GerirHorasFeriasList = ({
   Ano,
 }) => {
 
+  const { t } = useTranslation('ferias');
   const { feriadosPortugal } = useFeriadosPortugal();
   //const [verificaResultado, setVerificaResultado] = useState(1);
   const [verificaAlterado, setVerificaAlterado] = useState(false);
@@ -34,7 +36,7 @@ const GerirHorasFeriasList = ({
 
   const handleAddDias = (e) => {
     if (addDias <= 0 || !e) {
-      toast.error("Valores Inseridos Invalidos!")
+      toast.error(t('toast.invalidValues'))
       return;
     }
     const sYear = selectedYear.getFullYear();
@@ -396,7 +398,7 @@ const GerirHorasFeriasList = ({
                   className='btn btn-outline-primary buttonProjeto'
                   onClick={() => handleAddDias(keyF)}
                 >
-                  Adicionar
+                  {t('list.add')}
                 </button>
               )}
             </div>
@@ -424,15 +426,15 @@ const GerirHorasFeriasList = ({
                       <div className="col-md-1 themed-grid-col"></div>
 
                       <div className="col-md-3 themed-grid-col" style={{ margin: "auto" }}>
-                        <p style={{ margin: "auto" }}>Responsável</p>
+                        <p style={{ margin: "auto" }}>{t('list.responsible')}</p>
                       </div>
 
                       <div className="col-md-3 themed-grid-col" style={{ margin: "auto" }}>
-                        <p style={{ margin: "auto" }}>Inseridos</p>
+                        <p style={{ margin: "auto" }}>{t('list.inserted')}</p>
                       </div>
 
                       <div className="col-md-3 themed-grid-col" style={{ margin: "auto" }}>
-                        <p style={{ margin: "auto" }}>Ano Correspondente</p>
+                        <p style={{ margin: "auto" }}>{t('list.correspondingYear')}</p>
                       </div>
                       <div className="col-md-2 themed-grid-col"></div>
                     </div>
@@ -475,15 +477,15 @@ const GerirHorasFeriasList = ({
                       <div className="col-md-1 themed-grid-col"></div>
 
                       <div className="col-md-3 themed-grid-col">
-                        <p>Data</p>
+                        <p>{t('list.date')}</p>
                       </div>
 
                       <div className="col-md-3 themed-grid-col">
-                        <p>Numero de Dias</p>
+                        <p>{t('list.numberOfDays')}</p>
                       </div>
 
                       <div className="col-md-3 themed-grid-col">
-                        Ano Correspondente
+                        {t('list.correspondingYear')}
                       </div>
                       <div className="col-md-2 themed-grid-col"></div>
                     </div>

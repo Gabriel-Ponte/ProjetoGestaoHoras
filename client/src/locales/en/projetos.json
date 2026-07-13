@@ -1,0 +1,133 @@
+{
+  "common": {
+    "loading": "Loading…"
+  },
+  "fields": {
+    "name": "Name",
+    "namePlaceholder": "Project name",
+    "action": "Action",
+    "client": "Client",
+    "clientLabel": "Client: ",
+    "startDate": "Start Date",
+    "startDateShort": "Start Date",
+    "targetDate": "Target Date",
+    "endDate": "End Date",
+    "endDateProject": "Project End Date",
+    "notes": "Notes",
+    "linkA3": "A3 Link",
+    "linkSummary": "Summary Link",
+    "pilot": "Pilot",
+    "pilotLabel": "Pilot:",
+    "finished": "Finished",
+    "result": "Result",
+    "workTypes": "Work Types"
+  },
+  "fieldNames": {
+    "Nome": "Name",
+    "Acao": "Action",
+    "Cliente": "Client",
+    "DataInicio": "Start Date",
+    "DataObjetivo": "Target Date",
+    "Tema": "Theme",
+    "Piloto": "Pilot"
+  },
+  "add": {
+    "title": "Add Project",
+    "submit": "Add"
+  },
+  "edit": {
+    "title": "Edit Project",
+    "submit": "Submit"
+  },
+  "list": {
+    "title": "Project Management",
+    "foundFinished_one": "{{count}} Finished project found",
+    "foundFinished_other": "{{count}} Finished projects found",
+    "foundOngoing_one": "{{count}} Ongoing project found",
+    "foundOngoing_other": "{{count}} Ongoing projects found",
+    "foundWaiting_one": "{{count}} project On Hold found",
+    "foundWaiting_other": "{{count}} projects On Hold found",
+    "hasTargetDate": "Has Target Date",
+    "emptyTitle": "No projects",
+    "emptyMessage": "There are no projects to show with the current filters.",
+    "pendingChanges_one": "You have {{count}} project with unconfirmed changes!",
+    "pendingChanges_other": "You have {{count}} projects with unconfirmed changes!"
+  },
+  "header": {
+    "client": "Client",
+    "project": "Project",
+    "actions": "Actions",
+    "notes": "Notes",
+    "pilot": "Pilot",
+    "endDate": "End Date",
+    "result": "Result",
+    "targetDate": "Target Date",
+    "daysAlert": "Days alert"
+  },
+  "row": {
+    "insert": "Insert",
+    "save": "Save",
+    "edit": "Edit",
+    "view": "View",
+    "addLinkA3": "Add A3 Link",
+    "openA3": "Open A3",
+    "addLinkResumo": "Add Summary Link",
+    "openResumo": "Open Summary",
+    "closeLink": "Close"
+  },
+  "view": {
+    "selectVersion": "Select a Version:",
+    "currentVersion": "Current",
+    "chooseUser": "Choose User",
+    "userLabel": "User:",
+    "legend": {
+      "weekend": "Weekend",
+      "holidays": "Public Holidays",
+      "inserted": "Logged",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "targetDate": "Target Date"
+    },
+    "noStartDate": "No Start Date",
+    "noEndDate": "No End Date",
+    "noTargetDate": "No Target Date",
+    "totalHours": "Total Number of Hours",
+    "totalHoursOn": "Total Number of Hours {{date}}",
+    "noHours": "No Hours Logged on the Project",
+    "noHoursAll": "There are no hours logged on the project",
+    "noHoursUser": "{{user}} has no hours logged on the project",
+    "noHoursDayAll": "There are no hours logged on the project on {{date}}",
+    "noHoursDayUser": "{{user}} has no hours logged on the project on {{date}}",
+    "noHoursMonthAll": "There are no hours logged on the project in {{date}}",
+    "noHoursMonthUser": "{{user}} has no hours logged on the project in {{date}}",
+    "noWorkTypes": "No Work Types defined"
+  },
+  "version": {
+    "client": "Client",
+    "pilots": "Pilot(s)",
+    "noPilots": "No Pilots",
+    "action": "Action",
+    "noActions": "No Actions",
+    "notes": "Notes",
+    "noNotes": "No Notes",
+    "version": "Version",
+    "links": "Links",
+    "noLinkA3": "No A3 Link",
+    "linkSummary": "Summary Link",
+    "noLinkSummary": "No Summary Link",
+    "done": "Completed",
+    "yes": "Yes",
+    "no": "No",
+    "result": "Result",
+    "success": "Success",
+    "failure": "Failure"
+  },
+  "toast": {
+    "requiredField": "Please fill in the required field: {{field}}!",
+    "requiredFields": "Please fill in all the required fields!",
+    "loadProjectFailed": "The project could not be loaded",
+    "insertLink": "Please enter the Link!",
+    "updateError": "Error while updating!",
+    "endDateBeforeStart": "End Date cannot be before the start date"
+  }
+}

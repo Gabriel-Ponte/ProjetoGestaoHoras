@@ -3,14 +3,38 @@ import Wrapper from "@/styles/Calendar";
 import { MdKeyboardArrowLeft } from 'react-icons/md';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import useFeriadosPortugal from "@/components/dias/FeriadosPortugal";
-import PropTypes from 'prop-types'; 
+import PropTypes from 'prop-types';
 
 const CalendarControl = ({ handleChange, inserted, feriados, ferias,inserting, compensacao, compensacaoDomingo, inicio, fim, objetivo,aceitacao, vProjeto, todos, numberUsers, horasExtraID, selectedDate , user}) => {
+    const { t, i18n } = useTranslation('dias');
     const [calendar, setCalendar] = useState(selectedDate ? new Date(selectedDate.ano , selectedDate.mes , 1 ,0 , 0, 0) : new Date());
 
-    const calWeekDays = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
-    const calMonthName = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+    // Index-based: the array order maps to Date#getDay() / Date#getMonth().
+    const calWeekDays = [
+        t('calendar.weekdays.sun'),
+        t('calendar.weekdays.mon'),
+        t('calendar.weekdays.tue'),
+        t('calendar.weekdays.wed'),
+        t('calendar.weekdays.thu'),
+        t('calendar.weekdays.fri'),
+        t('calendar.weekdays.sat'),
+    ];
+    const calMonthName = [
+        t('calendar.months.january'),
+        t('calendar.months.february'),
+        t('calendar.months.march'),
+        t('calendar.months.april'),
+        t('calendar.months.may'),
+        t('calendar.months.june'),
+        t('calendar.months.july'),
+        t('calendar.months.august'),
+        t('calendar.months.september'),
+        t('calendar.months.october'),
+        t('calendar.months.november'),
+        t('calendar.months.december'),
+    ];
     const { feriadosPortugal } = useFeriadosPortugal();
     const localDate = new Date();
     
@@ -30,7 +54,7 @@ const CalendarControl = ({ handleChange, inserted, feriados, ferias,inserting, c
         // console.log(inserted?.length)
         // console.log(user, (ferias?.length > 0 ? ferias.find(val => (new Date(val.Data)).getMonth() === calendar.getMonth()) : ""));
         initializeCalendar();
-      },  [selectedDate,inserted?.length, ferias?.length, inicio,inserting, vProjeto, user]);
+      },  [selectedDate,inserted?.length, ferias?.length, inicio,inserting, vProjeto, user, i18n.language]);
 
 
       const initializeCalendar = useCallback(() => {
@@ -48,7 +72,7 @@ const CalendarControl = ({ handleChange, inserted, feriados, ferias,inserting, c
         displayMonth(date.getMonth());
         displayYear(date.getFullYear());
 
-    }, [selectedDate, inicio, vProjeto,inserted, inserting, user, ferias?.length]);
+    }, [selectedDate, inicio, vProjeto,inserted, inserting, user, ferias?.length, i18n.language]);
 
     function daysInMonth(month, year) {
         return new Date(year, month, 0).getDate();
@@ -533,7 +557,7 @@ const CalendarControl = ({ handleChange, inserted, feriados, ferias,inserting, c
                         numberItems[insertedDay.getDate() - 1].classList.add("calendar-inicio");
                     }
                 } catch {
-                    toast.error("Inicio não é uma data")
+                    toast.error(t('calendar.errors.startNotDate'))
                 }
             }
 
@@ -551,7 +575,7 @@ const CalendarControl = ({ handleChange, inserted, feriados, ferias,inserting, c
                         numberItems[insertedDay.getDate() - 1].classList.add("calendar-objetivo");
                     }
                 } catch {
-                    toast.log("Objetivo não é uma data")
+                    toast.log(t('calendar.errors.objectiveNotDate'))
                 }
             }
 
@@ -569,7 +593,7 @@ const CalendarControl = ({ handleChange, inserted, feriados, ferias,inserting, c
                         numberItems[insertedDay.getDate() - 1].classList.add("calendar-fim");
                     }
                 } catch {
-                    toast.log("Fim não é uma data")
+                    toast.log(t('calendar.errors.endNotDate'))
                 }
             }
 

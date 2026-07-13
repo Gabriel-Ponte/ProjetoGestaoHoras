@@ -1,5 +1,6 @@
 import { Fragment,useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import links from '@/utils/links';
 import { AiOutlineArrowDown } from 'react-icons/ai';
 import { useSelector, useDispatch } from 'react-redux';
@@ -14,6 +15,7 @@ import NavLinksModalBox from '@/components/layout/NavLinksModalBox'
 import { exportDia } from '@/features/allDias/allDiasSlice';
 
 const NavLinks = () => {
+  const { t } = useTranslation('layout');
   const {
     projetos,
     numOfPages,
@@ -147,7 +149,8 @@ const NavLinks = () => {
     <div className='nav-links'>
       {links.map((link) => {
 
-        const { text, path, id, icon } = link;
+        const { textKey, path, id, icon } = link;
+        const text = t(textKey);
         if(user.tipo === 1 && (id === 2 || id === 3 || id === 4 || id === 8 || id === 9)){
           return null;
         }

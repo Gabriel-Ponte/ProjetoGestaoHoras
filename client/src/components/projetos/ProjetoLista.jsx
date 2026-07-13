@@ -9,6 +9,7 @@ import { updateProjeto } from '@/features/projetos/projetosSlice';
 import { FcCheckmark } from 'react-icons/fc';
 import { IoMdClose } from 'react-icons/io';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import { AppButton } from '@/components/ui';
 
 
@@ -34,6 +35,8 @@ const Projeto = ({
   utilizadores,
   handleAlterado,
 }) => {
+
+  const { t } = useTranslation('projetos');
 
   const [initialState, setInitialState] = useState({
     _id,
@@ -91,7 +94,7 @@ const Projeto = ({
       //navigate('/PaginaEditarProjeto');
       window.location.reload(navigate('/PaginaEditarProjeto'));
     } else {
-      toast.error("Não foi possivel carregar o projeto");
+      toast.error(t('toast.loadProjectFailed'));
     }
 
   };
@@ -189,10 +192,10 @@ const Projeto = ({
     setAddLink(false);
     e.preventDefault();
     if (addLink === 1 && !values.Links) {
-      toast.error('Por favor, insira o Link!');
+      toast.error(t('toast.insertLink'));
       return;
     } else if (addLink === 2 && !values.LinkResumo) {
-      toast.error('Por favor, insira o Link!');
+      toast.error(t('toast.insertLink'));
       return;
     }
     try {
@@ -201,7 +204,7 @@ const Projeto = ({
         setAddLink(0)
       }
     } catch (error) {
-      toast.error('Erro ao atualizar!');
+      toast.error(t('toast.updateError'));
       console.error(error);
     }
 
@@ -229,7 +232,7 @@ const Projeto = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!values.Nome || !values.Cliente || !values.Acao) {
-      toast.error('Por favor, preencha todos os campos obrigatórios!');
+      toast.error(t('toast.requiredFields'));
       return;
     }
     try {
@@ -240,7 +243,7 @@ const Projeto = ({
         setInitialState(values)
       }
     } catch (error) {
-      toast.error('Erro ao atualizar!');
+      toast.error(t('toast.updateError'));
       console.error(error);
     }
   };
@@ -427,6 +430,7 @@ const Projeto = ({
                         <AppButton
                           variant='danger'
                           size='sm'
+                          aria-label={t('row.closeLink')}
                           onClick={toggleCloseAddLink}
                         >
                           <IoMdClose />
@@ -448,7 +452,7 @@ const Projeto = ({
                           size='sm'
                           onClick={toggleAddLinkDB}
                         >
-                          Inserir
+                          {t('row.insert')}
                         </AppButton>
                       </div>
                     </>
@@ -458,6 +462,7 @@ const Projeto = ({
                         <AppButton
                           variant='danger'
                           size='sm'
+                          aria-label={t('row.closeLink')}
                           onClick={toggleCloseAddLink}
                         >
                           <IoMdClose />
@@ -479,7 +484,7 @@ const Projeto = ({
                           size='sm'
                           onClick={toggleAddLinkDB}
                         >
-                          Inserir
+                          {t('row.insert')}
                         </AppButton>
                       </div>
                     </>
@@ -494,7 +499,7 @@ const Projeto = ({
                               size='sm'
                               onClick={handleSubmit}
                             >
-                              Alterar
+                              {t('row.save')}
                             </AppButton>
                           </div>
                         </div>
@@ -510,7 +515,7 @@ const Projeto = ({
                               fullWidth
                               onClick={() => toggleEdit(_id)}
                             >
-                              Editar
+                              {t('row.edit')}
                             </AppButton>
                           </div>
                           <div className='row mb-2 text-center'>
@@ -520,7 +525,7 @@ const Projeto = ({
                               fullWidth
                               onClick={() => toggleVisualize(_id)}
                             >
-                              Visualizar
+                              {t('row.view')}
                             </AppButton>
                           </div>
                           {
@@ -532,12 +537,12 @@ const Projeto = ({
                                   fullWidth
                                   onClick={() => toggleAddLinkA3()}
                                 >
-                                  Adicionar Link A3
+                                  {t('row.addLinkA3')}
                                 </AppButton>
                               </div>
                             ) : (
                               <div className='row mb-2 text-center'>
-                                <a href={values.Links} className='btn btn-outline-link buttonProjeto' target="_blank" rel="noreferrer" > Abrir A3</a>
+                                <a href={values.Links} className='btn btn-outline-link buttonProjeto' target="_blank" rel="noreferrer" > {t('row.openA3')}</a>
                               </div>
                             )
                           }
@@ -550,12 +555,12 @@ const Projeto = ({
                                   fullWidth
                                   onClick={() => toggleAddLinkResumo()}
                                 >
-                                  Adicionar Link Resumo
+                                  {t('row.addLinkResumo')}
                                 </AppButton>
                               </div>
                             ) : (
                               <div className='row mb-2 text-center'>
-                                <a href={values.LinkResumo} className='btn btn-outline-link buttonProjeto' target="_blank" rel="noreferrer"> Abrir Resumo</a>
+                                <a href={values.LinkResumo} className='btn btn-outline-link buttonProjeto' target="_blank" rel="noreferrer"> {t('row.openResumo')}</a>
                               </div>
                             )
                           }

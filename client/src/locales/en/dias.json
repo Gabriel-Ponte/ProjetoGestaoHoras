@@ -1,0 +1,55 @@
+{
+  "calendar": {
+    "months": {
+      "january": "January",
+      "february": "February",
+      "march": "March",
+      "april": "April",
+      "may": "May",
+      "june": "June",
+      "july": "July",
+      "august": "August",
+      "september": "September",
+      "october": "October",
+      "november": "November",
+      "december": "December"
+    },
+    "weekdays": {
+      "sun": "Sunday",
+      "mon": "Monday",
+      "tue": "Tuesday",
+      "wed": "Wednesday",
+      "thu": "Thursday",
+      "fri": "Friday",
+      "sat": "Saturday"
+    },
+    "errors": {
+      "startNotDate": "Start is not a date",
+      "objectiveNotDate": "Objective is not a date",
+      "endNotDate": "End is not a date"
+    }
+  },
+  "dia": {
+    "deleteRequest": "Delete Request",
+    "deletedWorkType": "Deleted Work Type"
+  },
+  "holidays": {
+    "anoNovo": "New Year's Day",
+    "diaLiberdade": "Freedom Day",
+    "diaTrabalhador": "Labour Day",
+    "diaPortugal": "Portugal Day",
+    "assuncaoNossaSenhora": "Assumption of Our Lady",
+    "feriasColetivas": "Company Shutdown",
+    "implantacaoRepublica": "Republic Day",
+    "diaTodosSantos": "All Saints' Day",
+    "restauracaoIndependencia": "Restoration of Independence",
+    "diaImaculadaConceicao": "Immaculate Conception",
+    "feriadoMunicipal": "Municipal Holiday",
+    "natal": "Christmas",
+    "carnaval": "Carnival",
+    "sextaFeiraSanta": "Good Friday",
+    "pascoa": "Easter",
+    "segundaFeiraPascoa": "Easter Monday",
+    "corpoDeus": "Corpus Christi"
+  }
+}

@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import Wrapper from '@/styles/addDias';
 import { useSelector, useDispatch } from 'react-redux';
@@ -7,6 +8,7 @@ import { getTipoTrabalho } from '@/features/tipoTrabalho/tipoTrabalhoSlice';
 import { toast } from 'react-toastify';
 import { createDia, getDia, editDia, createDiaDomingo } from '@/features/dias/diasSlice';
 import { AddHorasCopiar, AddHorasDropdown, FormRow, useFeriadosPortugal } from '@/components';
+import { AppButton } from '@/components/ui';
 
 import Loading from '@/components/common/Loading';
 import AddHorasDomingo from '@/components/horas/AddHorasDomingo';
@@ -28,8 +30,9 @@ const initialState = {
 
 
 const ListaProjetos = () => {
+  const { t } = useTranslation('horas');
   const [values, setValues] = useState(initialState);
-  
+
 
   const [buttonClicked, setButtonClicked] = useState(false);
   const [addFerias, setAddFerias] = useState(false);
@@ -605,8 +608,8 @@ const ListaProjetos = () => {
       values.associated = Data
       await dispatch(createDiaDomingo(values));
 
-      toast.error('Horas Inseridas num Domingo!');
-      
+      toast.error(t('toast.sundayHours'));
+
       setTimeout(() => {
         window.location.reload();
       }, 1000);
@@ -658,30 +661,30 @@ const ListaProjetos = () => {
 
     if(values.accepted !== 2) {
     if (horasT <= 0) {
-      toast.error('Valor inserido invalido!');
+      toast.error(t('toast.invalidValue'));
       return;
     } else if(feriadosPortugal(date)){
 
         count++;
-        toast.error('Horas inseridas num Feriado!');
+        toast.error(t('toast.holidayHours'));
     }else if(isWeekend){
 
       count++;
       if(!dayOfWeek === 0 || horasT < 8)
         {
-          toast.error('Horas inseridas num fim de semana!');
+          toast.error(t('toast.weekendHours'));
         }
     } else if (date.getDay() === 5) {
       if (horasT > 6) {
         count++;
-        toast.error('Valor inserido excede as 6 Horas!');
+        toast.error(t('toast.exceeds6Hours'));
       }
     } else if (horasT > 8.5) {
 
       count++;
-      toast.error('Valor inserido excede as 8 horas e 30 minutos diárias!');
+      toast.error(t('toast.exceeds8h30'));
     }
-    
+
 
 
     if(activeCompensacao === true){
@@ -690,7 +693,7 @@ const ListaProjetos = () => {
           const tipoTrabalhoArray = values.tipoDeTrabalhoHoras[key]?.tipoTrabalho?.split(',') || [];
           for (let a = 0; a < tipoTrabalhoArray.length; a++) {
           if((tipoTrabalhoArray[a] === compensacaoID) && (horasTipoTrabalhoArray[a] > 0)){
-            toast.error('Pedido de compensação de horas extra realizado!');
+            toast.error(t('toast.compensationRequested'));
             count++;
           }
         }
@@ -704,7 +707,7 @@ const ListaProjetos = () => {
           const tipoTrabalhoArray = values.tipoDeTrabalhoHoras[key]?.tipoTrabalho?.split(',') || [];
           for (let a = 0; a < tipoTrabalhoArray.length; a++) {
           if((tipoTrabalhoArray[a] === feriasID) && (horasTipoTrabalhoArray[a] > 0)){
-            toast.error('Pedido de Férias realizado!');
+            toast.error(t('toast.vacationRequested'));
             count++;
           }
         }
@@ -818,7 +821,7 @@ const ListaProjetos = () => {
     if (tipoTrabalhoArray.find(item => item === compensacaoID)) {
       setActiveCompensacao(true);
       if (values?.Data && (newHorasT > maxHoras || dateAdd.getDay() === 0 || dateAdd.getDay() === 6)) {
-        toast.error('Valor inserido invalido devido ao tipo de trabalho!');
+        toast.error(t('toast.invalidForWorkType'));
 
         let tipoDeTrabalhoHoras = {};
         tipoDeTrabalhoHoras[projectId] = {
@@ -845,7 +848,7 @@ const ListaProjetos = () => {
     if (tipoTrabalhoArray.find(item => item === feriasID)) {
       setFeriasActive(true);
       if (values?.Data && (newHorasT > maxHoras)) {
-        toast.error('Valor inserido invalido devido ao tipo de trabalho!');
+        toast.error(t('toast.invalidForWorkType'));
 
         let tipoDeTrabalhoHoras = {};
         tipoDeTrabalhoHoras[projectId] = {
@@ -878,13 +881,13 @@ const ListaProjetos = () => {
 
     if (horasExtraTTCheck || horasExtraNumber > 0) {
       if ((parseFloat(newHorasT) - parseFloat(horasExtraNumber)) > 24) {
-        toast.error('Valor inserido excede as 24 Horas!');
+        toast.error(t('toast.exceeds24Hours'));
         setValues({ ...values, [horas]: "0.0" });
         return;
       }
     } else {
       if (parseFloat(newHorasT) > 24) {
-        toast.error('Valor inserido excede as 24 Horas!');
+        toast.error(t('toast.exceeds24Hours'));
         setValues({ ...values, [horas]: "0.0" });
         return;
       }
@@ -979,7 +982,7 @@ const ListaProjetos = () => {
     if (value === true) {
 
       if (!lastDate?.tipoDeTrabalhoHoras) {
-        toast.error("Utilizador não possui horas inseridas para copiar");
+        toast.error(t('toast.noHoursToCopy'));
         return;
       }
 
@@ -1082,9 +1085,9 @@ const ListaProjetos = () => {
           <div>
             <div className='row'>
               <div className='col-4'>
-                <h3>{verificaDiaCalled ? 'Editar Dia' : 'Adicionar Dia'}</h3>
+                <h3>{verificaDiaCalled ? t('titles.editDay') : t('titles.addDay')}</h3>
               </div>
-              
+
               {!verificaDiaCalled &&
 
               <div className='col-4 d-flex flex-column justify-content-center align-items-center'>
@@ -1103,13 +1106,13 @@ const ListaProjetos = () => {
                     width:'auto'} }
                     onClick={(e) => { setAddFerias(true) }}
                 >
-                  Adicionar Férias
+                  {t('actions.addVacation')}
               </button>
-              
+
             </div>
           }
               <div className='col-4 text-end'>
-                <h4>{horasExtraAfter ? 'Horas extra  ' + convertToMinutes(horasExtraAfter) : ''}</h4>
+                <h4>{horasExtraAfter ? t('summary.overtime', { value: convertToMinutes(horasExtraAfter) }) : ''}</h4>
               </div>
             </div>
             <div className='row'>
@@ -1121,6 +1124,7 @@ const ListaProjetos = () => {
                   classNameLabel="form-field-label"
                   id="Dia"
                   name="Data"
+                  labelText={t('labels.date')}
                   placeholder="Dia Adicionar Horas"
                   value={values.Data ? new Date(values.Data).toLocaleDateString('en-CA') : ''}
                   handleChange={verificaDia}
@@ -1153,7 +1157,9 @@ const ListaProjetos = () => {
                 if ((dateMonth < startMonth && dateYear <= startYear) || (dateDay <= startDay && dateMonth === startMonth)) {
                   return (
                     <div className='text-center'>
-                      <p>Adicione horas extras acumuladas em <b>Geral</b> &rarr; <b>Adicionar Horas Extras</b> entre <b>01/12/2023 e 10/12/2023</b></p>
+                      <p>
+                        {t('notice.accumulatedOvertimeStart')} <b>{t('notice.accumulatedOvertimeMenu')}</b> &rarr; <b>{t('notice.accumulatedOvertimeAction')}</b> {t('notice.accumulatedOvertimeBetween')} <b>{t('notice.accumulatedOvertimeRange')}</b>
+                      </p>
                     </div>
                   );
                 }
@@ -1185,7 +1191,7 @@ const ListaProjetos = () => {
             <div className="card text-center">
               <div className="card-body">
                 <h5 className="card-title">
-                  Total de horas: {convertToMinutes((parseFloat(horasT) - parseFloat(horasExtraTT)))}
+                  {t('summary.totalHours')} {convertToMinutes((parseFloat(horasT) - parseFloat(horasExtraTT)))}
                   { values?.Data && (new Date(values.Data).getDay() === 0 || new Date(values.Data).getDay() === 6 || feriadosPortugal(new Date(values.Data)))
                   ? ""
                   : values?.Data && new Date(values.Data).getDay() === 5
@@ -1195,15 +1201,18 @@ const ListaProjetos = () => {
               </div>
               
               <div className="card-body">
-                <button
+                <AppButton
                   type="submit"
                   disabled={(values.accepted === 2 && startHorasT >= 8.5) || isLoading || buttonClicked ||  (values.accepted === 4 || values.accepted === 5)}
 
                   onClick={(e) => { handleDia(e) }}
-                  className="w-100 btn btn-lg btn-primary"
+                  variant="primary"
+                  size="lg"
+                  fullWidth
+                  loading={isLoading}
                 >
-                  {isLoading ? 'loading...' : verificaDiaCalled ? 'Editar Dia' : 'Guardar Dia'}
-                </button>
+                  {verificaDiaCalled ? t('actions.editDay') : t('actions.saveDay')}
+                </AppButton>
               </div>
             </div>
           </div>

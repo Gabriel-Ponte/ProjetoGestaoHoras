@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { FaSort, FaSortUp, FaSortDown } from 'react-icons/fa';
+import { useTranslation } from 'react-i18next';
 import LoadingState from './LoadingState';
 import EmptyState from './EmptyState';
 import ErrorState from './ErrorState';
@@ -99,8 +100,8 @@ const DataTable = ({
   loading = false,
   error = null,
   onRetry,
-  emptyTitle = 'Sem resultados',
-  emptyMessage = 'Não há dados para apresentar.',
+  emptyTitle,
+  emptyMessage,
   stickyHeader = false,
   sortKey,
   sortDir,
@@ -108,6 +109,7 @@ const DataTable = ({
   onRowClick,
   className,
 }) => {
+  const { t } = useTranslation('common');
   const colSpan = columns.length;
 
   const renderBody = () => {
@@ -115,7 +117,7 @@ const DataTable = ({
       return (
         <tr>
           <td colSpan={colSpan} className="table-state">
-            <LoadingState message="A carregar…" inline />
+            <LoadingState inline />
           </td>
         </tr>
       );
@@ -133,7 +135,11 @@ const DataTable = ({
       return (
         <tr>
           <td colSpan={colSpan} className="table-state">
-            <EmptyState title={emptyTitle} message={emptyMessage} inline />
+            <EmptyState
+              title={emptyTitle === undefined ? t('state.emptyTitle') : emptyTitle}
+              message={emptyMessage === undefined ? t('state.emptyMessage') : emptyMessage}
+              inline
+            />
           </td>
         </tr>
       );

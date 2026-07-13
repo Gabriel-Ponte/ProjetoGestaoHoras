@@ -1,5 +1,6 @@
 import { useState, useEffect, memo } from 'react';
 import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { getTipoTrabalho, createTipoTrabalho, deleteTipoTrabalho, editTipoTrabalho } from '@/features/tipoTrabalho/tipoTrabalhoSlice';
 import { AiFillDelete } from 'react-icons/ai';
 import Wrapper from '@/styles/GerirTipoTrabalho';
@@ -12,6 +13,7 @@ import { toast } from 'react-toastify';
 
 
 const GerirTipoTrabalho =  () => {
+  const { t } = useTranslation('tipoTrabalho');
   const [listaTipoTrabalho, setListaTipoTrabalho] = useState([]);
   const [initialState, setInitialState] = useState([]);
   const [verificaAlterado, setVerificaAlterado] = useState({});
@@ -51,18 +53,18 @@ const GerirTipoTrabalho =  () => {
         }, 1000);
         return;
       }
-      toast.error("Ocorreu um erro ao apagar o Tipo de Trabalho.");
+      toast.error(t('errors.apagar'));
     } catch (error) {
       console.error(error);
-      toast.error("Ocorreu um erro ao apagar o Tipo de Trabalho.");
+      toast.error(t('errors.apagar'));
     }
     setDeleting(false);
     setTtToDelete(null);
   };
-  
+
   const alterarTipoTrabalho = async (tt) => {
     if (!tt.TipoTrabalho) {
-      toast.error('Por favor, não insira um tipo de trabalho vazio!');
+      toast.error(t('errors.vazio'));
       setVerificaAlterado(false);
       return setListaTipoTrabalho(initialState);
     }
@@ -163,7 +165,7 @@ const GerirTipoTrabalho =  () => {
       }];
 
       if (listaTipoTrabalho.some(item => item.TipoTrabalho.toLowerCase() === lowercaseOption)) {
-        alert('Este tipo de Trabalho ' + newOption + ' já existe.');
+        alert(t('errors.duplicado', { nome: newOption }));
         setNewOption('');
         return;
       }
@@ -176,21 +178,21 @@ const GerirTipoTrabalho =  () => {
   return (
     <Wrapper>
       <PageHeader
-        title="Tipos de Trabalho"
-        subtitle="Gerir os tipos de trabalho disponíveis"
+        title={t('page.title')}
+        subtitle={t('page.subtitle')}
       />
 
       <div className="listaTiposTrabalho">
-        {listaTipoTrabalho.map((t, i) => (
+        {listaTipoTrabalho.map((tt, i) => (
           <div className="tt-card" key={i}>
             <div className="tt-card-fields" key={i + "tt"}>
               <FormRowListaTipoTrabalho
                 type="textarea"
                 id="TipoTrabalhoProjeto"
                 name="TipoTrabalho"
-                value={t.TipoTrabalho}
+                value={tt.TipoTrabalho}
                 keyGet={`tt-${i}`}
-                handleChange={(e) => handleChangeTipoTrabalho(e, t._id)}
+                handleChange={(e) => handleChangeTipoTrabalho(e, tt._id)}
               />
               <div className="tiposTrabalho" key={i + "stt"}>
                 <FormRowSelectTipo
@@ -199,28 +201,28 @@ const GerirTipoTrabalho =  () => {
                   labelText=" "
                   id="tipo"
                   name="tipoT"
-                  handleChange={(e) => handleChangeTipoTrabalho(e, t._id)}
-                  placeholder="Escolha um tipo"
-                  value={t.tipo}
-                  key={`sttKey-${t._id}`}
-                  keyGet={`${t._id}`}
+                  handleChange={(e) => handleChangeTipoTrabalho(e, tt._id)}
+                  placeholder={t('form.escolhaTipo')}
+                  value={tt.tipo}
+                  key={`sttKey-${tt._id}`}
+                  keyGet={`${tt._id}`}
                   list={[["Projetos"], ["Geral"], ["Outro"], ["Compensação"], ["Extra"], ["Compensação Domingo"], ["Ferias"]]}
                 />
               </div>
             </div>
 
             <div className="tt-actions">
-              {verificaAlterado[t._id] === true ? (
-                <AppButton size="sm" onClick={() => alterarTipoTrabalho(t)}>
-                  Alterar
+              {verificaAlterado[tt._id] === true ? (
+                <AppButton size="sm" onClick={() => alterarTipoTrabalho(tt)}>
+                  {t('actions.alterar')}
                 </AppButton>
               ) : (
-                (t.tipo !== 5 && t.tipo !== 4 && t.tipo !== 6) && (
+                (tt.tipo !== 5 && tt.tipo !== 4 && tt.tipo !== 6) && (
                   <AppButton
                     size="sm"
                     variant="danger"
-                    onClick={() => setTtToDelete(t)}
-                    aria-label={`Apagar ${t.TipoTrabalho}`}
+                    onClick={() => setTtToDelete(tt)}
+                    aria-label={t('actions.apagarAriaLabel', { nome: tt.TipoTrabalho })}
                   >
                     <AiFillDelete />
                   </AppButton>
@@ -231,30 +233,30 @@ const GerirTipoTrabalho =  () => {
         ))}
       </div>
 
-      <SectionCard title="Adicionar tipo de trabalho">
+      <SectionCard title={t('form.addSectionTitle')}>
         <div className="tt-add">
           <AppInput
             type="text"
             id="novoTrabalho"
             value={newOption}
             onChange={handleNewOptionChange}
-            placeholder="Nome do novo tipo de trabalho…"
+            placeholder={t('form.novoTipoPlaceholder')}
             onKeyDown={(e) => e.key === 'Enter' && handleAddToList()}
           />
-          <AppButton onClick={handleAddToList}>Adicionar</AppButton>
+          <AppButton onClick={handleAddToList}>{t('actions.adicionar')}</AppButton>
         </div>
       </SectionCard>
 
       <ConfirmDialog
         open={!!ttToDelete}
-        title="Apagar tipo de trabalho?"
+        title={t('confirm.apagarTitle')}
         message={
           ttToDelete
-            ? `Tem a certeza que deseja apagar o tipo de trabalho "${ttToDelete.TipoTrabalho}"?`
+            ? t('confirm.apagarMessage', { nome: ttToDelete.TipoTrabalho })
             : ''
         }
         variant="danger"
-        confirmLabel="Apagar"
+        confirmLabel={t('actions.apagar')}
         loading={deleting}
         onConfirm={handleConfirmDelete}
         onCancel={() => setTtToDelete(null)}
