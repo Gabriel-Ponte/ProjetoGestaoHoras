@@ -15,16 +15,22 @@ import { AppButton } from '@/components/ui';
 function VisualizarProjeto() {
   const { t } = useTranslation('projetos');
   const { projeto, isLoading } = useSelector((store) => store.projeto);
-  const { utilizadores, listaDeUtilizadores } = useSelector((store) => store.utilizador);
+  // NOTE: `listaDeUtilizadores` used to be destructured here. It does not exist on the
+  // slice (the reducer sets `utilizadores`), so it was permanently undefined and was
+  // only ever used as a bogus effect dependency. Removed.
+  const { utilizadores } = useSelector((store) => store.utilizador);
   const [listaTipoTrabalho, setListaTipoTrabalho] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // Fetch once on mount. The old deps were `[listaDeUtilizadores, projeto, isLoading]`:
+  // the first was the phantom above, and the other two belong to the *projeto* slice —
+  // so the user list was being re-fetched every time the project loaded or its loading
+  // flag flipped, for no reason. The users this form needs do not depend on the project.
   useEffect(() => {
     dispatch(listaUtilizadores());
-   
-  }, [listaDeUtilizadores, projeto, isLoading]);
-  
+  }, [dispatch]);
+
   const formattedListUtilizadores = Array.isArray(utilizadores) ? utilizadores.filter(user => user.email.endsWith('isqctag.pt')) : [];
   const [values, setValues] = useState(null);
 
@@ -33,8 +39,7 @@ function VisualizarProjeto() {
     dispatch(getTipoTrabalho()).then((res) => {
       setListaTipoTrabalho(Array.isArray(res.payload.tipoTrabalho) ? res.payload.tipoTrabalho : []);
     });
-   
-  }, []);
+  }, [dispatch]);
 
 
   let StringListaTrabalho = listaTipoTrabalho.map(item => item.TipoTrabalho).join(",");

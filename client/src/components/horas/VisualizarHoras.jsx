@@ -27,10 +27,10 @@ const ListaHoras = () => {
   const [selectedUser, setSelectedUser] = useState(user?.user?.nome);
   const [selectedUserID, setSelectedUserID] = useState(user?.user?.id)
   const [selectedDay, setSelectedDay] = useState();
-  const [getFeriados, setFeriados] = useState([]);
+  const [getFeriados, setGetFeriados] = useState([]);
   const [listaDias, setListaDias] = useState([]);
   const [listaDiasT, setListaDiasT] = useState([]);
-  const [addHorasExtraIDS, setAddHorasExtraID] = useState([]);
+  const [addHorasExtraIDS, setAddHorasExtraIDS] = useState([]);
   const [listaPagamentos, setListaPagamentos] = useState([]);
 
   const [listaTipoTrabalho, setListaTipoTrabalho] = useState(null);
@@ -55,7 +55,7 @@ const ListaHoras = () => {
 
   const [horasCompensacao, setHorasCompensacao] = useState([]);
   const [horasCompensacaoDomingo, setHorasCompensacaoDomingo] = useState([]);
-  const [idCompensacao, setIDCompencacao] = useState(null)
+  const [idCompensacao, setIdCompensacao] = useState(null)
   const [userNome, setUserNome] = useState(user?.user?.nome);
   const [feriasPossiveis, setFeriasPossiveis] = useState(0);
   const [pedidosFerias, setPedidosFerias] = useState(0);
@@ -137,7 +137,7 @@ const ListaHoras = () => {
         { name: "Corpo de Deus", date: calculateCorpusChristi(i) },
       );
     }
-    setFeriados(feriados);
+    setGetFeriados(feriados);
     for (const feriado of feriados) {
       if (
         date.getDate() === feriado.date.getDate() &&
@@ -315,8 +315,8 @@ const ListaHoras = () => {
           const idCompensacao = tipoTrabalhoArray.find((tipo) => tipo.tipo === 4)?._id;
           const addHorasExtraID = tipoTrabalhoArray.find((tipo) => tipo.tipo === 5)?._id;
 
-          setAddHorasExtraID(addHorasExtraID);
-          setIDCompencacao(idCompensacao)
+          setAddHorasExtraIDS(addHorasExtraID);
+          setIdCompensacao(idCompensacao)
           setListaDiasT(listaDiasA);
 
           let countHours = 0;

@@ -88,7 +88,7 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, tipoHoras, handleChange,
     const [verificaSortHoras, setVerificaSortHoras] = useState(sort);
     const [verificaSortUtilizadorResponsavel, setVerificaSortUtilizadorResponsavel] = useState(sort);
     const [verificaSortUtilizador, setVerificaSortUtilizador] = useState(sort);
-    const [verificaSortMes, setVerificaMes] = useState(sort);
+    const [verificaSortMes, setVerificaSortMes] = useState(sort);
     const [verificaSortTipo, setVerificaSortTipo] = useState(sort);
     const [verificaSortData, setVerificaSortData] = useState(sort);
     
@@ -104,7 +104,7 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, tipoHoras, handleChange,
                 break;
 
             case 'Mes':
-                setVerificaMes(!verificaSortMes);            
+                setVerificaSortMes(!verificaSortMes);            
                 setVerificaActivo(verificaSortMes ? '-Mes' : 'Mes');
                 handleChange(verificaSortMes ? '-Mes' : 'Mes');
                 break;

@@ -1,16 +1,29 @@
 import Wrapper from '@/styles/FormRowListaTipoTrabalho';
-import { useCallback, useEffect, useState } from 'react';
+import { Fragment, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 
 //import { useSelector, useDispatch } from 'react-redux';
 //import LoadingSmaller from '@/components/common/LoadingSmaller';
 
+// As datas "dd/mm/aaaa" guardadas em `initialDate` são geradas abaixo pela própria app e
+// separadas por '<br />' (nunca HTML do utilizador). Converte-se essa string no JSX
+// equivalente para evitar `dangerouslySetInnerHTML`, mantendo o mesmo resultado renderizado.
+const renderLinhasDatas = (datas) => {
+  const linhas = String(datas ?? '').split('<br />');
+  return linhas.map((linha, index) => (
+    <Fragment key={linha}>
+      {linha}
+      {index < linhas.length - 1 && <br />}
+    </Fragment>
+  ));
+};
+
 const FormRowListaHorasExtra = ({ type, value, tipoHoras, utilizadores, changed }) => {
   const { t } = useTranslation('forms');
   const id = `myTextarea${type}${value}`;
   const [initialDate, setInitialDate] = useState([]);
-  const [initialName, setName] = useState([]);
+  const [initialName, setInitialName] = useState([]);
   //const [feriados, setFeriados] = useState([]);
   const [horasExtra, setHorasExtra] = useState([]);
   const [compensacao, setCompensacao] = useState(false);
@@ -149,7 +162,7 @@ const FormRowListaHorasExtra = ({ type, value, tipoHoras, utilizadores, changed 
       if (utilizadores && utilizadores.length > 0) {
         utilizadores.filter((user) => {
           if (user._id === value[0]?.Utilizador) {
-            setName(user?.nome);
+            setInitialName(user?.nome);
           }
           return false;
         })
@@ -321,7 +334,7 @@ const FormRowListaHorasExtra = ({ type, value, tipoHoras, utilizadores, changed 
     if (utilizadores && utilizadores.length > 0) {
       utilizadores.filter((user) => {
         if (user._id === value?.Utilizador) {
-          setName(user?.nome);
+          setInitialName(user?.nome);
         }
         return false;
       })
@@ -376,7 +389,7 @@ const FormRowListaHorasExtra = ({ type, value, tipoHoras, utilizadores, changed 
           <p>{initialName}</p>
         </div>
         <div className={tipo === "Férias" ? "col-md-4 text-center" : "col-md-2 text-center"}>
-          <p dangerouslySetInnerHTML={{ __html: initialDate }} />
+          <p>{renderLinhasDatas(initialDate)}</p>
         </div>
         <div className="col-md-1 text-center">
           <p>{tipo === "Férias"  ? " — " :convertToMinutes(value?.NumeroHoras)}</p>
@@ -402,7 +415,7 @@ const FormRowListaHorasExtra = ({ type, value, tipoHoras, utilizadores, changed 
             const tipoT = t.tipoTrabalho.split(',');
             const hours = t.horas.split(',');
             return (
-              <div key={`${index}`} className='row' >
+              <div key={t._id} className='row' >
                 <div className='col-md-12'>
                   <h5>{project.trim()}</h5>
                 </div>
@@ -423,8 +436,8 @@ const FormRowListaHorasExtra = ({ type, value, tipoHoras, utilizadores, changed 
         }
       </div>
 
-      {associated && associated.length > 0 && associated.map((diaAss, i) => (
-        <div key={diaAss + "_" + i}>
+      {associated && associated.length > 0 && associated.map((diaAss) => (
+        <div key={diaAss._id}>
           <div className="row mb-3" >
             <div className={"col-md-2 text-center"}>
             </div>

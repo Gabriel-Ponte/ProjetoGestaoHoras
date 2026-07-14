@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useTranslation } from 'react-i18next';
 import DefaultUserImg from "@/assets/image/DefaultUserImg.png";
 import Wrapper from '@/styles/ModalFoto';
@@ -15,28 +15,45 @@ function ModalFoto({ label, name, value, handleChange, className }) {
 
   const [foto, setFoto] = useState(value);
   useEffect(() => {
-    if(value === "" || typeof value === "undefined"){
-    fetch(DefaultUserImg)
-    .then(response => response.blob())
-    .then(blob => {
-      const novaFoto = URL.createObjectURL(blob);
-      return fetch(novaFoto);
-    })
-    .then(response => response.arrayBuffer())
-    .then(buffer => {
-      const fotoUser = new Uint8Array(buffer);
-      setFoto(fotoUser);
-      handleChange(name, fotoUser);
-    })
-    .catch(error => {
-      console.error("Error fetching image:", error);
-    });
+    if (value !== "" && typeof value !== "undefined") {
+      setFoto(value);
+      return undefined;
     }
-    else{
-    setFoto(value);
-  }
-   
+
+    // Aborted on cleanup: without this the fetch chain kept running after unmount and
+    // then called setFoto/handleChange against a dead component.
+    const controller = new AbortController();
+
+    fetch(DefaultUserImg, { signal: controller.signal })
+      .then(response => response.blob())
+      .then(blob => {
+        const novaFoto = URL.createObjectURL(blob);
+        return fetch(novaFoto, { signal: controller.signal });
+      })
+      .then(response => response.arrayBuffer())
+      .then(buffer => {
+        const fotoUser = new Uint8Array(buffer);
+        setFoto(fotoUser);
+        handleChange(name, fotoUser);
+      })
+      .catch(error => {
+        if (error.name === 'AbortError') return; // unmounted — expected, not an error
+        console.error("Error fetching image:", error);
+      });
+
+    return () => controller.abort();
   }, [file, value]);
+
+  // Memoised: URL.createObjectURL() is a side effect and must not run during render.
+  // Same expression that used to be inlined in both <img src={...}> below (it minted —
+  // and leaked — two new blob URLs on every re-render); now recomputed only when `foto` changes.
+  const fotoSrc = useMemo(
+    () =>
+      foto.data
+        ? URL.createObjectURL(new Blob([new Uint8Array(foto.data.data)], { type: foto.contentType }))
+        : DefaultUserImg,
+    [foto]
+  );
 
   const handleFileInputChange = (file) => {
     const reader = new FileReader();
@@ -168,11 +185,7 @@ function ModalFoto({ label, name, value, handleChange, className }) {
             >
               <img
                 alt={t('photo.alt')}
-                src={
-                  foto.data
-                    ? URL.createObjectURL(new Blob([new Uint8Array(foto.data.data)], { type: foto.contentType }))
-                    : DefaultUserImg
-                }
+                src={fotoSrc}
                 className="rounded mx-auto d-block"
                 style={{ maxWidth: "100px" }}
               />
@@ -201,11 +214,7 @@ function ModalFoto({ label, name, value, handleChange, className }) {
           <img
             ref={imgRef}
             alt={t('photo.alt')}
-            src={
-              foto.data
-                ? URL.createObjectURL(new Blob([new Uint8Array(foto.data.data)], { type: foto.contentType }))
-                : DefaultUserImg
-            }
+            src={fotoSrc}
             className="rounded mx-auto d-block"
             style={{ maxWidth: "100px" }}
           />

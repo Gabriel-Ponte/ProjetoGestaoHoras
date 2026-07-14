@@ -43,7 +43,7 @@ const ListaProjetos = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((store) => store.utilizador);
 
-  const [sortedProjetos, seTSortedProjetos] = useState([]);
+  const [sortedProjetos, setSortedProjetos] = useState([]);
   //const [filteredProjetos, setFilteredProjetos] = useState([]);
   const [horasT, setHorasT] = useState(0);
   const [DataCopy, setDataCopy] = useState("");
@@ -65,7 +65,7 @@ const ListaProjetos = () => {
   const [horasExtraAfter, setHorasExtraAfter] = useState(0);
   const [activeCompensacao, setActiveCompensacao] = useState(false);
   const [feriasActive, setFeriasActive] = useState(false);
-  const [compensacaoID, setcompensacaoID] = useState();
+  const [compensacaoID, setCompensacaoID] = useState();
   const [feriasID, setFeriasID] = useState();
   const [addHorasExtraID, setAddHorasExtraID] = useState();
   const [horasExtraTT, setHorasExtraTT] = useState(0);
@@ -95,7 +95,7 @@ const ListaProjetos = () => {
       const ferias = tipoTrabalhoArray.filter(item => item.tipo === 7);
       setFeriasID(ferias[0]?._id);
       setAddHorasExtraID(addHorasExtra[0]?._id);
-      setcompensacaoID(compensacao[0]?._id);
+      setCompensacaoID(compensacao[0]?._id);
       setListaTrabalhoAll(tipoTrabalhoArray.filter(item => item.tipo === 1));
       setListaTrabalhoGeral(tipoTrabalhoArray.filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 5 || item.tipo === 6|| item.tipo === 7)));
 
@@ -351,7 +351,7 @@ const ListaProjetos = () => {
 
       setLastDate(copiaEscolhida);
 
-      seTSortedProjetos(sSProjetos);
+      setSortedProjetos(sSProjetos);
     } else {
 
       setCopyExists(false);
@@ -456,7 +456,7 @@ const ListaProjetos = () => {
         setHorasT(listaDias[i].NumeroHoras);
         setVerificaChange(true);
         setVerificaDiaCalled(true);
-        seTSortedProjetos(sSProjetos);
+        setSortedProjetos(sSProjetos);
         return;
       }
     }
@@ -478,7 +478,7 @@ const ListaProjetos = () => {
     setVerificaChange(false);
     setVerificaDiaCalled(false);
 
-    seTSortedProjetos(sProjetos)
+    setSortedProjetos(sProjetos)
     return;
   }
   }, [listaDias.length, values.Data, projetos]);
@@ -964,7 +964,7 @@ const ListaProjetos = () => {
 
       setHorasT(lastDate.NumeroHoras);
       setVerificaChange(true);
-      seTSortedProjetos(sSProjetos);
+      setSortedProjetos(sSProjetos);
     } else {
       setVerificaChange(false);
       setValues({

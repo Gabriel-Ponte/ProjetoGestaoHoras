@@ -1,7 +1,7 @@
 import { AiOutlineArrowDown } from 'react-icons/ai';
 import { AiOutlineArrowUp } from 'react-icons/ai';
 import { FaSort } from 'react-icons/fa';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import Wrapper from '@/styles/ListaProjetosHeader';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
@@ -51,6 +51,10 @@ const GerirHorasFeriasHeader = ({ sortValue, handleChange, setSelectedYear, sele
     const [verificaSortPorDar, setVerificaSortPorDar] = useState(sort);
     const [verificaSortAcoes, setVerificaSortAcoes] = useState(sort);
     const [verificaActivo, setVerificaActivo] = useState(sortValue);
+
+    // Limite superior do seletor de ano ("hoje"). Calculado fora do render para manter o
+    // componente puro; o DatePicker só usa a granularidade do ano, por isso basta uma vez.
+    const maxDate = useMemo(() => new Date(), []);
 
 
     const toggleSort = async (button) => {
@@ -187,7 +191,7 @@ const GerirHorasFeriasHeader = ({ sortValue, handleChange, setSelectedYear, sele
                             <LocalizationProvider dateAdapter={AdapterDateFns}>
                                 <DatePicker
                                     minDate={new Date('2015-01-01')} // Minimum year allowed
-                                    maxDate={new Date()} // Maximum year allowed
+                                    maxDate={maxDate} // Maximum year allowed
                                     views={['year']} // Limits the picker to only allow year selection
                                     value={selectedYear}
                                     onChange={(newValue) => {

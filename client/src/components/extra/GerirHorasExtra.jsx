@@ -472,8 +472,8 @@ const GerirHorasExtra = () => {
                     tipoHoras={verificaTipo}
                     handleChange={handleChangeSort} />
 
-                  {verificaAlterado === 3 && listaPagamentos.map((t, i) => (
-                    <div className="row text-center" key={"p" + i}>
+                  {verificaAlterado === 3 && listaPagamentos.map((t) => (
+                    <div className="row text-center" key={t._id}>
                       <hr></hr>
                       <div>
                         <FormRowListaHorasExtraPagas

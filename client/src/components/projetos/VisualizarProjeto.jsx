@@ -49,7 +49,7 @@ const VisualizarProjeto = () => {
   const [valuesVisualizar, setValuesVisualizar] = useState(null);
   const [selectedUser, setSelectedUser] = useState(user.user.tipo === 1 ? user?.user?.nome : "Todos");
   const [selectedDay, setSelectedDay] = useState();
-  const [getFeriados, setFeriados] = useState([]);
+  const [getFeriados, setGetFeriados] = useState([]);
   const [listaDias, setListaDias] = useState([]);
   const [updatedListaDias, setUpdatedListaDias] = useState([]);
   const [listaTipoTrabalho, setListaTipoTrabalho] = useState([]);
@@ -321,7 +321,7 @@ const VisualizarProjeto = () => {
       );
     }
 
-    setFeriados(feriados);
+    setGetFeriados(feriados);
     for (const feriado of feriados) {
       if (
         date.getDate() === feriado.date.getDate() &&
@@ -401,7 +401,7 @@ const VisualizarProjeto = () => {
                       {t('view.currentVersion')}
                     </option>
   
-                    {listaVProjeto.map((projetoVersion, index) => {
+                    {listaVProjeto.map((projetoVersion) => {
                       const date = new Date(projetoVersion.createdAt);
                       const day = date.getDate();
                       let month = date.getMonth() + 1; 
@@ -413,7 +413,7 @@ const VisualizarProjeto = () => {
 
                       const data = `${day}/${month}/${year} ${hour}:${min}:${sec}`; 
                       return (
-                        <option key={index} value={projetoVersion.createdAt}>
+                        <option key={projetoVersion._id} value={projetoVersion.createdAt}>
                           {data}
                         </option>
                       );
@@ -591,11 +591,11 @@ const VisualizarProjeto = () => {
                     </div>
                     <div>
                       {listaTipoTrabalho && listaTipoTrabalho.length > 0 ? (
-                        listaTipoTrabalho.map((t, i) => {
+                        listaTipoTrabalho.map((t) => {
 
                           return (
                             values.NumeroHorasTipoTrabalho[t.TipoTrabalho] && values.NumeroHorasTipoTrabalho[t.TipoTrabalho] > 0 ? (
-                              <div className="row mb-3" key={i}>
+                              <div className="row mb-3" key={t._id}>
                                 <div className="col-6">
                                   <p>{t.TipoTrabalho}</p>
                                 </div>

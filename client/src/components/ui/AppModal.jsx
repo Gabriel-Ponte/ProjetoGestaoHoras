@@ -106,7 +106,7 @@ const AppModal = ({
 }) => {
   const { t } = useTranslation('common');
   const dialogRef = useRef(null);
-  const titleId = useRef(`app-modal-title-${(titleSeq += 1)}`);
+  const titleIdRef = useRef(`app-modal-title-${(titleSeq += 1)}`);
 
   useEffect(() => {
     if (!open) return undefined;
@@ -141,11 +141,11 @@ const AppModal = ({
         tabIndex={-1}
         role="dialog"
         aria-modal="true"
-        aria-labelledby={title ? titleId.current : undefined}
+        aria-labelledby={title ? titleIdRef.current : undefined}
       >
         {(title || showClose) && (
           <div className="modal-head">
-            {title ? <h2 id={titleId.current} className="modal-title">{title}</h2> : <span />}
+            {title ? <h2 id={titleIdRef.current} className="modal-title">{title}</h2> : <span />}
             {showClose && (
               <button type="button" className="modal-close" onClick={onClose} aria-label={t('actions.close')}>
                 <IoClose />

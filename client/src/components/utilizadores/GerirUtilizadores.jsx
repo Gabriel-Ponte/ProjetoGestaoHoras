@@ -10,7 +10,7 @@ const GerirUtilizadores = () => {
   const { t } = useTranslation('utilizadores');
   const [initialState, setInitialState] = useState([]);
   const [verificaAlterado, setVerificaAlterado] = useState({});
-  const [listaDeUtilizadores, setListaUtilizadores] = useState([]);
+  const [listaDeUtilizadores, setListaDeUtilizadores] = useState([]);
   const dispatch = useDispatch();
   const [callUseEffect, setCallUseEffect] = useState();
   const { user, isLoading } = useSelector((store) => store.utilizador.user);
@@ -45,7 +45,7 @@ const GerirUtilizadores = () => {
         })
     : [];
   
-      setListaUtilizadores(lista);
+      setListaDeUtilizadores(lista);
       setInitialState(lista)
     });
   }, [callUseEffect ,dispatch]);
@@ -116,7 +116,7 @@ const updateList = async (e, id) => {
       }
       return newItem;
   }));
-  setListaUtilizadores(newList);
+  setListaDeUtilizadores(newList);
 };
 
 updateList();
@@ -232,7 +232,7 @@ updateList();
       }
       return item;
     }));
-    setListaUtilizadores(updatedListaUtilizador);
+    setListaDeUtilizadores(updatedListaUtilizador);
   };
 
 
@@ -247,10 +247,10 @@ updateList();
         subtitle={t('manage.subtitle')}
       />
       <div className="listaTiposUtilizador">
-        {listaDeUtilizadores.map((utilizador, i) => {
+        {listaDeUtilizadores.map((utilizador) => {
           if (user.id === utilizador._id) return null;
           return (
-            <div className="user-card" key={i}>
+            <div className="user-card" key={utilizador._id}>
               <div className="user-card-info">
                 <p className="user-name">{utilizador.nome}</p>
                 <p className="user-email">{utilizador.email}</p>

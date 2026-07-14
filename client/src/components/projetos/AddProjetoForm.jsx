@@ -32,7 +32,10 @@ const AddProjectForm = () => {
   const [values, setValues] = useState(initialState);
   const { listaClientes } = useSelector((store) => store.projeto);
   //const [listaTipoTrabalho, setListaTipoTrabalho] = useState([]);
-  const { isLoadingU, utilizadores, listaDeUtilizadores } = useSelector((store) => store.utilizador)
+  // NOTE: `listaDeUtilizadores` used to be destructured here. It does not exist on the
+  // slice (the reducer sets `utilizadores`), so it was always undefined and was only
+  // ever used as a bogus effect dependency. Removed.
+  const { isLoadingU, utilizadores } = useSelector((store) => store.utilizador)
   //const { isLoading } = useSelector((store) => store.projetos);
 
   const dispatch = useDispatch();
@@ -48,15 +51,23 @@ const AddProjectForm = () => {
   //}, []);
 
   /////////////////////////////////////////////////////////////////////////////////////
+  // Fetch once on mount. Both dep arrays were WRONG, not merely incomplete:
+  //
+  //  - `listaDeUtilizadores` does not exist on the utilizador slice at all (the
+  //    reducer sets `utilizadores`), so it was permanently `undefined`. The effect
+  //    therefore ran exactly once — purely by accident.
+  //
+  //  - `listaClientes` DOES exist, and `getClientes` assigns a brand-new array from
+  //    the API on every fulfil. So this effect re-triggered on its OWN result:
+  //    dispatch -> fulfil -> new array reference -> dep changed -> dispatch -> ...
+  //    an infinite fetch loop hammering /projetos/clientes.
   useEffect(() => {
     dispatch(listaUtilizadores());
-     
-  }, [listaDeUtilizadores]);
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(getClientes());
-     
-  }, [listaClientes]);
+  }, [dispatch]);
 
   if (isLoadingU) {
     return <LoadingState message={t('common.loading')} />;

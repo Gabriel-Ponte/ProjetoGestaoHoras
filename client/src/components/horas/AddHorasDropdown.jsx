@@ -35,7 +35,7 @@ const AddHorasDropdown = ({ sortedProjetos, verificaChange, listaTipoTrabalho, v
   const [listaTrabalho, setListaTrabalho] = useState([]);
   const [listaTrabalhoGeralAdd, setListaTrabalhoGeralAdd] = useState([]);
   const [listaTrabalhoGeralD, setListaTrabalhoGeralD] = useState([]);
-  const [arrayTipoTrabalhoDropdown, setArrayTipoTrabalhoDropdwon] = useState([]);
+  const [arrayTipoTrabalhoDropdown, setArrayTipoTrabalhoDropdown] = useState([]);
   const [options, setOptions] = useState([]);
   const [showProjeto, setShowProjeto] = useState({});
 
@@ -199,7 +199,7 @@ const AddHorasDropdown = ({ sortedProjetos, verificaChange, listaTipoTrabalho, v
         const find = arrayTipoTrabalhoDropdown.find(dropdownItem => dropdownItem === projectId);
         if (!find) {
           arrayTipoTrabalhoDropdown.push(projectId);
-          setArrayTipoTrabalhoDropdwon([...arrayTipoTrabalhoDropdown]);
+          setArrayTipoTrabalhoDropdown([...arrayTipoTrabalhoDropdown]);
         }
       }
     });

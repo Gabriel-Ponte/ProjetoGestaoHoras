@@ -25,7 +25,7 @@ const VisualizarHorasProjeto = () => {
   const [verificaDias, setVerificaDias] = useState(0);
   const [selectedProjeto, setSelectedProjeto] = useState("Todos");
   const [selectedDay, setSelectedDay] = useState();
-  const [getFeriados, setFeriados] = useState([]);
+  const [getFeriados, setGetFeriados] = useState([]);
   const [listaDias, setListaDias] = useState([]);
   const [listaDiasT, setListaDiasT] = useState([]);
   const [numeroTotalHoras, setNumeroTotalHoras] = useState(0);
@@ -43,8 +43,6 @@ const VisualizarHorasProjeto = () => {
   const dispatch = useDispatch();
 
   const formatedListProjetos = Array.isArray(projetos) ? projetos : [];
-
-  const today = new Date();
 
   function feriadosPortugal(date) {
 
@@ -74,7 +72,7 @@ const VisualizarHorasProjeto = () => {
       );
     }
 
-    setFeriados(feriados);
+    setGetFeriados(feriados);
     for (const feriado of feriados) {
       if (
         date?.getDate() === feriado.date?.getDate() &&
@@ -252,6 +250,7 @@ const VisualizarHorasProjeto = () => {
   useEffect(() => {
 
     let tipoTrabalhoArray = [];
+    const today = new Date();
     feriadosPortugal(today);
     dispatch(getAllProjetos()).then((res) => {
       setListaProjetos(res.payload.projetos);
@@ -657,11 +656,11 @@ const VisualizarHorasProjeto = () => {
                       </div>
                       <div>
                         {listaTipoTrabalho && listaTipoTrabalho?.length > 0 ? (
-                          listaTipoTrabalho.map((t, i) => {
+                          listaTipoTrabalho.map((t) => {
 
                             return (
                               projeto?.NumeroHorasTipoTrabalho[t.TipoTrabalho] && projeto?.NumeroHorasTipoTrabalho[t.TipoTrabalho] > 0 ? (
-                                <div className="row mb-3" key={i}>
+                                <div className="row mb-3" key={t._id}>
                                   <div className='col-2'></div>
                                   <div className="col-6">
                                     <p>{t.TipoTrabalho}</p>

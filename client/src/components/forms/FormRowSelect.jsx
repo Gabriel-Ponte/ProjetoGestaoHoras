@@ -85,8 +85,8 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
   let selectOptions;
 
   if (name === 'Piloto') {
-    const listaUtilizador = list.map((itemValue, index) => (
-      <option key={index} data-key={itemValue._id} value={itemValue.nome}>
+    const listaUtilizador = list.map((itemValue) => (
+      <option key={itemValue._id} data-key={itemValue._id} value={itemValue.nome}>
         {
           itemValue.nome
         }
@@ -180,8 +180,8 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
   }
   } else if(name === 'listaProjetos'){
     // Add checkbox inputs for each option
-    const lista = updatedList.map((itemValue, index) => (
-      <option key={index} value={itemValue._id}>
+    const lista = updatedList.map((itemValue) => (
+      <option key={itemValue._id} value={itemValue._id}>
         {
          itemValue._id_P + ' - ' + itemValue.Nome
         }
@@ -199,8 +199,8 @@ const FormRowSelect = ({ labelText, name, value, handleChange, list, multiple, h
 
   } else {
     // Add checkbox inputs for each option
-    const lista = updatedList.map((itemValue, index) => (
-      <option key={index} value={itemValue.TipoTrabalho}>
+    const lista = updatedList.map((itemValue) => (
+      <option key={itemValue._id} value={itemValue.TipoTrabalho}>
         {
           itemValue.TipoTrabalho
         }

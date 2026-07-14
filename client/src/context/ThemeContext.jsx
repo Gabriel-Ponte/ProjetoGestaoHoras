@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, use, useCallback, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { createTheme, ThemeProvider as MuiProvider } from '@mui/material/styles';
 
@@ -36,6 +36,9 @@ const getInitialTheme = () => {
 };
 
 export const ThemeProvider = ({ children }) => {
+  // The raw setter is deliberately NOT called `setTheme` — that name is taken by the
+  // public one exported on the context below, which also persists to localStorage.
+  // eslint-disable-next-line @eslint-react/use-state
   const [theme, setThemeState] = useState(getInitialTheme);
 
   // Apply to <html> (tokens + Bootstrap colour mode).
@@ -86,13 +89,15 @@ export const ThemeProvider = ({ children }) => {
     [theme, setTheme, toggleTheme]
   );
 
-  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
+  // React 19: the context itself is the provider — no `.Provider` needed.
+  return <ThemeContext value={value}>{children}</ThemeContext>;
 };
 
 ThemeProvider.propTypes = { children: PropTypes.node };
 
 export const useTheme = () => {
-  const ctx = useContext(ThemeContext);
+  // React 19: `use` supersedes `useContext`.
+  const ctx = use(ThemeContext);
   if (!ctx) throw new Error('useTheme must be used inside <ThemeProvider>');
   return ctx;
 };

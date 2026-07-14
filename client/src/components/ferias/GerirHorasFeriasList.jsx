@@ -1,4 +1,4 @@
-import { memo, useCallback, useState } from 'react';
+import { Fragment, memo, useCallback, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -9,6 +9,19 @@ import { useTranslation } from 'react-i18next';
 import { FaCaretDown } from 'react-icons/fa';
 import { AiFillDelete } from 'react-icons/ai';
 import useFeriadosPortugal from '@/components/dias/FeriadosPortugal';
+
+// `stringListaDias` gera datas "dd/mm/aaaa" separadas por '<br />' (conteúdo criado pela
+// própria app, nunca HTML do utilizador). Converte-se essa string no JSX equivalente para
+// evitar `dangerouslySetInnerHTML`, mantendo exatamente o mesmo resultado renderizado.
+const renderLinhasDatas = (datas) => {
+  const linhas = String(datas ?? '').split('<br />');
+  return linhas.map((linha, index) => (
+    <Fragment key={linha}>
+      {linha}
+      {index < linhas.length - 1 && <br />}
+    </Fragment>
+  ));
+};
 
 const GerirHorasFeriasList = ({
   keyF,
@@ -25,13 +38,17 @@ const GerirHorasFeriasList = ({
   //const [verificaResultado, setVerificaResultado] = useState(1);
   const [verificaAlterado, setVerificaAlterado] = useState(false);
   const [addDias, setAddDias] = useState("0");
-  const [selectedYear, setSelectedYear] = useState((new Date()));
+  const [selectedYear, setSelectedYear] = useState(() => new Date());
   const { user } = useSelector((store) => store.utilizador);
   const [showFerias, setShowFerias] = useState({});
 
   const [arrayDataYear, setArrayDataYear] = useState({});
 
   const [showFeriasSwitch, setShowFeriasSwitch] = useState({ keyF: false });
+
+  // Limite superior do seletor de ano ("hoje"). Calculado fora do render para manter o
+  // componente puro; o DatePicker só usa a granularidade do ano, por isso basta uma vez.
+  const maxDate = useMemo(() => new Date(), []);
 
   const handleAddDias = (e) => {
     if (addDias <= 0 || !e) {
@@ -311,7 +328,7 @@ const GerirHorasFeriasList = ({
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <DatePicker
                       minDate={new Date('2015-01-01')} // Minimum year allowed
-                      maxDate={new Date()} // Maximum year allowed
+                      maxDate={maxDate} // Maximum year allowed
                       views={['year']} // Limits the picker to only allow year selection
                       value={selectedYear}
                       formatDensity={"spacious"}
@@ -437,10 +454,10 @@ const GerirHorasFeriasList = ({
                       <div className="col-md-2 themed-grid-col"></div>
                     </div>
 
-                    {ferias[1].map((feriasYear, index) => {
+                    {ferias[1].map((feriasYear) => {
 
                       return (
-                        <div className='row' key={index}>
+                        <div className='row' key={feriasYear._id}>
 
                           <div className="col-md-1 themed-grid-col" style={{ margin: "auto" }}>
 
@@ -498,7 +515,7 @@ const GerirHorasFeriasList = ({
                           <div className="col-md-1 themed-grid-col">
                           </div>
                           <div className="col-md-3 themed-grid-col">
-                            <p dangerouslySetInnerHTML={{ __html: stringDates }} />
+                            <p>{renderLinhasDatas(stringDates)}</p>
                           </div>
                           <div className="col-md-3 themed-grid-col">
                             <p>{numero}</p>

@@ -9,13 +9,13 @@ function OptionsPanel({ options, handleTipoTrabalho}) {
    const { t } = useTranslation('layout');
    const [inputValue, setInputValue] = useState('');
    const [filteredOptions, setFilteredOptions] = useState([]);
-   const [isDropdownOpen, setDropdownOpen] = useState(false);
+   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
 
    const handleSelectOption = (option) => {
     handleTipoTrabalho(option);
     setInputValue("");
-    setDropdownOpen(false)
+    setIsDropdownOpen(false)
   };
 
 
@@ -30,7 +30,7 @@ function OptionsPanel({ options, handleTipoTrabalho}) {
     }, [inputValue, options]);
 
     const handleInputChange = (e) => {
-      setDropdownOpen(true)
+      setIsDropdownOpen(true)
       setInputValue(e.target.value);
     };
 

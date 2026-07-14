@@ -18,19 +18,19 @@ const GerirHorasFerias = ({ setGerirFerias }) => {
   const { t } = useTranslation('ferias');
   const dispatch = useDispatch();
 
-  const [listaFerias, setlistaFerias] = useState({});
-  const [listaFeriasUser, setlistaFeriasUser] = useState([]);
+  const [listaFerias, setListaFerias] = useState({});
+  const [listaFeriasUser, setListaFeriasUser] = useState([]);
   const [selectedDates, setSelectedDates] = useState([]);
-  const [listaDias, setlistaDias] = useState({});
+  const [listaDias, setListaDias] = useState({});
   const { isLoadingFerias, sort } = useSelector((store) => store.ferias);
   const [addFerias, setAddFerias] = useState(false);
   const { user, utilizadores } = useSelector((store) => store.utilizador);
-  const [getFeriados, setFeriados] = useState([]);
+  const [listaFeriados, setListaFeriados] = useState([]);
   const [selectedDay, setSelectedDay] = useState();
   const [selectedDayCalendar, setSelectedDayCalendar] = useState();
   const [selectedUser, setSelectedUser] = useState(user?.user?.nome);
   const [selectedUserID, setSelectedUserID] = useState(user?.user?.id);
-  const [selectedYear, setSelectedYear] = useState((new Date()));
+  const [selectedYear, setSelectedYear] = useState(() => new Date());
   const [update, setUpdate] = useState(false);
   const [change, setChange] = useState(false);
 
@@ -46,7 +46,7 @@ const GerirHorasFerias = ({ setGerirFerias }) => {
     feriadosPortugal();
     dispatch(getAllDiasUtilizador({ userNome: selectedUserID })).then((res) => {
       const listaDiasA = (typeof res.payload.diasAllUtilizador !== "undefined") ? res.payload.diasAllUtilizador : [];
-      setlistaDias(listaDiasA);
+      setListaDias(listaDiasA);
     })
 
     getListaFeriasUser();
@@ -58,7 +58,7 @@ const GerirHorasFerias = ({ setGerirFerias }) => {
 
       const horasExtraArray = (res?.payload?.feriasArray) ? res?.payload?.feriasArray : [];
   
-      setlistaFerias(horasExtraArray);
+      setListaFerias(horasExtraArray);
     } catch (error) {
       console.error('Error Lista Ferias', error);
     }
@@ -69,7 +69,7 @@ const GerirHorasFerias = ({ setGerirFerias }) => {
       const res = await dispatch(getFeriasUtilizador(selectedUserID));
       const horasExtraArray = (res?.payload?.feriasArray) ? res?.payload?.feriasArray : [];
 
-      setlistaFeriasUser(horasExtraArray[0]);
+      setListaFeriasUser(horasExtraArray[0]);
     } catch (error) {
       console.error('Error Lista Ferias', error);
     }
@@ -182,7 +182,7 @@ const GerirHorasFerias = ({ setGerirFerias }) => {
         { name: "Corpo de Deus", date: calculateCorpusChristi(i) },
       );
     }
-    setFeriados(feriados);
+    setListaFeriados(feriados);
 
   }
 
@@ -261,7 +261,7 @@ const GerirHorasFerias = ({ setGerirFerias }) => {
           key={"calendar"}
           selectedDate={selectedDayCalendar}
           ferias={listaFeriasUser}
-          feriados={getFeriados}
+          feriados={listaFeriados}
           inserting={selectedDates}
           handleChange={(dia, mes, ano) => {
             handleChangeCalendario(dia, mes, ano);

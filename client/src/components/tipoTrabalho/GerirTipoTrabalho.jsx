@@ -184,8 +184,8 @@ const GerirTipoTrabalho =  () => {
 
       <div className="listaTiposTrabalho">
         {listaTipoTrabalho.map((tt, i) => (
-          <div className="tt-card" key={i}>
-            <div className="tt-card-fields" key={i + "tt"}>
+          <div className="tt-card" key={tt._id}>
+            <div className="tt-card-fields">
               <FormRowListaTipoTrabalho
                 type="textarea"
                 id="TipoTrabalhoProjeto"
@@ -194,7 +194,7 @@ const GerirTipoTrabalho =  () => {
                 keyGet={`tt-${i}`}
                 handleChange={(e) => handleChangeTipoTrabalho(e, tt._id)}
               />
-              <div className="tiposTrabalho" key={i + "stt"}>
+              <div className="tiposTrabalho">
                 <FormRowSelectTipo
                   type="text"
                   className="col-md-12"

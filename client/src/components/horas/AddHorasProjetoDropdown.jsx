@@ -83,7 +83,7 @@ const AddHorasProjetoDropdown = ({ sortedProjetos, verificaChange, listaTipoTrab
                             matchFoundProjeto[sortedProjetos?.projeto?._id] = true;
                             return (
 
-                              <div key={"EditarDia" + ID}>
+                              <div key={"EditarDia" + item._id}>
 
                                 {StringListaTrabalho?.split(",").map((t, i) =>
                                   itemTypeArray.map((iT, iId) => {

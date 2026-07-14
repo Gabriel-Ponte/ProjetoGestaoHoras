@@ -1,4 +1,4 @@
-import { memo, useState, useEffect, useCallback } from 'react';
+import { Fragment, memo, useState, useEffect, useCallback } from 'react';
 import { FormRow, useFeriadosPortugal } from '@/components';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
@@ -9,6 +9,18 @@ import { getFeriasUtilizador } from '@/features/ferias/feriasSlice';
 import { AppButton } from '@/components/ui';
 
 
+// `stringListaDias` gera datas "dd/mm/aaaa" separadas por '<br />' (conteúdo criado pela
+// própria app, nunca HTML do utilizador). Converte-se essa string no JSX equivalente para
+// evitar `dangerouslySetInnerHTML`, mantendo exatamente o mesmo resultado renderizado.
+const renderLinhasDatas = (datas) => {
+  const linhas = String(datas ?? '').split('<br />');
+  return linhas.map((linha, index) => (
+    <Fragment key={linha}>
+      {linha}
+      {index < linhas.length - 1 && <br />}
+    </Fragment>
+  ));
+};
 
 const AddFerias = ({ user, setAddFerias, verificaDia, Data, listaDias, accepted, getDates ,updateCalendar}) => {
   const { t } = useTranslation('ferias');
@@ -382,7 +394,7 @@ const AddFerias = ({ user, setAddFerias, verificaDia, Data, listaDias, accepted,
           {stringDates ? (
             <>
               <h4>{selectedDates.length === 1 ? t('add.day') : t('add.days')}</h4>
-              <p dangerouslySetInnerHTML={{ __html: stringDates }} />
+              <p>{renderLinhasDatas(stringDates)}</p>
             </>
           ) : (
             <p>{t('add.invalidSelectedDays')}</p>

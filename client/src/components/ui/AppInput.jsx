@@ -1,4 +1,3 @@
-import { forwardRef } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
@@ -33,15 +32,15 @@ const StyledInput = styled.input`
   }
 `;
 
-const AppInput = forwardRef(({ invalid = false, type = 'text', ...rest }, ref) => {
+// React 19: `ref` is an ordinary prop — forwardRef is no longer needed.
+const AppInput = ({ invalid = false, type = 'text', ref, ...rest }) => {
   return <StyledInput ref={ref} type={type} $invalid={invalid} {...rest} />;
-});
-
-AppInput.displayName = 'AppInput';
+};
 
 AppInput.propTypes = {
   invalid: PropTypes.bool,
   type: PropTypes.string,
+  ref: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
 };
 
 export default AppInput;

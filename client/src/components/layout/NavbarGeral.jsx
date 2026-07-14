@@ -1,6 +1,6 @@
 import Wrapper from '@/styles/NavbarGeral';
 import { FaUserCircle, FaCaretDown } from 'react-icons/fa';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,7 +11,7 @@ const Navbar = () => {
   const { t } = useTranslation('layout');
   const [showLogout, setShowLogout] = useState(0);
   const [disableAddHoras, setDisableAddHoras] = useState(0);
-  const [disableVisualizardHoras, setDisableVisualizarHoras] = useState(0);
+  const [disableVisualizarHoras, setDisableVisualizarHoras] = useState(0);
   const { user } = useSelector((store) => store.utilizador);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -50,14 +50,19 @@ const Navbar = () => {
 
   // "active" highlight mirrors the previous green-background logic exactly:
   // Adicionar Horas is highlighted when it is the active page OR nothing is selected yet.
-  const addHorasActive = disableAddHoras === 1 || disableVisualizardHoras === 0;
-  const visualizarActive = disableVisualizardHoras === 1;
+  const addHorasActive = disableAddHoras === 1 || disableVisualizarHoras === 0;
+  const visualizarActive = disableVisualizarHoras === 1;
 
-  const fotoUrl = user?.user?.foto
-    ? URL.createObjectURL(
-        new Blob([new Uint8Array(user.user.foto.data.data)], { type: user.user.foto.contentType })
-      )
-    : null;
+  // Memoised: URL.createObjectURL() is a side effect, so it must not run during render.
+  // It also used to mint (and leak) a brand new blob URL on every single re-render.
+  const foto = user?.user?.foto;
+  const fotoUrl = useMemo(
+    () =>
+      foto
+        ? URL.createObjectURL(new Blob([new Uint8Array(foto.data.data)], { type: foto.contentType }))
+        : null,
+    [foto]
+  );
 
   return (
     <Wrapper>
@@ -80,7 +85,7 @@ const Navbar = () => {
                 variant={visualizarActive ? 'primary' : 'secondary'}
                 size='sm'
                 onClick={visualizarHoras}
-                disabled={disableVisualizardHoras === 1}
+                disabled={disableVisualizarHoras === 1}
               >
                 {t('nav.viewHoras')}
               </AppButton>

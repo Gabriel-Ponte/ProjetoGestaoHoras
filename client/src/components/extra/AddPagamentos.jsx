@@ -50,7 +50,7 @@ const AddPagamentos = ({ horasExtraEsteMes, horasPorDar, selectedUser, responsab
   const [loading, setLoading] = useState(false);
   const [pagamentoVisible, setPagamentoVisible] = useState(false);
   const [values, setValues] = useState(initialState);
-  const [selectedMinutes, setSelectedMinutes] = useState((convertToInt(horasExtraEsteMes) >= "0" ? convertToInt(horasExtraEsteMes) : "0")); // Convert hours to minutes
+  const [selectedMinutes, setSelectedMinutes] = useState(() => (convertToInt(horasExtraEsteMes) >= "0" ? convertToInt(horasExtraEsteMes) : "0")); // Convert hours to minutes
 
 
 

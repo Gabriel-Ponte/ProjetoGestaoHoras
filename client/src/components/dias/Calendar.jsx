@@ -9,7 +9,10 @@ import PropTypes from 'prop-types';
 
 const CalendarControl = ({ handleChange, inserted, feriados, ferias,inserting, compensacao, compensacaoDomingo, inicio, fim, objetivo,aceitacao, vProjeto, todos, numberUsers, horasExtraID, selectedDate , user}) => {
     const { t, i18n } = useTranslation('dias');
-    const [calendar, setCalendar] = useState(selectedDate ? new Date(selectedDate.ano , selectedDate.mes , 1 ,0 , 0, 0) : new Date());
+    // Lazy initial state: useState discards the initializer's result after the first
+    // render anyway, so this keeps the exact same initial value while avoiding a
+    // `new Date()` on every render.
+    const [calendar, setCalendar] = useState(() => selectedDate ? new Date(selectedDate.ano , selectedDate.mes , 1 ,0 , 0, 0) : new Date());
 
     // Index-based: the array order maps to Date#getDay() / Date#getMonth().
     const calWeekDays = [

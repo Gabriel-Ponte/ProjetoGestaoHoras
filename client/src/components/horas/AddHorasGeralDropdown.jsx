@@ -241,7 +241,7 @@ const AddHorasGeralDropdown = ({ sortedProjetos, verificaChange, listaTipoTrabal
                                 matchFoundProjeto[idProjeto] = true;
                                 return (
 
-                                  <div key={"EditarDia" + ID}>
+                                  <div key={"EditarDia" + item._id}>
                                     {((values?.accepted === 5 || values?.accepted === 4) ? StringListaTrabalhoCompensacaoD : StringListaTrabalhoGeral)?.split(",").map((t, i) =>
                                       itemTypeArray.map((iT, iId) => {
                                         const lTrabalho = (((values?.accepted === 5 || values?.accepted === 4) && project.Nome === "Geral") ? listaTrabalhoGeralD : project.Nome !== "Geral" ? ListaTrabalhoAll : listaTrabalhoGeralAdd);
@@ -320,7 +320,7 @@ const AddHorasGeralDropdown = ({ sortedProjetos, verificaChange, listaTipoTrabal
                               } else {
                                 if (!matchFoundProjeto[idProjeto] && ID === arrayTipoTrabalho?.length - 1) {
                                   return (
-                                    <div key={"EditarDiaProjetoNotFound" + idProjeto}>
+                                    <div key={"EditarDiaProjetoNotFound" + project._id}>
                                       {((values?.accepted === 5 || values?.accepted === 4) ? StringListaTrabalhoCompensacaoD : StringListaTrabalhoGeral)?.split(",").map((t, i) => {
                                         const ttID = (listaTipoTrabalho.filter(item => item.TipoTrabalho === t).map(item => item._id).join(","))
                                         let value = "";

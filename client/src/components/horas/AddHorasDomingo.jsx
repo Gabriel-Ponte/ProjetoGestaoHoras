@@ -42,7 +42,7 @@ const AddHorasDomingo = ({ handleDateChoosen, handleClose, state, checkDate, dat
         return newDate;
     };
 
-    const [data, setData] = useState(incrementDateByOneDay(dataReceived));
+    const [data, setData] = useState(() => incrementDateByOneDay(dataReceived));
     const [open] = useState(state);
 
 

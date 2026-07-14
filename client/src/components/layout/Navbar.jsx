@@ -1,6 +1,6 @@
 import Wrapper from '@/styles/Navbar';
 import { FaAlignLeft, FaUserCircle, FaCaretDown } from 'react-icons/fa';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -110,11 +110,16 @@ const Navbar = () => {
   const gestaoHorasExtra = showsGestaoHorasExtra(tipo);
   const fallbackTitle = !gestaoProjetos && !gestaoHoras && !gestaoHorasExtra;
 
-  const fotoUrl = user?.user?.foto
-    ? URL.createObjectURL(
-        new Blob([new Uint8Array(user.user.foto.data.data)], { type: user.user.foto.contentType })
-      )
-    : null;
+  // Memoised: URL.createObjectURL() is a side effect, so it must not run during render.
+  // It also used to mint (and leak) a brand new blob URL on every single re-render.
+  const foto = user?.user?.foto;
+  const fotoUrl = useMemo(
+    () =>
+      foto
+        ? URL.createObjectURL(new Blob([new Uint8Array(foto.data.data)], { type: foto.contentType }))
+        : null,
+    [foto]
+  );
 
   return (
     <Wrapper>

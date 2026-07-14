@@ -121,27 +121,32 @@ const FormRowCheckboxMultiple = ({ labelText, name, value, handleChange, handleC
   const options = ['Todos', ...list.map((item) => item.nome)];
   const ids = ['Todos', ...list.map((item) => item._id)];
 
-  const checkboxOptions = options.map((option, index) => (
-    <div key={index}>
-      <div className='row'>
-        <div className='col-9'>
-          <label htmlFor={option} style={{ cursor: 'pointer' }}>{translateOption(option)}</label>
-        </div>
-        <div className='col-3'>
-          <input
-            style={{ cursor: 'pointer' }}
-            type="checkbox"
-            id={option}
-            name={name}
-            value={ids[index]}
-            checked={selectedOptions.includes(option)}
-            onChange={() => handleCheckboxChange(option)}
-            // onChange={() => handleCheckboxChange(option, ids[index])}
-          />
+  // `ids` é paralelo a `options` (mesma ordem): guarda o `_id` de cada utilizador e o
+  // sentinela 'Todos'. Serve de chave estável, em vez do índice do array.
+  const checkboxOptions = options.map((option, index) => {
+    const optionId = ids[index];
+    return (
+      <div key={optionId}>
+        <div className='row'>
+          <div className='col-9'>
+            <label htmlFor={option} style={{ cursor: 'pointer' }}>{translateOption(option)}</label>
+          </div>
+          <div className='col-3'>
+            <input
+              style={{ cursor: 'pointer' }}
+              type="checkbox"
+              id={option}
+              name={name}
+              value={optionId}
+              checked={selectedOptions.includes(option)}
+              onChange={() => handleCheckboxChange(option)}
+              // onChange={() => handleCheckboxChange(option, optionId)}
+            />
+          </div>
         </div>
       </div>
-    </div>
-  ));
+    );
+  });
 
   return (
     <Wrapper>

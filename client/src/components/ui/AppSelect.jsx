@@ -1,4 +1,3 @@
-import { forwardRef } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
@@ -37,31 +36,29 @@ const StyledSelect = styled.select`
   }
 `;
 
-const AppSelect = forwardRef(
-  ({ invalid = false, options, placeholder, children, ...rest }, ref) => {
-    return (
-      <StyledSelect ref={ref} $invalid={invalid} {...rest}>
-        {placeholder && (
-          <option value="" disabled>
-            {placeholder}
-          </option>
-        )}
-        {options
-          ? options.map((o) => (
-              <option key={o.value} value={o.value}>
-                {o.label ?? o.value}
-              </option>
-            ))
-          : children}
-      </StyledSelect>
-    );
-  }
-);
-
-AppSelect.displayName = 'AppSelect';
+// React 19: `ref` is an ordinary prop — forwardRef is no longer needed.
+const AppSelect = ({ invalid = false, options, placeholder, children, ref, ...rest }) => {
+  return (
+    <StyledSelect ref={ref} $invalid={invalid} {...rest}>
+      {placeholder && (
+        <option value="" disabled>
+          {placeholder}
+        </option>
+      )}
+      {options
+        ? options.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label ?? o.value}
+            </option>
+          ))
+        : children}
+    </StyledSelect>
+  );
+};
 
 AppSelect.propTypes = {
   invalid: PropTypes.bool,
+  ref: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   placeholder: PropTypes.string,
   options: PropTypes.arrayOf(
     PropTypes.shape({
