@@ -15,7 +15,7 @@ const FormRowListaHorasExtraPagas = ({ type, value,  utilizadores, changed  }) =
 
 
   useEffect(() => {
-    let data = new Date()
+    let data;
       if(utilizadores && utilizadores.length > 0){
         utilizadores.filter((user) => {
           if (user._id === value.Utilizador) {

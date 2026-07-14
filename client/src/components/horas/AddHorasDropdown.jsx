@@ -59,7 +59,7 @@ const AddHorasDropdown = ({ sortedProjetos, verificaChange, listaTipoTrabalho, v
 
     const endDay = dayEnd.getDate();
 
-    let ListaTrabalhoGeralString = [];
+    let ListaTrabalhoGeralString;
 
 
     if ((dateDay >= startDay && dateMonth === startMonth && dateYear === startYear) || dateYear > startYear || dateMonth > startMonth) {

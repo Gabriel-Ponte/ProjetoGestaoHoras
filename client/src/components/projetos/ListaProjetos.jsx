@@ -49,7 +49,7 @@ const ListaProjetos = () => {
   }
 
   const handleAlterado = (alterado) => {
-    let alt = 0;
+    let alt;
       if(alterado === true){
         alt = verificaAlterado + 1;
         setVerificaAlterado(alt);

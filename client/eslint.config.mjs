@@ -95,7 +95,17 @@ export default [
   {
     settings: {
       react: {
-        version: "detect",
+        // MUST stay an explicit version — do NOT set "detect".
+        //
+        // ESLint 10 removed context.getFilename() (deprecated since 9). The
+        // unmaintained eslint-plugin-react still calls it, but ONLY inside
+        // detectReactVersion(), which only runs when this is "detect". Pinning the
+        // version short-circuits that code path, so the plugin works fine on
+        // ESLint 10. With "detect" every rule crashes:
+        //   TypeError: contextOrFilename.getFilename is not a function
+        //
+        // Keep in sync with the `react` version in package.json.
+        version: "19.2",
       },
     },
   },

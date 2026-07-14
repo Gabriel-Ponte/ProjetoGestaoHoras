@@ -1402,7 +1402,7 @@ const ListaHoras = () => {
                   {
                     (() => {
 
-                      let isFeriado = false;
+                      let isFeriado;
 
                       const selectedDay = dias?.find((dia) => {
                         const data = new Date(dia.Data);

@@ -84,7 +84,7 @@ const FormRowCheckboxMultiple = ({ labelText, name, value, handleChange, handleC
     setSeparatedArray(updatedSeparatedArray);
 
     if (nome && JSON.stringify(controlArray) !== JSON.stringify(separatedArrayId)) {
-      let verifica = false;
+      let verifica;
       verifica = handleChange(name, separatedArrayId);
       if(verifica){
       handleChangeSubmit(1);

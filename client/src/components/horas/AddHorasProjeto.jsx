@@ -131,7 +131,7 @@ const verificaDia = useCallback((e) => {
                 // Calculate the decimal representation
         let horasNumberChange = parseInt(timeParts[0], 10) + parseFloat(timeParts[1]) / 60;
         let horasNumber = Number(horasNumberChange.toFixed(2));
-        let diff = 0;
+        let diff;
 
         if (isNaN(horasNumber) || horasNumber <= 0 || horasNumber === null) {
             horasNumber = 0;

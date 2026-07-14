@@ -146,8 +146,8 @@ const VisualizarHorasProjeto = () => {
           const dia = listaDias[i];
 
           const data = new Date(dia.Data);
-          let dataSelected = new Date();
-          let condicao = null;
+          let dataSelected;
+          let condicao;
           let diaSelected;
           if (selectedDay && selectedDay.dia !== 0) {
             diaSelected = selectedDay ? selectedDay.dia : 0;

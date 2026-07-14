@@ -40,8 +40,6 @@ const FormRowSelectTipo = ({ labelText, name, value, handleChange, list, classNa
           </div>
         </Wrapper>
       );
-    } else {
-      selectOptions = [];
     }
 
     return (<></>);

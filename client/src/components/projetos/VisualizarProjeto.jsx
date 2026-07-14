@@ -171,8 +171,8 @@ const VisualizarProjeto = () => {
         for (let i = 0; i < listaDias.length; i++) {
           const dia = listaDias[i];
           const data = new Date(dia.Data);
-          let dataSelected = new Date();
-          let condicao = null;
+          let dataSelected;
+          let condicao;
           let diaSelected;
           if (selectedDay && selectedDay.dia !== 0) {
             diaSelected = selectedDay ? selectedDay.dia : 0;

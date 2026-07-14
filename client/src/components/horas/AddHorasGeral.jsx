@@ -144,12 +144,6 @@ const ListaProjetos = () => {
         const lista = res.payload.dia
         setListaDias(lista);
 
-        let dayStart = new Date(Date.UTC(2023, 11, 1, 0, 0, 0));
-
-        if(dateRegisterUTC > dayStart){
-          dayStart = dateRegisterUTC;
-        }
-
         const firstDateWithLessThan8Hours = lista.reduceRight((acc, item) => {
           const itemDate = new Date(item.Data);
           const itemDayOfWeek = itemDate.getDay();
@@ -174,7 +168,7 @@ const ListaProjetos = () => {
           currentDate = dateRegisterUTC;
         }
 
-        let targetDate = null;
+        let targetDate;
         const date = new Date().toISOString().slice(0, 10);
         
         let today = new Date(date);
@@ -748,7 +742,7 @@ const ListaProjetos = () => {
     // Calculate the decimal representation
     let horasNumberChange = parseInt(timeParts[0], 10) + parseFloat(timeParts[1]) / 60;
     let horasNumber = Number(horasNumberChange.toFixed(2));
-    let diff = 0;
+    let diff;
     if (isNaN(horasNumber) || horasNumber <= 0 || horasNumber === null) {
       horasNumber = 0;
     }
@@ -871,12 +865,12 @@ const ListaProjetos = () => {
     }
 
 
-    let horasExtraValue = 0;
+    let horasExtraValue;
     if (parseFloat(horasT) > parseFloat(newHorasT)) {
 
       let horas = (parseFloat(newHorasT) - parseFloat(horasExtraNumber));
       //let horasExtraBefore = 0;
-      let horasExtraExtract = 0;
+      let horasExtraExtract;
       if (tipoTrabalho === addHorasExtraID) {
         horasExtraValue = parseFloat(horasExtraAfter) + (parseFloat(horasNumber) - parseFloat(horasExtraBeforeValue));
         setHorasExtraAfter(horasExtraValue);
@@ -1191,7 +1185,7 @@ const ListaProjetos = () => {
       </Wrapper>
     );
   }else{
-    let acc = 8
+    let acc;
     if(user?.user?.responsavel){
       // Laboratorio Acceptance 8
       acc = 8;
