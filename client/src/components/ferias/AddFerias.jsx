@@ -252,12 +252,6 @@ const AddFerias = ({ user, setAddFerias, verificaDia, Data, listaDias, accepted,
           const val = listaDias[i].tipoDeTrabalhoHoras[j].projeto;
 
           tipoDeTrabalhoHoras[val] = listaDias[i].tipoDeTrabalhoHoras[j];
-
-
-          const projeto = listaDias[i].tipoDeTrabalhoHoras[j]
-          const tt = projeto.tipoTrabalho.split(',') || [];
-          const ttH = projeto.horas.split(',') || [];
-
         }
         return;
       }
@@ -313,7 +307,7 @@ const AddFerias = ({ user, setAddFerias, verificaDia, Data, listaDias, accepted,
       
             <button
               type="submit"
-              onClick={(e) => { setAddFerias(false) }}
+              onClick={() => { setAddFerias(false) }}
               disabled={buttonClicked}
               className='button-30'
               style={{
@@ -440,6 +434,8 @@ AddFerias.propTypes = {
     PropTypes.object.isRequired,
     PropTypes.string.isRequired
   ]).isRequired,
+  getDates: PropTypes.func,
+  updateCalendar: PropTypes.func,
 }
 
 

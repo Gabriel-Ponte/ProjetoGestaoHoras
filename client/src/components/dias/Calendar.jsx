@@ -165,23 +165,10 @@ const CalendarControl = ({ handleChange, inserted, feriados, ferias,inserting, c
         //handleChange(e.target.textContent, calendar.getMonth(), calendar.getFullYear());
     }
 
-    async function navigateToPreviousMonth() {
-
-        let newCalendar;
-        if (calendar.getMonth() === 0) {
-            // Handle December (month number 11)
-            newCalendar = new Date(calendar.getFullYear() - 1, 11, 1);
-        } else {
-            newCalendar = new Date(calendar.getFullYear(), calendar.getMonth() - 1, 1);
-        }
-
-        handleChange(0, newCalendar.getMonth(), newCalendar.getFullYear());
-
-        // Plot the new dates
-        plotDates(newCalendar);
-
-        setCalendar(newCalendar);
-}
+    // NOTE: a second, byte-for-byte identical `navigateToPreviousMonth` used to be
+    // declared here. Being a function declaration it silently overwrote the one
+    // above (same behaviour, so nothing broke — but it was a trap for the next
+    // person to edit "the" function and change nothing). Removed.
 
     function plotDayNames() {
         const calendarBody = document.querySelector(".calendar .calendar-body");
@@ -686,8 +673,12 @@ CalendarControl.propTypes = {
     vProjeto: PropTypes.array, 
     todos: PropTypes.bool, 
     numberUsers: PropTypes.number, 
-    horasExtraID: PropTypes.string, 
-    selectedDate: PropTypes.object, 
+    horasExtraID: PropTypes.string,
+    selectedDate: PropTypes.object,
+    // Only ever read inside dependency arrays, as a re-render trigger. Callers are
+    // inconsistent about it: some pass the user's name/id (string), others the whole
+    // redux user object — hence the union rather than a single type.
+    user: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   }
 
 export default CalendarControl;

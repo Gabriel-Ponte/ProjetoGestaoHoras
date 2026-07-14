@@ -9,7 +9,6 @@ import PageBtnContainer from '@/components/layout/PageBtnContainer';
 import ListaProjetosHeader from '@/components/projetos/ListaProjetosHeader';
 import { handleChange } from '@/features/allProjetos/allProjetosSlice';
 import { listaUtilizadores } from '@/features/utilizadores/utilizadorSlice';
-import FormRowCheckbox from '@/components/forms/FormRowCheckbox';
 import { EmptyState } from '@/components/ui';
 
 const ListaProjetos = () => {
@@ -90,54 +89,50 @@ const ListaProjetos = () => {
         ? 'list.foundOngoing'
         : 'list.foundWaiting';
 
+  /* Page header, shared by the empty and populated states.
+     The two filters used to be FormRowCheckbox with classNameLabel="col-md-11" and
+     classNameInput="col-md-1" — so each label sat 91% of the row away from the
+     checkbox it belonged to. They are now compact <label>+<input> pairs, which also
+     makes the label itself clickable. */
+  const header = (
+    <div className="projetos-header">
+      <div className="projetos-header-titles">
+        <h1>{t('list.title')}</h1>
+        <p className="projetos-count">{t(foundKey, { count: totalProjetos })}</p>
+      </div>
+
+      <div className="projetos-filters">
+        <label className="projetos-filter" htmlFor="Finalizado">
+          <input
+            id="Finalizado"
+            name="Finalizado"
+            type="checkbox"
+            checked={projetoFinalizado === true}
+            onChange={handleChangeCheckbox}
+          />
+          <span>{t('fields.finished')}</span>
+        </label>
+
+        {projetoFinalizado !== true && (
+          <label className="projetos-filter" htmlFor="DataObjetivoC">
+            <input
+              id="DataObjetivoC"
+              name="DataObjetivoC"
+              type="checkbox"
+              checked={DataObjetivoC === true}
+              onChange={handleChangeCheckboxDataObjetivo}
+            />
+            <span>{t('list.hasTargetDate')}</span>
+          </label>
+        )}
+      </div>
+    </div>
+  );
+
   if (projetos.length === 0) {
     return (
       <Wrapper>
-      <div className="row text-center">
-        
-        <div className="col-md-3 themed-grid-col">
-          <h1>{t('list.title')}</h1>
-        </div>
-
-        <div className="col-md-9 finalizado themed-grid-col">
-          <h5>
-          {t(foundKey, { count: totalProjetos })}
-          </h5>
-        </div>
-
-
-          <div className="col-md-12 text-end themed-grid-col">
-            <FormRowCheckbox
-              type="checkbox"
-              className="row mb-3 text-center"
-              classNameLabel="col-md-11 finalizado themed-grid-col"
-              classNameInput="col-md-1 themed-grid-col"
-              id="Finalizado"
-              name="Finalizado"
-              labelText={t('fields.finished')}
-              placeholder={t('fields.finished')}
-              value={projetoFinalizado}
-              handleChange={handleChangeCheckbox}
-            />
-          </div>
-
-        {projetoFinalizado !== true && (
-        <div className="col-md-12 text-end themed-grid-col">
-          <FormRowCheckbox
-            type="checkbox"
-            className="row mb-3  text-center"
-            classNameLabel="col-md-11  finalizado themed-grid-col"
-            classNameInput="col-md-1 themed-grid-col"
-            id="DataObjetivoC"
-            name="DataObjetivoC"
-            labelText={t('list.hasTargetDate')}
-            placeholder={t('list.hasTargetDate')}
-            value={DataObjetivoC}
-            handleChange={handleChangeCheckboxDataObjetivo}
-          />
-        </div>
-        )}
-      </div>
+        {header}
 
         <EmptyState
           title={t('list.emptyTitle')}
@@ -149,51 +144,7 @@ const ListaProjetos = () => {
 
   return (
     <Wrapper>
-      <div className="row text-center">
-        
-        <div className="col-md-3 themed-grid-col">
-          <h1>{t('list.title')}</h1>
-        </div>
-
-        <div className="col-md-9 finalizado themed-grid-col">
-          <h5>
-            {t(foundKey, { count: totalProjetos })}
-          </h5>
-        </div>
-
-
-          <div className="col-md-12 text-end themed-grid-col">
-            <FormRowCheckbox
-              type="checkbox"
-              className="row mb-3 text-center"
-              classNameLabel="col-md-11 finalizado themed-grid-col"
-              classNameInput="col-md-1 themed-grid-col"
-              id="Finalizado"
-              name="Finalizado"
-              labelText={t('fields.finished')}
-              placeholder={t('fields.finished')}
-              value={projetoFinalizado}
-              handleChange={handleChangeCheckbox}
-            />
-          </div>
-
-        {projetoFinalizado !== true && (
-        <div className="col-md-12 text-end themed-grid-col">
-          <FormRowCheckbox
-            type="checkbox"
-            className="row mb-3  text-center"
-            classNameLabel="col-md-11  finalizado themed-grid-col"
-            classNameInput="col-md-1 themed-grid-col"
-            id="DataObjetivoC"
-            name="DataObjetivoC"
-            labelText={t('list.hasTargetDate')}
-            placeholder={t('list.hasTargetDate')}
-            value={DataObjetivoC}
-            handleChange={handleChangeCheckboxDataObjetivo}
-          />
-        </div>
-        )}
-      </div>
+      {header}
 
       <div className='projetos'>
         <ListaProjetosHeader

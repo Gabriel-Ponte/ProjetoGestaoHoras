@@ -8,13 +8,18 @@ const FormRow = ({ type, name, value, handleChange, classNameInput, keyGet }) =>
 
   useEffect(() => {
     const textarea = document.getElementById(id);
+    if (!textarea) return undefined;
 
-    if (textarea) {
-      textarea.addEventListener('focusout', () => {
-        textarea.style.width = '';
-        textarea.style.height = '';
-      });
-    }
+    // The listener MUST be removed on cleanup. This component renders once per
+    // table row, so without this every re-render leaked another 'focusout'
+    // listener onto the element.
+    const resetSize = () => {
+      textarea.style.width = '';
+      textarea.style.height = '';
+    };
+
+    textarea.addEventListener('focusout', resetSize);
+    return () => textarea.removeEventListener('focusout', resetSize);
   }, [id]);
 
   return (

@@ -179,6 +179,7 @@ Dia.propTypes = {
   _id: PropTypes.string.isRequired,
   Data: PropTypes.string.isRequired,
   NumeroHoras: PropTypes.number.isRequired,
+  _id_Group: PropTypes.number,
   Utilizador: PropTypes.string.isRequired,
   tipoDeTrabalhoHoras: PropTypes.array.isRequired,
   associated: PropTypes.string,

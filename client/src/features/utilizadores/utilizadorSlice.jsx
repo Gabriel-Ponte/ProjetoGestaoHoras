@@ -282,7 +282,7 @@ const userSlice = createSlice({
       .addCase(listaUsersTipo.pending, (state) => {
         state.isLoadingU = true;
       })
-      .addCase(listaUsersTipo.fulfilled, (state, { payload }) => {
+      .addCase(listaUsersTipo.fulfilled, (state) => {
         state.isLoadingU = false;
         //toast.success(`Lista Utilizador obtida!`);
       })

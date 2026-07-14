@@ -490,53 +490,10 @@ const ListaProjetos = () => {
   }, [listaDias.length, values.Data, projetos]);
 
 
-  const verificaProjetos = async (dateP) => {
-    const currentDay = dateP.getDate();
-    const currentMonth = dateP.getMonth();
-    const currentYear = dateP.getFullYear();
-
-    const filteredP = projetos.filter((p) => {
-      const dataI = new Date(p.DataInicio);
-      if (p.DataFim) {
-        const dataF = new Date(p.DataFim);
-
-        const endDay = dataF.getDate();
-        const endMonth = dataF.getMonth();
-        const endYear = dataF.getFullYear();
-
-       if (
-          currentYear > endYear || (currentYear === endYear && currentMonth > endMonth) ||
-          (
-            currentYear === endYear &&
-            currentMonth === endMonth &&
-            currentDay >= endDay)
-        ) {
-          return false;
-        }
-      } else if (p.Finalizado) {
-        return false;
-      }
-
-
-      const startDay = dataI.getDate();
-      const startMonth = dataI.getMonth();
-      const startYear = dataI.getFullYear();
-
-      if (
-        currentYear < startYear || (currentYear === startYear && currentMonth < startMonth) ||
-        (
-          currentYear === startYear &&
-          currentMonth === startMonth &&
-          currentDay < startDay)
-      ) {
-        return false;
-      }
-
-      return true;
-    });
-
-
-    //setFilteredProjetos(filteredP);
+  // No-op: the only effect this had was setFilteredProjetos(...), and both that
+  // setter and its useState are commented out (see top of file). The live
+  // equivalent is getFilteredProjetos() below.
+  const verificaProjetos = async () => {
     return;
   };
 
@@ -1104,7 +1061,7 @@ const ListaProjetos = () => {
                     lineHeight: "normal",
                     backgroundColor: "#BBC2E2",
                     width:'auto'} }
-                    onClick={(e) => { setAddFerias(true) }}
+                    onClick={() => { setAddFerias(true) }}
                 >
                   {t('actions.addVacation')}
               </button>

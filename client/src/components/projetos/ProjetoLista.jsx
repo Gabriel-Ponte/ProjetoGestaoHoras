@@ -333,7 +333,7 @@ const Projeto = ({
             </div>
 
 
-            <div className="col-md-6 themed-grid-col">
+            <div className="col-md-5 themed-grid-col">
               <div className="row text-center">
                 <div className="col-md-5 themed-grid-col">
                   {finalizado === true ? (
@@ -421,164 +421,99 @@ const Projeto = ({
               </div>
             </div>
 
-            <div className="col-md-1 themed-grid-col " >
-              <div className="col-md-11 themed-grid-col " >
-                {
-                  addLink === 1 ? (
-                    <>
-                      <div className='col-md-12 text-end'>
-                        <AppButton
-                          variant='danger'
-                          size='sm'
-                          aria-label={t('row.closeLink')}
-                          onClick={toggleCloseAddLink}
-                        >
-                          <IoMdClose />
-                        </AppButton>
-                      </div>
-                      <div className='row text-center'>
-                        <FormRowListaProjetos
-                          type="textarea"
-                          id={"LinkA3 " + _id}
-                          name="Links"
-                          classNameInput="form__field"
-                          value={values.Links}
-                          handleChange={handleChangeProjeto}
-                        />
-                      </div>
-                      <div className='row mb-2 text-center'>
-                        <AppButton
-                          variant='primary'
-                          size='sm'
-                          onClick={toggleAddLinkDB}
-                        >
-                          {t('row.insert')}
-                        </AppButton>
-                      </div>
-                    </>
-                  ) : addLink === 2 ? (
-                    <>
-                      <div className='col-md-12 text-end'>
-                        <AppButton
-                          variant='danger'
-                          size='sm'
-                          aria-label={t('row.closeLink')}
-                          onClick={toggleCloseAddLink}
-                        >
-                          <IoMdClose />
-                        </AppButton>
-                      </div>
-                      <div className='row text-center'>
-                        <FormRowListaProjetos
-                          type="textarea"
-                          id={"LinkResumo " + _id}
-                          name="LinkResumo"
-                          classNameInput="form__field"
-                          value={values.LinkResumo}
-                          handleChange={handleChangeProjeto}
-                        />
-                      </div>
-                      <div className='row mb-2 text-center'>
-                        <AppButton
-                          variant='success'
-                          size='sm'
-                          onClick={toggleAddLinkDB}
-                        >
-                          {t('row.insert')}
-                        </AppButton>
-                      </div>
-                    </>
-                  ) : (
-                    verificaAlterado === true ? (
-                      <><div className='row mb-2 text-center'>
-                      </div>
-                        <div className='row mb-2 align-items-center text-center'>
-                          <div className='col-md-12 themed-grid-col'>
-                            <AppButton
-                              variant='primary'
-                              size='sm'
-                              onClick={handleSubmit}
-                            >
-                              {t('row.save')}
-                            </AppButton>
-                          </div>
-                        </div>
+            {/* Actions were crammed into col-md-1 (~8% of the row), but AppButton is
+                `white-space: nowrap` — so "Adicionar Link Resumo" simply overflowed the
+                card. Widened to col-md-2 (the middle column gave up the space) and the
+                buttons now wrap. */}
+            <div className="col-md-2 themed-grid-col">
+              <div className="projeto-actions">
+                {addLink === 1 ? (
+                  <>
+                    <div className='projeto-actions-close'>
+                      <AppButton
+                        variant='danger'
+                        size='sm'
+                        aria-label={t('row.closeLink')}
+                        onClick={toggleCloseAddLink}
+                      >
+                        <IoMdClose />
+                      </AppButton>
+                    </div>
+                    <FormRowListaProjetos
+                      type="textarea"
+                      id={"LinkA3 " + _id}
+                      name="Links"
+                      classNameInput="form__field"
+                      value={values.Links}
+                      handleChange={handleChangeProjeto}
+                    />
+                    <AppButton variant='primary' size='sm' fullWidth onClick={toggleAddLinkDB}>
+                      {t('row.insert')}
+                    </AppButton>
+                  </>
+                ) : addLink === 2 ? (
+                  <>
+                    <div className='projeto-actions-close'>
+                      <AppButton
+                        variant='danger'
+                        size='sm'
+                        aria-label={t('row.closeLink')}
+                        onClick={toggleCloseAddLink}
+                      >
+                        <IoMdClose />
+                      </AppButton>
+                    </div>
+                    <FormRowListaProjetos
+                      type="textarea"
+                      id={"LinkResumo " + _id}
+                      name="LinkResumo"
+                      classNameInput="form__field"
+                      value={values.LinkResumo}
+                      handleChange={handleChangeProjeto}
+                    />
+                    <AppButton variant='success' size='sm' fullWidth onClick={toggleAddLinkDB}>
+                      {t('row.insert')}
+                    </AppButton>
+                  </>
+                ) : verificaAlterado === true ? (
+                  <AppButton variant='primary' size='sm' fullWidth onClick={handleSubmit}>
+                    {t('row.save')}
+                  </AppButton>
+                ) : (
+                  /* 2x2 grid. Four full-width buttons stacked vertically were what made
+                     every row ~160px tall; two columns halve that. */
+                  <div className='projeto-actions-grid'>
+                    <AppButton variant='primary' size='sm' fullWidth onClick={() => toggleEdit(_id)}>
+                      {t('row.edit')}
+                    </AppButton>
 
-                      </>
-                    ) :
-                      (
-                        <>
-                          <div className='row mb-2 text-center'>
-                            <AppButton
-                              variant='primary'
-                              size='sm'
-                              fullWidth
-                              onClick={() => toggleEdit(_id)}
-                            >
-                              {t('row.edit')}
-                            </AppButton>
-                          </div>
-                          <div className='row mb-2 text-center'>
-                            <AppButton
-                              variant='secondary'
-                              size='sm'
-                              fullWidth
-                              onClick={() => toggleVisualize(_id)}
-                            >
-                              {t('row.view')}
-                            </AppButton>
-                          </div>
-                          {
-                            values.Links === "" ? (
-                              <div className='row mb-2 text-center'>
-                                <AppButton
-                                  variant='success'
-                                  size='sm'
-                                  fullWidth
-                                  onClick={() => toggleAddLinkA3()}
-                                >
-                                  {t('row.addLinkA3')}
-                                </AppButton>
-                              </div>
-                            ) : (
-                              <div className='row mb-2 text-center'>
-                                <a href={values.Links} className='btn btn-outline-link buttonProjeto' target="_blank" rel="noreferrer" > {t('row.openA3')}</a>
-                              </div>
-                            )
-                          }
-                          {
-                            values.LinkResumo === "" ? (
-                              <div className='row mb-2 text-center'>
-                                <AppButton
-                                  variant='success'
-                                  size='sm'
-                                  fullWidth
-                                  onClick={() => toggleAddLinkResumo()}
-                                >
-                                  {t('row.addLinkResumo')}
-                                </AppButton>
-                              </div>
-                            ) : (
-                              <div className='row mb-2 text-center'>
-                                <a href={values.LinkResumo} className='btn btn-outline-link buttonProjeto' target="_blank" rel="noreferrer"> {t('row.openResumo')}</a>
-                              </div>
-                            )
-                          }
+                    <AppButton variant='secondary' size='sm' fullWidth onClick={() => toggleVisualize(_id)}>
+                      {t('row.view')}
+                    </AppButton>
 
-                          {/* {finalizado !== true && (
-                      <div className='row  text-center'>
-                        <button
-                          type='button'
-                          className='btn btn-outline-success buttonProjeto'
-                          onClick={() => toggleAddHoras(_id)}
-                        >
-                          Adicionar Horas
-                        </button>
-                      </div>
-                      )} */}
-                        </>
-                      ))
-                }
+                    {values.Links === "" ? (
+                      <AppButton variant='success' size='sm' fullWidth onClick={() => toggleAddLinkA3()}>
+                        {t('row.addLinkA3')}
+                      </AppButton>
+                    ) : (
+                      // was `btn btn-outline-link`, which is NOT a Bootstrap class
+                      // (it is btn-link) — so this rendered as unstyled plain text.
+                      <a href={values.Links} className='projeto-link' target="_blank" rel="noreferrer">
+                        {t('row.openA3')}
+                      </a>
+                    )}
+
+                    {values.LinkResumo === "" ? (
+                      <AppButton variant='success' size='sm' fullWidth onClick={() => toggleAddLinkResumo()}>
+                        {t('row.addLinkResumo')}
+                      </AppButton>
+                    ) : (
+                      <a href={values.LinkResumo} className='projeto-link' target="_blank" rel="noreferrer">
+                        {t('row.openResumo')}
+                      </a>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>

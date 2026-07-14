@@ -66,7 +66,10 @@ const AddHorasDropdown = ({ sortedProjetos, verificaChange, listaTipoTrabalho, v
       if ((dateDay <= endDay && dateMonth === startMonth && dateYear === startYear)) {
 
         if (date && (date.getDay() === 0 || date.getDay() === 6 || getFeriadosPortugalDate(date))) {
-          setListaTrabalhoGeralAdd(tipoTrabalhoArray.filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 5)));
+          // Was `tipoTrabalhoArray`, which is a const scoped to a .then() callback
+          // further down — a ReferenceError here. Every sibling branch below uses
+          // the `ListaTrabalhoGeral` prop, which is what this meant.
+          setListaTrabalhoGeralAdd(ListaTrabalhoGeral.filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 5)));
           ListaTrabalhoGeralString = listaTipoTrabalho.filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 5)).map(item => item.TipoTrabalho).join(",");
         } else {
           setListaTrabalhoGeralAdd(ListaTrabalhoGeral.filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 5 || item.tipo === 7)));
@@ -189,7 +192,9 @@ const AddHorasDropdown = ({ sortedProjetos, verificaChange, listaTipoTrabalho, v
 
 
   const handleDropdownToggle = useCallback((projectId) => {
-    arrayTipoTrabalho.map((item, ID) => {
+    // forEach, not map: the callback returns nothing and the result was discarded.
+    // This also drops the unused index parameter.
+    arrayTipoTrabalho.forEach((item) => {
       if (!item?.projeto) {
         const find = arrayTipoTrabalhoDropdown.find(dropdownItem => dropdownItem === projectId);
         if (!find) {
@@ -228,26 +233,42 @@ const AddHorasDropdown = ({ sortedProjetos, verificaChange, listaTipoTrabalho, v
   const renderProjectDropdown = useCallback((project, idProjeto) => {
 
     return (
-      <div className="list-group-item" key={"project_" + project._id}>
-        <div className="row mb-3 text-center">
-          <div className="col-md-4 text-end themed-grid-col">
-            <h5>{project.Nome}</h5>
-          </div>
-          <div className="col-md-8 themed-grid-col">
-            <div className="row">
-              <div className="col-md-10 btn-container">
-                <button
-                  type="button"
-                  className="btn button-Dropdown"
-                  onClick={() => handleDropdownToggle(project._id)}
-                >
-                  <FaCaretDown />
-                </button>
-                {showProjeto[project._id] && (
-                  <div className={`dropdown ${showProjeto[project._id] ? "show-dropdown" : "hidden-dropdown"} ${showProjeto[project._id] ? "" : "d-none"}`}>
-                    <div className="row mb-3 text-center" key={"NewDia" + project._id}>
+      <div className="list-group-item projeto-item" key={"project_" + project._id}>
+        {/* Header: name on the LEFT, running total + toggle on the RIGHT.
+            It used to be col-md-4 (name, right-aligned) + col-md-8 > col-md-10 that
+            held only the caret — so ~half of every row was dead white space. */}
+        <div className="projeto-header">
+          <h5 className="projeto-nome">{project.Nome}</h5>
 
-                      <div key={"EditDia" + project._id} data-key={"EditDia" + project._id} >
+          <div className="projeto-total">
+            {/* Kept exactly as before: the running total is accumulated during render.
+                This must stay UNCONDITIONAL — only the display below is hidden while
+                the panel is open, otherwise the total would stop adding up. */}
+            {values.tipoDeTrabalhoHoras[project._id]?.horas && values.tipoDeTrabalhoHoras[project._id]?.horas?.split(",").map((t) => {
+              horasP[project._id] += +t;
+              return null;
+            })}
+            {!showProjeto[project._id] && horasP[project._id] !== 0
+              ? convertToMinutes(horasP[project._id])
+              : ''}
+          </div>
+
+          <button
+            type="button"
+            className="btn button-Dropdown"
+            aria-expanded={!!showProjeto[project._id]}
+            aria-label={project.Nome}
+            onClick={() => handleDropdownToggle(project._id)}
+          >
+            <FaCaretDown />
+          </button>
+        </div>
+
+        {showProjeto[project._id] && (
+          <div className="dropdown show-dropdown">
+            <div className="row mb-3 text-center" key={"NewDia" + project._id}>
+
+              <div key={"EditDia" + project._id} data-key={"EditDia" + project._id} >
 
                         {(arrayTipoTrabalhoDropdown.find(item => item === project._id) && values.tipoDeTrabalhoHoras?.length !== 0) ? Array.isArray(arrayTipoTrabalho) && arrayTipoTrabalho.map((item, ID) => {
 
@@ -329,24 +350,12 @@ const AddHorasDropdown = ({ sortedProjetos, verificaChange, listaTipoTrabalho, v
                           </div>
                         )}
 
-                      </div>
-
-                      {project.Nome === "Geral" && <OptionsPanel options={options} handleTipoTrabalho={handleTipoTrabalho} />}
-                    </div>
-                  </div>
-                )}
               </div>
 
-              <div className={`col-md-2  text-start ${showProjeto[project._id] ? "hidden-dropdown" : "show-dropdown"}`}>
-                {values.tipoDeTrabalhoHoras[project._id]?.horas && values.tipoDeTrabalhoHoras[project._id]?.horas?.split(",").map((t) => {
-                  horasP[project._id] += +t;
-                  return null;
-                })}
-                <h3>{horasP[project._id] !== 0 ? convertToMinutes(horasP[project._id]) : ''}</h3>
-              </div>
+              {project.Nome === "Geral" && <OptionsPanel options={options} handleTipoTrabalho={handleTipoTrabalho} />}
             </div>
           </div>
-        </div>
+        )}
       </div>
     );
   }, [handleDropdownToggle, showProjeto, verificaChange, listaTrabalho, listaTrabalhoGeralAdd, renderTimePickerClock, values, arrayTipoTrabalho, StringListaTrabalho, StringListaTrabalhoGeral, ListaTrabalhoAll, StringListaTrabalhoCompensacaoD, ListaTrabalhoGeralOther, listaTipoTrabalho, horasP, handleTipoTrabalho, options]);

@@ -54,7 +54,10 @@ const AddHorasGeralDropdown = ({ sortedProjetos, verificaChange, listaTipoTrabal
       if ((dateDay <= endDay && dateMonth === startMonth && dateYear === startYear)) {
 
         if (date && (date.getDay() === 0 || date.getDay() === 6 || getFeriadosPortugalDate(date))) {
-          setListaTrabalhoGeralAdd(tipoTrabalhoArray.filter(item => (item.tipo === 2 || item.tipo === 5)));
+          // Was `tipoTrabalhoArray`, which is a const scoped to a .then() callback
+          // further down — a ReferenceError here. Every sibling branch below uses
+          // the `ListaTrabalhoGeral` prop, which is what this meant.
+          setListaTrabalhoGeralAdd(ListaTrabalhoGeral.filter(item => (item.tipo === 2 || item.tipo === 5)));
           ListaTrabalhoGeralString = listaTipoTrabalho.filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 5)).map(item => item.TipoTrabalho).join(",");
         } else {
           setListaTrabalhoGeralAdd(ListaTrabalhoGeral.filter(item => (item.tipo === 2 || item.tipo === 4 || item.tipo === 5 || item.tipo === 7)));

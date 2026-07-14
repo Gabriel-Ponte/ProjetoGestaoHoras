@@ -7,7 +7,7 @@ import { getAllProjetos1, handleChange } from '@/features/allProjetos/allProjeto
 import { getTipoTrabalho } from '@/features/tipoTrabalho/tipoTrabalhoSlice';
 import { toast } from 'react-toastify';
 import { createDia, getDia, editDia, createDiaDomingo } from '@/features/dias/diasSlice';
-import { AddHorasCopiar, AddHorasDropdown, AddHorasGeralDropdown, FormRow, useFeriadosPortugal } from '@/components';
+import { AddHorasCopiar, AddHorasGeralDropdown, FormRow, useFeriadosPortugal } from '@/components';
 import { AppButton } from '@/components/ui';
 
 import Loading from '@/components/common/Loading';
@@ -497,53 +497,10 @@ const ListaProjetos = () => {
   }, [listaDias.length, values.Data, projetos]);
 
 
-  const verificaProjetos = async (dateP) => {
-    const currentDay = dateP.getDate();
-    const currentMonth = dateP.getMonth();
-    const currentYear = dateP.getFullYear();
-
-    const filteredP = projetos.filter((p) => {
-      const dataI = new Date(p.DataInicio);
-      if (p.DataFim) {
-        const dataF = new Date(p.DataFim);
-
-        const endDay = dataF.getDate();
-        const endMonth = dataF.getMonth();
-        const endYear = dataF.getFullYear();
-
-       if (
-          currentYear > endYear || (currentYear === endYear && currentMonth > endMonth) ||
-          (
-            currentYear === endYear &&
-            currentMonth === endMonth &&
-            currentDay >= endDay)
-        ) {
-          return false;
-        }
-      } else if (p.Finalizado) {
-        return false;
-      }
-
-
-      const startDay = dataI.getDate();
-      const startMonth = dataI.getMonth();
-      const startYear = dataI.getFullYear();
-
-      if (
-        currentYear < startYear || (currentYear === startYear && currentMonth < startMonth) ||
-        (
-          currentYear === startYear &&
-          currentMonth === startMonth &&
-          currentDay < startDay)
-      ) {
-        return false;
-      }
-
-      return true;
-    });
-
-
-    //setFilteredProjetos(filteredP);
+  // No-op: the only effect this had was setFilteredProjetos(...), and both that
+  // setter and its useState are commented out (see top of file). The live
+  // equivalent is getFilteredProjetos() below.
+  const verificaProjetos = async () => {
     return;
   };
 
@@ -1116,7 +1073,7 @@ const ListaProjetos = () => {
                     type="submit"
                     disabled={(values.accepted === 2 && startHorasT >= 8.5) || isLoading || buttonClicked ||  (values.accepted === 4 || values.accepted === 5)}
 
-                    onClick={(e) => { setAddFerias(true) }}
+                    onClick={() => { setAddFerias(true) }}
                     variant="primary"
                     size="lg"
                     fullWidth

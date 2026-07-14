@@ -331,6 +331,19 @@ hr {
   background-color: var(--grey-500);
 }
 
+/* Sortable column headers (projects list, ferias, paid overtime).
+   The "sortable, not currently sorted" glyph used to be a LEFT arrow, which reads as
+   "go back" rather than "you can sort this". It is now a neutral up/down sort icon,
+   dimmed until the header is hovered. */
+.sort-idle {
+  opacity: 0.3;
+  transition: var(--transition);
+}
+button:hover > .sort-idle,
+.buttonHeader:hover .sort-idle {
+  opacity: 0.75;
+}
+
 /* Toast tweaks so notifications match the palette */
 .Toastify__toast {
   border-radius: var(--borderRadius);

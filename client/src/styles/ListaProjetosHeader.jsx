@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
-const Wrapper = styled.a`
+/* Was `styled.a` — an <a> with no href wrapping the whole column header. */
+const Wrapper = styled.div`
   display: block;
   width: 100%;
 
@@ -47,6 +48,21 @@ const Wrapper = styled.a`
   }
   .buttonHeader:hover {
     color: var(--primary-600);
+  }
+  .buttonHeader svg {
+    flex: none;
+    font-size: 0.9em;
+  }
+
+  /* The "sortable but not sorted" state used to render BsArrowLeftShort — a LEFT
+     arrow, which reads as "go back", not "you can sort this". It is now a neutral
+     up/down sort glyph, dimmed until you hover the header. */
+  .sort-idle {
+    opacity: 0.3;
+    transition: var(--transition);
+  }
+  .buttonHeader:hover .sort-idle {
+    opacity: 0.75;
   }
 
   @media (min-width: 1500px) {

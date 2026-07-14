@@ -31,13 +31,6 @@ const AddUtilizador = () => {
     //const { isLoading } = useSelector((store) => store.projetos);
     const dispatch = useDispatch();
 
-
-
-    if (isLoading) {
-      return <LoadingState message={t('state.loading')} />;
-    }
-    
-
     useEffect(() => {
       let listTipo = []
       if(user.tipo === 2 || user.tipo === 7){
@@ -80,6 +73,13 @@ const AddUtilizador = () => {
       setListTipoUser(listTipo);
     }, []);
 
+    // This early return MUST stay below every hook. It used to sit ABOVE the
+    // useEffect, so the hook count changed between renders (7 while loading, 8
+    // otherwise) and React threw "Rendered fewer hooks than during the previous
+    // render" as soon as isLoading flipped — i.e. on submit.
+    if (isLoading) {
+      return <LoadingState message={t('state.loading')} />;
+    }
 
     const handleChangeTipo = (e)=> {
       const { name, value } = e.target;

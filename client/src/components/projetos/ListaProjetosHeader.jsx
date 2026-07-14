@@ -1,6 +1,6 @@
 import { AiOutlineArrowDown } from 'react-icons/ai';
 import { AiOutlineArrowUp } from 'react-icons/ai';
-import { BsArrowLeftShort } from 'react-icons/bs';
+import { FaSort } from 'react-icons/fa';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Wrapper from '@/styles/ListaProjetosHeader';
@@ -148,7 +148,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                         {t('header.client')}{' '}
                                         {verificaActivo === "-Cliente" ?
                                             <AiOutlineArrowUp /> : (verificaActivo === "Cliente" ?
-                                                <AiOutlineArrowDown /> : <BsArrowLeftShort />
+                                                <AiOutlineArrowDown /> : <FaSort className="sort-idle" />
                                             )
                                         }
                                     </button>
@@ -163,7 +163,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                         {t('header.project')}{' '}
                                         {verificaActivo === "-Nome" ?
                                             <AiOutlineArrowUp /> : (verificaActivo === "Nome" ?
-                                                <AiOutlineArrowDown /> : <BsArrowLeftShort />
+                                                <AiOutlineArrowDown /> : <FaSort className="sort-idle" />
                                             )
                                         }
                                     </button>
@@ -171,7 +171,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                             </div>
                         </div>
 
-                        <div className="col-md-6 themed-grid-col">
+                        <div className="col-md-5 themed-grid-col">
                             <div className="row text-center">
                                 <div className="col-md-5 themed-grid-col">
                                     <button
@@ -183,7 +183,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                         {t('header.actions')}{' '}
                                         {verificaActivo === "-Acao" ?
                                             <AiOutlineArrowUp /> : (verificaActivo === "Acao" ?
-                                                <AiOutlineArrowDown /> : <BsArrowLeftShort />
+                                                <AiOutlineArrowDown /> : <FaSort className="sort-idle" />
                                             )
                                         }
                                     </button>
@@ -198,7 +198,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                         {t('header.notes')}{' '}
                                         {verificaActivo === "-Notas" ?
                                             <AiOutlineArrowUp /> : (verificaActivo === "Notas" ?
-                                                <AiOutlineArrowDown /> : <BsArrowLeftShort />
+                                                <AiOutlineArrowDown /> : <FaSort className="sort-idle" />
                                             )
                                         }
                                     </button>
@@ -230,7 +230,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                                 {t('header.endDate')}{' '}
                                                 {verificaActivo === "-DataFim" ?
                                                     <AiOutlineArrowUp /> : (verificaActivo === "DataFim" ?
-                                                        <AiOutlineArrowDown /> : <BsArrowLeftShort />
+                                                        <AiOutlineArrowDown /> : <FaSort className="sort-idle" />
                                                     )
                                                 }
                                             </button>
@@ -246,7 +246,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                                                 {t('header.result')}{' '}
                                                 {verificaActivo === "-Resultado" ?
                                                     <AiOutlineArrowUp /> : (verificaActivo === "Resultado" ?
-                                                        <AiOutlineArrowDown /> : <BsArrowLeftShort />
+                                                        <AiOutlineArrowDown /> : <FaSort className="sort-idle" />
                                                     )
                                                 }
                                             </button>
@@ -265,7 +265,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
 
                                                 {verificaActivo === "-DataObjetivo" ?
                                                     <AiOutlineArrowUp /> : (verificaActivo === "DataObjetivo" ?
-                                                        <AiOutlineArrowDown /> : <BsArrowLeftShort />
+                                                        <AiOutlineArrowDown /> : <FaSort className="sort-idle" />
                                                     )
                                                 }
                                             </button>
@@ -282,7 +282,7 @@ const ListaProjetosHeader = ({ sortValue, handleChange, finalizado }) => {
                             </div>
 
                         </div>
-                        <div className="col-md-1 themed-grid-col " >
+                        <div className="col-md-2 themed-grid-col " >
                         </div>
                     </div>
                     <hr></hr>

@@ -348,10 +348,14 @@ const VisualizarHorasProjeto = () => {
 
   useEffect(() => {
     setLoading(true);
-    setTimeout(() => {
+
+    // Cleared on cleanup: without this, switching project quickly stacked timers
+    // that later fired setLoading(false) against a stale/unmounted render.
+    const timer = setTimeout(() => {
       setLoading(false);
     }, 750);
 
+    return () => clearTimeout(timer);
   }, [selectedProjeto, listaDias.length]);
 
 

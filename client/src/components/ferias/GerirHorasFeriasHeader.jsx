@@ -1,6 +1,6 @@
 import { AiOutlineArrowDown } from 'react-icons/ai';
 import { AiOutlineArrowUp } from 'react-icons/ai';
-import { BsArrowLeftShort } from 'react-icons/bs';
+import { FaSort } from 'react-icons/fa';
 import { useState } from 'react';
 import Wrapper from '@/styles/ListaProjetosHeader';
 import PropTypes from 'prop-types';
@@ -102,7 +102,7 @@ const GerirHorasFeriasHeader = ({ sortValue, handleChange, setSelectedYear, sele
                                 {' '}
                                 {verificaActivo === "-Utilizador" ?
                                     <AiOutlineArrowUp /> : (verificaActivo === "Utilizador" ?
-                                        <AiOutlineArrowDown /> : <BsArrowLeftShort />
+                                        <AiOutlineArrowDown /> : <FaSort className="sort-idle" />
                                     )
                                 }
                                 {t('header.user')}
@@ -122,7 +122,7 @@ const GerirHorasFeriasHeader = ({ sortValue, handleChange, setSelectedYear, sele
                                         {' '}
                                         {verificaActivo === "-Inseridos" ?
                                             <AiOutlineArrowUp /> : (verificaActivo === "Inseridos" ?
-                                                <AiOutlineArrowDown /> : <BsArrowLeftShort />
+                                                <AiOutlineArrowDown /> : <FaSort className="sort-idle" />
                                             )
                                         }
                                         {t('header.accepted')}
@@ -138,7 +138,7 @@ const GerirHorasFeriasHeader = ({ sortValue, handleChange, setSelectedYear, sele
                                         {' '}
                                         {verificaActivo === "-Permitidos" ?
                                             <AiOutlineArrowUp /> : (verificaActivo === "Permitidos" ?
-                                                <AiOutlineArrowDown /> : <BsArrowLeftShort />
+                                                <AiOutlineArrowDown /> : <FaSort className="sort-idle" />
                                             )
                                         }
                                         {t('header.possible')}
@@ -155,7 +155,7 @@ const GerirHorasFeriasHeader = ({ sortValue, handleChange, setSelectedYear, sele
                                         {' '}
                                         {verificaActivo === "-PorDar" ?
                                             <AiOutlineArrowUp /> : (verificaActivo === "PorDar" ?
-                                                <AiOutlineArrowDown /> : <BsArrowLeftShort />
+                                                <AiOutlineArrowDown /> : <FaSort className="sort-idle" />
                                             )
                                         }
                                         {t('header.remaining')}
@@ -235,6 +235,8 @@ const GerirHorasFeriasHeader = ({ sortValue, handleChange, setSelectedYear, sele
 GerirHorasFeriasHeader.propTypes = {
     sortValue: PropTypes.string,
     handleChange: PropTypes.func.isRequired,
+    setSelectedYear: PropTypes.func.isRequired,
+    selectedYear: PropTypes.instanceOf(Date),
 }
 
 export default GerirHorasFeriasHeader;

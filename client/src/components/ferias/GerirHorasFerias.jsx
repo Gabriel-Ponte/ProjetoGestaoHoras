@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { addDiasFeriasUtilizador, deleteDiasFerias, getAllFerias, getFeriasUtilizador, handleChangeFerias } from '@/features/ferias/feriasSlice';
@@ -14,7 +14,7 @@ import { getAllDiasUtilizador } from '@/features/allDias/allDiasSlice';
 import { AppButton } from '@/components/ui';
 
 
-const GerirHorasFerias = ({ setGerirFerias, styleButton }) => {
+const GerirHorasFerias = ({ setGerirFerias }) => {
   const { t } = useTranslation('ferias');
   const dispatch = useDispatch();
 
@@ -378,7 +378,6 @@ const GerirHorasFerias = ({ setGerirFerias, styleButton }) => {
 
 GerirHorasFerias.propTypes = {
   setGerirFerias: PropTypes.func.isRequired,
-  styleButton: PropTypes.object.isRequired,
 };
 
 export default memo(GerirHorasFerias);

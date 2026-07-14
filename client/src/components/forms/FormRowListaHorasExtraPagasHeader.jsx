@@ -1,6 +1,6 @@
 import { AiOutlineArrowDown } from 'react-icons/ai';
 import { AiOutlineArrowUp } from 'react-icons/ai';
-import { BsArrowLeftShort } from 'react-icons/bs';
+import { FaSort } from 'react-icons/fa';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Wrapper from '@/styles/ListaProjetosHeader';
@@ -162,7 +162,7 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, tipoHoras, handleChange,
                                                 {t('header.responsavel')}{' '}
                                                 {verificaActivo === "-UtilizadorResponsavel" ?
                                                     <AiOutlineArrowUp /> : (verificaActivo === "UtilizadorResponsavel" ?
-                                                        <AiOutlineArrowDown /> : <BsArrowLeftShort />
+                                                        <AiOutlineArrowDown /> : <FaSort className="sort-idle" />
                                                     )
                                                 }
                                             </button>
@@ -178,7 +178,7 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, tipoHoras, handleChange,
                                                 {t('header.utilizador')}{' '}
                                                 {verificaActivo === "-Utilizador" ?
                                                     <AiOutlineArrowUp /> : (verificaActivo === "Utilizador" ?
-                                                        <AiOutlineArrowDown /> : <BsArrowLeftShort />
+                                                        <AiOutlineArrowDown /> : <FaSort className="sort-idle" />
                                                     )
                                                 }
                                             </button>
@@ -194,7 +194,7 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, tipoHoras, handleChange,
                                                 {t('header.mes')}{' '}
                                                 {verificaActivo === "-Mes" ?
                                                     <AiOutlineArrowUp /> : (verificaActivo === "Mes" ?
-                                                        <AiOutlineArrowDown /> : <BsArrowLeftShort />
+                                                        <AiOutlineArrowDown /> : <FaSort className="sort-idle" />
                                                     )
                                                 }
                                             </button>
@@ -210,7 +210,7 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, tipoHoras, handleChange,
                                                 {t('header.numeroHoras')}{' '}
                                                 {verificaActivo === "-Horas" ?
                                                     <AiOutlineArrowUp /> : (verificaActivo === "Horas" ?
-                                                        <AiOutlineArrowDown /> : <BsArrowLeftShort />
+                                                        <AiOutlineArrowDown /> : <FaSort className="sort-idle" />
                                                     )
                                                 }
                                             </button>
@@ -231,7 +231,7 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, tipoHoras, handleChange,
                                                 {t('header.utilizador')}{' '}
                                                 {verificaActivo === "-Utilizador" ?
                                                     <AiOutlineArrowUp /> : (verificaActivo === "Utilizador" ?
-                                                        <AiOutlineArrowDown /> : <BsArrowLeftShort />
+                                                        <AiOutlineArrowDown /> : <FaSort className="sort-idle" />
                                                     )
                                                 }
                                             </button>
@@ -247,7 +247,7 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, tipoHoras, handleChange,
                                                 {t('header.data')}{' '}
                                                 {verificaActivo === "-Data" ?
                                                     <AiOutlineArrowUp /> : (verificaActivo === "Data" ?
-                                                        <AiOutlineArrowDown /> : <BsArrowLeftShort />
+                                                        <AiOutlineArrowDown /> : <FaSort className="sort-idle" />
                                                     )
                                                 }
                                             </button>
@@ -263,7 +263,7 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, tipoHoras, handleChange,
                                                 {t('header.horas')}{' '}
                                                 {verificaActivo === "-Horas" ?
                                                     <AiOutlineArrowUp /> : (verificaActivo === "Horas" ?
-                                                        <AiOutlineArrowDown /> : <BsArrowLeftShort />
+                                                        <AiOutlineArrowDown /> : <FaSort className="sort-idle" />
                                                     )
                                                 }
                                             </button>
@@ -321,7 +321,7 @@ const FormRowListaHorasExtraPagasHeader = ({ sortValue, tipoHoras, handleChange,
                                             >
 
                                                 {t('header.trabalho')}{' '}
-                                                {verificaActivo === "-Tipo" ?   <AiOutlineArrowUp /> : (verificaActivo === "Tipo" ?     <AiOutlineArrowDown /> : <BsArrowLeftShort /> )
+                                                {verificaActivo === "-Tipo" ?   <AiOutlineArrowUp /> : (verificaActivo === "Tipo" ?     <AiOutlineArrowDown /> : <FaSort className="sort-idle" /> )
                                                 }
                                             </button>
                                         </div>

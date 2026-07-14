@@ -12,19 +12,17 @@ const AddHorasCopiar = ({ verificaCopiarHoras, copiar, DataCopy, verificaDiaLast
   const [copiarValue ,setCopiarValue] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-        try {
-            setTimeout(() => {
-              copiar(copiarValue);
-              setLoading(false);
-            }, 5);
-          } catch (error) {
-            console.error('Error copying hours:', error);
-          }
-        };
-    if (loading) {
-      fetchData();
-    }
+    if (!loading) return undefined;
+
+    // The timer must be cleared on cleanup, otherwise it fires against an
+    // unmounted component. (The old async wrapper + try/catch around setTimeout
+    // was dead code: setTimeout cannot throw synchronously.)
+    const timer = setTimeout(() => {
+      copiar(copiarValue);
+      setLoading(false);
+    }, 5);
+
+    return () => clearTimeout(timer);
   }, [loading, copiar, copiarValue]);
 
   const copiarHoras = async (value) => {

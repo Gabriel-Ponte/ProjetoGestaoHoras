@@ -27,34 +27,40 @@
   "license": "ISC",
   "dependencies": {
     "@sendgrid/mail": "^8.1.6",
-    "axios": "^1.18.1",
     "bcryptjs": "^3.0.3",
     "compression": "^1.8.1",
     "cors": "^2.8.6",
-    "cross-spawn": "^7.0.6",
     "dotenv": "^17.4.2",
     "exceljs": "^4.4.0",
     "express": "^5.2.1",
     "express-xss-sanitizer": "^2.0.2",
-    "helmet": "^8.2.0",
+    "helmet": "^8.3.0",
     "http-status-codes": "^2.3.0",
     "joi": "^18.2.3",
     "jsonwebtoken": "^9.0.3",
     "mongodb": "6.19.0",
     "mongoose": "^8.24.1",
-    "nodemon": "^3.1.14",
-    "pm2": "^6.0.14",
-    "sanitize-html": "^2.17.5",
-    "xss": "^1.0.15"
+    "pm2": "^7.0.3",
+    "sanitize-html": "^2.17.6"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"
   },
+  "//overrides": [
+    "glob was pinned to 11.0.2 — inside the vulnerable range 11.0.0-11.0.3",
+    "(GHSA-5j98-mcp5-4vw2, high). Bumped to ^11.1.0.",
+    "The js-yaml override is gone: it only existed because pm2 6 shipped the",
+    "vulnerable <=4.1.1. pm2 7 depends on 4.3.0 directly, so the root cause is fixed.",
+    "cross-spawn was a direct dependency that no source file imports — it existed",
+    "only to pin the CVE-fixed 7.0.6 (it is transitive via exceljs > archiver >",
+    "glob > foreground-child). An override is the correct way to express that."
+  ],
   "overrides": {
     "minimatch": "^10.0.2",
     "whatwg-url": "^14.0.0",
-    "glob": "11.0.2",
+    "glob": "^11.1.0",
     "rimraf": "6.0.1",
-    "fast-csv": "5.0.2"
+    "fast-csv": "5.0.2",
+    "cross-spawn": "^7.0.6"
   }
 }

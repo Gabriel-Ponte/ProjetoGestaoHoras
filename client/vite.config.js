@@ -7,6 +7,27 @@ import path from 'path';
 const sslCert = fs.readFileSync(path.resolve(__dirname, '../certs/cert.pem'));
 const sslKey = fs.readFileSync(path.resolve(__dirname, '../certs/key.pem'));
 
+// Chunk split (see build.rollupOptions.output.manualChunks below).
+const VENDOR = ['react', 'react-dom', 'react-router-dom'];
+const UTILS = [
+  'prop-types',
+  '@emotion/react',
+  '@emotion/styled',
+  '@mui/material',
+  '@mui/x-date-pickers',
+  '@reduxjs/toolkit',
+  'axios',
+  'date-fns',
+  'i18next',
+  'i18next-browser-languagedetector',
+  'react-i18next',
+  'react-icons',
+  'react-redux',
+  'react-toastify',
+  'react-widgets',
+  'styled-components',
+];
+
 
 function requestLoggerPlugin() {
   return {
@@ -48,27 +69,21 @@ export default defineConfig(({ command, mode }) => {
     chunkSizeWarningLimit: 900,
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom'], // Separate vendor chunks
-          utils: [
-            'prop-types',
-            '@emotion/react',
-            '@emotion/styled',
-            '@eslint/js',
-            '@mui/material',
-            '@mui/x-date-pickers',
-            '@reduxjs/toolkit',
-            '@testing-library/jest-dom',
-            'axios',
-            'date-fns',
-            'moment',
-            'react-icons',
-            'react-redux',
-            'react-toastify',
-            'react-widgets',
-            'styled-components',
-            'web-vitals',
-          ],
+        // Vite 8 bundles with Rolldown, which only accepts the FUNCTION form of
+        // manualChunks — the old object form throws "manualChunks is not a
+        // function". Same split as before, expressed as a matcher.
+        //
+        // Only REAL runtime dependencies belong here. The old list also contained
+        // dev-only tooling (@eslint/js, @testing-library/jest-dom) and packages the
+        // app never imports (moment, web-vitals). Keep this in sync with the
+        // `dependencies` in package.json.
+        manualChunks(id) {
+          const pkg = (name) =>
+            id.includes(`node_modules/${name}/`) || id.includes(`node_modules\\${name}\\`);
+
+          if (VENDOR.some(pkg)) return 'vendor';
+          if (UTILS.some(pkg)) return 'utils';
+          return undefined;
         },
       },
     },
@@ -79,8 +94,11 @@ export default defineConfig(({ command, mode }) => {
       '@': path.resolve(__dirname, 'src'), // absolute imports: @/components, @/styles, ...
     },
   },
-  esbuild: {
-    jsxInject: `import React from 'react'`, // Automatically import React in JSX files
-  },
+  // NOTE: there used to be `esbuild: { jsxInject: "import React from 'react'" }`.
+  // Vite 8 transforms with Oxc, not esbuild, so it was silently ignored — and it
+  // was never needed: @vitejs/plugin-react uses React's AUTOMATIC JSX runtime, so
+  // React does not have to be in scope to write JSX. Verified: no source file
+  // references `React.` directly. (This is also why the ESLint rule
+  // `react/react-in-jsx-scope` stays off.)
 }
 });

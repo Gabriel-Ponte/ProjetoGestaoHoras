@@ -305,18 +305,6 @@ const GerirHorasExtra = () => {
     }
   });
 
-  const styleButton = {
-    fontSize: "2.0rem", /* This is typically 40px */
-    fontWeight: "650",  /* Light font weight */
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    whiteSpace: "nowrap",
-    display: "inline-block",
-    lineHeight: 'normal',
- 
-  };
-
-
   const handleData = useCallback((t, i) => {
     return (
       <div className="row text-center" key={i}>
@@ -577,7 +565,6 @@ const GerirHorasExtra = () => {
         <GerirHorasFerias
           setGerirFerias={setGerirFerias}
           accepted={1}
-          styleButton={styleButton}
         />
       </Wrapper>
     )

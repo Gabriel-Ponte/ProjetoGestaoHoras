@@ -15,7 +15,6 @@ const GerirHorasFeriasList = ({
   ferias,
   userName,
   handleInsert,
-  totalFerias,
   feriasPorDar,
   deleteDias,
   Ano,
@@ -262,7 +261,6 @@ const GerirHorasFeriasList = ({
 
 
 
-  const acepted = ferias[0].length;
   return (
     <>
       {/* <div className={verificaResultado === 1 ? '' : verificaResultado ? 'resultadoProjetoP' : 'resultadoProjetoN'}> */}
@@ -537,6 +535,8 @@ GerirHorasFeriasList.propTypes = {
   userName: PropTypes.string.isRequired,
   handleInsert: PropTypes.func.isRequired,
   deleteDias: PropTypes.func.isRequired,
+  feriasPorDar: PropTypes.number.isRequired,
+  Ano: PropTypes.number.isRequired,
 }
 
 export default memo(GerirHorasFeriasList);
